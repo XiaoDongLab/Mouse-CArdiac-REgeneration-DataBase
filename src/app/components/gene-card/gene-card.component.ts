@@ -21,7 +21,7 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'div[app-gene-card]',
+  selector: '[app-gene-card]',
   templateUrl: './gene-card.component.html',
   styleUrls: ['./gene-card.component.css'],
 })

@@ -47,7 +47,8 @@
   <div class="col-md-9 col-sm-12 scroll-lg mt-2" [class.searching]="loading" *ngIf="this.genes.length > 0">
     <div class="accordion" id="accordionExample">
       <ng-container *ngFor="let gene_list of this.grouped_genes">
-        <div app-gene-card class="accordion-item" *ngIf="gene_list != null" [gene_list]="gene_list" [indices]="selected_indices"></div>
+        <div *ngIf="gene_list[0].gene" class="accordion-item" app-gene-card [gene_list]="gene_list" [indices]="selected_indices">
+        </div>
       </ng-container>
     </div>
   </div>
