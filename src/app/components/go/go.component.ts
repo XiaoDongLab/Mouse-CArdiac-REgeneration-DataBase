@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { LociService } from 'src/app/services/loci.service';
 import { PathwayinfoService } from 'src/app/services/pathwayinfo.service';
 import { GiniScore } from 'src/app/models/giniScore.model';
-
+declare const bootstrap: any;
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -245,7 +245,7 @@ export class GoComponent implements OnInit {
       },
       colors: ['#708090'], // Set the fill color here
     };
-    console.log(this.term_selected);
+
   }
 
   createDisplayData() {
@@ -438,9 +438,14 @@ export class GoComponent implements OnInit {
       next: (data) => {
         this.pathway_info = data.results[0]
         this.pathway_info.name = this.pathway_info.name.replace(/\b\w/g, (char: string) => char.toUpperCase());
-        console.log(this.pathway_info);
+        setTimeout(() => {
+          console.log(document.getElementById("pathway_btn"));
+          const pathway_popover = new bootstrap.Popover(document.getElementById("pathway_btn"));
+        }, 100)
       },
-      complete: () => { }
+      complete: () => { 
+        console.log("ggg");
+      }
     })
   }
 
