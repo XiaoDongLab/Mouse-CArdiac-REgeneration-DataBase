@@ -21,14 +21,14 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-gene-card',
+  selector: 'div[app-gene-card]',
   templateUrl: './gene-card.component.html',
   styleUrls: ['./gene-card.component.css'],
 })
 
 export class GeneCardComponent implements OnInit {
-  @Input() gene_list: DiffExp[];
-  @Input() indices!: Indices[];
+  @Input() gene_list: DiffExp[] = [];
+  @Input() indices: Indices[] = [];
   //@Input() en_id!: string | undefined;
   @ViewChild('child') child: MapsComponent;
 
