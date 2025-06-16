@@ -8,6 +8,7 @@ import { DiffExp } from 'src/app/models/diffExp.model';
 import { Indices } from 'src/app/models/indices.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
 import { LociService } from 'src/app/services/loci.service';
+import { GeneCardComponent } from '../gene-card/gene-card.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -20,7 +21,7 @@ export type ChartOptions = {
 @Component({
   selector: 'app-igv',
   templateUrl: './igv.component.html',
-  styleUrls: ['./igv.component.css']
+  styleUrls: ['./igv.component.css'],
 })
 export class IgvComponent implements AfterViewInit, OnDestroy {
   @ViewChild('igvdiv') igvDiv!: ElementRef;

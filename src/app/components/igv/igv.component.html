@@ -18,10 +18,9 @@
   </div>
   <div class="col-md-3 col-sm-12 scroll-lg mt-3" *ngIf="this.genes.length > 0">
     <h4>Tissues</h4>
-    <dx-tag-box style="width: 100% !important; flex: 1;" [items]="tissue_types"
-      [searchEnabled]="true" placeholder="Select Tissue(s)"
-      (onValueChanged)="onTissuesChanged($event)" [showClearButton]="true" [showSelectionControls]="true"
-      [multiline]="false" [maxDisplayedTags]="5" [value]='tissue_types'></dx-tag-box>
+    <dx-tag-box style="width: 100% !important; flex: 1;" [items]="tissue_types" [searchEnabled]="true"
+      placeholder="Select Tissue(s)" (onValueChanged)="onTissuesChanged($event)" [showClearButton]="true"
+      [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='tissue_types'></dx-tag-box>
     <hr />
     <h4>Cell Types</h4>
     <dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
@@ -46,8 +45,10 @@
   </div>
 
   <div class="col-md-9 col-sm-12 scroll-lg mt-2" [class.searching]="loading" *ngIf="this.genes.length > 0">
-    <div *ngFor="let gene_list of this.grouped_genes" class="mt-1 mb-1">
-      <app-gene-card [gene_list]="gene_list" [indices]="selected_indices"></app-gene-card>
+    <div class="accordion" id="accordionExample">
+      <ng-container *ngFor="let gene_list of this.grouped_genes">
+        <div app-gene-card class="accordion-item" *ngIf="gene_list != null" [gene_list]="gene_list" [indices]="selected_indices"></div>
+      </ng-container>
     </div>
   </div>
 </div>
