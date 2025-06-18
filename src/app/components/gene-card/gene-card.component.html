@@ -99,11 +99,14 @@
   </button>
 </h2>
 <div [id]="'collapse' + en_id" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-  <div class="accordion-body">
-    <div class="row mb-2">
+  <div class="accordion-body" *ngIf="!completely_loaded">
+    <p class="text-muted text-center">Data loading. Click Apply to refresh.</p>
+  </div>
+  <div class="accordion-body" *ngIf="completely_loaded">
+    <div class="row mb-2" *ngIf="model_selected">
       <div class="d-flex justify-content-center">
         <div class="map-container" style="max-width: 500px;">
-          <app-maps *ngIf="model_selected" [selected_info]="to_map" [en_id]="en_id" class="scaled"></app-maps>
+          <app-maps [selected_info]="to_map" [en_id]="en_id" class="scaled"></app-maps>
         </div>
       </div>
     </div>

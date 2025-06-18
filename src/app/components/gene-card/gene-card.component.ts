@@ -27,8 +27,9 @@ export type ChartOptions = {
 })
 
 export class GeneCardComponent implements OnInit {
-  @Input() gene_list: DiffExp[] = [];
+  @Input() gene_list: any[] = [];
   @Input() indices: Indices[] = [];
+  @Input() completely_loaded: boolean = false;
   //@Input() en_id!: string | undefined;
   @ViewChild('child') child: MapsComponent;
 
@@ -82,8 +83,6 @@ export class GeneCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //sort by fixed effect size
-    //this.cleanArrays();
     this.num_studies = this.getNumUniqueStudies()
     this.temp.push(this.gene_list[0])
     let temp_string = "00000000000" + this.gene_list[0].gene?.toString()
@@ -97,7 +96,6 @@ export class GeneCardComponent implements OnInit {
     }).catch((error: any) => {
       console.error('Error converting ensemble ID to gene:', error);
     });
-
 
     this.meta_chart_options1_Sham = {
       series: [
@@ -215,226 +213,6 @@ export class GeneCardComponent implements OnInit {
 
         }
       },
-    };
-
-    this.model_chart_options1_Sham = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'Sham');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-
-
-            //let slected_gene = this.gene_list[opts.dataPointIndex]
-            // Debug: Log what gene is being selected
-            console.log("Selected Gene Data:", slected_gene);
-
-
-
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '16px',
-            color: '#000',
-          }
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        // text: this.gene_list[0].gene!.toString(),
-        text: 'Sham - P1vsP8 - PSD1',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
-        ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
-    };
-
-    this.model_chart_options1_MI = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'MI');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-
-
-            //let slected_gene = this.gene_list[opts.dataPointIndex]
-            // Debug: Log what gene is being selected
-            console.log("Selected Gene Data:", slected_gene);
-
-
-
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        axisBorder: {
-          color: "#000"
-        },
-        axisTicks: {
-          color: "#000"
-        },
-        labels: {
-          style: {
-            colors: "#000",
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '16px',
-          }
-        },
-        labels: {
-          style: {
-            colors: "#000",
-          }
-        },
-        axisBorder: {
-          color: "#000"
-        },
-        axisTicks: {
-          color: "#000"
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        text: 'MI - P1vsP8 - PSD1',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
-        ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
     };
 
 
@@ -558,183 +336,6 @@ export class GeneCardComponent implements OnInit {
     };
 
 
-    this.model_chart_options3_Sham = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'Sham');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '18px'
-          }
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        text: 'Sham - P1vsP8 - PSD3',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
-        ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
-    };
-
-    this.model_chart_options3_MI = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'MI');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '18px'
-          }
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        text: 'MI - P1vsP8 - PSD3',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
-        ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
-    };
 
 
 
@@ -857,201 +458,6 @@ export class GeneCardComponent implements OnInit {
       },
     };
 
-    this.model_chart_optionsP1_1 = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-
-
-            //let slected_gene = this.gene_list[opts.dataPointIndex]
-            // Debug: Log what gene is being selected
-            console.log("Selected Gene Data:", slected_gene);
-
-
-
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '18px'
-          }
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        text: 'P1 - ShamvsMI - PSD1',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
-        ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
-    };
-
-    this.model_chart_optionsP1_3 = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-
-
-            //let slected_gene = this.gene_list[opts.dataPointIndex]
-            // Debug: Log what gene is being selected
-            console.log("Selected Gene Data:", slected_gene);
-
-
-
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '18px'
-          }
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        text: 'P1 - ShamvsMI - PSD3',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
-        ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
-    };
 
 
 
@@ -1172,205 +578,1065 @@ export class GeneCardComponent implements OnInit {
         }
       },
     };
+    if (this.completely_loaded) {
 
-
-    this.model_chart_optionsP8_1 = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
-          }
-        },
-        zoom: {
-          enabled: false
+      this.model_chart_options1_Sham = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
         }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
-          }
-        },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
-        title: {
-          text: "-Log10(Adjusted P-Value)",
-          style: {
-            fontSize: '18px'
-          }
-        }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-      title: {
-        text: 'P8 - ShamvsMI - PSD1',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
         ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
-          }
-        ]
-      }
-    };
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'Sham');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
 
-    this.model_chart_optionsP8_3 = {
-      series: [{
-        name: this.gene_list[0].gene?.toString(),
-        data: [],
-      }
-      ],
-      chart: {
-        height: '100%',
-        type: "scatter",
-        events: {
-          dataPointSelection: (e, chart, opts) => {
-            const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
-            let slected_gene = psd1_genes[opts.dataPointIndex];
-            this.to_map = {
-              pmid: slected_gene.pmid,
-              cell_type: slected_gene.cell_type,
-              gene: slected_gene.gene,
-              cell_type2: slected_gene.cell_type2,
-              cell_type3: slected_gene.cell_type3,
-              slope: slected_gene.slope,
-              pvalue: slected_gene.p_value,
-              intercept: slected_gene.inter,
-              lfc: slected_gene.lfc,
-              g_id: slected_gene.plotting_id
-            };
-            this.model_selected = true;
+
+              //let slected_gene = this.gene_list[opts.dataPointIndex]
+              // Debug: Log what gene is being selected
+              console.log("Selected Gene Data:", slected_gene);
+
+
+
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
           }
         },
-        zoom: {
-          enabled: false
-        }
-      },
-      xaxis: {
-        tooltip: {
-          formatter: function (val, opts) {
-            return val.toString()
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '16px',
+              color: '#000',
+            }
           }
         },
-        //type: "numeric",
-        //tickAmount: 10,
-        //min: -2,
-        //max: 2
-      },
-      markers: {
-        size: 10
-      },
-      yaxis: {
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
         title: {
-          text: "-Log10(Adjusted P-Value)",
+          // text: this.gene_list[0].gene!.toString(),
+          text: 'Sham - P1vsP8 - PSD1',
+          align: "center",
           style: {
-            fontSize: '18px'
+            color: "#000"
           }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
         }
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
+      };
 
+      this.model_chart_options1_MI = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
         }
-      },
-      title: {
-        text: 'P8 - ShamvsMI - PSD3',
-        align: "center",
-        style: {
-          color: "#000"
-        }
-      },
-      tooltip: {
-        enabled: false
-      },
-      annotations: {
-        yaxis: [
-          {
-            y: 1.30103,
-            strokeDashArray: 10,
-            borderColor: 'black',
-          }
         ],
-        xaxis: [
-          {
-            x: 0,
-            strokeDashArray: 7,
-            borderColor: 'grey',
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'MI');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+
+
+              //let slected_gene = this.gene_list[opts.dataPointIndex]
+              // Debug: Log what gene is being selected
+              console.log("Selected Gene Data:", slected_gene);
+
+
+
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
           }
-        ]
-      }
-    };
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          axisBorder: {
+            color: "#000"
+          },
+          axisTicks: {
+            color: "#000"
+          },
+          labels: {
+            style: {
+              colors: "#000",
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '16px',
+            }
+          },
+          labels: {
+            style: {
+              colors: "#000",
+            }
+          },
+          axisBorder: {
+            color: "#000"
+          },
+          axisTicks: {
+            color: "#000"
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'MI - P1vsP8 - PSD1',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
 
 
 
 
 
+      this.model_chart_options3_Sham = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
+        }
+        ],
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'Sham');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '18px'
+            }
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'Sham - P1vsP8 - PSD3',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
+
+      this.model_chart_options3_MI = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
+        }
+        ],
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'MI');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '18px'
+            }
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'MI - P1vsP8 - PSD3',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
+
+      this.model_chart_optionsP1_1 = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
+        }
+        ],
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+
+
+              //let slected_gene = this.gene_list[opts.dataPointIndex]
+              // Debug: Log what gene is being selected
+              console.log("Selected Gene Data:", slected_gene);
 
 
 
-    this.createDisplayData()
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '18px'
+            }
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'P1 - ShamvsMI - PSD1',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
+
+      this.model_chart_optionsP1_3 = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
+        }
+        ],
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+
+
+              //let slected_gene = this.gene_list[opts.dataPointIndex]
+              // Debug: Log what gene is being selected
+              console.log("Selected Gene Data:", slected_gene);
+
+
+
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '18px'
+            }
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'P1 - ShamvsMI - PSD3',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
+
+      this.model_chart_optionsP8_1 = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
+        }
+        ],
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '18px'
+            }
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'P8 - ShamvsMI - PSD1',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
+
+      this.model_chart_optionsP8_3 = {
+        series: [{
+          name: this.gene_list[0].gene?.toString(),
+          data: [],
+        }
+        ],
+        chart: {
+          height: '100%',
+          type: "scatter",
+          events: {
+            dataPointSelection: (e, chart, opts) => {
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
+              let slected_gene = psd1_genes[opts.dataPointIndex];
+              this.to_map = {
+                pmid: slected_gene.pmid,
+                cell_type: slected_gene.cell_type,
+                gene: slected_gene.gene,
+                cell_type2: slected_gene.cell_type2,
+                cell_type3: slected_gene.cell_type3,
+                slope: slected_gene.slope,
+                pvalue: slected_gene.p_value,
+                intercept: slected_gene.inter,
+                lfc: slected_gene.lfc,
+                g_id: slected_gene.plotting_id
+              };
+              this.model_selected = true;
+            }
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        xaxis: {
+          tooltip: {
+            formatter: function (val, opts) {
+              return val.toString()
+            }
+          },
+          //type: "numeric",
+          //tickAmount: 10,
+          //min: -2,
+          //max: 2
+        },
+        markers: {
+          size: 10
+        },
+        yaxis: {
+          title: {
+            text: "-Log10(Adjusted P-Value)",
+            style: {
+              fontSize: '18px'
+            }
+          }
+        },
+        fill: {
+          type: "pattern",
+          pattern: {
+            style: "verticalLines",
+
+          }
+        },
+        title: {
+          text: 'P8 - ShamvsMI - PSD3',
+          align: "center",
+          style: {
+            color: "#000"
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 1.30103,
+              strokeDashArray: 10,
+              borderColor: 'black',
+            }
+          ],
+          xaxis: [
+            {
+              x: 0,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            }
+          ]
+        }
+      };
+      this.createDisplayData();
+    } else {
+      this.createInitialDisplayData();
+    }
   }
 
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['gene_list'] && !changes['gene_list'].firstChange) {
+    if (changes['gene_list'] && !changes['gene_list'].firstChange && this.completely_loaded) {
       // Update charts when gene_list input changes
+      console.log("ggg");
       this.createDisplayData();
     }
   }
 
+  removeNullString(data: any): String {
+    return data == null ? '0,0,0,0,0,0' : data;
+  }
+
+  removeNullNumber(data: any) {
+    return data == null ? 0 : Number.parseInt(data);
+  }
+
+  createInitialDisplayData() {
+    // console.log("Starting createDisplayData");
+    let P1_3_temp = this.removeNullString(this.gene_list[0].P1_3).split(',');
+    let meta_series_infoP1_3 = P1_3_temp.map(val => this.removeNullNumber(val));
+    const P1_3_sum = meta_series_infoP1_3.reduce((sum, p) => sum + p);
+    this.meta_chart_optionsP1_3.chart!.width = P1_3_sum > 20 ? '100%' : Math.trunc(P1_3_sum * 5).toString() + '%';
+    // console.log(meta_series_infoP1_3);
+    this.meta_chart_optionsP1_3.series = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoP1_3[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoP1_3[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoP1_3[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoP1_3[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoP1_3[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoP1_3[4]]
+      },
+    ];
+
+    let P1_1_temp = this.removeNullString(this.gene_list[0].P1_1).split(',');
+    let meta_series_infoP1_1 = P1_1_temp.map(val => this.removeNullNumber(val));
+    const P1_1_sum = meta_series_infoP1_1.reduce((sum, p) => sum + p);
+    this.meta_chart_optionsP1_1.chart!.width = P1_1_sum > 20 ? '100%' : Math.trunc(P1_1_sum * 5).toString() + '%';
+    // console.log(meta_series_infoP1_1);
+    this.meta_chart_optionsP1_1.series! = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoP1_1[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoP1_1[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoP1_1[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoP1_1[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoP1_1[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoP1_1[4]]
+      },
+    ];
+
+    let P8_3_temp = this.removeNullString(this.gene_list[0].P8_3).split(',');
+    let meta_series_infoP8_3 = P8_3_temp.map(val => this.removeNullNumber(val));
+    const P8_3_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
+    this.meta_chart_optionsP8_3.chart!.width = P8_3_sum > 20 ? '100%' : Math.trunc(P8_3_sum * 5).toString() + '%';
+    // console.log(meta_series_infoP8_3);
+    this.meta_chart_optionsP8_3.series = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoP8_3[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoP8_3[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoP8_3[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoP8_3[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoP8_3[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoP8_3[4]]
+      },
+    ];
+
+    let P8_1_temp = this.removeNullString(this.gene_list[0].P8_1).split(',');
+    let meta_series_infoP8_1 = P8_1_temp.map(val => this.removeNullNumber(val));
+    const P8_1_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
+    this.meta_chart_optionsP8_1.chart!.width = P8_1_sum > 20 ? '100%' : Math.trunc(P8_1_sum * 5).toString() + '%';
+    // console.log(meta_series_infoP8_1);
+    this.meta_chart_optionsP8_1.series! = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoP8_1[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoP8_1[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoP8_1[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoP8_1[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoP8_1[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoP8_1[4]]
+      },
+    ];
+
+    let Sham_3_temp = this.removeNullString(this.gene_list[0].Sham_3).split(',');
+    let meta_series_infoSham_3 = Sham_3_temp.map(val => this.removeNullNumber(val));
+    const Sham_3_sum = meta_series_infoSham_3.reduce((sum, p) => sum + p);
+    this.meta_chart_options3_Sham.chart!.width = Sham_3_sum > 20 ? '100%' : Math.trunc(Sham_3_sum * 5).toString() + '%';
+    // console.log(meta_series_infoSham_3);
+    this.meta_chart_options3_Sham.series = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoSham_3[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoSham_3[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoSham_3[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoSham_3[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoSham_3[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoSham_3[4]]
+      },
+    ];
+
+    let Sham_1_temp = this.removeNullString(this.gene_list[0].Sham_1).split(',');
+    let meta_series_infoSham_1 = Sham_1_temp.map(val => this.removeNullNumber(val));
+    const Sham_1_sum = meta_series_infoSham_1.reduce((sum, p) => sum + p);
+    this.meta_chart_options1_Sham.chart!.width = Sham_1_sum > 20 ? '100%' : Math.trunc(Sham_1_sum * 5).toString() + '%';
+    // console.log(meta_series_infoSham_1);
+    this.meta_chart_options1_Sham.series! = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoSham_1[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoSham_1[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoSham_1[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoSham_1[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoSham_1[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoSham_1[4]]
+      },
+    ];
+
+    let MI_3_temp = this.removeNullString(this.gene_list[0].MI_3).split(',');
+    let meta_series_infoMI_3 = MI_3_temp.map(val => this.removeNullNumber(val));
+    const MI_3_sum = meta_series_infoMI_3.reduce((sum, p) => sum + p);
+    this.meta_chart_options3_MI.chart!.width = MI_3_sum > 20 ? '100%' : Math.trunc(MI_3_sum * 5).toString() + '%';
+    // console.log(meta_series_infoMI_3);
+    this.meta_chart_options3_MI.series = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoMI_3[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoMI_3[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoMI_3[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoMI_3[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoMI_3[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoMI_3[4]]
+      },
+    ];
+
+    let MI_1_temp = this.removeNullString(this.gene_list[0].MI_1).split(',');
+    let meta_series_infoMI_1 = MI_1_temp.map(val => this.removeNullNumber(val));
+    const MI_1_sum = meta_series_infoMI_1.reduce((sum, p) => sum + p);
+    this.meta_chart_options1_MI.chart!.width = MI_1_sum > 20 ? '100%' : Math.trunc(MI_1_sum * 5).toString() + '%';
+    // console.log(meta_series_infoMI_1);
+    this.meta_chart_options1_MI.series! = [
+      {
+        name: "Non-Significant Fit",
+        data: [meta_series_infoMI_1[5]]
+      },
+      {
+        name: "Significantly Downregulated",
+        data: [meta_series_infoMI_1[0]]
+      },
+      {
+        name: "Slightly Downregulated",
+        data: [meta_series_infoMI_1[1]]
+      },
+      {
+        name: "No Change",
+        data: [meta_series_infoMI_1[2]]
+      },
+      {
+        name: "Slightly Upregulated",
+        data: [meta_series_infoMI_1[3]]
+      },
+      {
+        name: "Significantly Upregulated",
+        data: [meta_series_infoMI_1[4]]
+      },
+    ];
+  }
 
   createDisplayData() {
     console.log("Starting createDisplayData");
@@ -2358,6 +2624,12 @@ export class GeneCardComponent implements OnInit {
       return (this.sli_up_color)
     }
     return (this.no_change_color)
+  }
+
+  hideToastControl(control_id: string): void {
+    const changelogToast = document.getElementById(control_id);
+    document.getElementById("shadow-bg")!.style.display = "none";
+    changelogToast!.style.display = "none";
   }
   // cleanArrays(){
   //   let ordered_ids = sortIds(this.gene.fixed_effect);
