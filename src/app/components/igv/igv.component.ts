@@ -197,6 +197,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   getInRangeGenes() {
     // This function loads data **without any criteria**. After 'general' data is loaded, detailed data will be scanned at the backend.
     this.loading = true;
+    this.completely_loaded = false;
     document.getElementById("btn-apply-detail")?.setAttribute('disabled', 'disabled');
     const loci = this.browser.currentLoci().split(':');
     const chr = loci[0].replace('chr', '')
@@ -311,10 +312,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   }
 
   async subsetCorrectCellAndTissueTypes() {
+    console.log([...this.original_grouped_genes][0].length);
     this.loading = true;
-    
-    await new Promise(r => setTimeout(r));   // ② 让浏览器先渲染这一帧
     this.grouped_genes = JSON.parse(JSON.stringify(this.original_grouped_genes));
+    console.log(this.grouped_genes[0].length);
 
     let selected_pmids: number[] = [];
     for (const key in this.pmid_tissue_dist) {
@@ -336,6 +337,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
+    console.log(this.grouped_genes[0].length);
     this.loading = false;
     this.completely_loaded = true;
   }

@@ -63,7 +63,7 @@ export class DatabaseConstsService {
     "Liver": [30348985, 35021063],
     "Lung": [30554520, 36108172],
     "Pancreas": [30865899, 34450029],
-    "Heart": [130699, 34489413]
+    "Heart": [33296652, 34489413]
   };
 
 
