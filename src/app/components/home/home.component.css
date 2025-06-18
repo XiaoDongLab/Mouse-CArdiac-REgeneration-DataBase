@@ -43,9 +43,11 @@
 }
 
 .help-image {
-  border: var(--bs-border-width) solid var(--bs-border-color-translucent);
-  border-radius: 5px;
-  filter: none !important;
+  /* border: var(--bs-border-width) solid var(--bs-border-color-translucent);*/
+  border-radius: calc(var(--bs-border-radius) - var(--bs-border-width));
+  display: flex;
+  justify-self: center;
+  /* filter: none !important; */
 }
 
 .card-header h3 {

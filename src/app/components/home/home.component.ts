@@ -33,7 +33,8 @@ export class HomeComponent implements OnInit {
   logo_list: any[];
   cell_total: string;
   min_age = -1
-  max_age = 1000
+  max_age = 1000;
+  preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   is_https: boolean = false;
   options = [
     {
@@ -62,6 +63,11 @@ export class HomeComponent implements OnInit {
    }
 
   ngOnInit(): void {
+
+  }
+
+  ngOnChanges(): void {
+    this.preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
   test(age_group: any){
