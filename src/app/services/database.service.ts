@@ -14,13 +14,14 @@ import JSZip from 'jszip';
 //const baseUrl = 'http://localhost:80/api/';
 
 //Prod Base URL
-const baseUrl = 'http://160.94.104.178:3305/api/';
+const baseUrl = 'http://localhost:3305/api/';
 
 //query paths
 const metaUrl = baseUrl.concat('metadata'.toString());
 const sampleUrl = baseUrl.concat('sample'.toString());
 const positionsUrl = baseUrl.concat('positions'.toString());
 const diffExpUrl = baseUrl.concat('differentialExpression'.toString());
+const diffExpGeneralUrl = baseUrl.concat('differentialExpressionGeneral'.toString());
 const indicesUrl = baseUrl.concat('indices'.toString());
 const imagesUrl = baseUrl.concat('images'.toString());
 const linRegUrl = baseUrl.concat('linearRegression'.toString());
@@ -75,6 +76,10 @@ export class DatabaseService {
 
   getGeneDiffExp(genes:any[]): Observable<DiffExp[]>{
     return this.http.get<DiffExp[]>(`${diffExpUrl}/${genes}`);
+  }
+
+  getGeneDiffExpGeneral(genes: any[]): Observable<DiffExp[]> {
+    return this.http.get<DiffExp[]>(`${diffExpGeneralUrl}/${genes}`);
   }
 
   getIndices(): Observable<Indices[]> {

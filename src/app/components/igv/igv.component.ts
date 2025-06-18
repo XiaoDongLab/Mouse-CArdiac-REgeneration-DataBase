@@ -4,6 +4,7 @@ import igv from 'node_modules/igv/dist/igv.esm.js'
 import { Positions } from 'src/app/models/positions.model';
 import { DatabaseService } from 'src/app/services/database.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle } from "ng-apexcharts";
+import { ChangeDetectorRef } from '@angular/core';
 import { DiffExp } from 'src/app/models/diffExp.model';
 import { Indices } from 'src/app/models/indices.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
@@ -71,10 +72,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   display?: Positions[];
   original_genes: DiffExp[];
   genes: DiffExp[] = [];
+  initial_genes: any[] = [];
   grouped_genes: DiffExp[][] = [];
   original_grouped_genes: DiffExp[][] = [];
   selected_indices: Indices[];
   original_indices: Indices[];
+  completely_loaded: boolean = false;
   pmid_tissue_dist: { [key: string]: number[] } = {}
   gene_names: string[] = [];
   found = false;
@@ -192,7 +195,9 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     })
   }
   getInRangeGenes() {
-    this.loading = true
+    // This function loads data **without any criteria**. After 'general' data is loaded, detailed data will be scanned at the backend.
+    this.loading = true;
+    document.getElementById("btn-apply-detail")?.setAttribute('disabled', 'disabled');
     const loci = this.browser.currentLoci().split(':');
     const chr = loci[0].replace('chr', '')
     const start = Math.floor(loci[1].split('-')[0])
@@ -201,9 +206,50 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.display = data;
-          this.getDiffExpData()
+          this.getDiffExpGeneralData();
+          // this.getDiffExpData()
         },
         error: (e) => console.error(e)
+      });
+  }
+
+  getDiffExpGeneralData() {
+    this.gene_names = this.display!.map((obj) => obj.en_id!)
+    const convertedList: number[] = this.gene_names.map((str) => {
+      // Remove 'ENSG' from the beginning of each string
+      const strippedString = str.replace('ENSMUSG', '');
+      // Convert the remaining string to a number
+      return parseInt(strippedString, 10);
+    });
+
+    this.databaseService.getGeneDiffExpGeneral(convertedList)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.initial_genes = data;
+          this.grouped_genes = data.map(gene => [gene]);
+          this.genes = data;
+          // console.log(this.initial_genes[0]);
+          // this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
+          // this.subsetCorrectCellAndTissueTypes()
+          // console.log(this.grouped_genes);
+
+          console.log("Get detailed data here");
+          this.getDiffExpData();
+          //this.original_genes = this.assignGeneNames(this.original_genes)
+          //this.genes = this.assignGeneNames(this.genes)
+          // this.original_genes = this.prettyOrderer(this.original_genes)
+          // this.genes = this.prettyOrderer(this.genes)
+        },
+        error: (e) => {
+          console.error(e)
+          this.loading = false;
+          alert('Too Many or Too Few Genes Selected, Please Adjust Search Region')
+        },
+        complete: () => {
+          this.loading = false
+          this.found = true
+        }
       });
   }
 
@@ -222,9 +268,9 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.original_genes = data;
           this.genes = data;
           this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
-          this.subsetCorrectCellAndTissueTypes()
+          document.getElementById("btn-apply-detail")?.removeAttribute("disabled");
+          // this.subsetCorrectCellAndTissueTypes()
           console.log(this.grouped_genes)
-
           //this.original_genes = this.assignGeneNames(this.original_genes)
           //this.genes = this.assignGeneNames(this.genes)
           // this.original_genes = this.prettyOrderer(this.original_genes)
@@ -264,7 +310,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     return (Object.values(groupedLists));
   }
 
-  subsetCorrectCellAndTissueTypes() {
+  async subsetCorrectCellAndTissueTypes() {
+    this.loading = true;
+    
+    await new Promise(r => setTimeout(r));   // ② 让浏览器先渲染这一帧
     this.grouped_genes = JSON.parse(JSON.stringify(this.original_grouped_genes));
 
     let selected_pmids: number[] = [];
@@ -287,6 +336,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
+    this.loading = false;
+    this.completely_loaded = true;
   }
 
 
