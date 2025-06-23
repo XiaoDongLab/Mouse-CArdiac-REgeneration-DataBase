@@ -10,6 +10,7 @@ import { Indices } from 'src/app/models/indices.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
 import { LociService } from 'src/app/services/loci.service';
 import { GeneCardComponent } from '../gene-card/gene-card.component';
+import { group } from 'console';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -32,11 +33,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   //to_child = new DiffExp('TEST GENE', ['1','2','3'],['2','3','4'],['0','1','2'],['1,1,1'],['1,1,1'])
   //IGV Variables
   browser: any;
+  deg_sorted_list: Map<String, number>;
   // trackUrl = 'https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig'
   trackUrl = 'https://www.encodeproject.org/files/ENCFF092EKO/@@download/ENCFF092EKO.bigWig';
   options = {
     genome: "mm10",
-    locus: 'chr8:5727233-17181696',
+    locus: 'chr8:14000000-15000000',
     tracks: [
       {
         name: 'Histone CHIP-seq (H3K27ac) : Heart Tissue Postnatal (0 days)',
@@ -90,6 +92,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     this.pmid_tissue_dist = databaseConstService.getDePmidTissueDict();
     this.tissue_types = Object.keys(this.pmid_tissue_dist)
     this.selected_tissues = this.tissue_types;
+    this.deg_sorted_list = new Map<String, number>();
     this.databaseService.getIndices().subscribe({
       next: (data) => {
         this.selected_indices = data;
@@ -229,7 +232,13 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           console.log(data);
           this.initial_genes = data;
           this.grouped_genes = data.map(gene => [gene]);
+          console.log(this.grouped_genes);
+          this.grouped_genes = this.sortGenesByDEG(this.grouped_genes, null);
           this.genes = data;
+          this.grouped_genes.forEach((gene, idx) => {
+            this.deg_sorted_list.set(gene[0]?.gene?.toString() ?? '', idx);
+          })
+          console.log(this.deg_sorted_list);
           // console.log(this.initial_genes[0]);
           // this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
           // this.subsetCorrectCellAndTissueTypes()
@@ -312,10 +321,9 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   }
 
   async subsetCorrectCellAndTissueTypes() {
-    console.log([...this.original_grouped_genes][0].length);
     this.loading = true;
     this.grouped_genes = JSON.parse(JSON.stringify(this.original_grouped_genes));
-    console.log(this.grouped_genes[0].length);
+    console.log(this.grouped_genes);
 
     let selected_pmids: number[] = [];
     for (const key in this.pmid_tissue_dist) {
@@ -337,6 +345,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
+    this.grouped_genes = this.sortGenesByDEG(this.grouped_genes, this.deg_sorted_list);
     console.log(this.grouped_genes[0].length);
     this.loading = false;
     this.completely_loaded = true;
@@ -398,6 +407,31 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       new_list.push(list[id])
     }
     return (new_list)
+  }
+
+  sortGenesByNumber(list: any): any {
+    return [...list].sort((a, b) => {
+      // 保险：内层可能为空时给 ''
+      const geneA = (a[0]?.gene ?? '').toLocaleString();
+      const geneB = (b[0]?.gene ?? '').toLocaleString();
+
+      // 忽略大小写 + 按英文字母顺序
+      return geneA.localeCompare(geneB, 'en', { sensitivity: 'base' });
+    });
+  }
+
+  sortGenesByDEG(list: any, map: Map<String, number> | null): any {
+    if (map == null) {
+      return [...list].sort((a, b) =>
+        (b[0]?.sig_total ?? 0) - (a[0]?.sig_total ?? 0)
+      );
+    } else {
+      return [...list].sort((a, b) => {
+        const rankA = this.deg_sorted_list.get(a[0]?.gene) ?? Number.POSITIVE_INFINITY;
+        const rankB = this.deg_sorted_list.get(b[0]?.gene) ?? Number.POSITIVE_INFINITY;
+        return rankA - rankB;          // 按汇总表既定顺序排
+      })
+    }
   }
 
   getEN_ID(gene: string | number | undefined) {

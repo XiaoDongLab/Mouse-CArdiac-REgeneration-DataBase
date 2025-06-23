@@ -58,7 +58,7 @@
 }
 
 @media (min-width: 992px) {
-  ::ng-deep .nav-link.active::after {
+  .nav-link.active::after {
     display: flex;
     position: absolute;
     bottom: calc(0px - var(--bs-border-width));
@@ -66,6 +66,18 @@
     content: ' ';
     background-color: var(--bs-body-color);
     width: 1rem;
+    border-radius: .125rem;
+    transition: .1s ease-in-out;
+  }
+
+  .nav-link.active:focus::after, .nav-link.active:active::after {
+    display: flex;
+    position: absolute;
+    bottom: calc(0px - var(--bs-border-width));
+    height: .25rem;
+    content: ' ';
+    background-color: var(--bs-body-color);
+    width: .75rem;
     border-radius: .125rem;
   }
 
@@ -85,15 +97,21 @@
     background-color: rgba(var(--bs-pink-rgb), 0.7);
   }
 
-  ::ng-deep .nav-link.active {
+  .nav-link {
     display: flex;
+    align-items: center;
     justify-content: center;
     position: relative;
+    cursor: pointer;
+  }
+
+  ::ng-deep .nav-link i, .nav-link svg {
+    margin-right: .25rem;
   }
 }
 
 @media (max-width: 992px) {
-  ::ng-deep .nav-link.active::before {
+  .nav-link.active::before {
     display: flex;
     position: absolute;
     left: calc(0px - var(--bs-border-width));
@@ -101,6 +119,18 @@
     content: ' ';
     background-color: var(--bs-body-color);
     height: 1rem;
+    border-radius: .125rem;
+    transition: .1s ease-in-out;
+  }
+
+  .nav-link.active:focus::before, .nav-link.active:active::before {
+    display: flex;
+    position: absolute;
+    left: calc(0px - var(--bs-border-width));
+    width: .25rem;
+    content: ' ';
+    background-color: var(--bs-body-color);
+    height: .75rem;
     border-radius: .125rem;
   }
 
@@ -121,10 +151,15 @@
     background-color: rgba(var(--bs-pink-rgb), 0.7);
   }
 
-  ::ng-deep .nav-link.active {
+  ::ng-deep .nav-link {
     display: flex;
     justify-content: left;
     align-items: center;
     position: relative;
+    cursor: pointer;
+  }
+
+  ::ng-deep .nav-link i, .nav-link svg {
+    margin-right: .5rem;
   }
 }

@@ -2,7 +2,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { DatabaseService } from 'src/app/services/database.service';
 import { Image } from 'src/app/models/image.model';
 import { DomSanitizer } from '@angular/platform-browser';
-import {ApexAxisChartSeries,ApexChart,ApexPlotOptions,ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations} from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations } from "ng-apexcharts";
 var ncbi = require('node-ncbi');
 
 export type ChartOptions = {
@@ -24,7 +24,7 @@ export type ChartOptions = {
   styleUrls: ['./maps.component.css']
 })
 export class MapsComponent implements OnInit {
-  @Input() selected_info!: {pmid:number, cell_type:string, gene: string, cell_type2: string, cell_type3: string, slope: number, pvalue:number, intercept: number, lfc:number, g_id: number, PSD: number, Surgery: string};
+  @Input() selected_info!: { pmid: number, cell_type: string, gene: string, cell_type2: string, cell_type3: string, slope: number, pvalue: number, intercept: number, lfc: number, g_id: number, PSD: number, Surgery: string };
   @Input() en_id!: string | undefined;
   image: Image[];
   tsne: any;
@@ -42,59 +42,59 @@ export class MapsComponent implements OnInit {
   public linReg_chart_options: Partial<ChartOptions>;
 
 
-  maps = [{text: "UMAP"}, {text: "TSNE"}, {text: "Model Visualization"}, {text: "Meta Info"}];
+  maps = [{ text: "UMAP" }, { text: "TSNE" }, { text: "Model Visualization" }, { text: "Meta Info" }];
   display = 'UMAP';
 
-  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer) {}
+  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.getClusterImages()
-    this.getLinRegGraphData()
-    }
+    // this.getLinRegGraphData()
+  }
 
-  getClusterImages(){
+  getClusterImages() {
     //this.databaseService.getImage(this.selected_info.pmid, 1).subscribe({
     this.databaseService.getImage(this.selected_info.pmid, 1).subscribe({
       next: (data) => {
         console.log("TEST: Received image data:", data);
         this.image = data;
         this.umap = this.decodeImage(this.image[0].UMAP!)
-        if(this.image[0].TSNE! != null){
+        if (this.image[0].TSNE! != null) {
           this.tsne = this.decodeImage(this.image[0].TSNE!)
         }
-        else{
+        else {
           this.tsne = null
         }
-     },
+      },
       error: (e) => console.error("TEST: Error fetching images", e)
     });
   }
 
-  getLinRegGraphData(){
+  getLinRegGraphData() {
     this.databaseService.getLinRegData(
       this.selected_info.g_id
-      ).subscribe({
+    ).subscribe({
       next: (data) => {
-        this.ages = data[0].age.replace('"','').split(',')
-        this.exp = data[0].exp.replace('"','').split(',')
+        this.ages = data[0].age.replace('"', '').split(',')
+        this.exp = data[0].exp.replace('"', '').split(',')
         console.log(this.exp[0])
         this.prepGraphData()
         this.makeLinRegGraph()
-     },
+      },
       error: (e) => console.error(e)
     });
   }
 
-  prepGraphData(){
+  prepGraphData() {
     //Prepare Point Data
     let points = []
-    for(let i=0; i<this.ages.length; i++){
+    for (let i = 0; i < this.ages.length; i++) {
       let point = [Number(this.ages[i]), Number(this.exp[i]).toFixed(3)]
       points.push(point)
     };
     console.log(points)
     let line_data = []
-    for(let i=1; i<100; i++){
+    for (let i = 1; i < 100; i++) {
       let y = (Number(this.selected_info.slope) * i + Number(this.selected_info.intercept)).toFixed(3)
       let point = [i, y]
       line_data.push(point)
@@ -104,13 +104,13 @@ export class MapsComponent implements OnInit {
     this.line_data = line_data
   }
 
-  makeLinRegGraph(){
+  makeLinRegGraph() {
     this.linReg_chart_options = {
       series: [{
         name: 'Cell',
         type: 'scatter',
         data: this.points_data
-      },{
+      }, {
         name: 'Linear Visualization',
         type: 'line',
         data: this.line_data
@@ -120,7 +120,7 @@ export class MapsComponent implements OnInit {
         type: 'line'
       },
       fill: {
-        type:'solid',
+        type: 'solid',
       },
       markers: {
         size: [6, 0]
@@ -129,7 +129,7 @@ export class MapsComponent implements OnInit {
         shared: false,
         intersect: true,
       },
-      xaxis:{
+      xaxis: {
         tickAmount: 10,
         title: {
           text: 'Age (Year)',
@@ -138,7 +138,7 @@ export class MapsComponent implements OnInit {
       },
       yaxis: {
         labels: {
-          formatter: function(value) {
+          formatter: function (value) {
             return (value.toFixed(0)).toString(); // Round the tick value to the nearest whole number
           }
         },
@@ -150,26 +150,30 @@ export class MapsComponent implements OnInit {
     }
   }
 
-  arrayBufferToBase64( buffer: any ) {
+  arrayBufferToBase64(buffer: any) {
     var binary = '';
-    var bytes = new Uint8Array( buffer );
+    var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
     for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
+      binary += String.fromCharCode(bytes[i]);
     }
-    return btoa( binary );
+    return btoa(binary);
   }
 
-  decodeImage(buffer: any){
+  decodeImage(buffer: any) {
     let data = buffer.data
     let base64 = this.arrayBufferToBase64(data)
-    return(this.sanitizer.bypassSecurityTrustResourceUrl(`data:image/png;base64, ${base64}`))
+    return (this.sanitizer.bypassSecurityTrustResourceUrl(`data:image/png;base64, ${base64}`))
   }
-  onItemSelected($event: any){
+  onItemSelected($event: any) {
     this.display = $event.itemData.text
   }
 
-  ngOnChanges(changes: SimpleChanges){
+  onItemSelected_Nav(text: any) {
+    this.display = text;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['selected_info'] && changes['selected_info'].currentValue) {
       console.log('New selected_info:', changes['selected_info'].currentValue);
       console.log('PSD:', changes['selected_info'].currentValue.PSD);
@@ -181,31 +185,31 @@ export class MapsComponent implements OnInit {
     console.log('Fetching PubMed data for PMID:', this.selected_info.pmid);
 
     const pubmed = ncbi.pubmed;
-    pubmed.summary(this.selected_info.pmid).then((results:any) => {
+    pubmed.summary(this.selected_info.pmid).then((results: any) => {
       console.log(results)
       this.title = results.title
-      this.author = results.authors.split(',')[0].replace(' ',', ')
+      this.author = results.authors.split(',')[0].replace(' ', ', ')
       this.year = results.pubDate.split('/')[0]
     });
     this.getClusterImages()
-    this.getLinRegGraphData() 
-    this.prepGraphData()
-    this.makeLinRegGraph()
+    // this.getLinRegGraphData()
+    // this.prepGraphData()
+    // this.makeLinRegGraph()
   }
 
-  formatOtherCellTypes(){
+  formatOtherCellTypes() {
     this.selected_info.cell_type2 = this.selected_info.cell_type2 == 'NA' ? '' : (this.selected_info.cell_type2);
-    this.selected_info.cell_type3 = this.selected_info.cell_type3 == 'NA' ? '' : (', '+ this.selected_info.cell_type3);
-    if(this.selected_info.cell_type2 == '' && this.selected_info.cell_type3 == ''){
+    this.selected_info.cell_type3 = this.selected_info.cell_type3 == 'NA' ? '' : (', ' + this.selected_info.cell_type3);
+    if (this.selected_info.cell_type2 == '' && this.selected_info.cell_type3 == '') {
       this.selected_info.cell_type2 = 'None'
     }
   }
 
-  calculateDecadeChange(){
+  calculateDecadeChange() {
     console.log(this.selected_info.lfc)
     //this.decade_change = Number((this.selected_info.lfc *1).toFixed(4))
     this.decade_change = Number(((Math.pow(2, this.selected_info.lfc) - 1) * 100).toFixed(4));
-  
+
   }
 
 }

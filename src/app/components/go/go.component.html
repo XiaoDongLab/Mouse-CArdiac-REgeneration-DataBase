@@ -5,42 +5,44 @@
   </div>
 </div>
 <div class="row mt-2 g-2">
-  <div class="col-md-3 col-sm-12 scroll-lg">
-    <h4>Comparison Type</h4>
-    <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType">
-      <option *ngFor="let item of comparisonTypes" [value]="item.value">{{item.text}}</option>
-    </select>
-    <!--<hr />
+  <div class="col-md-3 col-sm-12 ">
+    <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
+      <h4>Comparison Type</h4>
+      <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType">
+        <option *ngFor="let item of comparisonTypes" [value]="item.value">{{item.text}}</option>
+      </select>
+      <!--<hr />
     <h4>Tissues</h4>
     <dx-tag-box [items]="tissue_types" [searchEnabled]="true" [hideSelectedItems]="true" placeholder="Select Tissues"
       [showMultiTagOnly]="false" [maxDisplayedTags]="4" [showClearButton]="true" style="width: 100%; flex: 1;"
       [showSelectionControls]="true" [(value)]='selected_tissues'></dx-tag-box>-->
-    <hr />
-    <!--CELL TYPE SELECT BOX-->
-    <h4>Cell Types</h4>
-    <dx-tag-box [items]="cell_types" [searchEnabled]="true" placeholder="Select Cell Types" [showMultiTagOnly]="false"
-      [maxDisplayedTags]="4" [showClearButton]="true" style="width: 100%; flex: 1;" [showSelectionControls]="true"
-      [(value)]='selected_cell_types'></dx-tag-box>
-    <hr />
-    <h4>Pathways</h4>
-    <div class="d-inline-flex">
-      <dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
-        [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>
-      <a tabindex="0" id="pathway_btn" *ngIf="pathway_info != '' && pathway_info != null" data-bs-trigger="focus"
-        class="btn btn-link btn-floating text-body" role="button" data-bs-toggle="popover"
-        [attr.data-bs-title]="pathway_info?.name" [attr.data-bs-content]="pathway_info?.definition.text"><i
-          class="fa fa-info-circle"></i></a>
+      <hr />
+      <!--CELL TYPE SELECT BOX-->
+      <h4>Cell Types</h4>
+      <dx-tag-box [items]="cell_types" [searchEnabled]="true" placeholder="Select Cell Types" [showMultiTagOnly]="false"
+        [maxDisplayedTags]="4" [showClearButton]="true" style="width: 100%; flex: 1;" [showSelectionControls]="true"
+        [(value)]='selected_cell_types'></dx-tag-box>
+      <hr />
+      <h4>Pathways</h4>
+      <div class="d-inline-flex">
+        <dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
+          [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>
+        <a tabindex="0" id="pathway_btn" *ngIf="pathway_info != '' && pathway_info != null" data-bs-trigger="focus"
+          class="btn btn-link btn-floating text-body" role="button" data-bs-toggle="popover"
+          [attr.data-bs-title]="pathway_info?.name" [attr.data-bs-content]="pathway_info?.definition.text"><i
+            class="fa fa-info-circle"></i></a>
+      </div>
+      <h6 class="mt-2">Search mode</h6>
+      <select class="form-select" aria-label="Default select example" [(ngModel)]="selected_search_mode">
+        <option *ngFor="let item of search_modes" [value]="item.value">{{item.text}}</option>
+      </select>
+      <hr />
+      <button (click)="getNewData()" class="btn btn-mcaredb w-100">
+        <i class="fa fa-magnifying-glass"></i> GO Results
+      </button>
     </div>
-    <h6 class="mt-2">Search mode</h6>
-    <select class="form-select" aria-label="Default select example" [(ngModel)]="selected_search_mode">
-      <option *ngFor="let item of search_modes" [value]="item.value">{{item.text}}</option>
-    </select>
-    <hr />
-    <button (click)="getNewData()" class="btn btn-mcaredb w-100">
-      <i class="fa fa-magnifying-glass"></i> GO Results
-    </button>
   </div>
-  <div class="col-md-6 col-sm-12 scroll-lg">
+  <div class="col-md-6 col-sm-12">
     <apx-chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!" [xaxis]="go_chart_options.xaxis!"
       [yaxis]="go_chart_options.yaxis!" [markers]="go_chart_options.markers!"
       [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!"
@@ -61,8 +63,16 @@
                 <small class="text-muted">Cluster</small>
                 <h5>{{selected_term.cell_type}}</h5>
                 <hr />
-                <small class="text-muted">Tissue</small>
-                <h5>{{selected_term.tissue}}</h5>
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted">NES</small>
+                    <h5>{{selected_term.nes}}</h5>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">P-Value</small>
+                    <h5>{{selected_term.P_Value < 0.0001 ? '&lt;0.0001' : selected_term.P_Value.toFixed(4)}}</h5>
+                  </div>
+                </div>
                 <hr />
                 <small class="text-muted">PMID</small>
                 <h5>{{selected_term.pmid}}</h5>
@@ -100,8 +110,8 @@
     <div class="row g-2">
       <div class="col-12" *ngIf="!loading">
         <div class="card">
-          <div class="card-header text-center">
-            <h4 class="mb-0">Upregulated</h4>
+          <div class="card-header">
+            <h4 class="mb-0"><i class="fa fa-arrow-up"></i> Upregulated</h4>
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             <li *ngFor="let item of upreg_gene_counts"
@@ -117,8 +127,8 @@
       </div>
       <div class="col-12" *ngIf="!loading">
         <div class="card">
-          <div class="card-header text-center">
-            <h4 class="mb-0">Downregulated</h4>
+          <div class="card-header">
+            <h4 class="mb-0"><i class="fa fa-arrow-down"></i> Downregulated</h4>
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             <li *ngFor="let item of downreg_gene_counts"

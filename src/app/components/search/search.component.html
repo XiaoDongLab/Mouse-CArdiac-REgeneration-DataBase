@@ -1,128 +1,98 @@
 <div class="row mt-2 g-2">
     <div class="col-md-3 col-sm-12">
-        <h4>File type</h4>
-        <div class="input-group mb-2 d-flex justify-content-between">
-            <dx-tag-box class='dx-tag-box' [items]="species" [searchEnabled]="true" [hideSelectedItems]="true"
-                [hideSelectedItems]="false" [maxDisplayedTags]="4" style="width: 100%; flex: 1;"
-                [showClearButton]="true" [showSelectionControls]="true" (onValueChanged)="onSpeciesChanged($event)"
-                placeholder="Select species" [value]='selected_species'></dx-tag-box>
-        </div>
-        <hr />
-        <!--<h4>Tissue</h4>
-        <dx-tag-box class='dx-tag-box' [items]="tissue_types" [searchEnabled]="true" [hideSelectedItems]="true"
-            (onValueChanged)="onTissuesChanged($event)" placeholder="Select tissues" [showMultiTagOnly]="false"
-            [value]='tissue_types' style="width: 100%; flex: 1;" [showClearButton]="true" [maxDisplayedTags]="4"
-            [showClearButton]="true" [showSelectionControls]="true"></dx-tag-box>
-        <hr />
-        <h4>Health status</h4>
-        <dx-tag-box class='dx-tag-box' [items]="health" [searchEnabled]="true" [hideSelectedItems]="true"
-            (onValueChanged)="onHealthChanged($event)" placeholder="Select Health Status" style="width: 100%; flex: 1;"
-            [value]='selected_health' [maxDisplayedTags]="8" [showClearButton]="true"
-            [showSelectionControls]="false"></dx-tag-box>
-        <hr />-->
-        <h4>PMID</h4>
-        <input type="text" placeholder="Optional" class="form-control" aria-describedby="basic-addon1"
-            (input)="onInputChange($event)">
-        <hr />
-        <h4>Category</h4>
-        <div class="row g-1">
-            <p class="col-12 text-muted"><small>Highlight these boxes to select categories.</small></p>
-            <div class="col-12">
-                <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck1" autocomplete="off"
-                    value="neonetal" [(ngModel)]="this.neonatal_selected">
-                <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck1">
-                    <div class="d-flex align-items-center justify-content-left">
-                        <i class="fa fa-flask"></i>
-                        <div class="category-checkbox">
-                            <h6>Neonatal (P1 -P6)</h6>
-                            <small>Complete cardiac regeneration capacity</small>
+        <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
+            <h4>File type</h4>
+            <div class="input-group mb-2 d-flex justify-content-between">
+                <dx-tag-box class='dx-tag-box' [items]="species" [searchEnabled]="true" [hideSelectedItems]="true"
+                    [hideSelectedItems]="false" [maxDisplayedTags]="4" style="width: 100%; flex: 1;"
+                    [showClearButton]="true" [showSelectionControls]="true" (onValueChanged)="onSpeciesChanged($event)"
+                    placeholder="Select species" [value]='selected_species'></dx-tag-box>
+            </div>
+            <hr />
+            <h4>PMID</h4>
+            <input type="text" placeholder="Optional" class="form-control" aria-describedby="basic-addon1"
+                (input)="onInputChange($event)">
+            <hr />
+            <h4>Category</h4>
+            <div class="row g-1">
+                <p class="col-12 text-muted"><small>Highlight these boxes to select categories.</small></p>
+                <div class="col-12">
+                    <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck1"
+                        autocomplete="off" value="neonetal" [(ngModel)]="this.neonatal_selected">
+                    <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;"
+                        for="btncheck1">
+                        <div class="d-flex align-items-center justify-content-left">
+                            <i class="fa fa-flask"></i>
+                            <div class="category-checkbox">
+                                <h6>Neonatal (P1 -P6)</h6>
+                                <small>Complete cardiac regeneration capacity</small>
+                            </div>
                         </div>
-                    </div>
-                </label>
-            </div>
-            <div class="col-12">
-                <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck2" autocomplete="off"
-                    value="postnatal" [(ngModel)]="this.postnatal_selected">
-                <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck2">
-                    <div class="d-flex align-items-center justify-content-left">
-                        <i class="fa fa-flask"></i>
-                        <div class="category-checkbox">
-                            <h6>Postnatal (P7+)</h6>
-                            <small>Regenerative potential significantly reduced</small>
+                    </label>
+                </div>
+                <div class="col-12">
+                    <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck2"
+                        autocomplete="off" value="postnatal" [(ngModel)]="this.postnatal_selected">
+                    <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;"
+                        for="btncheck2">
+                        <div class="d-flex align-items-center justify-content-left">
+                            <i class="fa fa-flask"></i>
+                            <div class="category-checkbox">
+                                <h6>Postnatal (P7+)</h6>
+                                <small>Regenerative potential significantly reduced</small>
+                            </div>
                         </div>
-                    </div>
-                </label>
-            </div>
-            <div class="col-12">
-                <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck3" autocomplete="off"
-                    value="others" [(ngModel)]="this.others_selected">
-                <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck3">
-                    <div class="d-flex align-items-center justify-content-left">
-                        <i class="fa fa-info-circle"></i>
-                        <div class="category-checkbox">
-                            <h6>Others (NA)</h6>
-                            <small>General information about this experiment</small>
+                    </label>
+                </div>
+                <div class="col-12">
+                    <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck3"
+                        autocomplete="off" value="others" [(ngModel)]="this.others_selected">
+                    <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;"
+                        for="btncheck3">
+                        <div class="d-flex align-items-center justify-content-left">
+                            <i class="fa fa-info-circle"></i>
+                            <div class="category-checkbox">
+                                <h6>Others (NA)</h6>
+                                <small>General information about this experiment</small>
+                            </div>
                         </div>
-                    </div>
-                </label>
+                    </label>
+                </div>
+            </div>
+            <hr />
+            <div class="row g-1">
+                <button id="downloadButton" [disabled]="selectedRowData.length == 0" class="col-12 btn btn-mcaredb"
+                    icon="download" (click)="downloadWrapper()">
+                    <i class="fa fa-download"></i>
+                    Download Standardized Data
+                </button>
             </div>
         </div>
-        <hr />
-        <div class="row g-1">
-            <button id="downloadButton" [disabled]="selectedRowData.length == 0" class="col-12 btn btn-mcaredb"
-                icon="download" (click)="downloadWrapper()">
-                <i class="fa fa-download"></i>
-                Download Standardized Data
-            </button>
-        </div>
-        <!--<hr />
-        <h4>File type</h4>
-        <div class="row g-1">
-            <div class="col-lg-4 col-md-12">
-                <input type="checkbox" class="btn-check" id="degResults" autocomplete="off" value="degResult"
-                    [(ngModel)]="this.degResults_selected">
-                <label class="btn btn-outline-mcaredb h-100" style="width: 100%; flex: 1;" for="degResults">Deg Results</label>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <input type="checkbox" class="btn-check" id="expMatrix" autocomplete="off" value="expMatrix"
-                    [(ngModel)]="this.expMatrix_selected" (change)="criteriaChanged();">
-                <label class="btn btn-outline-mcaredb h-100" style="width: 100%; flex: 1;" for="expMatrix">Exp
-                    Matrix</label>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <input type="checkbox" class="btn-check" id="goEnrich" autocomplete="off" value="goEnrich"
-                    [(ngModel)]="this.goEnrich_selected">
-                <label class="btn btn-outline-mcaredb h-100" style="width: 100%; flex: 1;" for="goEnrich">Go
-                    Enrich</label>
-            </div>
-        </div>-->
     </div>
     <div class="col-md-9 col-sm-12">
-        <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true"
-            class="scrollspy-example-2" tabindex="0">
-            <ng-container *ngIf="!query_completed">
-                <h4 class="text-center">Click Search to continue</h4>
-            </ng-container>
-            <ng-container *ngIf="query_completed">
-                <h5>
-                    <span *ngIf="selectedRowKeys.length <= 1">{{selectedRowKeys.length}} File Totaling</span>
-                    <span *ngIf="selectedRowKeys.length > 1">{{selectedRowKeys.length}} Files Totaling</span>
-                    <span>&nbsp;{{downloadSize == null ? "0 Bytes" : downloadSize}} Selected</span>
-                </h5>
-                <p><small class="text-muted">Downloading multiple or large files requires zipping in the backend side which may cause temporary slow down.</small></p>
-                <dx-data-grid class="sampletable" id="gridContainer" [dataSource]="display!" keyExpr="sample_id"
-                    [showBorders]="true" (onRowPrepared)="formatRow($event)" [selectedRowKeys]="selectedRowKeys"
-                    (onSelectionChanged)="onSelectionChanged($event)">
-                    <dxo-selection selectAllMode="allPages" [showCheckBoxesMode]="checkBoxesMode"
-                        mode="multiple"></dxo-selection>
-                    <dxi-column dataField="study_id" caption="PMID"></dxi-column>
-                    <dxi-column dataField="disease_status" caption="Group"></dxi-column>
-                    <dxi-column dataField="notes" caption="Comparison"></dxi-column>
-                    <dxi-column dataField="age" caption="Category"></dxi-column>
-                    <dxi-column dataField="platform" caption="File name"></dxi-column>
-                    <dxi-column dataField="species" caption="File type"></dxi-column>
-                </dx-data-grid>
-            </ng-container>
-        </div>
+        <ng-container *ngIf="!query_completed">
+            <h4 class="text-center">Click Search to continue</h4>
+        </ng-container>
+        <ng-container *ngIf="query_completed">
+            <h5>
+                <span *ngIf="selectedRowKeys.length <= 1">{{selectedRowKeys.length}} File Totaling</span>
+                <span *ngIf="selectedRowKeys.length > 1">{{selectedRowKeys.length}} Files Totaling</span>
+                <span>&nbsp;{{downloadSize == null ? "0 Bytes" : downloadSize}} Selected</span>
+            </h5>
+            <p><small class="text-muted">Downloading multiple or large files requires zipping in the backend side
+                    which may cause temporary slow down.</small></p>
+            <dx-data-grid class="sampletable" id="gridContainer" [dataSource]="display!" keyExpr="sample_id"
+                [showBorders]="true" (onRowPrepared)="formatRow($event)" [selectedRowKeys]="selectedRowKeys"
+                (onSelectionChanged)="onSelectionChanged($event)">
+                <dxo-selection selectAllMode="allPages" [showCheckBoxesMode]="checkBoxesMode"
+                    mode="multiple"></dxo-selection>
+                <dxi-column dataField="study_id" caption="PMID"></dxi-column>
+                <dxi-column dataField="disease_status" caption="Group"></dxi-column>
+                <dxi-column dataField="notes" caption="Comparison"></dxi-column>
+                <dxi-column dataField="age" caption="Category"></dxi-column>
+                <dxi-column dataField="platform" caption="File name"></dxi-column>
+                <dxi-column dataField="species" caption="File type"></dxi-column>
+            </dx-data-grid>
+        </ng-container>
     </div>
 </div>

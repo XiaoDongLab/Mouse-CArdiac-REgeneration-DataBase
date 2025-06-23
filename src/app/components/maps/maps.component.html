@@ -1,33 +1,48 @@
-<div class="map-box card">
-    <div class="card-header">
-        <div class="row g-2">
-            <div class="d-flex justify-content-center">
-                <dx-button-group [items]="maps" stylingMode="outlined" [selectedItemKeys]="['UMAP']"
-                    (onItemClick)="onItemSelected($event)"></dx-button-group>
-            </div>
-            <!-- <h3 class="text-center">{{selected_info.cell_type}}</h3> -->
-        </div>
+<div class="maps row g-2 p-1">
+    <div class="col-xl-3 col-lg-4 col-md-12">
+        <h5 class="text-center">{{selected_info.cell_type}}</h5>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="display=='UMAP'" (click)="onItemSelected_Nav('UMAP')">UMAP</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="display=='TSNE'" (click)="onItemSelected_Nav('TSNE')">TSNE</a>
+            </li>
+            <!--<li class="nav-item">
+                <a class="nav-link" [class.active]="display == 'Model Visualization'"
+                    (click)="onItemSelected_Nav('Model Visualization')">Model Visualization</a>
+            </li>-->
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="display == 'Meta Info'"
+                    (click)="onItemSelected_Nav('Meta Info')">Meta Info</a>
+            </li>
+        </ul>
     </div>
-    <div class="card-body">
+    <div class="col-xl-9 col-lg-8 col-md-12" style="max-height: 400px; overflow-y: auto;">
+        <div class="text-center">
+            <img class="image img-fluid" *ngIf="display=='UMAP'" id="myimage" [src]='this.umap' />
+        </div>
+        <div class="text-center">
+            <img class="image img-fluid" *ngIf="display === 'TSNE' && this.tsne !== null" id="myimage"
+                [src]="this.tsne" />
+        </div>
 
-        <img class="image" *ngIf="display=='UMAP'" id="myimage" [src]='this.umap' width="100%" height="100%" />
-        <img class="image" *ngIf="display === 'TSNE' && this.tsne !== null" id="myimage" [src]="this.tsne" width="100%"
-            height="100%" />
-        <div *ngIf="display === 'tsne' && this.tsne === null" id="myimage" width="85%" height="85%">
-            <p style="text-align: center; color: red;">
+        <div *ngIf="display === 'tsne' && this.tsne === null" id="myimage">
+            <p class="text-muted text-center">
                 TSNE not available for this study
             </p>
         </div>
 
-        <div *ngIf="display=='Model Visualization'" width="85%" height="100%">
+        <!--<div *ngIf="display=='Model Visualization'" width="85%" height="100%">
             <apx-chart [series]="linReg_chart_options.series!" [chart]="linReg_chart_options.chart!"
                 [plotOptions]="linReg_chart_options.plotOptions!" [markers]="linReg_chart_options.markers!"
                 [xaxis]="linReg_chart_options.xaxis!" [yaxis]="linReg_chart_options.yaxis!"
                 [title]="linReg_chart_options.title!" [tooltip]="linReg_chart_options.tooltip!"
                 [annotations]="linReg_chart_options.annotations!"></apx-chart>
-            <span class="text-muted">Non-binomial Mixed Model (NBMM) calculated using all cells in cluster, only a maximum of 500
+            <span class="text-muted">Non-binomial Mixed Model (NBMM) calculated using all cells in cluster, only a
+                maximum of 500
                 cells displayed above. Visualization is of linear representation of NBMM</span>
-        </div>
+        </div>-->
         <div *ngIf="display=='Meta Info'">
             <div class="row g-2">
                 <div class='col-md-6 col-sm-12'>
@@ -63,9 +78,24 @@
             </div>
         </div>
     </div>
-    <div class="card-footer">
-        <div class="selected-cell-display">
+</div>
+<!--<div class="map-box card">
+    <div class="card-header">
+        <div class="row g-2">
+            <div class="d-flex justify-content-center">
+                <dx-button-group [items]="maps" stylingMode="outlined" [selectedItemKeys]="['UMAP']"
+                    (onItemClick)="onItemSelected($event)"></dx-button-group>
+            </div>
             <h3 class="text-center">{{selected_info.cell_type}}</h3>
         </div>
     </div>
-</div>
+    <div class="card-body">
+
+
+    </div>
+    <div class="card-footer">
+        <div class="selected-cell-display">
+            <h3 class="text-center"></h3>
+        </div>
+    </div>
+</div>-->

@@ -7,9 +7,9 @@
     (onItemClick)="selectTab($event)"
     [routerLink]="selected_path">
 </dx-tabs>-->
-<nav class="navbar sticky-top navbar-expand-lg bg-blurred">
+<nav class="navbar sticky-top navbar-expand-lg bg-blurred" #navbarTop>
     <div class="container">
-        <a class="navbar-brand" href="javascript:void(0)" (click)="selectTab(0)">MCareDB</a>
+        <!--<a class="navbar-brand" href="javascript:void(0)" (click)="selectTab(0)">MCareDB</a>-->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -19,6 +19,7 @@
                 <li class="nav-item" *ngFor="let tab of tabs; let i = index">
                     <a class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
                         [style.color]="tab.color" href="javascript:void(0);">
+                        <i class="fa {{tab.icon}}"></i>
                         {{ tab.text }}
                     </a>
                 </li>
@@ -29,7 +30,6 @@
                         (click)="onDarkModeSwitchClick()">
                     <label class="form-check-label" for="switchCheckDefault">Dark mode (Experimental)</label>
                 </div>-->
-                <button class="btn btn-darkmode" id="darkModeBtn" (click)="onDarkModeBtnClick();"><i class="fa fa-cloud-sun"></i></button>
             </div>
         </div>
     </div>

@@ -30,28 +30,28 @@
       </div>
       <div class="col-md-12 col-lg-9">
         <div class="row">
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">Sham</h3>
             <apx-chart [series]="meta_chart_options1_Sham.series!" [chart]="meta_chart_options1_Sham.chart!"
               [plotOptions]="meta_chart_options1_Sham.plotOptions!" [xaxis]="meta_chart_options1_Sham.xaxis!"
               [colors]="meta_chart_options1_Sham.colors!">
             </apx-chart>
           </div>
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">MI</h3>
             <apx-chart [series]="meta_chart_options1_MI.series!" [chart]="meta_chart_options1_MI.chart!"
               [plotOptions]="meta_chart_options1_MI.plotOptions!" [xaxis]="meta_chart_options1_MI.xaxis!"
               [colors]="meta_chart_options1_MI.colors!">
             </apx-chart>
           </div>
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">P1</h3>
             <apx-chart [series]="meta_chart_optionsP1_1.series!" [chart]="meta_chart_optionsP1_1.chart!"
               [plotOptions]="meta_chart_optionsP1_1.plotOptions!" [xaxis]="meta_chart_optionsP1_1.xaxis!"
               [colors]="meta_chart_optionsP1_1.colors!">
             </apx-chart>
           </div>
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">P8</h3>
             <apx-chart [series]="meta_chart_optionsP8_1.series!" [chart]="meta_chart_optionsP8_1.chart!"
               [plotOptions]="meta_chart_optionsP8_1.plotOptions!" [xaxis]="meta_chart_optionsP8_1.xaxis!"
@@ -65,28 +65,28 @@
       </div>
       <div class="col-md-12 col-lg-9">
         <div class="row">
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">Sham</h3>
             <apx-chart [series]="meta_chart_options3_Sham.series!" [chart]="meta_chart_options3_Sham.chart!"
               [plotOptions]="meta_chart_options3_Sham.plotOptions!" [xaxis]="meta_chart_options3_Sham.xaxis!"
               [colors]="meta_chart_options3_Sham.colors!">
             </apx-chart>
           </div>
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">MI</h3>
             <apx-chart [series]="meta_chart_options3_MI.series!" [chart]="meta_chart_options3_MI.chart!"
               [plotOptions]="meta_chart_options3_MI.plotOptions!" [xaxis]="meta_chart_options3_MI.xaxis!"
               [colors]="meta_chart_options3_MI.colors!">
             </apx-chart>
           </div>
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">P1</h3>
-            <apx-chart [series]="meta_chart_optionsP1_3.series!" [chart]="meta_chart_optionsP1_3.chart!"
+            <apx-chart  [series]="meta_chart_optionsP1_3.series!" [chart]="meta_chart_optionsP1_3.chart!"
               [plotOptions]="meta_chart_optionsP1_3.plotOptions!" [xaxis]="meta_chart_optionsP1_3.xaxis!"
               [colors]="meta_chart_optionsP1_3.colors!">
             </apx-chart>
           </div>
-          <div class="col">
+          <div class="col-3">
             <h3 class="chart-label">P8</h3>
             <apx-chart [series]="meta_chart_optionsP8_3.series!" [chart]="meta_chart_optionsP8_3.chart!"
               [plotOptions]="meta_chart_optionsP8_3.plotOptions!" [xaxis]="meta_chart_optionsP8_3.xaxis!"
@@ -103,13 +103,6 @@
     <p class="text-muted text-center">Data loading. Click Apply to refresh.</p>
   </div>
   <div class="accordion-body" *ngIf="completely_loaded">
-    <div class="row mb-2" *ngIf="model_selected">
-      <div class="d-flex justify-content-center">
-        <div class="map-container" style="max-width: 500px;">
-          <app-maps [selected_info]="to_map" [en_id]="en_id" class="scaled"></app-maps>
-        </div>
-      </div>
-    </div>
     <div class="row">
       <div class="col-xl-3 col-lg-6 col-md-12" style="height: 300px;">
         <apx-chart [series]="model_chart_options1_Sham.series!" [chart]="model_chart_options1_Sham.chart!"
@@ -140,9 +133,6 @@
           [title]="model_chart_optionsP8_1.title!" [tooltip]="model_chart_optionsP8_1.tooltip!"
           [annotations]="model_chart_optionsP8_1.annotations!"></apx-chart>
       </div>
-    </div>
-    <!-- Row 2: MI charts -->
-    <div class="row">
       <div class="col-xl-3 col-lg-6 col-md-12" style="height: 300px;">
         <apx-chart [series]="model_chart_options3_Sham.series!" [chart]="model_chart_options3_Sham.chart!"
           [plotOptions]="model_chart_options3_Sham.plotOptions!" [markers]="model_chart_options3_Sham.markers!"
@@ -172,5 +162,7 @@
           [annotations]="model_chart_optionsP8_3.annotations!"></apx-chart>
       </div>
     </div>
+    <hr />
+    <app-maps *ngIf="model_selected" [selected_info]="to_map" [en_id]="en_id" class="scaled"></app-maps>
   </div>
 </div>

@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { title } from 'process';
 import { AppComponent } from 'src/app/app.component';
+import { fromEvent, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -13,8 +14,11 @@ import { AppComponent } from 'src/app/app.component';
 export class NavbarComponent implements OnInit {
   tabs: any[];
   selected_path: string = '';
+  navHeight = 0;
+  private destroy$ = new Subject<void>();
 
   @ViewChild('customTabTemplate', { static: true }) customTabTemplate: TemplateRef<any>;
+  @ViewChild('navbarTop', {static: false}) navbar: ElementRef<HTMLElement>;
 
   constructor(private router: Router, private route: ActivatedRoute, private title: Title) {
     this.tabs = [
@@ -22,25 +26,32 @@ export class NavbarComponent implements OnInit {
         id: 0,
         text: 'Home',
         path: 'home',
+        icon: 'fa-home',
         customClass: '.nav-link', // Add custom class identifier.
       },
       {
         id: 1,
         text: 'Genome Browser',
-        icon: 'verticalaligntop',
+        icon: 'fa-server',
         path: 'igv',
       },
       {
         id: 2,
         text: 'Go Term Enrichment',
-        icon: 'columnfield',
+        icon: 'fa-magnifying-glass',
         path: 'go',
       },
       {
         id: 3,
         text: 'Search & Download',
-        icon: 'find',
+        icon: 'fa-download',
         path: 'search',
+      },
+      {
+        id: 4,
+        text: 'Settings',
+        icon: 'fa-gear',
+        path: 'settings',
       },
       /* Delete documentation tab {
         id: 4,
@@ -49,6 +60,27 @@ export class NavbarComponent implements OnInit {
         path: 'documentation',
       },*/
     ];
+  }
+
+  private reCalcNavHeight(): void {
+    this.navHeight = this.navbar.nativeElement.offsetHeight;
+  }
+
+  ngAfterViewInit(): void {
+    this.reCalcNavHeight();
+    fromEvent(window, 'resize')
+      .pipe(debounceTime(100), takeUntil(this.destroy$))
+      .subscribe(() => this.reCalcNavHeight());
+    console.log(this.navHeight)
+  }
+
+  get height(): number {
+    return this.navHeight;
+  }
+
+  ngOnDestory(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnInit(): void {
@@ -60,14 +92,6 @@ export class NavbarComponent implements OnInit {
     });
     this.selected_path = this.router.url.split('/')[1];
     this.updateSelectedTab();
-
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (prefersDark) {
-        document.documentElement.setAttribute("data-bs-theme", "dark");
-        document.getElementById('darkModeSwitch')?.setAttribute('checked', 'checked');
-        document.getElementById("darkModeBtn")!.innerHTML = "<i class=\"fa fa-moon\"><\/i>";
-    }
-    console.log(prefersDark);
   }
 
   selectTab(index: number) {

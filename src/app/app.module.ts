@@ -17,12 +17,12 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { GeneCardComponent } from './components/gene-card/gene-card.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { DocumentationComponent } from './components/documentation/documentation.component';
 import { DxiLayerModule, DxoSelectionModule } from 'devextreme-angular/ui/nested';
 import { GoComponent } from './components/go/go.component';
 import { LoginComponent } from './components/login/login.component';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -34,11 +34,11 @@ import { FooterComponent } from './components/footer/footer.component';
     GeneCardComponent,
     MapsComponent,
     NavbarComponent,
-    DocumentationComponent,
     GoComponent,
     LoginComponent,
     ChangelogComponent,
-    FooterComponent
+    FooterComponent,
+    SettingsComponent
   ],
   imports: [
     DxFormModule,

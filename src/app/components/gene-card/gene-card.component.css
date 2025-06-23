@@ -135,7 +135,7 @@ apx-chart {
 }
 
 .scaled {
-    height: 350px;
+    border-top: var(--bs-border-width) solid var(--bs-border-color-translucent);
 }
 
 /* Accordion adjustments */

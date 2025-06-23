@@ -8,6 +8,7 @@ import { DocumentationComponent } from './components/documentation/documentation
 import { GoComponent } from './components/go/go.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
+import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [
   // Public route
@@ -19,7 +20,7 @@ const routes: Routes = [
   { path: 'go', component: GoComponent, canActivate: [AuthGuard] },
   { path: 'igv', component: IgvComponent, canActivate: [AuthGuard] },
   { path: 'maps', component: MapsComponent, canActivate: [AuthGuard] },
-  { path: 'documentation', component: DocumentationComponent, canActivate: [AuthGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
   
   // Default and wildcard routes now redirect to '/home'
   // If the user is not logged in, your AuthGuard should handle the redirection to '/login'
@@ -39,6 +40,6 @@ export const routingComponents = [
   GoComponent,
   IgvComponent,
   MapsComponent,
-  DocumentationComponent,
+  SettingsComponent,
   LoginComponent
 ];

@@ -621,6 +621,9 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
+        markers: {
+          size: 10
+        },
         xaxis: {
           tooltip: {
             formatter: function (val, opts) {
@@ -631,9 +634,6 @@ export class GeneCardComponent implements OnInit {
           //tickAmount: 10,
           //min: -2,
           //max: 2
-        },
-        markers: {
-          size: 10
         },
         yaxis: {
           title: {
@@ -1730,7 +1730,6 @@ export class GeneCardComponent implements OnInit {
     // Process PSD 1 group
     console.log("Processing Group 1");
 
-
     for (let i = 0; i < cluster_number1_Sham; i++) {
       let gene = group1_Sham[i];
       let lfc = Number(gene.lfc);
@@ -1745,10 +1744,14 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val1_Sham) max_p_val1_Sham = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc);
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color};
       model_data1_Sham.push(formatted_data);
     }
+
+
+    console.log("Sham1 Done")
 
     for (let i = 0; i < cluster_number3_Sham; i++) {
       let gene = group3_Sham[i];
@@ -1976,7 +1979,7 @@ export class GeneCardComponent implements OnInit {
     ]
 
     //Setup ModelChart
-    this.model_chart_options1_Sham.series = [{ data: model_data1_Sham }]
+    this.model_chart_options1_Sham.series = [{ data: model_data1_Sham }];
 
     // Debug X-Axis settings
     console.log("X-Axis Range for ModelChart:");
