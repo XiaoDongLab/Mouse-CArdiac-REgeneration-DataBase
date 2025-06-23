@@ -79,10 +79,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "Chewie:build:production"
+              "buildTarget": "Chewie:build:production"
             },
             "development": {
-              "browserTarget": "Chewie:build:development"
+              "buildTarget": "Chewie:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +90,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Chewie:build"
+            "buildTarget": "Chewie:build"
           }
         },
         "test": {
