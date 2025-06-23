@@ -1,10 +1,12 @@
 <!-- Loading overlay that will cover only the content area -->
-<div *ngIf="loading" class="loading-overlay" id="loadingOverlay">
-  <!--<div class="loading-message">Loading...</div>-->
-  <div class="spinner-blurred">
-    <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
+@if (loading) {
+  <div class="loading-overlay" id="loadingOverlay">
+    <!--<div class="loading-message">Loading...</div>-->
+    <div class="spinner-blurred">
+      <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
+    </div>
   </div>
-</div>
+}
 <div class="row mt-2 g-2">
   <!-- Content area -->
   <div class="col-12">
@@ -16,38 +18,44 @@
       </button>
     </div>
   </div>
-  <div class="col-md-3 col-sm-12 mt-3" *ngIf="this.genes.length > 0">
-    <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
-      <h4>Cell Types</h4>
-      <dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
-        placeholder="Select Cell Type(s)" (onValueChanged)="onCellChanged($event)" [showClearButton]="true"
-        [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
+  @if (this.genes.length > 0) {
+    <div class="col-md-3 col-sm-12 mt-3">
+      <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
+        <h4>Cell Types</h4>
+        <dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
+          placeholder="Select Cell Type(s)" (onValueChanged)="onCellChanged($event)" [showClearButton]="true"
+          [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
         paginate='true'></dx-tag-box>
-      <hr />
-      <button class="btn btn-mcaredb w-100" id="btn-apply-detail" disabled (click)="subsetCorrectCellAndTissueTypes()">
-        <i class="fa fa-arrows-rotate"></i> Apply
-      </button>
-      <hr />
-      <h4>Legends</h4>
-      <h6 class="col" style="color:#9C27B0;">Significantly Downregulated</h6>
-      <h6 class="col" style="color: #00BCD4;">Slightly Downregulated</h6>
-      <h6 class="col" style="color: #4CAF50;">No Change</h6>
-      <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
-      <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
-      <h6>Not have a significant fit</h6>
-      <hr />
-      <h4>Notes</h4>
-      <p><small class="text-muted">All p-values higher than 0.05 were hidden in the scatter plots.</small></p>
+        <hr />
+        <button class="btn btn-mcaredb w-100" id="btn-apply-detail" disabled (click)="subsetCorrectCellAndTissueTypes()">
+          <i class="fa fa-arrows-rotate"></i> Apply
+        </button>
+        <hr />
+        <h4>Legends</h4>
+        <h6 class="col" style="color:#9C27B0;">Significantly Downregulated</h6>
+        <h6 class="col" style="color: #00BCD4;">Slightly Downregulated</h6>
+        <h6 class="col" style="color: #4CAF50;">No Change</h6>
+        <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
+        <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
+        <h6>Not have a significant fit</h6>
+        <hr />
+        <h4>Notes</h4>
+        <p><small class="text-muted">All p-values higher than 0.05 were hidden in the scatter plots.</small></p>
+      </div>
     </div>
-  </div>
+  }
 
-  <div class="col-md-9 col-sm-12 mt-2" [class.searching]="loading" *ngIf="this.genes.length > 0">
-    <div class="accordion" id="accordionExample">
-      <ng-container *ngFor="let gene_list of this.grouped_genes">
-        <div *ngIf="gene_list[0]" class="accordion-item" app-gene-card [gene_list]="gene_list"
-          [indices]="selected_indices" [completely_loaded]="completely_loaded">
-        </div>
-      </ng-container>
+  @if (this.genes.length > 0) {
+    <div class="col-md-9 col-sm-12 mt-2" [class.searching]="loading">
+      <div class="accordion" id="accordionExample">
+        @for (gene_list of this.grouped_genes; track gene_list) {
+          @if (gene_list[0]) {
+            <div class="accordion-item" app-gene-card [gene_list]="gene_list"
+              [indices]="selected_indices" [completely_loaded]="completely_loaded">
+            </div>
+          }
+        }
+      </div>
     </div>
-  </div>
+  }
 </div>

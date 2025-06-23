@@ -4,7 +4,7 @@ import { DiffExp } from 'src/app/models/diffExp.model';
 import { Indices } from 'src/app/models/indices.model';
 import { MapsComponent } from '../maps/maps.component';
 import { GeneConversionService } from '../../services/name-converter.service';
-import { CommonModule } from '@angular/common';
+
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
