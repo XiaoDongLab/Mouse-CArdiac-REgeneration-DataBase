@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
@@ -24,53 +24,47 @@ import { ChangelogComponent } from './components/changelog/changelog.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    routingComponents,
-    SearchComponent,
-    HomeComponent,
-    IgvComponent,
-    GeneCardComponent,
-    MapsComponent,
-    NavbarComponent,
-    GoComponent,
-    LoginComponent,
-    ChangelogComponent,
-    FooterComponent,
-    SettingsComponent
-  ],
-  imports: [
-    DxFormModule,
-    DxButtonModule,
-    DxDropDownBoxModule,
-    DxRangeSliderModule,
-    DxTagBoxModule,
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    DxDataGridModule,
-    DxAccordionModule,
-    BrowserAnimationsModule,
-    DxButtonGroupModule,
-    DxTabsModule,
-    DxoSelectionModule,
-    DxDropDownButtonModule,
-    DxTextBoxModule,
-    DxTabPanelModule,
-    DxVectorMapModule,
-    DxListModule,
-    DxSelectBoxModule,
-    DxAutocompleteModule,
-    DxiLayerModule,
-    NgApexchartsModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        routingComponents,
+        SearchComponent,
+        HomeComponent,
+        IgvComponent,
+        GeneCardComponent,
+        MapsComponent,
+        NavbarComponent,
+        GoComponent,
+        LoginComponent,
+        ChangelogComponent,
+        FooterComponent,
+        SettingsComponent
+    ],
+    bootstrap: [AppComponent], imports: [DxFormModule,
+        DxButtonModule,
+        DxDropDownBoxModule,
+        DxRangeSliderModule,
+        DxTagBoxModule,
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        DxDataGridModule,
+        DxAccordionModule,
+        BrowserAnimationsModule,
+        DxButtonGroupModule,
+        DxTabsModule,
+        DxoSelectionModule,
+        DxDropDownButtonModule,
+        DxTextBoxModule,
+        DxTabPanelModule,
+        DxVectorMapModule,
+        DxListModule,
+        DxSelectBoxModule,
+        DxAutocompleteModule,
+        DxiLayerModule,
+        NgApexchartsModule,
+        FormsModule,
+        ReactiveFormsModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
