@@ -19,9 +19,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-maps',
-  templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.css']
+    selector: 'app-maps',
+    templateUrl: './maps.component.html',
+    styleUrls: ['./maps.component.css'],
+    standalone: false
 })
 export class MapsComponent implements OnInit {
   @Input() selected_info!: { pmid: number, cell_type: string, gene: string, cell_type2: string, cell_type3: string, slope: number, pvalue: number, intercept: number, lfc: number, g_id: number, PSD: number, Surgery: string };

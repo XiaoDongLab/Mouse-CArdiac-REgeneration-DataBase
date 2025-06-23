@@ -21,9 +21,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: '[app-gene-card]',
-  templateUrl: './gene-card.component.html',
-  styleUrls: ['./gene-card.component.css'],
+    selector: '[app-gene-card]',
+    templateUrl: './gene-card.component.html',
+    styleUrls: ['./gene-card.component.css'],
+    standalone: false
 })
 
 export class GeneCardComponent implements OnInit {

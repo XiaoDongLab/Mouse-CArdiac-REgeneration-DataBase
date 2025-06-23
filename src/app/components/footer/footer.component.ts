@@ -3,9 +3,10 @@ import bootstrap from 'src/js/bootstrap.min.js'
 import { AppComponent } from 'src/app/app.component';
 
 @Component({
-  selector: 'app-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css'],
+    selector: 'app-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.css'],
+    standalone: false
 })
 export class FooterComponent implements OnInit {
 

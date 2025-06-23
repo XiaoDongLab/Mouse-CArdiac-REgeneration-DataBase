@@ -21,9 +21,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-igv',
-  templateUrl: './igv.component.html',
-  styleUrls: ['./igv.component.css'],
+    selector: 'app-igv',
+    templateUrl: './igv.component.html',
+    styleUrls: ['./igv.component.css'],
+    standalone: false
 })
 export class IgvComponent implements AfterViewInit, OnDestroy {
   @ViewChild('igvdiv') igvDiv!: ElementRef;

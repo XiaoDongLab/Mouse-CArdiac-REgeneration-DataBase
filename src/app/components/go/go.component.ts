@@ -27,9 +27,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-go',
-  templateUrl: './go.component.html',
-  styleUrls: ['./go.component.css']
+    selector: 'app-go',
+    templateUrl: './go.component.html',
+    styleUrls: ['./go.component.css'],
+    standalone: false
 })
 export class GoComponent implements OnInit {
   // Anthony
