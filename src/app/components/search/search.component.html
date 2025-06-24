@@ -104,6 +104,7 @@
       [rowSelection]="'multiple'"
       [rowMultiSelectWithClick]="true"
       [suppressRowClickSelection]="true"
+      domLayout="autoHeight"
       (gridReady)="onGridReady($event)"
       (selectionChanged)="onSelectionChanged_New()">
     </ag-grid-angular>
