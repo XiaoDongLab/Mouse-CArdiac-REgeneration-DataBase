@@ -7,25 +7,36 @@
     </div>
   </div>
 }
-<div class="row mt-2 g-2">
+<div class="row g-2">
   <!-- Content area -->
   <div class="col-12">
     <div #igvdiv class="igv" part="igv"></div>
     <div class="d-flex justify-content-center mt-3">
-      <button color="accent" (click)="getInRangeGenes()" class="btn btn-mcaredb">
+      <button color="accent" (click)="getInRangeGenes()" class="btn btn-mcaredb mb-1">
         <i class="fa fa-magnifying-glass"></i>
         Get Differential Expression Data
       </button>
     </div>
   </div>
   @if (this.genes.length > 0) {
-    <div class="col-md-3 col-sm-12 mt-3">
-      <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
+    <div class="col-md-3 col-sm-12">
+      <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
         <h4>Cell Types</h4>
-        <dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
+        <!--<dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
           placeholder="Select Cell Type(s)" (onValueChanged)="onCellChanged($event)" [showClearButton]="true"
           [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
-        paginate='true'></dx-tag-box>
+        paginate='true'></dx-tag-box>-->
+        <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" (onValueChanged)="onCellChanged($event)" placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells"
+          [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false" [multiple]="true">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
+              <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0" [ngModel]="item$.selected" />
+              <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;" for="item-{{index}}">
+                {{ item }}
+              </label>
+            </div>
+          </ng-template>
+        </ng-select>
         <hr />
         <button class="btn btn-mcaredb w-100" id="btn-apply-detail" disabled (click)="subsetCorrectCellAndTissueTypes()">
           <i class="fa fa-arrows-rotate"></i> Apply

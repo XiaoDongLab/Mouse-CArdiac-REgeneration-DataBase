@@ -11,6 +11,7 @@ import { DatabaseConstsService } from 'src/app/services/database-consts.service'
 import { LociService } from 'src/app/services/loci.service';
 import { GeneCardComponent } from '../gene-card/gene-card.component';
 import { group } from 'console';
+import { DxTagBoxModule } from 'devextreme-angular/ui/tag-box';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -21,10 +22,10 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'app-igv',
-    templateUrl: './igv.component.html',
-    styleUrls: ['./igv.component.css'],
-    standalone: false
+  selector: 'app-igv',
+  templateUrl: './igv.component.html',
+  styleUrls: ['./igv.component.css'],
+  standalone: false,
 })
 export class IgvComponent implements AfterViewInit, OnDestroy {
   @ViewChild('igvdiv') igvDiv!: ElementRef;
@@ -300,6 +301,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   }
   ngOnDestroy() {
     igv.removeAllBrowsers()
+  }
+
+  ngOnInit(): void {
+    this.selected_cells = this.cell_types;
   }
 
   convertDiffExpData(gene_list: any[]) {
