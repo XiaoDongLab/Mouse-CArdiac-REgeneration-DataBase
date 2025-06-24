@@ -1,13 +1,19 @@
-<div class="row mt-2 g-2">
+<div class="row g-2">
   <div class="col-md-3 col-sm-12">
-    <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
+    <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>File type</h4>
-      <div class="input-group mb-2 d-flex justify-content-between">
-        <dx-tag-box class='dx-tag-box' [items]="species" [searchEnabled]="true" [hideSelectedItems]="true"
-          [hideSelectedItems]="false" [maxDisplayedTags]="4" style="width: 100%; flex: 1;"
-          [showClearButton]="true" [showSelectionControls]="true" (onValueChanged)="onSpeciesChanged($event)"
-        placeholder="Select species" [value]='selected_species'></dx-tag-box>
-      </div>
+      <ng-select [items]="species" [searchable]="true" [clearable]="true" (onValueChanged)="onSpeciesChanged($event)"
+        placeholder="Select species..." class="mb-2" [selectableGroup]="true" [selectableGroupAsModel]="false"
+        [closeOnSelect]="false" [(ngModel)]="selected_species" groupBy="species" [addTag]="false" [multiple]="true">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="form-check">
+            <input id="item-{{ index }}" type="checkbox" class="form-check-input" [ngModel]="item$.selected" />
+            <label class="form-check-label" for="item-{{index}}">
+              {{ item }}
+            </label>
+          </div>
+        </ng-template>
+      </ng-select>
       <hr />
       <h4>PMID</h4>
       <input type="text" placeholder="Optional" class="form-control" aria-describedby="basic-addon1"
@@ -17,10 +23,9 @@
       <div class="row g-1">
         <p class="col-12 text-muted"><small>Highlight these boxes to select categories.</small></p>
         <div class="col-12">
-          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck1"
-            autocomplete="off" value="neonetal" [(ngModel)]="this.neonatal_selected">
-          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;"
-            for="btncheck1">
+          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck1" autocomplete="off"
+            value="neonetal" [(ngModel)]="this.neonatal_selected">
+          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck1">
             <div class="d-flex align-items-center justify-content-left">
               <i class="fa fa-flask"></i>
               <div class="category-checkbox">
@@ -31,10 +36,9 @@
           </label>
         </div>
         <div class="col-12">
-          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck2"
-            autocomplete="off" value="postnatal" [(ngModel)]="this.postnatal_selected">
-          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;"
-            for="btncheck2">
+          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck2" autocomplete="off"
+            value="postnatal" [(ngModel)]="this.postnatal_selected">
+          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck2">
             <div class="d-flex align-items-center justify-content-left">
               <i class="fa fa-flask"></i>
               <div class="category-checkbox">
@@ -45,10 +49,9 @@
           </label>
         </div>
         <div class="col-12">
-          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck3"
-            autocomplete="off" value="others" [(ngModel)]="this.others_selected">
-          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;"
-            for="btncheck3">
+          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck3" autocomplete="off"
+            value="others" [(ngModel)]="this.others_selected">
+          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck3">
             <div class="d-flex align-items-center justify-content-left">
               <i class="fa fa-info-circle"></i>
               <div class="category-checkbox">
@@ -71,32 +74,39 @@
   </div>
   <div class="col-md-9 col-sm-12">
     @if (!query_completed) {
-      <h4 class="text-center">Click Search to continue</h4>
+    <h4 class="text-center">Click Search to continue</h4>
     }
     @if (query_completed) {
-      <h5>
-        @if (selectedRowKeys.length <= 1) {
-          <span>{{selectedRowKeys.length}} File Totaling</span>
+    <h5>
+      @if (selectedRowKeys.length <= 1) { <span>{{selectedRowKeys.length}} File Totaling</span>
         }
         @if (selectedRowKeys.length > 1) {
-          <span>{{selectedRowKeys.length}} Files Totaling</span>
+        <span>{{selectedRowKeys.length}} Files Totaling</span>
         }
         <span>&nbsp;{{downloadSize == null ? "0 Bytes" : downloadSize}} Selected</span>
-      </h5>
-      <p><small class="text-muted">Downloading multiple or large files requires zipping in the backend side
-      which may cause temporary slow down.</small></p>
-      <dx-data-grid class="sampletable" id="gridContainer" [dataSource]="display!" keyExpr="sample_id"
-        [showBorders]="true" (onRowPrepared)="formatRow($event)" [selectedRowKeys]="selectedRowKeys"
-        (onSelectionChanged)="onSelectionChanged($event)">
-        <dxo-selection selectAllMode="allPages" [showCheckBoxesMode]="checkBoxesMode"
-        mode="multiple"></dxo-selection>
-        <dxi-column dataField="study_id" caption="PMID"></dxi-column>
-        <dxi-column dataField="disease_status" caption="Group"></dxi-column>
-        <dxi-column dataField="notes" caption="Comparison"></dxi-column>
-        <dxi-column dataField="age" caption="Category"></dxi-column>
-        <dxi-column dataField="platform" caption="File name"></dxi-column>
-        <dxi-column dataField="species" caption="File type"></dxi-column>
-      </dx-data-grid>
+    </h5>
+    <p><small class="text-muted">Downloading multiple or large files requires zipping in the backend side
+        which may cause temporary slow down.</small></p>
+    <!--<dx-data-grid class="sampletable" id="gridContainer" [dataSource]="display!" keyExpr="sample_id"
+      [showBorders]="true" (onRowPrepared)="formatRow($event)" [selectedRowKeys]="selectedRowKeys"
+      (onSelectionChanged)="onSelectionChanged($event)">
+      <dxo-selection selectAllMode="allPages" [showCheckBoxesMode]="checkBoxesMode" mode="multiple"></dxo-selection>
+      <dxi-column dataField="study_id" caption="PMID"></dxi-column>
+      <dxi-column dataField="disease_status" caption="Group"></dxi-column>
+      <dxi-column dataField="notes" caption="Comparison"></dxi-column>
+      <dxi-column dataField="age" caption="Category"></dxi-column>
+      <dxi-column dataField="platform" caption="File name"></dxi-column>
+      <dxi-column dataField="species" caption="File type"></dxi-column>
+    </dx-data-grid>-->
+    <ag-grid-angular class="ag-theme-quartz w-100 h-100"
+      [rowData]="display"
+      [columnDefs]="columnDefs"
+      [rowSelection]="'multiple'"
+      [rowMultiSelectWithClick]="true"
+      [suppressRowClickSelection]="true"
+      (gridReady)="onGridReady($event)"
+      (selectionChanged)="onSelectionChanged_New()">
+    </ag-grid-angular>
     }
   </div>
 </div>

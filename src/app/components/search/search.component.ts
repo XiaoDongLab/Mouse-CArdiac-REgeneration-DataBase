@@ -3,12 +3,14 @@ import { Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { DatabaseService } from 'src/app/services/database.service';
 import { DatabaseConstsService } from '../../services/database-consts.service'
-import themes from 'devextreme/ui/themes';
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexTheme, ApexStroke, ApexAxisChartSeries, ApexXAxis, ApexYAxis, ApexGrid } from "ng-apexcharts";
 import { Console } from 'console';
 import * as JSZip from 'jszip';
 import { type } from 'os';
 import { sample } from 'rxjs';
+import { ColDef, GridApi } from 'ag-grid-community';
+import { AllCommunityModule } from 'ag-grid-community';
+import { ModuleRegistry } from 'ag-grid-community';
 
 export type DonutChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -119,6 +121,24 @@ export class SearchComponent implements OnInit {
   downloadSize: string;
   query_completed = false;
 
+  columnDefs: ColDef[] = [
+    { width: 40, checkboxSelection: true,
+      headerCheckboxSelection: true,
+      headerCheckboxSelectionFilteredOnly: true },
+
+    { field: 'study_id',     headerName: 'PMID'       },
+    { field: 'disease_status', headerName: 'Group'    },
+    { field: 'notes',          headerName: 'Comparison' },
+    { field: 'age',            headerName: 'Category' },
+    { field: 'platform',       headerName: 'File name' },
+    { field: 'species',        headerName: 'File type' }
+  ];
+
+  private gridApi!: GridApi;
+
+  onGridReady(params: any) { this.gridApi = params.api; }
+
+
   maps = [{ text: "Tissue" }, { text: "Sex" }, { text: "Age" }, { text: "Health" }];
   displayed_map = 'Tissue';
 
@@ -126,7 +146,7 @@ export class SearchComponent implements OnInit {
   selected_download_method: string;
 
   constructor(private databaseConstService: DatabaseConstsService, private databaseService: DatabaseService) {
-    this.checkBoxesMode = themes.current().startsWith('material') ? 'always' : 'onClick';
+    ModuleRegistry.registerModules([AllCommunityModule]);
     this.tissue_types = databaseConstService.getTissueTypes();
     //this.species = databaseConstService.getSpecies();
     //this.cell_types = databaseConstService.getCellTypes();
@@ -159,6 +179,7 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.samplesTest();
+    this.selected_species = this.species;
   }
 
   cleanDisplay() {
@@ -383,18 +404,32 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  onSelectionChanged_New(event: any) {
-    this.selectedRowKeys = event.selectedRowKeys;
-    this.selectedRowData = event.selectedRowsData;
-    let selected_ids = this.selectedRowData.map(row => row.sample_id);
-    const ftArr = this.DATABASE_ARRAY.filter(a => a.sample_id in selected_ids);
-    const totalSize = ftArr.reduce((sumOuter, item) => {
-      // 把当前条目的 download 里的 size 全部加起来
-      const innerSum = (item.download || [])
-        .reduce((sumInner, d) => sumInner + (d.size || 0), 0);
-      return sumOuter + innerSum;
-    }, 0);
-    this.downloadSize = ((totalSize / (1024 ** 3)) < 1.00 ? (totalSize / (1024 ** 2)).toFixed(2) + ' MB' : (totalSize / (1024 ** 3)).toFixed(2) + 'GB');
+  onSelectionChanged_New() {
+    const rows = this.gridApi.getSelectedRows();
+    let selected_ids = this.selectedRowKeys = rows.map(r => r.sample_id);
+    if (selected_ids.length == 0) {
+      this.downloadSize = "0 Bytes"
+    } else {
+      console.log(selected_ids)
+      this.databaseService.getTarSize(selected_ids).subscribe({
+        next: (data) => {
+          if (data.sum >= 1024 ** 3) {
+            this.downloadSize = (data.sum / (1024 ** 3)).toFixed(2) + ' GB';
+          } else if (data.sum >= 1024 ** 2) {
+            this.downloadSize = (data.sum / (1024 ** 2)).toFixed(2) + ' MB';
+          } else if (data.sum >= 1024) {
+            this.downloadSize = (data.sum / (1024)).toFixed(2) + ' KB';
+          } else {
+            this.downloadSize = (data.sum / 1).toFixed(0) + ' Bytes';
+          }
+          console.log(data.sum)
+          console.log(this.downloadSize)
+        },
+        error: (e) => {
+          console.error(e);
+        }
+      });
+    }
   }
 
   containsAnyValue(string: string, values: string[]): boolean {
