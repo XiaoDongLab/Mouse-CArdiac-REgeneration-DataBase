@@ -3,7 +3,7 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { Image } from 'src/app/models/image.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations } from "ng-apexcharts";
-var ncbi = require('node-ncbi');
+// var ncbi = require('node-ncbi');
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -185,13 +185,13 @@ export class MapsComponent implements OnInit {
     this.calculateDecadeChange()
     console.log('Fetching PubMed data for PMID:', this.selected_info.pmid);
 
-    const pubmed = ncbi.pubmed;
+    /* const pubmed = ncbi.pubmed;
     pubmed.summary(this.selected_info.pmid).then((results: any) => {
       console.log(results)
       this.title = results.title
       this.author = results.authors.split(',')[0].replace(' ', ', ')
       this.year = results.pubDate.split('/')[0]
-    });
+    }); */
     this.getClusterImages()
     // this.getLinRegGraphData()
     // this.prepGraphData()
