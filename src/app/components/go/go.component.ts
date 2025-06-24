@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { event } from 'devextreme/events';
+import { Component, OnInit, Type } from '@angular/core';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels } from "ng-apexcharts";
 import { GoTerm } from 'src/app/models/goTerm.model';
 import { DatabaseService } from 'src/app/services/database.service';
@@ -60,7 +59,6 @@ export class GoComponent implements OnInit {
   gini_scores: GiniScore[];
   gini_histogram_data: string;
   pathways: any;
-  selected_search_mode: string = 'contains'
   search_modes = [
     { text: 'Name Contains', value: 'contains' },
     { text: 'Name Starts With', value: 'startsWith' }
@@ -83,7 +81,7 @@ export class GoComponent implements OnInit {
   ];
   upreg_gene_counts: { gene: string, count: string }[];
   downreg_gene_counts: { gene: string, count: string }[];
-  selected_cell_types: string[] = this.cell_types
+  selected_cell_types: string[] = this.cell_types;
   selected_pathway: string = 'G protein-coupled receptor signaling pathway'
 
   constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService) {

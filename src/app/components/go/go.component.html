@@ -1,18 +1,18 @@
 @if (loading) {
-  <div class="loading-overlay" id="loadingOverlay">
-    <!--<div class="loading-message">Loading...</div>-->
-    <div class="spinner-blurred">
-      <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
-    </div>
+<div class="loading-overlay" id="loadingOverlay">
+  <!--<div class="loading-message">Loading...</div>-->
+  <div class="spinner-blurred">
+    <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
   </div>
+</div>
 }
-<div class="row mt-2 g-2">
-  <div class="col-md-3 col-sm-12 ">
-    <div class="sidebar-sticky-top" [ngStyle]="{ top: 'var(--navbar-height)' }">
+<div class="row g-2">
+  <div class="col-md-3 col-sm-12">
+    <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>Comparison Type</h4>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType">
         @for (item of comparisonTypes; track item) {
-          <option [value]="item.value">{{item.text}}</option>
+        <option [value]="item.value">{{item.text}}</option>
         }
       </select>
       <!--<hr />
@@ -23,27 +23,41 @@
       <hr />
       <!--CELL TYPE SELECT BOX-->
       <h4>Cell Types</h4>
-      <dx-tag-box [items]="cell_types" [searchEnabled]="true" placeholder="Select Cell Types" [showMultiTagOnly]="false"
+      <ng-select [items]="cell_types" [searchable]="true" [clearable]="true"
+        placeholder="Select Cell Type(s)" [(ngModel)]="selected_cell_types" [selectableGroup]="true"
+        [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false" [multiple]="true">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
+            <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"
+              [ngModel]="item$.selected" />
+            <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;" for="item-{{index}}">
+              {{ item }}
+            </label>
+          </div>
+        </ng-template>
+      </ng-select>
+      <!--<dx-tag-box [items]="cell_types" [searchEnabled]="true" placeholder="Select Cell Types" [showMultiTagOnly]="false"
         [maxDisplayedTags]="4" [showClearButton]="true" style="width: 100%; flex: 1;" [showSelectionControls]="true"
-      [(value)]='selected_cell_types'></dx-tag-box>
+        [(value)]='selected_cell_types'></dx-tag-box>-->
       <hr />
       <h4>Pathways</h4>
-      <div class="d-inline-flex">
-        <dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
-        [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>
+      <div class="d-flex">
+        <!--<dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
+          [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>-->
+        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway" [closeOnSelect]="false" [addTag]="false" [multiple]="false" class="flex-grow-1" style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
+        </ng-select>
         @if (pathway_info != '' && pathway_info != null) {
-          <a tabindex="0" id="pathway_btn" data-bs-trigger="focus"
-            class="btn btn-link btn-floating text-body" role="button" data-bs-toggle="popover"
-            [attr.data-bs-title]="pathway_info?.name" [attr.data-bs-content]="pathway_info?.definition.text"><i
-          class="fa fa-info-circle"></i></a>
+        <a tabindex="0" id="pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
+          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_info?.name"
+          [attr.data-bs-content]="pathway_info?.definition.text"><i class="fa fa-info-circle"></i></a>
         }
       </div>
-      <h6 class="mt-2">Search mode</h6>
+      <!--<h6 class="mt-2">Search mode</h6>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selected_search_mode">
         @for (item of search_modes; track item) {
-          <option [value]="item.value">{{item.text}}</option>
+        <option [value]="item.value">{{item.text}}</option>
         }
-      </select>
+      </select>-->
       <hr />
       <button (click)="getNewData()" class="btn btn-mcaredb w-100">
         <i class="fa fa-magnifying-glass"></i> GO Results
@@ -57,52 +71,51 @@
       style="margin-bottom: 1000px;">
     </apx-chart>
     @if (!term_selected&&!loading) {
-      <div class="mt-3">
-        <p class="text-center text-muted">Select Cluster To See Details</p>
-      </div>
+    <div class="mt-3">
+      <p class="text-center text-muted">Select Cluster To See Details</p>
+    </div>
     }
     @if (term_selected) {
-      <div class="row g-2 mt-3">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header text-center">
-              <h4 class="mb-0">Selected Cluster</h4>
-            </div>
-            <div class="card-body position-relative">
-              <div class="row">
-                <div class="col-6">
-                  <small class="text-muted">Cluster</small>
-                  <h5>{{selected_term.cell_type}}</h5>
-                  <hr />
-                  <div class="row">
-                    <div class="col-6">
-                      <small class="text-muted">NES</small>
-                      <h5>{{selected_term.nes}}</h5>
-                    </div>
-                    <div class="col-6">
-                      <small class="text-muted">P-Value</small>
-                      <h5>{{selected_term.P_Value < 0.0001 ? '&lt;0.0001' : selected_term.P_Value.toFixed(4)}}</h5>
-                    </div>
+    <div class="row g-2 mt-3">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header text-center">
+            <h4 class="mb-0">Selected Cluster</h4>
+          </div>
+          <div class="card-body position-relative">
+            <div class="row">
+              <div class="col-6">
+                <small class="text-muted">Cluster</small>
+                <h5>{{selected_term.cell_type}}</h5>
+                <hr />
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted">NES</small>
+                    <h5>{{selected_term.nes}}</h5>
                   </div>
-                  <hr />
-                  <small class="text-muted">PMID</small>
-                  <h5>{{selected_term.pmid}}</h5>
+                  <div class="col-6">
+                    <small class="text-muted">P-Value</small>
+                    <h5>{{selected_term.P_Value < 0.0001 ? '&lt;0.0001' : selected_term.P_Value.toFixed(4)}}</h5>
+                  </div>
                 </div>
+                <hr />
+                <small class="text-muted">PMID</small>
+                <h5>{{selected_term.pmid}}</h5>
+              </div>
               <div class="position-absolute top-0 end-0 bottom-0
                   overflow-auto  list-group list-group-flush" style="width: 50%;">
-                  <h6 class="text-center"><br />Genes enriched</h6>
-                  @for (item of selected_core_enrichment; track item) {
-                    <button type="button" class="list-group-item list-group-item-action"
-                      (click)="geneRerout(item)">
-                      {{item}}
-                    </button>
-                  }
-                </div>
+                <h6 class="text-center"><br />Genes enriched</h6>
+                @for (item of selected_core_enrichment; track item) {
+                <button type="button" class="list-group-item list-group-item-action" (click)="geneRerout(item)">
+                  {{item}}
+                </button>
+                }
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
     }
     <!--<apx-chart [series]="hist_chart_options.series!" [chart]="hist_chart_options.chart!"
     [stroke]="hist_chart_options.stroke!" [yaxis]="hist_chart_options.yaxis!" [xaxis]="hist_chart_options.xaxis!"
@@ -117,11 +130,11 @@
       <p>{{pathway_info.definition.text}}</p>
     </div>
   </div>-->
-</div>
+  </div>
 
-<div class="col-md-3 col-sm-12 scroll-lg">
-  <div class="row g-2">
-    @if (!loading) {
+  <div class="col-md-3 col-sm-12 scroll-lg">
+    <div class="row g-2">
+      @if (!loading) {
       <div class="col-12">
         <div class="card">
           <div class="card-header">
@@ -129,38 +142,36 @@
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of upreg_gene_counts; track item) {
-              <li
-                class="list-group-item gene-regulated d-flex justify-content-between"
-                [ngStyle]="getColorStyle(item, 'DOWN')">
-                <span>{{ item.gene }}</span>
-                <span>{{ item.count }}</span>
-              </li>
-            }
-          </ul>
-          <!--<dx-list [dataSource]="selected_core_enrichment" (onItemClick)="geneRerout($event)" class="gene-list">
-        </dx-list>-->
-      </div>
-    </div>
-  }
-  @if (!loading) {
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="mb-0"><i class="fa fa-arrow-down"></i> Downregulated</h4>
-        </div>
-        <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
-          @for (item of downreg_gene_counts; track item) {
-            <li
-              class="list-group-item gene-regulated d-flex justify-content-between"
+            <li class="list-group-item gene-regulated d-flex justify-content-between"
               [ngStyle]="getColorStyle(item, 'DOWN')">
               <span>{{ item.gene }}</span>
               <span>{{ item.count }}</span>
             </li>
-          }
-        </ul>
+            }
+          </ul>
+          <!--<dx-list [dataSource]="selected_core_enrichment" (onItemClick)="geneRerout($event)" class="gene-list">
+        </dx-list>-->
+        </div>
       </div>
+      }
+      @if (!loading) {
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="mb-0"><i class="fa fa-arrow-down"></i> Downregulated</h4>
+          </div>
+          <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+            @for (item of downreg_gene_counts; track item) {
+            <li class="list-group-item gene-regulated d-flex justify-content-between"
+              [ngStyle]="getColorStyle(item, 'DOWN')">
+              <span>{{ item.gene }}</span>
+              <span>{{ item.count }}</span>
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+      }
     </div>
-  }
-</div>
-</div>
+  </div>
 </div>
