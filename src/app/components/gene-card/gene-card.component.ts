@@ -1093,7 +1093,9 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI');
+              console.log(psd1_genes);
+              console.log("^^ psd1 genes ^^")
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -1654,7 +1656,7 @@ export class GeneCardComponent implements OnInit {
 
     // Sham Vs MI
     const groupP1_1 = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
-    const groupP1_3 = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
+    const groupP1_3 = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI');
     const groupP8_1 = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
     const groupP8_3 = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
 
@@ -1730,6 +1732,8 @@ export class GeneCardComponent implements OnInit {
 
     // Process PSD 1 group
     console.log("Processing Group 1");
+    this.model_chart_options1_Sham.markers = {};
+    this.model_chart_options1_Sham.markers.discrete = [];
 
     for (let i = 0; i < cluster_number1_Sham; i++) {
       let gene = group1_Sham[i];
@@ -1747,12 +1751,17 @@ export class GeneCardComponent implements OnInit {
       let fill_color = this.getFillColor(p_value, lfc);
       // if (p_value == 0) continue;
 
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color};
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (gene.cell_type.includes("All")) {
+        this.model_chart_options1_Sham.markers.discrete.push({
+          seriesIndex: 0,
+          dataPointIndex: i,
+          strokeColor: '#0078d7',
+        })
+        console.log(gene);
+      }
       model_data1_Sham.push(formatted_data);
     }
-
-
-    console.log("Sham1 Done")
 
     for (let i = 0; i < cluster_number3_Sham; i++) {
       let gene = group3_Sham[i];
@@ -1771,8 +1780,8 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc);
 
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_data3_Sham.push(formatted_data);
     }
 
@@ -1791,8 +1800,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val1_MI) max_p_val1_MI = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc);
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_data1_MI.push(formatted_data);
     }
 
@@ -1811,8 +1820,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val3_MI) max_p_val3_MI = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc);
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_data3_MI.push(formatted_data);
     }
 
@@ -1831,8 +1840,8 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc);
 
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_dataP1_1.push(formatted_data);
     }
 
@@ -1850,9 +1859,9 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP8_1) max_p_valP8_1 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc);
-      if (p_value == 0) continue;
+      // if (p_value == 0) continue;
 
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_dataP8_1.push(formatted_data);
     }
 
@@ -1871,10 +1880,13 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP1_3) max_p_valP1_3 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc);
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_dataP1_3.push(formatted_data);
     }
+
+    console.log(model_dataP1_3);
+    console.log("^^ data ^^");
 
     // Process PSD 3 group
     for (let i = 0; i < cluster_numberP8_3; i++) {
@@ -1891,8 +1903,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP8_3) max_p_valP8_3 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc);
-      if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color };
+      // if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_dataP8_3.push(formatted_data);
     }
 
