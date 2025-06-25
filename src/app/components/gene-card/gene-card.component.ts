@@ -61,11 +61,11 @@ export class GeneCardComponent implements OnInit {
   num_studies: Number;
   en_id: string;
   sig_up_color: string = 'rgb(255, 87, 51)'
-  sli_up_color: string = '#FFC300'
-  no_change_color: string = '#4CAF50'
-  sli_dn_color: string = '#00BCD4'
-  sig_dn_color: string = '#9C27B0'
-  no_sig_fit_color: string = '#000000'
+  sli_up_color: string = 'rgb(255, 195, 0)'
+  no_change_color: string = 'rgb(76, 175, 80)'
+  sli_dn_color: string = 'rgb(0, 188, 212)'
+  sig_dn_color: string = 'rgb(156, 39, 176)'
+  no_sig_fit_color: string = 'rgb(0, 0, 0)'
   lfc_sig_cutoff = 0.0116
   lfc_minor_sig_cutoff = 0.0037
 
@@ -2594,24 +2594,30 @@ export class GeneCardComponent implements OnInit {
     return (set.size)
   }
 
+
+
   getFillColor(p_val: number, lfc: number, cell_type: string) {
     if (p_val < 1.30103) {
       return 'rgba(0, 0, 0, ' + (cell_type.includes("All") ? "1)" : "0.5)");
     }
     if (lfc < -this.lfc_sig_cutoff) {
-      return this.sig_dn_color;
+      return cell_type.includes("All") ? this.sig_dn_color : this.sig_dn_color.replace("rgb", "rgba")
+        .replace(")", ", .5)");
     }
     if (lfc < -this.lfc_minor_sig_cutoff) {
-      return (this.sli_dn_color);
+      return cell_type.includes("All") ? this.sli_dn_color : this.sli_dn_color.replace("rgb", "rgba")
+        .replace(")", ", .5)");
     }
     if (lfc > this.lfc_sig_cutoff) {
       return cell_type.includes("All") ? this.sig_up_color : this.sig_up_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
     if (lfc > this.lfc_minor_sig_cutoff) {
-      return (this.sli_up_color);
+      return cell_type.includes("All") ? this.sli_up_color : this.sli_up_color.replace("rgb", "rgba")
+        .replace(")", ", .5)");
     }
-    return (this.no_change_color);
+    return cell_type.includes("All") ? this.no_change_color : this.no_change_color.replace("rgb", "rgba")
+        .replace(")", ", .5)");;
   }
 
   hideToastControl(control_id: string): void {
