@@ -32,7 +32,7 @@ export class FooterComponent implements OnInit {
     // function normally.
     const changelogToast = document.getElementById(control_id);
     document.getElementById("shadow-bg")!.style.display = "block";
-    changelogToast!.style.display = "block";
+    changelogToast!.style.display = "flex";
   }
 
   hideToastControl(control_id: string): void {

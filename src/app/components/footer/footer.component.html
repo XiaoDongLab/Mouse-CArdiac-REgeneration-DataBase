@@ -48,14 +48,14 @@
             <input type="text" class="form-control" readonly value="Abcd, E., 2025, https://mcaredb.org/" />
         </div>
     </div>
-    <div id="changelogToast" class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed"
+    <div id="changelogToast" class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column"
         role="alert" aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
         <div class="toast-header">
             <strong class="me-auto">Changelog</strong>
             <a type="button" (click)="hideToastControl('changelogToast');" data-bs-dismiss="toast" aria-label="Close"
                 class="btn-macclose"></a>
         </div>
-        <div class="toast-body">
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
             <app-changelog></app-changelog>
         </div>
     </div>
