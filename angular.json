@@ -18,7 +18,8 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": {
-              "base": "frontend"
+              "base": "frontend",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": [

@@ -1,26 +1,64 @@
 <div class="row g-2">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="p-0 m-0">{{Version}}</h4>
+            <h2 id="1-2506-50-0-25-june-2025" class="p-0 m-0">{{ Version }}</h2>
             <small class="text-muted">
                 <i class="fa fa-clock"></i> {{ CompileDate }}
             </small>
         </div>
-        <p class="mt-2 mb-0">New Features</p>
+        <h3 id="important-to-know">Important to Know</h3>
         <ul>
-            <li><b>Redesigned Genome Browser</b>: The IGV and genome browser page was redesigned to fit large devices.</li>
-            <li><b>Redesigned navigation bar</b>: The navbar was redesigned to fit the modern design.</li>
+            <li>
+                <p><strong>New data</strong>: We&#39;re uploading new datasets to the server.</p>
+            </li>
+            <li>
+                <p><strong>Angular version</strong>: We&#39;ve updated the angular version to 20. All DevExtreme
+                    controls in the previous version were deprecated in this version.</p>
+            </li>
         </ul>
-        <p class="mt-2 mb-0">Fixed Issues</p>
+        <h3 id="new-features">New Features</h3>
         <ul>
-            <li>Now in the Go term enrichment page, you can view descriptions of the selected pathway.</li>
-            <li>Deprecated Gini index graph was removed from the Go term enrichment page.</li>
+            <li>
+                <p><strong>Redesigned Search &amp; Download page</strong>: We&#39;ve updated the data grid control and
+                    multiple selection bar.</p>
+            </li>
+            <li>
+                <p><strong>Scatter plots in differential expression results</strong>: All data points marked as
+                    &quot;All Cells, Heart&quot; will be shown as semi-transparent points in the charts.</p>
+            </li>
+            <li>
+                <p><strong>Redesigned gene cards</strong>: We&#39;ve updated the style of UMAP, TSNE and general info
+                    boxes in the gene card. This control will now fit your screen or viewport width.</p>
+            </li>
+            <li>
+                <p><strong>Settings page</strong>: Now you can adjust your preferred color theme, font sizes and
+                    contrast in the new settings page.</p>
+            </li>
         </ul>
-        <p class="mt-2 mb-0">Known Issues</p>
+        <h3 id="fixed-issues">Fixed Issues</h3>
         <ul>
-            <li>Sometimes the IGV will return empty sets of gene cards, even if you have selected multiple genes.</li>
-            <li>Downloading large or multiple files may cause temporary slow down or crash of your browser.</li>
+            <li>
+                <p>Fixed an issue that the gene cards can&#39;t be sorted by regulation significance.</p>
+            </li>
+            <li>
+                <p>Fixed an issue that the &quot;Selected Cluster&quot; card will not display unless you drag the
+                    viewport.</p>
+            </li>
+            <li>
+                <p>Fixed an issue that the scatter plots may not display correctly.</p>
+            </li>
+            <li>
+                <p>Fixed an issue that the PubMed ID will not display due to access control checks.</p>
+            </li>
+            <li>
+                <p>Fixed an issue that the download page could not initiate download process correctly.</p>
+            </li>
         </ul>
-        <p class="mb-0">See full version history on <a href="https://github.com/AnthonyShea/MouseHeartDatabase" target="_blank">GitHub</a>.</p>
+        <h3 id="known-issues">Known Issues</h3>
+        <ul>
+            <li>You may need to wait a few seconds before the differential expression results have loaded.</li>
+        </ul>
+        <p class="mb-0">See full version history on <a href="https://github.com/AnthonyShea/MouseHeartDatabase"
+                target="_blank">GitHub</a>.</p>
     </div>
 </div>

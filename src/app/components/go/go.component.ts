@@ -1,4 +1,4 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, NgZone, OnInit, Type } from '@angular/core';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels } from "ng-apexcharts";
 import { GoTerm } from 'src/app/models/goTerm.model';
 import { DatabaseService } from 'src/app/services/database.service';
@@ -26,10 +26,10 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'app-go',
-    templateUrl: './go.component.html',
-    styleUrls: ['./go.component.css'],
-    standalone: false
+  selector: 'app-go',
+  templateUrl: './go.component.html',
+  styleUrls: ['./go.component.css'],
+  standalone: false
 })
 export class GoComponent implements OnInit {
   // Anthony
@@ -84,7 +84,7 @@ export class GoComponent implements OnInit {
   selected_cell_types: string[] = this.cell_types;
   selected_pathway: string = 'G protein-coupled receptor signaling pathway'
 
-  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService) {
+  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone) {
     this.databaseService.getPathways().subscribe({
       next: (data) => {
         //this.pathways = data.slice(0,100);
@@ -121,9 +121,11 @@ export class GoComponent implements OnInit {
         type: "scatter",
         events: {
           dataPointSelection: (e, chart, opts) => {
-            this.selected_term = this.go_terms[opts.dataPointIndex];
-            this.getGeneSymbols(this.selected_term)
-            this.term_selected = true;
+            this.zone.run(() => {
+              this.selected_term = this.go_terms[opts.dataPointIndex];
+              this.getGeneSymbols(this.selected_term);
+              this.term_selected = true;
+            });
           }
         },
         zoom: {
@@ -442,7 +444,7 @@ export class GoComponent implements OnInit {
           const pathway_popover = new bootstrap.Popover(document.getElementById("pathway_btn"));
         }, 100)
       },
-      complete: () => { 
+      complete: () => {
         console.log("ggg");
       }
     })

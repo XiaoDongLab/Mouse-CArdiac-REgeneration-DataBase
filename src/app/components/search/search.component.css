@@ -301,7 +301,7 @@
     --ag-advanced-filter-builder-join-pill-color: var(--ag-inherited-advanced-filter-builder-join-pill-color, #f08e8d);
     --ag-advanced-filter-builder-option-pill-color: var(--ag-inherited-advanced-filter-builder-option-pill-color, #f3c08b);
     --ag-advanced-filter-builder-value-pill-color: var(--ag-inherited-advanced-filter-builder-value-pill-color, #85c0e4);
-    --ag-background-color: rgba(var(--bs-body-color-rgb), .05);
+    --ag-background-color: rgba(var(--bs-pink-rgb), .05);
     --ag-border-color: var(--bs-border-color-translucent);
     --ag-border-radius: var(--bs-border-radius);
     --ag-browser-color-scheme: var(--ag-inherited-browser-color-scheme, light);

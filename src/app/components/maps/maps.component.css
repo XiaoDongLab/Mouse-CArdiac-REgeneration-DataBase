@@ -175,19 +175,19 @@
     left: calc(0px - var(--bs-border-width));
     width: .25rem;
     content: ' ';
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-pink);
     height: 1rem;
     border-radius: .125rem;
     transition: .1s ease-in-out;
   }
 
-  .maps .nav-link.active:focus::before, .nav-link.active:active::before {
+  ::ng-deep .maps .nav-link.active:focus::before, ::ng-deep .nav-link.active:active::before {
     display: flex;
     position: absolute;
     left: calc(0px - var(--bs-border-width));
     width: .25rem;
     content: ' ';
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-pink);
     height: .75rem;
     border-radius: .125rem;
   }
@@ -206,7 +206,7 @@
   .maps .nav-link.active {
     box-shadow: var(--bs-box-shadow);
     border: var(--bs-border-width) solid var(--bs-border-color-translucent) !important;
-    background-color: rgba(var(--bs-body-color-rgb), 0.2);
+    background-color: rgba(var(--bs-pink-rgb), 0.2);
     transition: .1s ease-in-out;
   }
 }

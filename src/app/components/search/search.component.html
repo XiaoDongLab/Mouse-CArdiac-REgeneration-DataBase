@@ -64,7 +64,7 @@
       </div>
       <hr />
       <div class="row g-1">
-        <button id="downloadButton" [disabled]="selectedRowData.length == 0" class="col-12 btn btn-mcaredb"
+        <button id="downloadButton" [disabled]="selectedRowKeys.length == 0" class="col-12 btn btn-mcaredb"
           icon="download" (click)="downloadWrapper()">
           <i class="fa fa-download"></i>
           Download Standardized Data

@@ -1,6 +1,40 @@
 # Version history
 
-The latest version is **0.2506.18.0**, compiled on 13 June 2025.
+The latest version is **1.2506.50.0**, compiled on 25 June 2025.
+
+## 1.2506.50.0 - 25 June 2025
+
+### Important to Know
+
+- **New data**: We're uploading new datasets to the server.
+
+- **Angular version**: We've updated the angular version to 20. All DevExtreme controls in the previous version were deprecated in this version.
+
+### New Features
+
+- **Redesigned Search & Download page**: We've updated the data grid control and multiple selection bar.
+
+- **Scatter plots in differential expression results**: All data points marked as "All Cells, Heart" will be shown as semi-transparent points in the charts.
+
+- **Redesigned gene cards**: We've updated the style of UMAP, TSNE and general info boxes in the gene card. This control will now fit your screen or viewport width.
+
+- **Settings page**: Now you can adjust your preferred color theme, font sizes and contrast in the new settings page.
+
+### Fixed Issues
+
+- Fixed an issue that the gene cards can't be sorted by regulation significance.
+
+- Fixed an issue that the "Selected Cluster" card will not display unless you drag the viewport.
+
+- Fixed an issue that the scatter plots may not display correctly.
+
+- Fixed an issue that the PubMed ID will not display due to access control checks.
+
+- Fixed an issue that the download page could not initiate download process correctly.
+
+### Known Issues
+
+- You may need to wait a few seconds before the differential expression results have loaded.
 
 ## 0.2506.19.0 - 13 June 2025
 

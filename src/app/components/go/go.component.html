@@ -44,7 +44,7 @@
       <div class="d-flex">
         <!--<dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
           [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>-->
-        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway" [closeOnSelect]="false" [addTag]="false" [multiple]="false" class="flex-grow-1" style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
+        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway" [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1" style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
         </ng-select>
         @if (pathway_info != '' && pathway_info != null) {
         <a tabindex="0" id="pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
@@ -74,7 +74,7 @@
     <div class="mt-3">
       <p class="text-center text-muted">Select Cluster To See Details</p>
     </div>
-    }
+    } 
     @if (term_selected) {
     <div class="row g-2 mt-3">
       <div class="col-12">
@@ -95,12 +95,12 @@
                   </div>
                   <div class="col-6">
                     <small class="text-muted">P-Value</small>
-                    <h5>{{selected_term.P_Value < 0.0001 ? '&lt;0.0001' : selected_term.P_Value.toFixed(4)}}</h5>
+                    <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">{{selected_term.P_Value.toFixed(4)}}</h5>
                   </div>
                 </div>
                 <hr />
                 <small class="text-muted">PMID</small>
-                <h5>{{selected_term.pmid}}</h5>
+                <h5><a href="https://pubmed.ncbi.nlm.nih.gov/{{selected_term.pmid}}">{{selected_term.pmid}}</a></h5>
               </div>
               <div class="position-absolute top-0 end-0 bottom-0
                   overflow-auto  list-group list-group-flush" style="width: 50%;">

@@ -440,7 +440,7 @@ export class SearchComponent implements OnInit {
     document.getElementById("downloadButton")?.setAttribute("disabled", "true");
     alert('Download Started');
     this.selected_download_method = 'Download Standardized Data';
-    let selected_ids = this.selectedRowData.map(row => row.study_id + '/' + row.cell_types)
+    let selected_ids = this.gridApi.getSelectedRows().map(row => row.study_id + '/' + row.cell_types)
     if (this.selected_download_method == 'Download Standardized Data' && selected_ids.length > 0) {
       this.downloadStandaradizedData(selected_ids)
     }

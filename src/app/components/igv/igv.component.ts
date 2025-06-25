@@ -434,8 +434,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       );
     } else {
       return [...list].sort((a, b) => {
-        const rankA = this.deg_sorted_list.get(a[0]?.gene) ?? Number.POSITIVE_INFINITY;
-        const rankB = this.deg_sorted_list.get(b[0]?.gene) ?? Number.POSITIVE_INFINITY;
+        const rankA = map.get(a[0]?.gene.replace('ENSMUSG', '').replace(/^0+/, '')) ?? Number.POSITIVE_INFINITY;
+        const rankB = map.get(b[0]?.gene.replace('ENSMUSG', '').replace(/^0+/, '')) ?? Number.POSITIVE_INFINITY;
         return rankA - rankB;          // 按汇总表既定顺序排
       })
     }

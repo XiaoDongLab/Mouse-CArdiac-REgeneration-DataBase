@@ -593,7 +593,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'Sham');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'Sham' && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -626,11 +626,6 @@ export class GeneCardComponent implements OnInit {
           size: 10
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -661,7 +656,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -693,7 +694,8 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'MI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'MI'
+                && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -723,11 +725,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           axisBorder: {
             color: "#000"
           },
@@ -781,7 +778,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -816,7 +819,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'Sham');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'Sham' && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -838,11 +841,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -874,7 +872,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -905,7 +909,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'MI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === 'MI' && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -927,11 +931,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -963,7 +962,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -995,7 +1000,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -1025,11 +1030,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -1061,7 +1061,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -1093,7 +1099,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0);
               // console.log(psd1_genes);
               // console.log("^^ psd1 genes ^^")
               let slected_gene = psd1_genes[opts.dataPointIndex];
@@ -1125,11 +1131,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -1161,7 +1162,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -1192,7 +1199,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -1214,11 +1221,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -1250,7 +1252,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -1281,7 +1289,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI');
+              const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0);
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -1303,11 +1311,6 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          tooltip: {
-            formatter: function (val, opts) {
-              return val.toString()
-            }
-          },
           //type: "numeric",
           //tickAmount: 10,
           //min: -2,
@@ -1339,7 +1342,13 @@ export class GeneCardComponent implements OnInit {
           }
         },
         tooltip: {
-          enabled: false
+          enabled: true,    // Enable the tooltip
+          shared: false,    // Only show the tooltip for the hovered point
+          intersect: true,  // Tooltip appears only on exact hover
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
+            return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
+          }
         },
         annotations: {
           yaxis: [
@@ -1744,9 +1753,9 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val1_Sham) max_p_val1_Sham = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      // if (p_value == 0) continue;
+      if (p_value == 0) continue;
 
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data1_Sham.push(formatted_data);
     }
 
@@ -1767,8 +1776,8 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
-      // if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data3_Sham.push(formatted_data);
     }
 
@@ -1787,8 +1796,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val1_MI) max_p_val1_MI = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      // if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data1_MI.push(formatted_data);
     }
 
@@ -1807,8 +1816,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val3_MI) max_p_val3_MI = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      // if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data3_MI.push(formatted_data);
     }
 
@@ -1827,8 +1836,8 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
-      // if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP1_1.push(formatted_data);
     }
 
@@ -1846,9 +1855,9 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP8_1) max_p_valP8_1 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      // if (p_value == 0) continue;
+      if (p_value == 0) continue;
 
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP8_1.push(formatted_data);
     }
 
@@ -1867,8 +1876,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP1_3) max_p_valP1_3 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      // if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP1_3.push(formatted_data);
     }
 
@@ -1890,8 +1899,8 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP8_3) max_p_valP8_3 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      // if (p_value == 0) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
+      if (p_value == 0) continue;
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP8_3.push(formatted_data);
     }
 
@@ -1996,9 +2005,7 @@ export class GeneCardComponent implements OnInit {
 
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2077,9 +2084,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2153,9 +2158,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2221,9 +2224,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2294,9 +2295,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2377,9 +2376,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2457,9 +2454,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2525,9 +2520,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       tooltip: {
-        formatter: function (val, opts) {
-          return val.toString()
-        }
+        enabled: false
       },
       type: "numeric",
       tickAmount: num_ticks,
@@ -2598,26 +2591,26 @@ export class GeneCardComponent implements OnInit {
 
   getFillColor(p_val: number, lfc: number, cell_type: string) {
     if (p_val < 1.30103) {
-      return 'rgba(0, 0, 0, ' + (cell_type.includes("All") ? "1)" : "0.5)");
+      return 'rgba(0, 0, 0, ' + (!cell_type.includes("All") ? "1)" : "0.5)");
     }
     if (lfc < -this.lfc_sig_cutoff) {
-      return cell_type.includes("All") ? this.sig_dn_color : this.sig_dn_color.replace("rgb", "rgba")
+      return !cell_type.includes("All") ? this.sig_dn_color : this.sig_dn_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
     if (lfc < -this.lfc_minor_sig_cutoff) {
-      return cell_type.includes("All") ? this.sli_dn_color : this.sli_dn_color.replace("rgb", "rgba")
+      return !cell_type.includes("All") ? this.sli_dn_color : this.sli_dn_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
     if (lfc > this.lfc_sig_cutoff) {
-      return cell_type.includes("All") ? this.sig_up_color : this.sig_up_color.replace("rgb", "rgba")
+      return !cell_type.includes("All") ? this.sig_up_color : this.sig_up_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
     if (lfc > this.lfc_minor_sig_cutoff) {
-      return cell_type.includes("All") ? this.sli_up_color : this.sli_up_color.replace("rgb", "rgba")
+      return !cell_type.includes("All") ? this.sli_up_color : this.sli_up_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
-    return cell_type.includes("All") ? this.no_change_color : this.no_change_color.replace("rgb", "rgba")
-        .replace(")", ", .5)");;
+    return !cell_type.includes("All") ? this.no_change_color : this.no_change_color.replace("rgb", "rgba")
+      .replace(")", ", .5)");;
   }
 
   hideToastControl(control_id: string): void {

@@ -55,7 +55,7 @@
             </apx-chart>
           </div>
           <div class="col-3">
-            <h3 class="chart-label">P1</h3>
+            <h3 class="chart-label">P1 + P2</h3>
             <apx-chart [series]="meta_chart_optionsP1_1.series!" [chart]="meta_chart_optionsP1_1.chart!"
               [plotOptions]="meta_chart_optionsP1_1.plotOptions!" [xaxis]="meta_chart_optionsP1_1.xaxis!"
               [colors]="meta_chart_optionsP1_1.colors!">
@@ -90,7 +90,7 @@
             </apx-chart>
           </div>
           <div class="col-3">
-            <h3 class="chart-label">P1</h3>
+            <h3 class="chart-label">P1 + P2</h3>
             <apx-chart [series]="meta_chart_optionsP1_3.series!" [chart]="meta_chart_optionsP1_3.chart!"
               [plotOptions]="meta_chart_optionsP1_3.plotOptions!" [xaxis]="meta_chart_optionsP1_3.xaxis!"
               [colors]="meta_chart_optionsP1_3.colors!">
@@ -117,6 +117,9 @@
   @if (completely_loaded) {
   <div class="accordion-body">
     <div class="row">
+      <div class="col-12">
+        <p class="text-muted text-center"><small>Clusters with cell type "All Cells, Heart" were shown as semi-transparent datapoints.</small></p>
+      </div>
       <div class="col-xl-3 col-lg-6 col-md-12" style="height: 300px;">
         <apx-chart [series]="model_chart_options1_Sham.series!" [chart]="model_chart_options1_Sham.chart!"
           apexNoMinHeight [plotOptions]="model_chart_options1_Sham.plotOptions!"

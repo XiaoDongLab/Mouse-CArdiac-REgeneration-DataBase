@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
       document.documentElement.setAttribute("data-bs-theme", "dark");
     } else document.documentElement.setAttribute("data-bs-theme", "light");
   }
-  static Version = "0.2506.19.0";
-  static CompileDate = "13 June 2025";
+  static Version = "1.2506.50.0";
+  static CompileDate = "25 June 2025";
   title = 'Mouse Cardiac Regeneration Database';
 }
