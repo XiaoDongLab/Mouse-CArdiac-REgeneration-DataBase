@@ -21,10 +21,10 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: '[app-gene-card]',
-    templateUrl: './gene-card.component.html',
-    styleUrls: ['./gene-card.component.css'],
-    standalone: false
+  selector: '[app-gene-card]',
+  templateUrl: './gene-card.component.html',
+  styleUrls: ['./gene-card.component.css'],
+  standalone: false
 })
 
 export class GeneCardComponent implements OnInit {
@@ -60,7 +60,7 @@ export class GeneCardComponent implements OnInit {
   temp: DiffExp[] = [];
   num_studies: Number;
   en_id: string;
-  sig_up_color: string = '#FF5733'
+  sig_up_color: string = 'rgb(255, 87, 51)'
   sli_up_color: string = '#FFC300'
   no_change_color: string = '#4CAF50'
   sli_dn_color: string = '#00BCD4'
@@ -592,14 +592,14 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
               const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'Sham');
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
               //let slected_gene = this.gene_list[opts.dataPointIndex]
               // Debug: Log what gene is being selected
-              console.log("Selected Gene Data:", slected_gene);
+              // console.log("Selected Gene Data:", slected_gene);
 
 
 
@@ -692,14 +692,14 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
               const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === 'MI');
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
               //let slected_gene = this.gene_list[opts.dataPointIndex]
               // Debug: Log what gene is being selected
-              console.log("Selected Gene Data:", slected_gene);
+              // console.log("Selected Gene Data:", slected_gene);
 
 
 
@@ -994,14 +994,14 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
               const psd1_genes = this.gene_list.filter(gene => gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P1' && gene.Comparison === 'ShamvsMI');
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
               //let slected_gene = this.gene_list[opts.dataPointIndex]
               // Debug: Log what gene is being selected
-              console.log("Selected Gene Data:", slected_gene);
+              // console.log("Selected Gene Data:", slected_gene);
 
 
 
@@ -1092,16 +1092,16 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
+              // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
               const psd1_genes = this.gene_list.filter(gene => gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI');
-              console.log(psd1_genes);
-              console.log("^^ psd1 genes ^^")
+              // console.log(psd1_genes);
+              // console.log("^^ psd1 genes ^^")
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
               //let slected_gene = this.gene_list[opts.dataPointIndex]
               // Debug: Log what gene is being selected
-              console.log("Selected Gene Data:", slected_gene);
+              // console.log("Selected Gene Data:", slected_gene);
 
 
 
@@ -1369,7 +1369,7 @@ export class GeneCardComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['gene_list'] && !changes['gene_list'].firstChange && this.completely_loaded) {
       // Update charts when gene_list input changes
-      console.log("ggg");
+      /// console.log("ggg");
       this.createDisplayData();
     }
   }
@@ -1642,10 +1642,10 @@ export class GeneCardComponent implements OnInit {
   }
 
   createDisplayData() {
-    console.log("Starting createDisplayData");
-    console.log("Genes:", this.gene_list); // Log first few genes
+    // console.log("Starting createDisplayData");
+    // console.log("Genes:", this.gene_list); // Log first few genes
     // Check what PSD values exist in the gene list
-    console.log("PSD Values in Gene List:", this.gene_list.map(gene => gene.PSD));
+    // console.log("PSD Values in Gene List:", this.gene_list.map(gene => gene.PSD));
 
 
     // Split gene_list into PSD groups P1vsP8
@@ -1730,11 +1730,6 @@ export class GeneCardComponent implements OnInit {
     let max_lfcP8_3 = Number.NEGATIVE_INFINITY;
     let max_p_valP8_3 = Number.NEGATIVE_INFINITY;
 
-    // Process PSD 1 group
-    console.log("Processing Group 1");
-    this.model_chart_options1_Sham.markers = {};
-    this.model_chart_options1_Sham.markers.discrete = [];
-
     for (let i = 0; i < cluster_number1_Sham; i++) {
       let gene = group1_Sham[i];
       let lfc = Number(gene.lfc);
@@ -1748,18 +1743,10 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfc1_Sham) max_lfc1_Sham = lfc;
       if (p_value > max_p_val1_Sham) max_p_val1_Sham = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       // if (p_value == 0) continue;
 
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
-      if (gene.cell_type.includes("All")) {
-        this.model_chart_options1_Sham.markers.discrete.push({
-          seriesIndex: 0,
-          dataPointIndex: i,
-          strokeColor: '#0078d7',
-        })
-        console.log(gene);
-      }
       model_data1_Sham.push(formatted_data);
     }
 
@@ -1778,7 +1765,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val3_Sham) max_p_val3_Sham = p_value;
 
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
       // if (p_value == 0) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
@@ -1799,7 +1786,7 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfc1_MI) max_lfc1_MI = lfc;
       if (p_value > max_p_val1_MI) max_p_val1_MI = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       // if (p_value == 0) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_data1_MI.push(formatted_data);
@@ -1819,7 +1806,7 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfc3_MI) max_lfc3_MI = lfc;
       if (p_value > max_p_val3_MI) max_p_val3_MI = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       // if (p_value == 0) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_data3_MI.push(formatted_data);
@@ -1838,7 +1825,7 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfcP1_1) max_lfcP1_1 = lfc;
       if (p_value > max_p_valP1_1) max_p_valP1_1 = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
       // if (p_value == 0) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
@@ -1858,7 +1845,7 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfcP8_1) max_lfcP8_1 = lfc;
       if (p_value > max_p_valP8_1) max_p_valP8_1 = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       // if (p_value == 0) continue;
 
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
@@ -1879,14 +1866,14 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfcP1_3) max_lfcP1_3 = lfc;
       if (p_value > max_p_valP1_3) max_p_valP1_3 = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       // if (p_value == 0) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_dataP1_3.push(formatted_data);
     }
 
-    console.log(model_dataP1_3);
-    console.log("^^ data ^^");
+    // console.log(model_dataP1_3);
+    // console.log("^^ data ^^");
 
     // Process PSD 3 group
     for (let i = 0; i < cluster_numberP8_3; i++) {
@@ -1902,7 +1889,7 @@ export class GeneCardComponent implements OnInit {
       if (lfc > max_lfcP8_3) max_lfcP8_3 = lfc;
       if (p_value > max_p_valP8_3) max_p_valP8_3 = p_value;
 
-      let fill_color = this.getFillColor(p_value, lfc);
+      let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       // if (p_value == 0) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: p_value == 0 ? 'transparent' : fill_color };
       model_dataP8_3.push(formatted_data);
@@ -1995,8 +1982,8 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_options1_Sham.series = [{ data: model_data1_Sham }];
 
     // Debug X-Axis settings
-    console.log("X-Axis Range for ModelChart:");
-    console.log("Min LFC:", min_lfc1_Sham, "Max LFC:", max_lfc1_Sham);
+    // console.log("X-Axis Range for ModelChart:");
+    // console.log("Min LFC:", min_lfc1_Sham, "Max LFC:", max_lfc1_Sham);
 
     this.model_chart_options1_Sham.xaxis = {
       title: {
@@ -2077,8 +2064,8 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_options1_MI.series = [{ data: model_data1_MI }]
 
     // Debug X-Axis settings
-    console.log("X-Axis Range for ModelChart:");
-    console.log("Min LFC:", min_lfc1_MI, "Max LFC:", max_lfc1_MI);
+    // console.log("X-Axis Range for ModelChart:");
+    // console.log("Min LFC:", min_lfc1_MI, "Max LFC:", max_lfc1_MI);
 
     this.model_chart_options1_MI.xaxis = {
       title: {
@@ -2261,22 +2248,6 @@ export class GeneCardComponent implements OnInit {
       }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //Setup MetaChart
     this.meta_chart_optionsP1_1.chart!.width = cluster_numberP1_1 > 20 ? '100%' : Math.trunc(cluster_numberP1_1 * 5).toString() + '%'
     this.meta_chart_optionsP1_1.series = [
@@ -2310,8 +2281,8 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_optionsP1_1.series = [{ data: model_dataP1_1 }]
 
     // Debug X-Axis settings
-    console.log("X-Axis Range for ModelChart:");
-    console.log("Min LFC:", min_lfcP1_1, "Max LFC:", max_lfcP1_1);
+    // console.log("X-Axis Range for ModelChart:");
+    // console.log("Min LFC:", min_lfcP1_1, "Max LFC:", max_lfcP1_1);
 
     this.model_chart_optionsP1_1.xaxis = {
       title: {
@@ -2393,8 +2364,8 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_optionsP1_3.series = [{ data: model_dataP1_3 }]
 
     // Debug X-Axis settings
-    console.log("X-Axis Range for ModelChart:");
-    console.log("Min LFC:", min_lfcP1_3, "Max LFC:", max_lfcP1_3);
+    // console.log("X-Axis Range for ModelChart:");
+    // console.log("Min LFC:", min_lfcP1_3, "Max LFC:", max_lfcP1_3);
 
     this.model_chart_optionsP1_3.xaxis = {
       title: {
@@ -2623,23 +2594,24 @@ export class GeneCardComponent implements OnInit {
     return (set.size)
   }
 
-  getFillColor(p_val: number, lfc: number) {
+  getFillColor(p_val: number, lfc: number, cell_type: string) {
     if (p_val < 1.30103) {
-      return ('black')
+      return 'rgba(0, 0, 0, ' + (cell_type.includes("All") ? "1)" : "0.5)");
     }
     if (lfc < -this.lfc_sig_cutoff) {
-      return (this.sig_dn_color)
+      return this.sig_dn_color;
     }
     if (lfc < -this.lfc_minor_sig_cutoff) {
-      return (this.sli_dn_color)
+      return (this.sli_dn_color);
     }
     if (lfc > this.lfc_sig_cutoff) {
-      return (this.sig_up_color)
+      return cell_type.includes("All") ? this.sig_up_color : this.sig_up_color.replace("rgb", "rgba")
+        .replace(")", ", .5)");
     }
     if (lfc > this.lfc_minor_sig_cutoff) {
-      return (this.sli_up_color)
+      return (this.sli_up_color);
     }
-    return (this.no_change_color)
+    return (this.no_change_color);
   }
 
   hideToastControl(control_id: string): void {

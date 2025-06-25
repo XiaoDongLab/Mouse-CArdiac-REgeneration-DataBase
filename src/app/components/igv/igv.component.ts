@@ -347,6 +347,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         }
         if (!this.selected_cells.includes(cleaned_celltype!) || !selected_pmids.includes(gene.pmid!)) {
           console.log('Splicing');
+          console.log(gene);
           this.grouped_genes[i].splice(j, 1);
         }
       }

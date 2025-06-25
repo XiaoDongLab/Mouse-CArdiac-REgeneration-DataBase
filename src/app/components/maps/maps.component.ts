@@ -3,6 +3,8 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { Image } from 'src/app/models/image.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations } from "ng-apexcharts";
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { PubmedService } from 'src/app/services/pubmed.service';
 // var ncbi = require('node-ncbi');
 
 export type ChartOptions = {
@@ -19,10 +21,10 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'app-maps',
-    templateUrl: './maps.component.html',
-    styleUrls: ['./maps.component.css'],
-    standalone: false
+  selector: 'app-maps',
+  templateUrl: './maps.component.html',
+  styleUrls: ['./maps.component.css'],
+  standalone: false
 })
 export class MapsComponent implements OnInit {
   @Input() selected_info!: { pmid: number, cell_type: string, gene: string, cell_type2: string, cell_type3: string, slope: number, pvalue: number, intercept: number, lfc: number, g_id: number, PSD: number, Surgery: string };
@@ -46,7 +48,7 @@ export class MapsComponent implements OnInit {
   maps = [{ text: "UMAP" }, { text: "TSNE" }, { text: "Model Visualization" }, { text: "Meta Info" }];
   display = 'UMAP';
 
-  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer) { }
+  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer, private http: HttpClient, private pubmedService: PubmedService) { }
 
   ngOnInit(): void {
     this.getClusterImages()
@@ -185,13 +187,27 @@ export class MapsComponent implements OnInit {
     this.calculateDecadeChange()
     console.log('Fetching PubMed data for PMID:', this.selected_info.pmid);
 
-    /* const pubmed = ncbi.pubmed;
-    pubmed.summary(this.selected_info.pmid).then((results: any) => {
+    /*const ncbi = await import('node-ncbi');
+    ncbi.pubmed.summary(this.selected_info.pmid).then((results: any) => {
       console.log(results)
       this.title = results.title
       this.author = results.authors.split(',')[0].replace(' ', ', ')
       this.year = results.pubDate.split('/')[0]
+    });*/
+    /*this.pubmedService.getPubmedData(this.selected_info.pmid).subscribe(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      this.title = doc.querySelector('h1.heading-title')?.textContent?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
+      this.author = doc.querySelector('div.authors-list span.authors-list-item a.full-name')?.textContent
+        ?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
+      this.year = doc.querySelector('time.citation-year')?.textContent
+        ?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
     }); */
+    this.pubmedService.getPubmedJson(this.selected_info.pmid).subscribe(pubmed => {
+      this.title = pubmed.title;
+      this.author = pubmed.first_author;
+      this.year = pubmed.publish_year.toString();
+    });
+
     this.getClusterImages()
     // this.getLinRegGraphData()
     // this.prepGraphData()
