@@ -55,6 +55,7 @@
   background-color: rgba(var(--bs-pink-rgb), 0.5);
   backdrop-filter: blur(100px);
   --webkit-backdrop-filter: blur(100px);
+  box-shadow: var(--bs-box-shadow);
 }
 
 @media (min-width: 992px) {

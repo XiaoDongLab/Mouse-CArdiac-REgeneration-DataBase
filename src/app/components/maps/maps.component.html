@@ -12,80 +12,65 @@
       <a class="nav-link" [class.active]="display == 'Model Visualization'"
       (click)="onItemSelected_Nav('Model Visualization')">Model Visualization</a>
     </li>-->
-    <li class="nav-item">
-      <a class="nav-link" [class.active]="display == 'Meta Info'"
-      (click)="onItemSelected_Nav('Meta Info')">Meta Info</a>
-    </li>
-  </ul>
-</div>
-<div class="col-xl-9 col-lg-8 col-md-12" style="max-height: 400px; overflow-y: auto;">
-  <div class="text-center">
-    @if (display=='UMAP') {
-      <img class="image img-fluid" id="myimage" [src]='this.umap' />
-    }
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="display == 'Meta Info'" (click)="onItemSelected_Nav('Meta Info')">Meta
+          Info</a>
+      </li>
+    </ul>
   </div>
-  <div class="text-center">
-    @if (display === 'TSNE' && this.tsne !== null) {
-      <img class="image img-fluid" id="myimage"
-        [src]="this.tsne" />
-    }
-  </div>
-
-  @if (display === 'tsne' && this.tsne === null) {
-    <div id="myimage">
-      <p class="text-muted text-center">
-        TSNE not available for this study
-      </p>
-    </div>
-  }
-
-  <!--<div *ngIf="display=='Model Visualization'" width="85%" height="100%">
-  <apx-chart [series]="linReg_chart_options.series!" [chart]="linReg_chart_options.chart!"
-    [plotOptions]="linReg_chart_options.plotOptions!" [markers]="linReg_chart_options.markers!"
-    [xaxis]="linReg_chart_options.xaxis!" [yaxis]="linReg_chart_options.yaxis!"
-    [title]="linReg_chart_options.title!" [tooltip]="linReg_chart_options.tooltip!"
-  [annotations]="linReg_chart_options.annotations!"></apx-chart>
-  <span class="text-muted">Non-binomial Mixed Model (NBMM) calculated using all cells in cluster, only a
-    maximum of 500
-  cells displayed above. Visualization is of linear representation of NBMM</span>
-</div>-->
-@if (display=='Meta Info') {
-  <div>
+  <div class="col-xl-9 col-lg-8 col-md-12">
     <div class="row g-2">
+      <div class="text-center col-12">
+        @if (display=='UMAP') {
+        <img class="image img-fluid" id="myimage" [src]='this.umap' />
+        }
+      </div>
+      <div class="text-center col-12">
+        @if (display === 'TSNE' && this.tsne !== null) {
+        <img class="image img-fluid" id="myimage" [src]="this.tsne" />
+        }
+      </div>
+
+      @if (display === 'tsne' && this.tsne === null) {
+      <div id="myimage" class="col-12">
+        <p class="text-muted text-center">
+          TSNE not available for this study
+        </p>
+      </div>
+      }
+      @if (display=='Meta Info') {
       <div class='col-md-6 col-sm-12'>
         <h4>Study Information</h4>
         <p>
-          Title: <a target="_blank"
-        href="https://pubmed.ncbi.nlm.nih.gov/{{selected_info.pmid}}/">{{title}}</a>
-      </p>
-      <p>
-        First Author: <b>{{author}}</b>
-      </p>
-      <p>
-        Year Published: <b>{{year}}</b>
-      </p>
-    </div>
-    <div class="col-md-6 col-sm-12">
-      <h4>Information</h4>
-      <p>Other Possible Cell Types: <b>{{ selected_info.cell_type2 }} {{ selected_info.cell_type3 }}</b>
-    </p>
-    <div class="row">
-      <div class="col-12">
-        <span>-Log<sub>10</sub>(Adjusted P-Value):</span>
-        <h4>{{selected_info.pvalue.toExponential(2)}}</h4>
+          Title: <a target="_blank" href="https://pubmed.ncbi.nlm.nih.gov/{{selected_info.pmid}}/">{{title}}</a>
+        </p>
+        <p>
+          First Author: <b>{{author}}</b>
+        </p>
+        <p>
+          Year Published: <b>{{year}}</b>
+        </p>
       </div>
-      <div class="col-12">
-        <span>% Change</span>
-        <h4 [ngClass]="{'text-danger': decade_change < 0, 'text-success': decade_change >= 0}">
-          {{ decade_change + '%' }}
-        </h4>
+      <div class="col-md-6 col-sm-12">
+        <h4>Information</h4>
+        <p>Other Possible Cell Types: <b>{{ selected_info.cell_type2 }} {{ selected_info.cell_type3 }}</b>
+        </p>
+        <div class="row">
+          <div class="col-12">
+            <span>-Log<sub>10</sub>(Adjusted P-Value):</span>
+            <h4>{{selected_info.pvalue.toExponential(2)}}</h4>
+          </div>
+          <div class="col-12">
+            <span>% Change</span>
+            <h4 [ngClass]="{'text-danger': decade_change < 0, 'text-success': decade_change >= 0}">
+              {{ decade_change + '%' }}
+            </h4>
+          </div>
+        </div>
       </div>
+      }
     </div>
   </div>
-</div>
-</div>
-}
-</div>
 </div>
 <!--<div class="map-box card">
 <div class="card-header">
