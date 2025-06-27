@@ -24,8 +24,8 @@ const routes: Routes = [
   
   // Default and wildcard routes now redirect to '/home'
   // If the user is not logged in, your AuthGuard should handle the redirection to '/login'
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login', pathMatch: 'full' }
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({

@@ -140,7 +140,7 @@ export class DatabaseService {
   }
 
   staticDownload(sample_ids: string[]): void {
-    const urls = sample_ids.map(id => `http://tests.autos:3305/downloads/${id}`);
+    const urls = sample_ids.map(id => `https://tests.autos:3305/downloads/${id}`);
     const fileRequests = urls.map(url => this.http.get(url, { responseType: 'blob' }).toPromise());
 
     // Create a promise for the metadata request
