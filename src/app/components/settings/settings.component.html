@@ -68,5 +68,53 @@
         <p>This resource is provided for research or educational purposes only. It must not be used for clinical
             diagnosis
             or commercial decision making.</p>
+        <div class="d-flex" style="gap: 1rem">
+            <small class="text-muted"><a href="javascript:void(0);" target="_blank"
+                    (click)="showToastControl('citationToast');">Citation</a></small>
+            <small class="text-muted"><a href="javascript:void(0);" target="_blank"
+                    (click)="showToastControl('changelogToast');">Changelog</a></small>
+            <small class="text-muted"><a href="javascript:void(0);" target="_blank"
+                    (click)="showToastControl('licenseToast');">License</a></small>
+        </div>
     </div>
+</div>
+
+<div class="toast-container position-fixed top-0 start-0 w-100 h-100">
+    <div id="citationToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Citation</strong>
+            <a type="button" (click)="hideToastControl('citationToast');" data-bs-dismiss="toast" aria-label="Close"
+                class="btn-macclose"></a>
+        </div>
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
+            <input type="text" class="form-control" readonly value="Abcd, E., 2025, https://mcaredb.org/" />
+        </div>
+    </div>
+    <div id="changelogToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Changelog</strong>
+            <a type="button" (click)="hideToastControl('changelogToast');" data-bs-dismiss="toast" aria-label="Close"
+                class="btn-macclose"></a>
+        </div>
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
+            <app-changelog></app-changelog>
+        </div>
+    </div>
+    <div id="licenseToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">License</strong>
+            <a type="button" (click)="hideToastControl('licenseToast');" data-bs-dismiss="toast" aria-label="Close"
+                class="btn-macclose"></a>
+        </div>
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
+            <p>License here</p>
+        </div>
+    </div>
+    <div id="shadow-bg" class="position-fixed shadow top-0 start-0 w-100 h-100"></div>
 </div>

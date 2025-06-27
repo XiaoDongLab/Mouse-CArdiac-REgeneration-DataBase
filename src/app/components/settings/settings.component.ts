@@ -19,6 +19,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.Version = AppComponent.Version;
     this.CompileDate = AppComponent.CompileDate;
+    document.getElementById("shadow-bg")!.style.display = "none";
     this.setColorTheme();
     this.setContrast();
     document.body.style.fontSize = ((this.fontSize / 20 + 1) * 100).toFixed(0) + '%';
@@ -48,6 +49,25 @@ export class SettingsComponent implements OnInit {
   contrastChange(): void {
     this.setContrast();
     localStorage["highContrast"] = this.highContrast;
+  }
+  
+  CiteClick(): void {
+    window.prompt('Citation', 'Abcd, E., 2025, https://mcaredb.org/');
+  }
+
+  showToastControl(control_id: string): void {
+    // Don't use the default method of bootstrap here. I don't know why but
+    // if you try to use it, probably any else collapse elements won't
+    // function normally.
+    const changelogToast = document.getElementById(control_id);
+    document.getElementById("shadow-bg")!.style.display = "block";
+    changelogToast!.style.display = "flex";
+  }
+
+  hideToastControl(control_id: string): void {
+    const changelogToast = document.getElementById(control_id);
+    document.getElementById("shadow-bg")!.style.display = "none";
+    changelogToast!.style.display = "none";
   }
 
 }
