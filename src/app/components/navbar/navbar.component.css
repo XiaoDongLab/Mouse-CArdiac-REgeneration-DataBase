@@ -51,11 +51,25 @@
   border: 1px solid transparent;
 }
 
-.bg-blurred {
-  background-color: rgba(var(--bs-pink-rgb), 0.5);
-  backdrop-filter: blur(100px);
-  --webkit-backdrop-filter: blur(100px);
-  box-shadow: var(--bs-box-shadow);
+@media (min-width: 992px) {
+  .bg-blurred {
+    background-color: rgba(var(--bs-pink-rgb), 0.5);
+    backdrop-filter: blur(30px) saturate(80%);
+    --webkit-backdrop-filter: blur(30px) saturate(80%);
+    box-shadow: var(--bs-box-shadow);
+    margin: 0 .5rem;
+    border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+    top: .5rem;
+    border-radius: var(--bs-border-radius-lg);
+  }
+}
+
+@media (max-width: 992px) {
+  .bg-blurred {
+    background-color: rgba(var(--bs-pink-rgb), 0.5);
+    backdrop-filter: blur(30px) saturate(80%);
+    --webkit-backdrop-filter: blur(30px) saturate(80%);
+  }
 }
 
 @media (min-width: 992px) {
@@ -71,7 +85,8 @@
     transition: .1s ease-in-out;
   }
 
-  .nav-link.active:focus::after, .nav-link.active:active::after {
+  .nav-link.active:focus::after,
+  .nav-link.active:active::after {
     display: flex;
     position: absolute;
     bottom: calc(0px - var(--bs-border-width));
@@ -106,7 +121,8 @@
     cursor: pointer;
   }
 
-  ::ng-deep .nav-link i, .nav-link svg {
+  ::ng-deep .nav-link i,
+  .nav-link svg {
     margin-right: .25rem;
   }
 }
@@ -124,7 +140,8 @@
     transition: .1s ease-in-out;
   }
 
-  .nav-link.active:focus::before, .nav-link.active:active::before {
+  .nav-link.active:focus::before,
+  .nav-link.active:active::before {
     display: flex;
     position: absolute;
     left: calc(0px - var(--bs-border-width));
@@ -135,7 +152,8 @@
     border-radius: .125rem;
   }
 
-  ::ng-deep .btn-darkmode, .nav-link.active {
+  ::ng-deep .btn-darkmode,
+  .nav-link.active {
     box-shadow: var(--bs-box-shadow);
     border: 1px solid var(--bs-border-color-translucent) !important;
     background-color: rgba(var(--bs-pink-rgb), 0.5);
@@ -160,7 +178,8 @@
     cursor: pointer;
   }
 
-  ::ng-deep .nav-link i, .nav-link svg {
+  ::ng-deep .nav-link i,
+  .nav-link svg {
     margin-right: .5rem;
   }
 }
