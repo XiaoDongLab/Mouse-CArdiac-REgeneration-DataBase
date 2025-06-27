@@ -31,3 +31,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Version history
 
 See [Changelog](CHANGELOG.md) for more details.
+
+## Miscellaneous
+
+You can manually override stylesheets in IGV (`node_modules/igv/dist/igv.esm.js`). Notice that you cannot apply any external stylesheets to IGV, since it is protected when serving.
