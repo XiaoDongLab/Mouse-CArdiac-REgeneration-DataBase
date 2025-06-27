@@ -124,6 +124,7 @@
 
 .toast.bg-blurred {
     background-color: var(--bs-body-bg);
+    border-radius: var(--bs-border-radius-xl);
     z-index: 999
 }
 
