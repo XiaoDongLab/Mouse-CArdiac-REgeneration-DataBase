@@ -12,7 +12,9 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build --configuration=production` to build the project. The build artifacts will be stored in the `dist/` directory. You may need to add `NODE_ENV=production REQUIRE_AUTH=false` when running the backend server during production.
+
+If you want to disable the optimizer, add `--optimization=false`. This will run all animations smoothly.
 
 ## Running unit tests
 
