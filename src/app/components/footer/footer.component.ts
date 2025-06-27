@@ -17,7 +17,7 @@ export class FooterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    document.getElementById("shadow-bg")!.style.display = "none";
+    // document.getElementById("shadow-bg")!.style.display = "none";
     this.Version = AppComponent.Version;
     this.CompileDate = AppComponent.CompileDate;
   }
