@@ -23,9 +23,9 @@
       <hr />
       <!--CELL TYPE SELECT BOX-->
       <h4>Cell Types</h4>
-      <ng-select [items]="cell_types" [searchable]="true" [clearable]="true"
-        placeholder="Select Cell Type(s)" [(ngModel)]="selected_cell_types" [selectableGroup]="true"
-        [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false" [multiple]="true">
+      <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" placeholder="Select Cell Type(s)"
+        [(ngModel)]="selected_cell_types" [selectableGroup]="true" [selectableGroupAsModel]="false"
+        [closeOnSelect]="false" [addTag]="false" [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
             <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"
@@ -41,16 +41,44 @@
         [(value)]='selected_cell_types'></dx-tag-box>-->
       <hr />
       <h4>Pathways</h4>
+      @if (pathway_groupby_go) {
       <div class="d-flex">
         <!--<dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
           [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>-->
-        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway" [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1" style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
+        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway"
+          [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
+          style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
         </ng-select>
         @if (pathway_info != '' && pathway_info != null) {
         <a tabindex="0" id="pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
           role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_info?.name"
           [attr.data-bs-content]="pathway_info?.definition.text"><i class="fa fa-info-circle"></i></a>
         }
+      </div>
+      }
+      @if (!pathway_groupby_go) {
+      <div class="d-flex">
+        <!--<dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
+          [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>-->
+        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway"
+          [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
+          style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
+        </ng-select>
+        @if (pathway_info != '' && pathway_info != null) {
+        <a tabindex="0" id="pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
+          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_info?.name"
+          [attr.data-bs-content]="pathway_info?.definition.text"><i class="fa fa-info-circle"></i></a>
+        }
+      </div>
+      }
+      <h5 class="mt-2">Group by</h5>
+      <div class="btn-group">
+        <input type="radio" class="btn-check" name="options-base" id="option5" [value]="true" autocomplete="off"
+          [(ngModel)]="pathway_groupby_go">
+        <label class="btn btn-outline-mcaredb" for="option5">GO</label>
+
+        <input type="radio" class="btn-check" name="options-base" id="option6" [value]="false" autocomplete="off" [(ngModel)]="pathway_groupby_go">
+        <label class="btn btn-outline-mcaredb" for="option6">KEGG</label>
       </div>
       <!--<h6 class="mt-2">Search mode</h6>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selected_search_mode">
@@ -74,7 +102,7 @@
     <div class="mt-3">
       <p class="text-center text-muted">Select Cluster To See Details</p>
     </div>
-    } 
+    }
     @if (term_selected) {
     <div class="row g-2 mt-3">
       <div class="col-12">
@@ -95,7 +123,8 @@
                   </div>
                   <div class="col-6">
                     <small class="text-muted">P-Value</small>
-                    <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">{{selected_term.P_Value.toFixed(4)}}</h5>
+                    <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">
+                      {{selected_term.P_Value.toFixed(4)}}</h5>
                   </div>
                 </div>
                 <hr />
