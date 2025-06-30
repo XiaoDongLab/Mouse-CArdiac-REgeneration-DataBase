@@ -68,6 +68,7 @@ export class GeneCardComponent implements OnInit {
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
   lfc_sig_cutoff = 0.0116
   lfc_minor_sig_cutoff = 0.0037
+  display = 'ShamMI';
 
 
   model_selected = false;
@@ -81,6 +82,10 @@ export class GeneCardComponent implements OnInit {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+  }
+
+  onItemSelected_Nav(text: any) {
+    this.display = text;
   }
 
   ngOnInit(): void {
@@ -623,7 +628,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         markers: {
-          size: 10
+          size: 5
         },
         xaxis: {
           //type: "numeric",
@@ -649,7 +654,7 @@ export class GeneCardComponent implements OnInit {
         },
         title: {
           // text: this.gene_list[0].gene!.toString(),
-          text: 'Sham - P1vsP8 - PSD1',
+          text: 'Sham - PSD1',
           align: "center",
           style: {
             color: "#000"
@@ -742,7 +747,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -771,7 +776,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'MI - P1vsP8 - PSD1',
+          text: 'MI - PSD1',
           align: "center",
           style: {
             color: "#000"
@@ -847,7 +852,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -865,7 +870,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'Sham - P1vsP8 - PSD3',
+          text: 'Sham - PSD3',
           align: "center",
           style: {
             color: "#000"
@@ -937,7 +942,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -955,7 +960,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'MI - P1vsP8 - PSD3',
+          text: 'MI - PSD3',
           align: "center",
           style: {
             color: "#000"
@@ -1036,7 +1041,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -1054,7 +1059,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'P1 - ShamvsMI - PSD1',
+          text: 'P1 - PSD1',
           align: "center",
           style: {
             color: "#000"
@@ -1137,7 +1142,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -1155,7 +1160,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'P1 - ShamvsMI - PSD3',
+          text: 'P1 - PSD3',
           align: "center",
           style: {
             color: "#000"
@@ -1227,7 +1232,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -1245,7 +1250,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'P8 - ShamvsMI - PSD1',
+          text: 'P8 - PSD1',
           align: "center",
           style: {
             color: "#000"
@@ -1317,7 +1322,7 @@ export class GeneCardComponent implements OnInit {
           //max: 2
         },
         markers: {
-          size: 10
+          size: 5
         },
         yaxis: {
           title: {
@@ -1335,7 +1340,7 @@ export class GeneCardComponent implements OnInit {
           }
         },
         title: {
-          text: 'P8 - ShamvsMI - PSD3',
+          text: 'P8 - PSD3',
           align: "center",
           style: {
             color: "#000"
