@@ -82,7 +82,10 @@ export class GoComponent implements OnInit {
   upreg_gene_counts: { gene: string, count: string }[];
   downreg_gene_counts: { gene: string, count: string }[];
   selected_cell_types: string[] = this.cell_types;
-  selected_pathway: string = 'G protein-coupled receptor signaling pathway'
+  selected_pathway: string = 'G protein-coupled receptor signaling pathway';
+  selected_pathway_kegg: string;
+  pathway_groupby_go: boolean = true; // False is KEGG
+  pathway_groupby_kegg: boolean = false;
 
   constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone) {
     this.databaseService.getPathways().subscribe({
