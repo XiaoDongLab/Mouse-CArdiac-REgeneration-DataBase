@@ -68,3 +68,11 @@
   text-indent: -.5in;
   list-style: none;
 }
+
+.mcaredb-title {
+  color: var(--bs-pink); font-weight: normal;
+}
+
+.mcaredb-title > b {
+  filter: saturate(5);
+}
