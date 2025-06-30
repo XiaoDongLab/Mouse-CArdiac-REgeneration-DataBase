@@ -1,11 +1,11 @@
 <!-- Loading overlay that will cover only the content area -->
 @if (loading) {
-  <div class="loading-overlay" id="loadingOverlay">
-    <!--<div class="loading-message">Loading...</div>-->
-    <div class="spinner-blurred">
-      <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
-    </div>
+<div class="loading-overlay" id="loadingOverlay">
+  <!--<div class="loading-message">Loading...</div>-->
+  <div class="spinner-blurred">
+    <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
   </div>
+</div>
 }
 <div class="row g-2">
   <!-- Content area -->
@@ -13,60 +13,70 @@
     <div #igvdiv class="igv" part="igv"></div>
     <div class="d-flex justify-content-center mt-3">
       <button color="accent" (click)="getInRangeGenes()" class="btn btn-mcaredb mb-1">
-        <i class="fa fa-magnifying-glass"></i>
-        Get Differential Expression Data
+        <i class="fa fa-arrow-up"></i>
+        Get DEG data in window
+      </button>
+      <button class="btn btn-mcaredb mb-1 ms-1" (click)="getDiffExpGenesInterest()">
+        <i class="fa fa-magnifying-glass">
+        </i>
+        Get DEG data of popular genes
       </button>
     </div>
   </div>
   @if (this.genes.length > 0) {
-    <div class="col-md-3 col-sm-12">
-      <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
-        <h4>Cell Types</h4>
-        <!--<dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
+  <div class="col-md-3 col-sm-12">
+    <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
+      <h4>Cell Types</h4>
+      <!--<dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
           placeholder="Select Cell Type(s)" (onValueChanged)="onCellChanged($event)" [showClearButton]="true"
           [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
         paginate='true'></dx-tag-box>-->
-        <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" (onValueChanged)="onCellChanged($event)" placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells"
-          [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false" [multiple]="true">
-          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-            <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
-              <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0" [ngModel]="item$.selected" />
-              <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;" for="item-{{index}}">
-                {{ item }}
-              </label>
-            </div>
-          </ng-template>
-        </ng-select>
-        <hr />
-        <button class="btn btn-mcaredb w-100" id="btn-apply-detail" disabled (click)="subsetCorrectCellAndTissueTypes()">
-          <i class="fa fa-arrows-rotate"></i> Apply
-        </button>
-        <hr />
-        <h4>Legends</h4>
-        <h6 class="col" style="color:#9C27B0;">Significantly Downregulated</h6>
-        <h6 class="col" style="color: #00BCD4;">Slightly Downregulated</h6>
-        <h6 class="col" style="color: #4CAF50;">No Change</h6>
-        <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
-        <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
-        <h6>Not have a significant fit</h6>
-        <hr />
-        <h4>Notes</h4>
-        <p><small class="text-muted">All p-values higher than 0.05 were hidden in the scatter plots.</small></p>
+      <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" (onValueChanged)="onCellChanged($event)"
+        placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells" [selectableGroup]="true"
+        [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false" [multiple]="true">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
+            <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"
+              [ngModel]="item$.selected" />
+            <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;" for="item-{{index}}">
+              {{ item }}
+            </label>
+          </div>
+        </ng-template>
+      </ng-select>
+      <hr />
+      <div class="progress mb-2" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar text-bg-mcaredb" [class.progress-bar-striped]="load_progress != 100" [class.progress-bar-animated]="load_progress != 100" [style.width]="load_progress + '%'">{{`${load_progress.toFixed(2)}%`}}</div>
       </div>
+      <button class="btn btn-mcaredb w-100" id="btn-apply-detail" disabled (click)="subsetCorrectCellAndTissueTypes()">
+        <i class="fa fa-arrows-rotate"></i> Apply
+      </button>
+      <hr />
+      <h4>Legends</h4>
+      <h6 class="col" style="color:#9C27B0;">Significantly Downregulated</h6>
+      <h6 class="col" style="color: #00BCD4;">Slightly Downregulated</h6>
+      <h6 class="col" style="color: #4CAF50;">No Change</h6>
+      <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
+      <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
+      <h6>Not have a significant fit</h6>
+      <hr />
+      <h4>Notes</h4>
+      <p><small class="text-muted">All p-values higher than 0.05 were hidden in the scatter plots.</small></p>
     </div>
+  </div>
   }
 
   @if (this.genes.length > 0) {
-    <div class="col-md-9 col-sm-12 mt-2" [class.searching]="loading">
-      <div class="accordion" id="accordionExample">
-        @for (gene_list of this.grouped_genes; track gene_list) {
-          @if (gene_list[0]) {
-            <div class="accordion-item" app-gene-card [gene_list]="gene_list"
-              [indices]="selected_indices" [completely_loaded]="completely_loaded">
-            </div>
-          }
-        }
+  <div class="col-md-9 col-sm-12 mt-2" [class.searching]="loading">
+    <div class="accordion" id="accordionExample">
+      @for (gene_list of this.grouped_genes; track gene_list) {
+      @if (gene_list[0]) {
+      <div class="accordion-item" app-gene-card [gene_list]="gene_list" [indices]="selected_indices"
+        [completely_loaded]="completely_loaded">
       </div>
+      }
+      }
     </div>
+  </div>
   }
 </div>

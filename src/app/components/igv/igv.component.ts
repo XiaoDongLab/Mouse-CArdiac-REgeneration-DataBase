@@ -12,6 +12,7 @@ import { LociService } from 'src/app/services/loci.service';
 import { GeneCardComponent } from '../gene-card/gene-card.component';
 import { group } from 'console';
 import { DxTagBoxModule } from 'devextreme-angular/ui/tag-box';
+import GeneList from '../../../assets/geneDict.json'
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -35,7 +36,9 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   //to_child = new DiffExp('TEST GENE', ['1','2','3'],['2','3','4'],['0','1','2'],['1,1,1'],['1,1,1'])
   //IGV Variables
   browser: any;
+  genes_interested: string[];
   deg_sorted_list: Map<String, number>;
+  load_progress: number;
   // trackUrl = 'https://www.encodeproject.org/files/ENCFF356YES/@@download/ENCFF356YES.bigWig'
   trackUrl = 'https://www.encodeproject.org/files/ENCFF092EKO/@@download/ENCFF092EKO.bigWig';
   options = {
@@ -91,8 +94,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   constructor(private databaseService: DatabaseService, databaseConstService: DatabaseConstsService, private lociService: LociService) {
     this.cell_types = databaseConstService.getDECellTypes();
     this.selected_cells = this.cell_types;
+    this.load_progress = 0;
     this.pmid_tissue_dist = databaseConstService.getDePmidTissueDict();
     this.tissue_types = Object.keys(this.pmid_tissue_dist)
+    this.genes_interested = ['ENSMUSG00000001517', 'ENSMUSG00000070348', 'ENSMUSG00000000184', 'ENSMUSG00000002068', 'ENSMUSG00000028212', 'ENSMUSG00000037169', 'ENSMUSG00000062991', 'ENSMUSG00000060275', 'ENSMUSG00000041014', 'ENSMUSG00000032311', 'ENSMUSG00000062312', 'ENSMUSG00000018166', 'ENSMUSG00000062209', 'ENSMUSG00000021765', 'ENSMUSG00000053110', 'ENSMUSG00000050966', 'ENSMUSG00000040021', 'ENSMUSG00000021959', 'ENSMUSG00000092341', 'ENSMUSG00000020160', 'ENSMUSG00000027210', 'ENSMUSG00000006932', 'ENSMUSG00000030867', 'ENSMUSG00000027699', 'ENSMUSG00000049604'];
     this.selected_tissues = this.tissue_types;
     this.deg_sorted_list = new Map<String, number>();
     this.databaseService.getIndices().subscribe({
@@ -212,10 +217,58 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.display = data;
+          console.log(data);
           this.getDiffExpGeneralData();
           // this.getDiffExpData()
         },
         error: (e) => console.error(e)
+      });
+  }
+
+  getDiffExpGenesInterest() {
+    this.loading = true;
+    this.completely_loaded = false;
+    console.log(this.genes_interested)
+    const convertedList: number[] = this.genes_interested.map((str) => {
+      // Remove 'ENSG' from the beginning of each string
+      const strippedString = str.replace('ENSMUSG', '');
+      // Convert the remaining string to a number
+      return parseInt(strippedString, 10);
+    });
+    this.databaseService.getGeneDiffExpGeneral(convertedList)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.initial_genes = data;
+          this.grouped_genes = data.map(gene => [gene]);
+          console.log(this.grouped_genes);
+          this.grouped_genes = this.sortGenesByDEG(this.grouped_genes, null);
+          this.genes = data;
+          this.grouped_genes.forEach((gene, idx) => {
+            this.deg_sorted_list.set(gene[0]?.gene?.toString() ?? '', idx);
+          })
+          console.log(this.deg_sorted_list);
+          // console.log(this.initial_genes[0]);
+          // this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
+          // this.subsetCorrectCellAndTissueTypes()
+          // console.log(this.grouped_genes);
+
+          console.log("Get detailed data here");
+          this.getDiffExpData(convertedList);
+          //this.original_genes = this.assignGeneNames(this.original_genes)
+          //this.genes = this.assignGeneNames(this.genes)
+          // this.original_genes = this.prettyOrderer(this.original_genes)
+          // this.genes = this.prettyOrderer(this.genes)
+        },
+        error: (e) => {
+          console.error(e)
+          this.loading = false;
+          alert('Too Many or Too Few Genes Selected, Please Adjust Search Region')
+        },
+        complete: () => {
+          this.loading = false
+          this.found = true
+        }
       });
   }
 
@@ -247,7 +300,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           // console.log(this.grouped_genes);
 
           console.log("Get detailed data here");
-          this.getDiffExpData();
+          this.getDiffExpData(convertedList);
           //this.original_genes = this.assignGeneNames(this.original_genes)
           //this.genes = this.assignGeneNames(this.genes)
           // this.original_genes = this.prettyOrderer(this.original_genes)
@@ -265,24 +318,25 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  getDiffExpData() {
-    this.gene_names = this.display!.map((obj) => obj.en_id!)
+  getDiffExpData(convertedList: number[]) {
+    /* this.gene_names = this.display!.map((obj) => obj.en_id!)
     const convertedList: number[] = this.gene_names.map((str) => {
       // Remove 'ENSG' from the beginning of each string
       const strippedString = str.replace('ENSMUSG', '');
       // Convert the remaining string to a number
       return parseInt(strippedString, 10);
-    });
-
+    });*/
+    this.load_progress = 20;
     this.databaseService.getGeneDiffExp(convertedList)
       .subscribe({
         next: (data) => {
+          this.load_progress = 50;
           this.original_genes = data;
           this.genes = data;
           this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
           document.getElementById("btn-apply-detail")?.removeAttribute("disabled");
           // this.subsetCorrectCellAndTissueTypes()
-          console.log(this.grouped_genes)
+          // console.log(this.grouped_genes)
           //this.original_genes = this.assignGeneNames(this.original_genes)
           //this.genes = this.assignGeneNames(this.genes)
           // this.original_genes = this.prettyOrderer(this.original_genes)
@@ -309,6 +363,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
 
   convertDiffExpData(gene_list: any[]) {
     for (let i = 0; i < gene_list.length; i++) {
+      this.load_progress = 50 + 50 * i / gene_list.length;
       let original_name = gene_list[i].gene
       let temp_string = "00000000000" + original_name.toString()
       let gene_name = "ENSMUSG" + temp_string.slice(-11)
@@ -321,7 +376,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       acc[obj.gene].push(obj);
       return acc;
     }, {} as { [gene: string]: DiffExp[] });
-
+    this.load_progress = 100;
     // Convert the object to an array of arrays
     return (Object.values(groupedLists));
   }
