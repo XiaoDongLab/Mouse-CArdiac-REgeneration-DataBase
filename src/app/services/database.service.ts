@@ -31,6 +31,7 @@ const linRegDataUrl =  baseUrl.concat('linRegData'.toString());
 const staticUrl =  baseUrl.concat('static'.toString());
 const tarSizeUrl =  baseUrl.concat('tarSize'.toString());
 const goEnrichUrl =  baseUrl.concat('goEnrich'.toString());
+const keggEnrichUrl =  baseUrl.concat('keggEnrich'.toString());
 const giniURL =  baseUrl.concat('gini'.toString());
 
 
@@ -128,6 +129,20 @@ export class DatabaseService {
     console.log(`${goEnrichUrl}/${formatted_tissues}/${formatted_cell_types}/${formatted_pathway}/${formatted_comparison}`);
 
     return this.http.get<any[]>(`${goEnrichUrl}/${formatted_tissues}/${formatted_cell_types}/${formatted_pathway}/${formatted_comparison}`);
+  }
+
+  getKEGGTerms(tissues: string[], cell_types: string[], pathway: string, comparisonType: string) {
+    let formatted_tissues = tissues.join(',').replace(/ /g, '_');
+    let formatted_cell_types = cell_types
+        .map(str => str.toLowerCase().charAt(0).toUpperCase() + str.slice(1))
+        .join(',')
+        .replace(/ /g, '_');
+    let formatted_pathway = pathway.replace(/ /g, '_');
+    let formatted_comparison = comparisonType.replace(/ /g, '_'); // Format comparison type
+
+    console.log(`${keggEnrichUrl}/${formatted_tissues}/${formatted_cell_types}/${formatted_pathway}/${formatted_comparison}`);
+
+    return this.http.get<any[]>(`${keggEnrichUrl}/${formatted_tissues}/${formatted_cell_types}/${formatted_pathway}/${formatted_comparison}`);
   }
 
 
