@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { LociService } from 'src/app/services/loci.service';
 import { PathwayinfoService } from 'src/app/services/pathwayinfo.service';
 import { GiniScore } from 'src/app/models/giniScore.model';
+import { DatabaseConstsService } from 'src/app/services/database-consts.service';
+import { min } from 'rxjs';
 declare const bootstrap: any;
 
 export type ChartOptions = {
@@ -38,8 +40,8 @@ export class GoComponent implements OnInit {
     { text: 'P1 vs P8: MI - PSD3', value: '2' },
     { text: 'P1 vs P8: Sham - PSD1', value: '3' },
     { text: 'P1 vs P8: Sham - PSD3', value: '4' },
-    { text: 'Sham vs MI: P1 - PSD1', value: '5' },  // text is correct value, young_old is becuase i am lazy to change
-    { text: 'Sham vs MI: P1 - PSD3', value: '6' },
+    { text: 'Sham vs MI: P1/2 - PSD1', value: '5' },  // text is correct value, young_old is becuase i am lazy to change
+    { text: 'Sham vs MI: P1/2 - PSD3', value: '6' },
     { text: 'Sham vs MI: P8 - PSD1', value: '7' },
     { text: 'Sham vs MI: P8 - PSD3', value: '8' }
   ];
@@ -59,35 +61,65 @@ export class GoComponent implements OnInit {
   gini_scores: GiniScore[];
   gini_histogram_data: string;
   pathways: any;
+  kegg_pathways: any;
   search_modes = [
     { text: 'Name Contains', value: 'contains' },
     { text: 'Name Starts With', value: 'startsWith' }
   ];
   tissue_types: string[] = ['Heart'];
   selected_tissues: string[] = this.tissue_types
-  cell_types: string[] = [
-    'All Cells, Heart',
-    'Cardiomyocyte',
-    'Fibroblast 2',
-    'Macrophage',
-    'Cardiomyocyte 2',
-    'Endothelial Cell 2',
-    'Fibroblast 3',
-    'Mural Cell',
-    'Cardiomyocyte 3',
-    'Endothelial Cell',
-    'Fibroblast',
-    'Nuclear Cardiomyocyte'
+  cell_types = [
+    "All Cells",
+    "All",
+    "Cardiac cell",
+    "B cell",
+    "T cell",
+    "Red blood cell",
+    "Granulocyte",
+    "Cardiomyocyte",
+    "Cardiomyocyte 1",
+    "Cardiomyocyte 1 2",
+    "Cardiomyocyte 1 3",
+    "Cardiomyocyte 1 4",
+    "Cardiomyocyte 2",
+    "Cardiomyocyte 2 2",
+    "Cardiomyocyte 2 3",
+    "Cardiomyocyte 2 4",
+    "Cardiomyocyte 3",
+    "Cardiomyocyte 4",
+    "Cardiomyocyte 4 2",
+    "Sinoatrial node (SAN) cell",
+    "Sinoatrial node cell",
+    "Endothelial cell",
+    "Endothelial cell 2",
+    "Endothelial cell 3",
+    "Endothelial cell 4",
+    "Endothelial cell 5",
+    "Endothelial cell 6",
+    "Macrophage",
+    "Macrophage 2",
+    "M2 macrophage",
+    "Fibroblast",
+    "Fibroblast 2",
+    "Fibroblast 3",
+    "Fibroblast 4",
+    "Fibroblast 5",
+    "Fibroblast 6",
+    "Mural cell",
+    "Well-established epicardial progenitor cell",
+    "Progenitor cell",
+    "Activated fibroblast"
   ];
   upreg_gene_counts: { gene: string, count: string }[];
   downreg_gene_counts: { gene: string, count: string }[];
   selected_cell_types: string[] = this.cell_types;
   selected_pathway: string = 'G protein-coupled receptor signaling pathway';
-  selected_pathway_kegg: string;
+  selected_pathway_kegg: string = 'Cytokine-cytokine receptor interaction';
   pathway_groupby_go: boolean = true; // False is KEGG
   pathway_groupby_kegg: boolean = false;
 
-  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone) {
+  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, private databaseConstsService: DatabaseConstsService) {
+    // Get GO Pathways
     this.databaseService.getPathways().subscribe({
       next: (data) => {
         //this.pathways = data.slice(0,100);
@@ -98,6 +130,10 @@ export class GoComponent implements OnInit {
       },
       complete: () => { }
     });
+
+    // Get KEGG Pathways
+    this.kegg_pathways = this.databaseConstsService.getKEGGPathways().sort((a, b) => (a < b ? 1 : -1));
+
     this.databaseService.getGiniScores().subscribe({
       next: (data) => {
         this.gini_scores = data
@@ -253,16 +289,25 @@ export class GoComponent implements OnInit {
   }
 
   createDisplayData() {
+    console.log(this.go_terms)
     this.upreg_enrich_list = []
     this.downreg_enrich_list = []
     let go_data = [];
-    let min_nes = Number.POSITIVE_INFINITY
-    let max_nes = Number.NEGATIVE_INFINITY
-    let max_p_val = Number.NEGATIVE_INFINITY
+    let min_nes = this.go_terms.reduce((prev, cur) => {
+      return (prev && prev.nes < cur.nes) ? prev : cur;
+    }).nes;
+    let max_nes = this.go_terms.reduce((prev, cur) => {
+      return (prev && prev.nes > cur.nes) ? prev : cur;
+    }).nes;
+    min_nes = Math.floor(min_nes - 1)
+    max_nes = Math.ceil(max_nes + 1)
+    let max_p_val = -Math.log10(Number(this.go_terms.reduce((prev, cur) => {
+      return (prev && prev.P_Value < cur.P_Value) ? prev : cur;
+    }).P_Value));
     for (let i = 0; i < this.go_terms.length; i++) {
       let go_term = this.go_terms[i];
-      let color = this.getColorForValue(go_term.nes)
-      let label = go_term.cell_type + '-' + go_term.tissue
+      let color = this.getColorForValue(go_term.nes, min_nes, max_nes);
+      let label = go_term.cell_type + '-' + go_term.tissue;
       // let formatted_data = { x: Number(go_term.nes), y: Number(go_term.P_Value), fillColor: color, label: label };
       // anthony
       // Convert adjusted p-value to -log10(p-value)
@@ -275,11 +320,8 @@ export class GoComponent implements OnInit {
       };
 
       go_data.push(formatted_data);
-      min_nes = go_term.nes! < min_nes ? go_term.nes! : min_nes;
-      max_nes = go_term.nes! > max_nes ? go_term.nes! : max_nes;
-      max_p_val = go_term.P_Value > max_p_val ? go_term.P_Value : max_p_val;
       //set core enrichment values
-      let enrich_list = go_term.coreenrichment.split('/')
+      let enrich_list = go_term.coreenrichment.split(this.pathway_groupby_go ? '/' : ';');
       if (Number(go_term.nes >= 0)) {
         this.upreg_enrich_list = this.upreg_enrich_list.concat(enrich_list)
       }
@@ -290,24 +332,20 @@ export class GoComponent implements OnInit {
     //calculte gene prevalance
     this.countOccurrences(this.upreg_enrich_list, 'UP')
     this.countOccurrences(this.downreg_enrich_list, 'DOWN')
-
-    min_nes = Math.floor(min_nes - 1)
-    max_nes = Math.ceil(max_nes + 1)
-    max_p_val = Math.ceil(max_p_val + 0.5)
+    max_p_val = Math.ceil(max_p_val + 1)
     let num_ticks = max_nes - min_nes
     this.go_chart_options.series = [{ data: go_data }];
     this.go_chart_options.xaxis = {
       title: {
         text: "Normalized Enrichment Score",
-        offsetY: 80,
         style: {
           fontSize: '16px',
-          color: "#000"
+          color: "#000000"
         }
       },
       labels: {
         style: {
-          colors: "#000"
+          colors: "#000000"
         }
       },
       type: "numeric", // Ensure x-axis is numeric
@@ -323,7 +361,7 @@ export class GoComponent implements OnInit {
         text: "-Log10(Adjusted P-Value)",
         style: {
           fontSize: '16px',
-          color: '#000'
+          color: '#000000'
         }
       },
       min: 0,
@@ -334,16 +372,16 @@ export class GoComponent implements OnInit {
           return Math.round(val).toString();
         },
         style: {
-          colors: "#000",
+          colors: "#000000",
         }
       }
     }
   }
 
-  getColorForValue(value: number): string {
+  getColorForValue(value: number, min_val: number, max_val: number): string {
     // Normalize value to be between 0 and 1
-    const min_value = -2;
-    const max_value = 2;
+    const min_value = min_val;
+    const max_value = max_val;
     const normalizedValue = (value - min_value) / (max_value - min_value);
 
     // Define the colors
@@ -373,7 +411,7 @@ export class GoComponent implements OnInit {
 
 
   getGeneSymbols(selected_term: GoTerm): void {
-    let ensemble_list = selected_term.coreenrichment.split('/')
+    let ensemble_list = selected_term.coreenrichment.split(this.pathway_groupby_go ? '/' : ';')
     this.geneConversionService.convertEnsemblListToGeneList(ensemble_list)
       .then((result: string[]) => {
         let selected_gene_counts = selected_term.nes > 0 ? this.upreg_gene_counts : this.downreg_gene_counts
@@ -432,23 +470,20 @@ export class GoComponent implements OnInit {
 
   // Re-wrote
   geneRerout(item: string) {
-    console.log(item);
     this.lociService.setLocus(item);
     this.router.navigate(['/igv']);
   }
 
-  getPathDisplayData() {
+  getPathDisplayData() { //Go pathway
     this.pathwayInfoService.getPathwayInfo(this.go_terms[0].goid).subscribe({
       next: (data) => {
         this.pathway_info = data.results[0]
         this.pathway_info.name = this.pathway_info.name.replace(/\b\w/g, (char: string) => char.toUpperCase());
         setTimeout(() => {
-          console.log(document.getElementById("pathway_btn"));
-          const pathway_popover = new bootstrap.Popover(document.getElementById("pathway_btn"));
+          const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
         }, 100)
       },
       complete: () => {
-        console.log("ggg");
       }
     })
   }
@@ -487,20 +522,34 @@ export class GoComponent implements OnInit {
   }
 
   prepareData() {
-
-    this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
-      .subscribe({
-        next: (data) => {
-          this.go_terms = data;
-          this.createDisplayData();
-          this.getPathDisplayData();
-          this.loading = false;
-        },
-        error: (e) => {
-          console.error(e);
-        },
-        complete: () => { }
-      });
+    if (this.pathway_groupby_go) {
+      this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
+        .subscribe({
+          next: (data) => {
+            this.go_terms = data;
+            this.createDisplayData();
+            this.getPathDisplayData();
+            this.loading = false;
+          },
+          error: (e) => {
+            console.error(e);
+          },
+          complete: () => { }
+        });
+    } else {
+      this.databaseService.getKEGGTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway_kegg, this.selectedComparisonType)
+        .subscribe({
+          next: (data) => {
+            this.go_terms = data;
+            this.createDisplayData();
+            // this.getPathDisplayData();
+          },
+          error: (e) => {
+            console.error(e);
+          },
+          complete: () => this.loading = false
+        });
+    }
   }
 
   makeGiniPlot() {
@@ -550,7 +599,6 @@ export class GoComponent implements OnInit {
   getNewData() {
     this.loading = true;
     this.term_selected = false;
-    console.log(this.loading)
     this.prepareData()
     this.setHistogramLines()
   }
@@ -569,7 +617,13 @@ export class GoComponent implements OnInit {
   onCellsChanged($event: any) {
     this.selected_cell_types = $event.value
   }
-  onPathwayChange($event: any) {
-    this.selected_pathway = $event.value;
+  onPathwayChange() {
+    if (this.pathway_groupby_go) {
+      this.getPathDisplayData()
+    } else {
+      setTimeout(() => {
+        const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
+      }, 100)
+    }
   }
 }

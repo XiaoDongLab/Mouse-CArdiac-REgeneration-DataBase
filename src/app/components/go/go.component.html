@@ -41,45 +41,53 @@
         [(value)]='selected_cell_types'></dx-tag-box>-->
       <hr />
       <h4>Pathways</h4>
-      @if (pathway_groupby_go) {
       <div class="d-flex">
         <!--<dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
           [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>-->
+        @if (pathway_groupby_go) {
         <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway"
           [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
           style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
         </ng-select>
-        @if (pathway_info != '' && pathway_info != null) {
-        <a tabindex="0" id="pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
-          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_info?.name"
-          [attr.data-bs-content]="pathway_info?.definition.text"><i class="fa fa-info-circle"></i></a>
         }
-      </div>
-      }
-      @if (!pathway_groupby_go) {
-      <div class="d-flex">
-        <!--<dx-autocomplete [dataSource]="pathways" [(value)]="selected_pathway" [minSearchLength]="1" searchEnabled="true"
-          [searchMode]="selected_search_mode" [maxItemCount]="200" [showDropDownButton]="true"></dx-autocomplete>-->
-        <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway"
+        @if (!pathway_groupby_go) {
+        <ng-select [items]="kegg_pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway_kegg"
           [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
           style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
         </ng-select>
+        }
         @if (pathway_info != '' && pathway_info != null) {
-        <a tabindex="0" id="pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
-          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_info?.name"
-          [attr.data-bs-content]="pathway_info?.definition.text"><i class="fa fa-info-circle"></i></a>
+        <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
+          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : 'KEGG Pathway Information'"
+          [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : 'This function is currently unavailable due to technical issues.'"><i class="fa fa-info-circle"></i></a>
         }
       </div>
-      }
-      <h5 class="mt-2">Group by</h5>
-      <div class="btn-group">
-        <input type="radio" class="btn-check" name="options-base" id="option5" [value]="true" autocomplete="off"
-          [(ngModel)]="pathway_groupby_go">
-        <label class="btn btn-outline-mcaredb" for="option5">GO</label>
 
-        <input type="radio" class="btn-check" name="options-base" id="option6" [value]="false" autocomplete="off" [(ngModel)]="pathway_groupby_go">
-        <label class="btn btn-outline-mcaredb" for="option6">KEGG</label>
-      </div>
+      <!--<div class="d-flex">
+        @if (pathway_info != '' && pathway_info != null) {
+        <a tabindex="0" id="kegg_pathway_btn" data-bs-trigger="focus" class="btn btn-link btn-floating text-body"
+          role="button" data-bs-toggle="popover" data-bs-title="KEGG Pathway Information"
+          data-bs-content="This function is currently unavailable due to technical issues."><i class="fa fa-info-circle"></i></a>
+        }
+      </div>-->
+      <h5 class="mt-2">Group by</h5>
+      <input type="radio" class="btn-check" name="options-base" id="option5" [value]="true" autocomplete="off"
+        [(ngModel)]="pathway_groupby_go" (change)="onPathwayChange()">
+      <label class="btn btn-outline-mcaredb w-100 text-start" for="option5">
+        <div class="d-flex flex-column w-100 justify-content-left">
+          <h5>GO Pathways</h5>
+          <small>Gene Ontology (GO) annotates and classifies gene sets through BP, CC, and MF.</small>
+        </div>
+      </label>
+
+      <input type="radio" class="btn-check" name="options-base" id="option6" [value]="false" autocomplete="off"
+        [(ngModel)]="pathway_groupby_go" (change)="onPathwayChange()">
+      <label class="btn btn-outline-mcaredb w-100 text-start mt-2" for="option6">
+        <div class="d-flex flex-column w-100 justify-content-left">
+          <h5>KEGG Pathways</h5>
+          <small>Kyoto Encyclopedia of Genes and Genomes (KEGG) looks at pathways through DEGs.</small>
+        </div>
+      </label>
       <!--<h6 class="mt-2">Search mode</h6>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selected_search_mode">
         @for (item of search_modes; track item) {
@@ -95,8 +103,7 @@
   <div class="col-md-6 col-sm-12">
     <apx-chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!" [xaxis]="go_chart_options.xaxis!"
       [yaxis]="go_chart_options.yaxis!" [markers]="go_chart_options.markers!"
-      [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!"
-      style="margin-bottom: 1000px;">
+      [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!">
     </apx-chart>
     @if (!term_selected&&!loading) {
     <div class="mt-3">
@@ -124,7 +131,7 @@
                   <div class="col-6">
                     <small class="text-muted">P-Value</small>
                     <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">
-                      {{selected_term.P_Value.toFixed(4)}}</h5>
+                      {{(selected_term.P_Value > 0.0001 ? selected_term.P_Value.toFixed(4) : "&lt;0.0001")}}</h5>
                   </div>
                 </div>
                 <hr />
