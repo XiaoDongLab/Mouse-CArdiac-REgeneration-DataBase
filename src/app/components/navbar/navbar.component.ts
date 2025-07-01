@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
       },
       {
         id: 2,
-        text: 'Go Term Enrichment',
+        text: 'Pathway Enrichment',
         icon: 'fa-magnifying-glass',
         path: 'go',
       },
