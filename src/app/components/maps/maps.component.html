@@ -41,23 +41,32 @@
       @if (display=='Meta Info') {
       <div class='col-md-6 col-sm-12'>
         <h4>Study Information</h4>
-        <p>
-          Title: <a target="_blank" href="https://pubmed.ncbi.nlm.nih.gov/{{selected_info.pmid}}/">{{title}}</a>
-        </p>
-        <p>
-          First Author: <b>{{author}}</b>
-        </p>
-        <p>
-          Year Published: <b>{{year}}</b>
-        </p>
-      </div>
-      <div class="col-md-6 col-sm-12">
-        <h4>Information</h4>
-        <p>Other Possible Cell Types: <b>{{ selected_info.cell_type2 }} {{ selected_info.cell_type3 }}</b>
-        </p>
         <div class="row">
           <div class="col-12">
-            <span>-Log<sub>10</sub>(Adjusted P-Value):</span>
+            <h5>
+              <a href="https://pubmed.ncbi.nlm.nih.gov/{{selected_info.pmid}}/" target="_blank">{{title}}</a>
+            </h5>
+          </div>
+          <div class="col-12">
+            <span>First Author</span>
+            <h5>{{author}}</h5>
+          </div>
+          <div class="col-12">
+            <span>Year Published</span>
+            <h5>{{year}}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <h4>Cluster Information</h4>
+        <div class="row">
+          <div class="col-12">
+            <span>Other Possible Cell Types</span>
+            <h5>{{ selected_info.cell_type2 }}</h5>
+            <h5>{{ selected_info.cell_type3 }}</h5>
+          </div>
+          <div class="col-12">
+            <span>-Log<sub>10</sub>(Adjusted P-Value)</span>
             <h4>{{selected_info.pvalue.toExponential(2)}}</h4>
           </div>
           <div class="col-12">

@@ -216,7 +216,7 @@ export class MapsComponent implements OnInit {
 
   formatOtherCellTypes() {
     this.selected_info.cell_type2 = this.selected_info.cell_type2 == 'NA' ? '' : (this.selected_info.cell_type2);
-    this.selected_info.cell_type3 = this.selected_info.cell_type3 == 'NA' ? '' : (', ' + this.selected_info.cell_type3);
+    this.selected_info.cell_type3 = this.selected_info.cell_type3 == 'NA' ? '' : (this.selected_info.cell_type3);
     if (this.selected_info.cell_type2 == '' && this.selected_info.cell_type3 == '') {
       this.selected_info.cell_type2 = 'None'
     }
