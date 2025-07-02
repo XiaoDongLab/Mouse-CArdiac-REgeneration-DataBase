@@ -10,9 +10,10 @@ import { Indices } from 'src/app/models/indices.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
 import { LociService } from 'src/app/services/loci.service';
 import { GeneCardComponent } from '../gene-card/gene-card.component';
-import { group } from 'console';
+import { clear, group } from 'console';
 import { DxTagBoxModule } from 'devextreme-angular/ui/tag-box';
 import GeneList from '../../../assets/geneDict.json'
+import { setInterval, clearInterval } from 'timers';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -89,6 +90,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   gene_names: string[] = [];
   found = false;
   loading: boolean = false;
+  fakeInterval: any | undefined;
 
 
   constructor(private databaseService: DatabaseService, databaseConstService: DatabaseConstsService, private lociService: LociService) {
@@ -318,6 +320,16 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       });
   }
 
+  fakeProgress(list_length: number) {
+    this.fakeInterval = window.setInterval(() => {
+      this.load_progress += Math.random() * 3 + 1;
+      if (this.load_progress >= 97) {
+        window.clearInterval(this.fakeInterval)
+        this.fakeInterval = undefined;
+      }
+    }, Math.random() * 10 + list_length * 15);
+  }
+
   getDiffExpData(convertedList: number[]) {
     /* this.gene_names = this.display!.map((obj) => obj.en_id!)
     const convertedList: number[] = this.gene_names.map((str) => {
@@ -326,11 +338,15 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       // Convert the remaining string to a number
       return parseInt(strippedString, 10);
     });*/
-    this.load_progress = 20;
+    window.clearInterval(this.fakeInterval)
+    this.load_progress = 0;
+    this.fakeProgress(convertedList.length);
     this.databaseService.getGeneDiffExp(convertedList)
       .subscribe({
         next: (data) => {
-          this.load_progress = 50;
+          window.clearInterval(this.fakeInterval)
+          this.fakeInterval = undefined;
+          this.load_progress = 100;
           this.original_genes = data;
           this.genes = data;
           this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
@@ -363,7 +379,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
 
   convertDiffExpData(gene_list: any[]) {
     for (let i = 0; i < gene_list.length; i++) {
-      this.load_progress = 50 + 50 * i / gene_list.length;
       let original_name = gene_list[i].gene
       let temp_string = "00000000000" + original_name.toString()
       let gene_name = "ENSMUSG" + temp_string.slice(-11)
@@ -376,7 +391,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       acc[obj.gene].push(obj);
       return acc;
     }, {} as { [gene: string]: DiffExp[] });
-    this.load_progress = 100;
     // Convert the object to an array of arrays
     return (Object.values(groupedLists));
   }
