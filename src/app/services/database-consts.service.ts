@@ -15,7 +15,7 @@ export class DatabaseConstsService {
   ]
 
    DiffExpCellTypes = [
-    "All Cells, Heart",
+    "All Cells",
     "Cardiac cell",
     "B cell",
     "T cell",
