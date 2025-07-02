@@ -2,7 +2,7 @@
   <div class="col-md-3 col-sm-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>File type</h4>
-      <ng-select [items]="species" [searchable]="true" [clearable]="true" (onValueChanged)="onSpeciesChanged($event)"
+      <ng-select [items]="species" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
         placeholder="Select species..." class="mb-2" [selectableGroup]="true" [selectableGroupAsModel]="false"
         [closeOnSelect]="false" [(ngModel)]="selected_species" groupBy="species" [addTag]="false" [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
@@ -15,6 +15,20 @@
         </ng-template>
       </ng-select>
       <hr />
+      <!--<h4>Cell type</h4>
+      <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
+        placeholder="Select cell types..." class="mb-2" [selectableGroup]="true" [selectableGroupAsModel]="false"
+        [closeOnSelect]="false" [(ngModel)]="selected_cells" groupBy="cell_types" [addTag]="false" [multiple]="true">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <div class="form-check">
+            <input id="item-{{ index }}" type="checkbox" class="form-check-input" [ngModel]="item$.selected" />
+            <label class="form-check-label" for="item-{{index}}">
+              {{ item }}
+            </label>
+          </div>
+        </ng-template>
+      </ng-select>
+      <hr />-->
       <h4>PMID</h4>
       <input type="text" placeholder="Optional" class="form-control" aria-describedby="basic-addon1"
         (input)="onInputChange($event)">

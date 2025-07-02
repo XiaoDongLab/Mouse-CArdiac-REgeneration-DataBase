@@ -126,7 +126,8 @@ export class SearchComponent implements OnInit {
       headerCheckboxSelection: true,
       headerCheckboxSelectionFilteredOnly: true },
 
-    { field: 'study_id',     headerName: 'PMID'       },
+    { field: 'study_id',       headerName: 'PMID'     },
+    { field: 'cell_types',      headerName: 'Cell Type'},
     { field: 'disease_status', headerName: 'Group'    },
     { field: 'notes',          headerName: 'Comparison' },
     { field: 'age',            headerName: 'Category' },
@@ -152,11 +153,11 @@ export class SearchComponent implements OnInit {
     //this.cell_types = databaseConstService.getCellTypes();
     this.health = ['All', 'Cancer', 'Healthy'];
     this.species = ["matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Go Enrich", "DEG Results"];
-    this.cell_types = ['All Cells', 'B Cells', 'Dendritic Cells', 'Endothelial Cells', 'Fibroblasts', 'Macrophages', 'Neurons', 'T Cells'];
+    this.cell_types = databaseConstService.getDECellTypes();
     this.age_type = ['neonatal', 'postnatal'];
 
     this.selected_tissues = this.tissue_types;
-    this.selected_cells = ['All Cells'];
+    this.selected_cells = this.cell_types;
     this.selected_species = ["matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Go Enrich", "DEG Results"];
     this.selected_age = [0, 110];
     this.selected_age_type = ['neonatal', 'postnatal'];
@@ -230,7 +231,6 @@ export class SearchComponent implements OnInit {
     backend_health_select = this.addBackendHealth(this.selected_health)
 
     let pmid_selected = this.pmid == '' ? 'undefined' : this.pmid
-    console.log(this.selected_species)
     this.databaseService.getSamplesTest(this.selected_species, backend_tissue_select, this.formatForDB(this.selected_cells), this.selected_age, backend_health_select, pmid_selected)
       .subscribe({
         next: (data) => {
@@ -298,16 +298,7 @@ export class SearchComponent implements OnInit {
     }
     return arr;
   }
-
-  onTissuesChanged($event: any) {
-    this.selected_tissues = $event.value
-  }
-  onCellsChanged($event: any) {
-    this.selected_cells = $event.value
-  }
   onSpeciesChanged($event: any) {
-    this.selected_species = $event.value;
-    console.log(this.selected_species)
     this.samplesTest();
   }
   onAgeChanged($event: any) {
@@ -440,7 +431,7 @@ export class SearchComponent implements OnInit {
     document.getElementById("downloadButton")?.setAttribute("disabled", "true");
     alert('Download Started');
     this.selected_download_method = 'Download Standardized Data';
-    let selected_ids = this.gridApi.getSelectedRows().map(row => row.study_id + '/' + row.cell_types)
+    let selected_ids = this.gridApi.getSelectedRows().map(row => row.study_id + '/' + row.platform)
     if (this.selected_download_method == 'Download Standardized Data' && selected_ids.length > 0) {
       this.downloadStandaradizedData(selected_ids)
     }
