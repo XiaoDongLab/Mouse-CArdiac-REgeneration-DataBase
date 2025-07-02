@@ -70,7 +70,6 @@ export class GoComponent implements OnInit {
   selected_tissues: string[] = this.tissue_types
   cell_types = [
     "All Cells",
-    "All",
     "Cardiac cell",
     "B cell",
     "T cell",
@@ -181,7 +180,7 @@ export class GoComponent implements OnInit {
         }
       },
       markers: {
-        size: 10,
+        size: 5,
         shape: "circle"
       },
       yaxis: {
@@ -307,7 +306,11 @@ export class GoComponent implements OnInit {
     for (let i = 0; i < this.go_terms.length; i++) {
       let go_term = this.go_terms[i];
       let color = this.getColorForValue(go_term.nes, min_nes, max_nes);
-      let label = go_term.cell_type + '-' + go_term.tissue;
+      let label = go_term.cell_type;
+      if (label.includes("All")) {
+        color = color.replace("rgb", "rgba").replace(")", ",.5)");
+      }
+      console.log(label + ": " + color)
       // let formatted_data = { x: Number(go_term.nes), y: Number(go_term.P_Value), fillColor: color, label: label };
       // anthony
       // Convert adjusted p-value to -log10(p-value)
