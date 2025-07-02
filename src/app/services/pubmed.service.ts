@@ -31,7 +31,7 @@ export class PubmedService {
         ).map(n => n.textContent?.trim() ?? 'Unknown');
 
         const year = doc
-          .querySelector('time.citation-year')
+          .querySelector('.citation-year')
           ?.textContent?.trim() ?? 'Unknown';
 
         return new Pubmed(title, authors, year);   // ← 这里返回给 map
