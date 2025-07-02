@@ -1,6 +1,24 @@
 # Version history
 
-The latest version is **1.2506.50.0**, compiled on 25 June 2025.
+The latest version is **1.2507.13.0**, compiled on 2 July 2025.
+
+## 1.2507.13.0 - 2 July 2025
+
+### Important to Know
+
+- **KEGG Pathways**: We've added Kyoto Encyclopedia of Genes and Genomes (KEGG) data to our database.
+
+- **Clusters display**: All clusters on the pathway enrichment scatter plot will be shown as semi-transparent if the cell type is "All Cells". 
+
+### New Features
+
+- **Pathway selector**: You can select GO or KEGG pathways in the new **Pathway Enrichment** page, previously Go Term Enrichment.
+
+### Fixed Issues
+
+- Fixed an issue that the PubMed publish date could not display properly.
+
+- Fixed an issue that the pathway information popover could not display after switching pathway category.
 
 ## 1.2506.50.0 - 25 June 2025
 
