@@ -1145,6 +1145,8 @@ export class GeneCardComponent implements OnInit {
           size: 5
         },
         yaxis: {
+          logarithmic: true,
+          logBase: 10,
           title: {
             text: "-Log10(Adjusted P-Value)",
             style: {
@@ -2018,6 +2020,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfc1_Sham
     }
     this.model_chart_options1_Sham.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2025,8 +2029,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_val1_Sham,
+      min: 0.01,
+      max: max_p_val1_Sham * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2097,6 +2101,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfc1_MI
     }
     this.model_chart_options1_MI.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2104,8 +2110,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_val1_MI,
+      min: 0.01,
+      max: max_p_val1_MI * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2171,6 +2177,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfc3_Sham
     }
     this.model_chart_options3_Sham.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2178,8 +2186,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_val3_Sham,
+      min: 0.01,
+      max: max_p_val3_Sham * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2237,6 +2245,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfc3_MI
     }
     this.model_chart_options3_MI.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2244,8 +2254,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_val3_MI,
+      min: 0.01,
+      max: max_p_val3_MI * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2308,6 +2318,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfcP1_1
     }
     this.model_chart_optionsP1_1.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2315,8 +2327,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_valP1_1,
+      min: 0.01,
+      max: max_p_valP1_1 * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2389,6 +2401,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfcP1_3
     }
     this.model_chart_optionsP1_3.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2396,8 +2410,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_valP1_3,
+      min: 0.01,
+      max: max_p_valP1_3 * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2467,6 +2481,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfcP8_1
     }
     this.model_chart_optionsP8_1.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2474,8 +2490,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_valP8_1,
+      min: 0.01,
+      max: max_p_valP8_1 * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2533,6 +2549,8 @@ export class GeneCardComponent implements OnInit {
       max: max_lfcP8_3
     }
     this.model_chart_optionsP8_3.yaxis = {
+      logarithmic: true,
+      logBase: 10,
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
@@ -2540,8 +2558,8 @@ export class GeneCardComponent implements OnInit {
           color: "#000"
         }
       },
-      min: 0,
-      max: max_p_valP8_3,
+      min: 0.01,
+      max: max_p_valP8_3 * 5,
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
