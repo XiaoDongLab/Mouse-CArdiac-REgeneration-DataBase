@@ -283,3 +283,11 @@
 ::ng-deep .ng-select-container label {
   text-overflow: ellipsis !important;
 }
+
+::ng-deep .ng-dropdown-panel {
+  background-color: transparent !important;
+}
+
+::ng-deep .ng-dropdown-panel {
+  z-index: 99999 !important;
+}

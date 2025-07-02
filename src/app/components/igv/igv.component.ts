@@ -323,11 +323,11 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   fakeProgress(list_length: number) {
     this.fakeInterval = window.setInterval(() => {
       this.load_progress += Math.random() * 3 + 1;
-      if (this.load_progress >= 97) {
+      if (this.load_progress >= 95) {
         window.clearInterval(this.fakeInterval)
         this.fakeInterval = undefined;
       }
-    }, Math.random() * 10 + list_length * 15);
+    }, Math.random() * 10 + list_length * 15 + 150);
   }
 
   getDiffExpData(convertedList: number[]) {
