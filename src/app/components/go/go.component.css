@@ -488,3 +488,7 @@
 ::ng-deep .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
     top: unset !important
 }
+
+::ng-deep .ng-dropdown-panel {
+  background-color: transparent !important;
+}

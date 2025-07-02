@@ -288,7 +288,6 @@ export class GoComponent implements OnInit {
   }
 
   createDisplayData() {
-    console.log(this.go_terms)
     this.upreg_enrich_list = []
     this.downreg_enrich_list = []
     let go_data = [];
@@ -310,7 +309,6 @@ export class GoComponent implements OnInit {
       if (label.includes("All")) {
         color = color.replace("rgb", "rgba").replace(")", ",.5)");
       }
-      console.log(label + ": " + color)
       // let formatted_data = { x: Number(go_term.nes), y: Number(go_term.P_Value), fillColor: color, label: label };
       // anthony
       // Convert adjusted p-value to -log10(p-value)
@@ -324,7 +322,7 @@ export class GoComponent implements OnInit {
 
       go_data.push(formatted_data);
       //set core enrichment values
-      let enrich_list = go_term.coreenrichment.split(this.pathway_groupby_go ? '/' : ';');
+      let enrich_list = go_term.coreenrichment.split('/');
       if (Number(go_term.nes >= 0)) {
         this.upreg_enrich_list = this.upreg_enrich_list.concat(enrich_list)
       }
@@ -414,7 +412,7 @@ export class GoComponent implements OnInit {
 
 
   getGeneSymbols(selected_term: GoTerm): void {
-    let ensemble_list = selected_term.coreenrichment.split(this.pathway_groupby_go ? '/' : ';')
+    let ensemble_list = selected_term.coreenrichment.split('/')
     this.geneConversionService.convertEnsemblListToGeneList(ensemble_list)
       .then((result: string[]) => {
         let selected_gene_counts = selected_term.nes > 0 ? this.upreg_gene_counts : this.downreg_gene_counts

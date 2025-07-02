@@ -178,11 +178,12 @@
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of upreg_gene_counts; track item) {
-            <li class="list-group-item gene-regulated d-flex justify-content-between"
+            <button class="list-group-item list-group-item-action gene-regulated d-flex justify-content-between" type="button"
+              (click)="geneRerout(item.gene)"
               [ngStyle]="getColorStyle(item, 'DOWN')">
               <span>{{ item.gene }}</span>
               <span>{{ item.count }}</span>
-            </li>
+            </button>
             }
           </ul>
           <!--<dx-list [dataSource]="selected_core_enrichment" (onItemClick)="geneRerout($event)" class="gene-list">
@@ -198,11 +199,11 @@
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of downreg_gene_counts; track item) {
-            <li class="list-group-item gene-regulated d-flex justify-content-between"
+            <button class="list-group-item gene-regulated d-flex justify-content-between list-group-item-action" type="button" (click)="geneRerout(item.gene)"
               [ngStyle]="getColorStyle(item, 'DOWN')">
               <span>{{ item.gene }}</span>
               <span>{{ item.count }}</span>
-            </li>
+            </button>
             }
           </ul>
         </div>
