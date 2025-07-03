@@ -2620,19 +2620,19 @@ export class GeneCardComponent implements OnInit {
       return !cell_type.includes("All") ? this.sig_dn_color : this.sig_dn_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
-    if (lfc < -this.lfc_minor_sig_cutoff) {
+    else if (lfc < -this.lfc_minor_sig_cutoff && lfc >= -this.lfc_sig_cutoff) {
       return !cell_type.includes("All") ? this.sli_dn_color : this.sli_dn_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
-    if (lfc > this.lfc_sig_cutoff) {
+    else if (lfc > this.lfc_sig_cutoff) {
       return !cell_type.includes("All") ? this.sig_up_color : this.sig_up_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
-    if (lfc > this.lfc_minor_sig_cutoff) {
+    else if (lfc > this.lfc_minor_sig_cutoff && lfc <= this.lfc_sig_cutoff) {
       return !cell_type.includes("All") ? this.sli_up_color : this.sli_up_color.replace("rgb", "rgba")
         .replace(")", ", .5)");
     }
-    return !cell_type.includes("All") ? this.no_change_color : this.no_change_color.replace("rgb", "rgba")
+    else return !cell_type.includes("All") ? this.no_change_color : this.no_change_color.replace("rgb", "rgba")
       .replace(")", ", .5)");;
   }
 
