@@ -1,3 +1,15 @@
 * {
     font-family: var(--bs-body-font-family) !important;
 }
+
+@media (max-width: 768px) {
+    .main-router {
+        padding-top: .5rem !important
+    }
+}
+
+@media (min-width: 768px) {
+    .main-router {
+        padding-top: 1rem !important;
+    }
+}

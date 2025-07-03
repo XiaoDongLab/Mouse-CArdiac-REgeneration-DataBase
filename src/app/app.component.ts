@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   }
 
   private reCalcNavHeight(): void {
-    this.navHeight = this.navbar.height;
+    this.navHeight = this.navbar.height + 8;
   }
 
 
