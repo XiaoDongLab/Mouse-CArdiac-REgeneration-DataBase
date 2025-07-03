@@ -7,10 +7,11 @@ import { ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexLegend, ApexData
 import { Console } from 'console';
 import * as JSZip from 'jszip';
 import { type } from 'os';
-import { sample } from 'rxjs';
+import { isEmpty, sample } from 'rxjs';
 import { ColDef, GridApi } from 'ag-grid-community';
 import { AllCommunityModule } from 'ag-grid-community';
 import { ModuleRegistry } from 'ag-grid-community';
+declare const bootstrap: any;
 
 export type DonutChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -43,10 +44,10 @@ interface DownloadData {
 }
 
 @Component({
-    selector: 'app-search',
-    templateUrl: './search.component.html',
-    styleUrls: ['./search.component.css'],
-    standalone: false
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css'],
+  standalone: false
 })
 export class SearchComponent implements OnInit {
   public tissue_chart_options: Partial<DonutChartOptions>;
@@ -56,32 +57,6 @@ export class SearchComponent implements OnInit {
 
   DISPLAY_DATA: any[];
 
-
-  DATABASE_ARRAY = [
-    {
-      sample_id: 0,
-      study_id: 33296652,
-      comparison_type: 'Sample P1',
-      file_type: 'matrix',
-      age: 'P1',
-      download: [
-        { filename: 'http://tests.autos:3305/static/Sample_3_matrix.mtx', size: 43.6e6 }
-      ]
-    },
-    {
-      sample_id: 1,
-      study_id: 33296652,
-      geo_id: 'GSM4644951',
-      comparison_type: 'P1: MI - PSD3',
-      file_type: 'scRNA-seq',
-      age: 'Neonatal',
-      download: [
-        { filename: 'https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4644951&format=file&file=GSM4644951_P1_3MI_barcodes.tsv.gz', size: 15.3e3 },
-        { filename: 'https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4644951&format=file&file=GSM4644951_P1_3MI_genes.tsv.gz', size: 217.5e3 },
-        { filename: 'https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4644951&format=file&file=GSM4644951_P1_3MI_matrix.mtx.gz', size: 26.9e6 }
-      ]
-    }
-  ]
   tissue_dict: any = {};
   sex_dict: any = {};
   age_dict: any = { '0-9': 0, '10-19': 0, '20-29': 0, '30-49': 0, '50-64': 0, '65-99': 0, '100+': 0, };
@@ -122,18 +97,30 @@ export class SearchComponent implements OnInit {
   query_completed = false;
 
   columnDefs: ColDef[] = [
-    { width: 40, checkboxSelection: true,
+    {
+      width: 40, checkboxSelection: true,
       headerCheckboxSelection: true,
-      headerCheckboxSelectionFilteredOnly: true },
+      headerCheckboxSelectionFilteredOnly: true
+    },
 
-    { field: 'study_id',       headerName: 'PMID'     },
-    { field: 'cell_types',      headerName: 'Cell Type'},
-    { field: 'disease_status', headerName: 'Group'    },
-    { field: 'notes',          headerName: 'Comparison' },
-    { field: 'age',            headerName: 'Category' },
-    { field: 'platform',       headerName: 'File name' },
-    { field: 'species',        headerName: 'File type' }
+    { field: 'study_id', headerName: 'PMID', filter: true },
+    { field: 'cell_types', headerName: 'Cell Type', filter: true },
+    { field: 'disease_status', headerName: 'Group', filter: true },
+    { field: 'notes', headerName: 'Comparison', filter: true },
+    { field: 'age', headerName: 'Category', filter: true },
+    { field: 'platform', headerName: 'File name', filter: true },
+    { field: 'species', headerName: 'File type', filter: true }
   ];
+
+  column_dicts = {
+    'pmid': 'study_id',
+    'cell_type': 'cell_types',
+    'group': 'disease_status',
+    'comparison': 'notes',
+    'category': 'age',
+    'file_name': 'platform',
+    'file_type': 'species'
+  }
 
   private gridApi!: GridApi;
 
@@ -181,6 +168,11 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.samplesTest();
     this.selected_species = this.species;
+  }
+
+  ngAfterViewInit(): void {
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
   }
 
   cleanDisplay() {
@@ -239,7 +231,6 @@ export class SearchComponent implements OnInit {
           this.DISPLAY_DATA = data;
           this.display = data;
           this, this.cleanDisplay()
-          this.makeDictionaries()
           // this.tissue_chart_options = this.makeDonutChart(this.tissue_dict)
           // this.sex_chart_options = this.makeDonutChart(this.sex_dict)
           // this.age_chart_options = this.makeBarChart(this.age_dict)
@@ -301,9 +292,6 @@ export class SearchComponent implements OnInit {
   onSpeciesChanged($event: any) {
     this.samplesTest();
   }
-  onAgeChanged($event: any) {
-    this.selected_age = $event.value
-  }
   onAgeSelectionChanged($event: any) {
     this.selected_age_type = [];
     if ((<HTMLInputElement>document.getElementById("btncheck1")).checked) {
@@ -313,14 +301,6 @@ export class SearchComponent implements OnInit {
       this.selected_age_type.push('postnetal');
     }
   }
-
-  onHealthChanged($event: any) {
-    this.selected_health = $event.value
-  }
-  switchSelectedDownloadMethod($event: any) {
-    this.selected_download_method = $event.itemData.name
-  }
-
   addBackendTissue(tissue_list: any[]) {
     let backend_tissue_select = [...tissue_list]
     if (backend_tissue_select.includes('Intestine')) {
@@ -436,20 +416,6 @@ export class SearchComponent implements OnInit {
       this.downloadStandaradizedData(selected_ids)
     }
     document.getElementById("downloadButton")?.removeAttribute("disabled");
-  }
-
-  downloadWrapper_New() {
-    let selected_ids = this.selectedRowData.map(row => row.sample_id);
-    const ftArr = this.DATABASE_ARRAY.filter(a => a.sample_id in selected_ids);
-    const links = ftArr.flatMap(it =>
-      (it.download ?? []).map(d => d.filename)
-    );
-    links.forEach(element => {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = element;
-      downloadLink.download = '';
-      downloadLink.click();
-    });
   }
 
   downloadStandaradizedData(file_names: string[]) {
@@ -619,110 +585,7 @@ export class SearchComponent implements OnInit {
     return (chart)
   }
 
-  makeBarChart(input_dict: any) {
-    let age_names = Object.keys(input_dict)
-    let age_count = Object.values(input_dict)
-    let chart: Partial<BarChartOptions> = {
-      series: [
-        {
-          name: "Age",
-          data: [
-            {
-              x: age_names[0],
-              y: age_count[0],
-            },
-            {
-              x: age_names[1],
-              y: age_count[1],
-            },
-            /*{
-              x: age_names[2],
-              y: age_count[2],
-            },
-            {
-              x: age_names[3],
-              y: age_count[3],
-            },
-            {
-              x: age_names[4],
-              y: age_count[4],
-            },
-            {
-              x: age_names[5],
-              y: age_count[5],
-            },
-            {
-              x: age_names[6],
-              y: age_count[6],
-            }*/
-          ]
-        }
-      ],
-      chart: {
-        height: 400,
-        type: "bar",
-        foreColor: "#E85A4F"
-      },
-      options: {
-        bar: {
-          columnWidth: "80%"
-        }
-      },
-      data_labels: {
-        enabled: true,
-        style: {
-          fontSize: '35px',
-          fontFamily: 'RobotoCondensed-Bold',
-          fontWeight: 600,
-          colors: [
-            function ({ w, dataPointIndex }: any) {
-              if (w.config.series[0].data[dataPointIndex].y > 0) {
-                return "white";
-              } else {
-                return "#8E8D8A";
-              }
-            },
-          ]
-        },
-      },
-      legend: {
-        show: false,
-      },
-      xaxis: {
-        labels: {
-          style: {
-            fontSize: '15px',
-            fontWeight: 700
 
-          }
-        },
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        },
-      },
-      yaxis: {
-        show: false,
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        },
-      },
-      grid: {
-        yaxis: {
-          lines: {
-            show: false
-          }
-        }
-      },
-      colors: ['#E85A4F']
-    };
-    return (chart)
-  }
 
   getAgeGroup(age: number) {
     if (age < 10) {
@@ -818,4 +681,54 @@ export class SearchComponent implements OnInit {
     }
     return (ret_age)
   }
+
+  commandChanged($event: any) {
+    const inputVal: string = $event.target.value.toString();
+
+    if (inputVal.includes("--")) {
+      // 清空 quick filter
+      this.gridApi.setGridOption('quickFilterText', '');
+
+      // 解析参数
+      const params = inputVal.split(/\n| |\t|,/).filter(x => x !== "");
+
+      // 用来存放 field -> filter value 的映射
+      const filterModel: { [key: string]: any } = {};
+
+      params.forEach((element: string) => {
+        if (element.startsWith("--")) {
+          const config = element.replace("--", "").split("=");
+          const field = config[0];
+          const value = config[1] || "";
+          const lowerKeys = Object.keys(this.column_dicts).map(k => k.toLowerCase());
+          if (lowerKeys.includes(field.toLowerCase())) {
+            // 填充 filter model
+            console.log(field.toLowerCase() as keyof typeof this.column_dicts);
+            console.log(lowerKeys)
+            filterModel[this.column_dicts[field.toLowerCase() as keyof typeof this.column_dicts]] = {
+              filterType: 'text',
+              type: 'contains',
+              filter: value.replace("_", " ")
+            };
+          }
+          console.log(config)
+          console.log(filterModel)
+        }
+      });
+
+      // 设置 grid filter model
+      this.gridApi.setFilterModel(filterModel);
+
+      // 通知 grid 重新过滤
+      this.gridApi.onFilterChanged();
+
+    } else {
+      // 如果是普通 quick filter
+      this.gridApi.setGridOption('quickFilterText', inputVal);
+
+      // 清空已有 filter model
+      this.gridApi.setFilterModel(null);
+    }
+  }
+
 }
