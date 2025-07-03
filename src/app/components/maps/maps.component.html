@@ -72,6 +72,16 @@
           <div class="col-12">
             <span>% Change</span>
             <h4 [ngClass]="{'text-danger': decade_change < 0, 'text-success': decade_change >= 0}">
+              @if (decade_change < 0) {
+                <span>
+                  <i class="fa fa-arrow-down"></i>
+                </span>
+              }
+              @if (decade_change > 0) {
+                <span>
+                  <i class="fa fa-arrow-up"></i>
+                </span>
+              }
               {{ decade_change + '%' }}
             </h4>
           </div>

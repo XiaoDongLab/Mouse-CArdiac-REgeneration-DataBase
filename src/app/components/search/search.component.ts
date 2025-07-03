@@ -114,12 +114,12 @@ export class SearchComponent implements OnInit {
 
   column_dicts = {
     'pmid': 'study_id',
-    'cell_type': 'cell_types',
+    'cell-type': 'cell_types',
     'group': 'disease_status',
     'comparison': 'notes',
     'category': 'age',
-    'file_name': 'platform',
-    'file_type': 'species'
+    'file-name': 'platform',
+    'file-type': 'species'
   }
 
   private gridApi!: GridApi;
@@ -708,7 +708,7 @@ export class SearchComponent implements OnInit {
             filterModel[this.column_dicts[field.toLowerCase() as keyof typeof this.column_dicts]] = {
               filterType: 'text',
               type: 'contains',
-              filter: value.replace("_", " ")
+              filter: value.replace("_", " "),
             };
           }
           console.log(config)
