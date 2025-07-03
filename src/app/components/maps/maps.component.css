@@ -254,3 +254,11 @@
     justify-content: center;
   }
 }
+
+.image {
+  border-radius: var(--bs-border-radius);
+}
+
+.image[data-bs-theme=dark] {
+  border: var(--bs-border-width) solid var(--bs-border-color-translucent)
+}
