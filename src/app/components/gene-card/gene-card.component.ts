@@ -630,17 +630,12 @@ export class GeneCardComponent implements OnInit {
         markers: {
           size: 5
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
             style: {
-              fontSize: '16px',
+              fontSize: '14px',
+              fontFamily: 'var(--bs-body-font-family)',
               color: '#000',
             }
           }
@@ -845,12 +840,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
+        
         markers: {
           size: 5
         },
@@ -935,12 +925,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
+        
         markers: {
           size: 5
         },
@@ -1034,12 +1019,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
+        
         markers: {
           size: 5
         },
@@ -1135,12 +1115,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
+        
         markers: {
           size: 5
         },
@@ -1227,12 +1202,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
+        
         markers: {
           size: 5
         },
@@ -1317,12 +1287,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        xaxis: {
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
-        },
+        
         markers: {
           size: 5
         },
@@ -2004,7 +1969,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_options1_Sham.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
@@ -2086,10 +2050,9 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_options1_MI.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
-          color: "#000"
+          color: "#000",
         }
       },
       tooltip: {
@@ -2162,7 +2125,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_options3_Sham.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
@@ -2230,7 +2192,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_options3_MI.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
@@ -2303,7 +2264,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_optionsP1_1.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
@@ -2386,7 +2346,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_optionsP1_3.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
@@ -2466,7 +2425,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_optionsP8_1.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
@@ -2534,7 +2492,6 @@ export class GeneCardComponent implements OnInit {
     this.model_chart_optionsP8_3.xaxis = {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
-        offsetY: 75,
         style: {
           fontSize: '16px',
           color: "#000"
