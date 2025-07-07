@@ -44,8 +44,8 @@
         <h4 class="mb-0">Pathways</h4>
         @if (pathway_info != '' && pathway_info != null) {
         <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" class="btn btn-sm btn-link btn-floating text-body"
-          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : 'KEGG Pathway Information'"
-          [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : 'This function is currently unavailable due to technical issues.'"><i class="fa fa-info-circle"></i></a>
+          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
+          [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i class="fa fa-info-circle"></i></a>
         }
       </div>
       <div class="d-flex">
@@ -54,13 +54,13 @@
         @if (pathway_groupby_go) {
         <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway"
           [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
-          style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
+          style="min-width: 0px !important;" placeholder="Select pathway" (change)="prepareData()" [virtualScroll]="true">
         </ng-select>
         }
         @if (!pathway_groupby_go) {
         <ng-select [items]="kegg_pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway_kegg"
           [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
-          style="min-width: 0px !important;" placeholder="Select pathway" [virtualScroll]="true">
+          style="min-width: 0px !important;" placeholder="Select pathway" (change)="prepareData()" [virtualScroll]="true">
         </ng-select>
         }
       </div>
@@ -95,11 +95,11 @@
         @for (item of search_modes; track item) {
         <option [value]="item.value">{{item.text}}</option>
         }
-      </select>-->
+      </select>
       <hr />
       <button (click)="getNewData()" class="btn btn-mcaredb w-100">
         <i class="fa fa-magnifying-glass"></i> GO Results
-      </button>
+      </button>-->
     </div>
   </div>
   <div class="col-md-6 col-sm-12">

@@ -61,6 +61,7 @@ export class GoComponent implements OnInit {
   gini_scores: GiniScore[];
   gini_histogram_data: string;
   pathways: any;
+  kegg_pathway_info: any;
   kegg_pathways: any;
   search_modes = [
     { text: 'Name Contains', value: 'contains' },
@@ -118,6 +119,11 @@ export class GoComponent implements OnInit {
   pathway_groupby_kegg: boolean = false;
 
   constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, private databaseConstsService: DatabaseConstsService) {
+    this.databaseService.loadKEGGInfo().subscribe({
+      next: data => {
+        this.kegg_pathway_info = data;
+      }
+    })
     // Get GO Pathways
     this.databaseService.getPathways().subscribe({
       next: (data) => {
@@ -130,9 +136,6 @@ export class GoComponent implements OnInit {
       complete: () => { }
     });
 
-    // Get KEGG Pathways
-    this.kegg_pathways = this.databaseConstsService.getKEGGPathways().sort((a, b) => (a < b ? 1 : -1));
-
     this.databaseService.getGiniScores().subscribe({
       next: (data) => {
         this.gini_scores = data
@@ -144,10 +147,21 @@ export class GoComponent implements OnInit {
       },
       complete: () => { }
     });
+
+
+    this.databaseService.getKEGGPathways().subscribe({
+      next: (data) => {
+        this.kegg_pathways = data
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
     this.prepareData()
   }
 
   ngOnInit(): void {
+    // Get KEGG Pathways
     this.go_chart_options = {
       series: [{
         name: 'TEST',
@@ -173,7 +187,7 @@ export class GoComponent implements OnInit {
       tooltip: {
         enabled: true,    // Enable the tooltip
         shared: false,    // Only show the tooltip for the hovered point
-        intersect: true,  // Tooltip appears only on exact hover
+        intersect: true,  // Tooltip appears only on exact hover，
         custom: function ({ series, seriesIndex, dataPointIndex, w }) {
           const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
           return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
@@ -288,6 +302,7 @@ export class GoComponent implements OnInit {
   }
 
   createDisplayData() {
+    console.log(this.go_terms)
     this.upreg_enrich_list = []
     this.downreg_enrich_list = []
     let go_data = [];
@@ -476,17 +491,27 @@ export class GoComponent implements OnInit {
   }
 
   getPathDisplayData() { //Go pathway
-    this.pathwayInfoService.getPathwayInfo(this.go_terms[0].goid).subscribe({
-      next: (data) => {
-        this.pathway_info = data.results[0]
-        this.pathway_info.name = this.pathway_info.name.replace(/\b\w/g, (char: string) => char.toUpperCase());
-        setTimeout(() => {
-          const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
-        }, 100)
-      },
-      complete: () => {
-      }
-    })
+    if (this.pathway_groupby_go) {
+      this.pathwayInfoService.getPathwayInfo(this.go_terms[0].goid).subscribe({
+        next: (data) => {
+          this.pathway_info = data.results[0]
+          this.pathway_info.name = this.pathway_info.name.replace(/\b\w/g, (char: string) => char.toUpperCase());
+          setTimeout(() => {
+            const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
+          }, 100)
+        },
+        complete: () => {
+        }
+      })
+    } else {
+      console.log(this.kegg_pathway_info)
+      this.pathway_info = this.kegg_pathway_info[this.go_terms[0].pathway];
+      this.pathway_info = this.pathway_info.replace(/\b\w/g, (char: string) => char.toUpperCase());
+      console.log(this.pathway_info)
+      setTimeout(() => {
+        const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
+      }, 100)
+    }
   }
 
   getColorStyle(item: any, direction: string): { [key: string]: string } {
@@ -523,6 +548,7 @@ export class GoComponent implements OnInit {
   }
 
   prepareData() {
+    this.loading = true;
     if (this.pathway_groupby_go) {
       this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
         .subscribe({
@@ -543,7 +569,8 @@ export class GoComponent implements OnInit {
           next: (data) => {
             this.go_terms = data;
             this.createDisplayData();
-            // this.getPathDisplayData();
+            this.getPathDisplayData();
+            this.loading = false;
           },
           error: (e) => {
             console.error(e);
@@ -619,12 +646,6 @@ export class GoComponent implements OnInit {
     this.selected_cell_types = $event.value
   }
   onPathwayChange() {
-    if (this.pathway_groupby_go) {
-      this.getPathDisplayData()
-    } else {
-      setTimeout(() => {
-        const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
-      }, 100)
-    }
+    this.prepareData();
   }
 }
