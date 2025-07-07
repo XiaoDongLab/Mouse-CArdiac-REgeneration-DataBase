@@ -150,6 +150,14 @@ export class DatabaseService {
     return this.http.get<any[]>(`${goEnrichUrl}/allpathways`);
   }
 
+  getKEGGPathways() {
+    return this.http.get<any[]>(`${keggEnrichUrl}/allpathways`);
+  }
+
+  loadKEGGInfo(): Observable<{ [key: string]: string }> {
+    return this.http.get<{ [key: string]: string }>('/assets/kegg_pathways_info.json');
+  }
+
   getGiniScores(){
     return this.http.get<any[]>(`${giniURL}`);
   }
