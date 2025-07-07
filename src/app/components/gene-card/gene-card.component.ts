@@ -1994,7 +1994,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_val1_Sham * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_val1_Sham))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2074,7 +2074,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_val1_MI * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_val1_MI))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2149,7 +2149,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_val3_Sham * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_val3_Sham))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2216,7 +2216,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_val3_MI * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_val3_MI))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2288,7 +2288,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_valP1_1 * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_valP1_1))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2370,7 +2370,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_valP1_3 * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_valP1_3))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2449,7 +2449,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_valP8_1 * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_valP8_1))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
@@ -2516,7 +2516,7 @@ export class GeneCardComponent implements OnInit {
         }
       },
       min: 0.01,
-      max: max_p_valP8_3 * 5,
+      max: Math.pow(10, Math.ceil(Math.log10(max_p_valP8_3))),
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
