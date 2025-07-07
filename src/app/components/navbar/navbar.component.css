@@ -181,5 +181,6 @@
   ::ng-deep .nav-link i,
   .nav-link svg {
     margin-right: .5rem;
+    width: 1rem;
   }
 }
