@@ -1,6 +1,22 @@
 # Version history
 
-The latest version is **1.2507.13.0**, compiled on 2 July 2025.
+The latest version is **1.2507.37.0**, compiled on 8 July 2025.
+
+## 1.2507.37.0 - 8 July 2025
+
+### Important to Know
+
+- **New KEGG Version**: We used a newer KEGG pathway version to perform NES calculation.
+
+### New Features
+
+- **KEGG Pathway information**: Now you can view the KEGG pathway information. Note that some descriptions aren't available on the kegg.jp website.
+
+- **Command search**: You can use optional commands `--[option1]=<value1>, --[option2]=<value2>` to search files.
+
+### Miscellaneous
+
+- We updated the y-axis for the P-value / log2 Fold change chart to be logarithmic.
 
 ## 1.2507.13.0 - 2 July 2025
 
