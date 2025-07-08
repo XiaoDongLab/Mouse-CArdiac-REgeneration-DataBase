@@ -490,6 +490,18 @@ export class GoComponent implements OnInit {
     this.router.navigate(['/igv']);
   }
 
+  removeItemAll(arr: GoTerm[], value: string) {
+    var i = 0;
+    while (i < arr.length) {
+      if (arr[i].cell_type !== value) {
+        arr.splice(i, 1);
+      } else {
+        ++i;
+      }
+    }
+    return arr;
+  }
+
   getPathDisplayData() { //Go pathway
     if (this.pathway_groupby_go) {
       this.pathwayInfoService.getPathwayInfo(this.go_terms[0].goid).subscribe({
@@ -549,10 +561,12 @@ export class GoComponent implements OnInit {
 
   prepareData() {
     this.loading = true;
+    this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0])
     if (this.pathway_groupby_go) {
       this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
         .subscribe({
           next: (data) => {
+            this.selected_cell_types
             this.go_terms = data;
             this.createDisplayData();
             this.getPathDisplayData();

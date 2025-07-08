@@ -10,7 +10,7 @@
   <div class="col-md-3 col-sm-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>Comparison Type</h4>
-      <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType">
+      <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType" (change)="prepareData()">
         @for (item of comparisonTypes; track item) {
         <option [value]="item.value">{{item.text}}</option>
         }
