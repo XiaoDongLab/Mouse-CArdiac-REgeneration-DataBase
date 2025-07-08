@@ -196,6 +196,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   async createBrowser() {
     try {
       this.browser = await igv.createBrowser(this.igvDiv.nativeElement, this.options)
+
       //this.addTrackByUrl()
     } catch (e) {
       console.log(e)
