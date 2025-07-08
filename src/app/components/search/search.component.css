@@ -514,7 +514,7 @@
     --ag-toggle-button-switch-background-color: var(--ag-inherited-toggle-button-switch-background-color, var(--ag-background-color));
     --ag-toggle-button-switch-inset: var(--ag-inherited-toggle-button-switch-inset, 2px);
     --ag-toggle-button-width: var(--ag-inherited-toggle-button-width, 28px);
-    --ag-tool-panel-separator-border: var(--ag-inherited-tool-panel-separator-border, solid 1px var(--ag-border-color));
+    --ag-tool-panel-separator-border: var(--ag-inherited-tool-panel-separator-border, solid 1px var(--bs-border-color-translucent));
     --ag-tooltip-background-color: var(--ag-inherited-tooltip-background-color, var(--ag-chrome-background-color));
     --ag-tooltip-border: var(--ag-inherited-tooltip-border, solid 1px var(--ag-border-color));
     --ag-tooltip-text-color: var(--ag-inherited-tooltip-text-color, var(--ag-text-color));
@@ -531,4 +531,11 @@
 
 ::ng-deep .ng-dropdown-panel {
   background-color: transparent !important;
+}
+
+::ng-deep .ag-menu, ::ng-deep .ag-select-list {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+    border-radius: var(--bs-border-radius)
 }
