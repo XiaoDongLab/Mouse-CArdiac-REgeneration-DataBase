@@ -181,7 +181,7 @@
     transition: .1s ease-in-out;
   }
 
-  ::ng-deep .maps .nav-link.active:focus::before, ::ng-deep .nav-link.active:active::before {
+  ::ng-deep .maps .nav-link.active:focus::before, ::ng-deep .maps .nav-link.active:active::before {
     display: flex;
     position: absolute;
     left: calc(0px - var(--bs-border-width));
