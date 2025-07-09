@@ -30,6 +30,34 @@ export class GeneConversionService {
     }
   }
 
+  async isEnsembleIncluded(ensembelId: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.mappingsLoaded$.pipe(
+        filter(loaded => loaded), // Wait until mappings are loaded
+        take(1) // Take the first value and complete the observable
+      ).subscribe(() => {
+        if (!(ensembelId in this.ensembleToGeneMapping)) {
+          reject('Gene not found');
+        }
+      });
+    });
+  }
+
+  async convertGeneToEnsemble(gene: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.mappingsLoaded$.pipe(
+        filter(loaded => loaded), // Wait until mappings are loaded
+        take(1) // Take the first value and complete the observable
+      ).subscribe(() => {
+        if (Object.values(this.ensembleToGeneMapping).map(item => item.toLowerCase()).includes(gene.toLowerCase())) {
+          resolve(Object.keys(this.ensembleToGeneMapping).find(key => this.ensembleToGeneMapping[key].toLowerCase() === gene.toLowerCase()) ?? '');
+        } else {
+          reject('Gene not found');
+        }
+      });
+    });
+  }
+
   async convertEnsembleToGene(ensembleId: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       this.mappingsLoaded$.pipe(
