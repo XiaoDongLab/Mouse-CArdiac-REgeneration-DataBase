@@ -118,7 +118,7 @@ export class GoComponent implements OnInit {
   pathway_groupby_go: boolean = true; // False is KEGG
   pathway_groupby_kegg: boolean = false;
 
-  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, private lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, private databaseConstsService: DatabaseConstsService) {
+  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, private databaseConstsService: DatabaseConstsService) {
     this.databaseService.loadKEGGInfo().subscribe({
       next: data => {
         this.kegg_pathway_info = data;
@@ -518,7 +518,6 @@ export class GoComponent implements OnInit {
     } else {
       console.log(this.kegg_pathway_info)
       this.pathway_info = this.kegg_pathway_info[this.go_terms[0].pathway];
-      this.pathway_info = this.pathway_info.replace(/\b\w/g, (char: string) => char.toUpperCase());
       console.log(this.pathway_info)
       setTimeout(() => {
         const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));

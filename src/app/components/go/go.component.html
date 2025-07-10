@@ -10,7 +10,8 @@
   <div class="col-md-3 col-sm-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>Comparison Type</h4>
-      <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType" (change)="prepareData()">
+      <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType"
+        (change)="prepareData()">
         @for (item of comparisonTypes; track item) {
         <option [value]="item.value">{{item.text}}</option>
         }
@@ -43,9 +44,17 @@
       <div class="d-flex mb-2 justify-content-between align-items-center">
         <h4 class="mb-0">Pathways</h4>
         @if (pathway_info != '' && pathway_info != null) {
-        <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" class="btn btn-sm btn-link btn-floating text-body"
-          role="button" data-bs-toggle="popover" [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
-          [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i class="fa fa-info-circle"></i></a>
+        <div class="inline-flex">
+          <a class="btn btn-sm btn-link btn-floating text-body" title="Pathway browser" tabindex="0" target="_blank"
+            [href]="pathway_groupby_go ? `https://biocyc.org/HUMAN/NEW-IMAGE?type=ECOCYC-CLASS&object=${go_terms[0].goid}#cy_${go_terms[0].goid}` : `https://www.kegg.jp/pathway/${go_terms[0].goid}`">
+            <i class="fa fa-map"></i>
+          </a>
+          <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" title="Pathway information" class="btn btn-sm btn-link btn-floating text-body"
+            role="button" data-bs-toggle="popover"
+            [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
+            [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i
+              class="fa fa-info-circle"></i></a>
+        </div>
         }
       </div>
       <div class="d-flex">
@@ -54,13 +63,15 @@
         @if (pathway_groupby_go) {
         <ng-select [items]="pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway"
           [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
-          style="min-width: 0px !important;" placeholder="Select pathway" (change)="prepareData()" [virtualScroll]="true">
+          style="min-width: 0px !important;" placeholder="Select pathway" (change)="prepareData()"
+          [virtualScroll]="true">
         </ng-select>
         }
         @if (!pathway_groupby_go) {
         <ng-select [items]="kegg_pathways" [searchable]="true" [clearable]="true" [(ngModel)]="selected_pathway_kegg"
           [closeOnSelect]="true" [addTag]="false" [multiple]="false" class="flex-grow-1"
-          style="min-width: 0px !important;" placeholder="Select pathway" (change)="prepareData()" [virtualScroll]="true">
+          style="min-width: 0px !important;" placeholder="Select pathway" (change)="prepareData()"
+          [virtualScroll]="true">
         </ng-select>
         }
       </div>
@@ -180,9 +191,8 @@
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of upreg_gene_counts; track item) {
-            <button class="list-group-item list-group-item-action gene-regulated d-flex justify-content-between" type="button"
-              (click)="geneRerout(item.gene)"
-              [ngStyle]="getColorStyle(item, 'DOWN')">
+            <button class="list-group-item list-group-item-action gene-regulated d-flex justify-content-between"
+              type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
               <span>{{ item.gene }}</span>
               <span>{{ item.count }}</span>
             </button>
@@ -201,8 +211,8 @@
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of downreg_gene_counts; track item) {
-            <button class="list-group-item gene-regulated d-flex justify-content-between list-group-item-action" type="button" (click)="geneRerout(item.gene)"
-              [ngStyle]="getColorStyle(item, 'DOWN')">
+            <button class="list-group-item gene-regulated d-flex justify-content-between list-group-item-action"
+              type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
               <span>{{ item.gene }}</span>
               <span>{{ item.count }}</span>
             </button>
