@@ -41,8 +41,8 @@
         <div class="accordion mt-2" id="geneInterestedAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#geneInterested" aria-expanded="false" aria-controls="geneInterested">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#geneInterested" aria-expanded="true" aria-controls="geneInterested">
                 <div class="row">
                   <div class="col-12">
                     <h4>List of genes interested</h4>
@@ -51,28 +51,17 @@
                 </div>
               </button>
             </h2>
-            <div id="geneInterested" class="accordion-collapse collapse" data-bs-parent="#geneInterestedAccordion">
+            <div id="geneInterested" class="accordion-collapse collapse show" data-bs-parent="#geneInterestedAccordion">
               <div class="accordion-body">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Symbol</th>
-                      <th>Stable ID</th>
-                      <th>Reference</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (item of gene_interested; track item; let i = $index) {
-                    <tr>
-                      <td>{{i}}</td>
-                      <td>{{item.name}}</td>
-                      <td>{{item.stableId ?? ''}}</td>
-                      <td>{{item.reference}}</td>
-                    </tr>
-                    }
-                  </tbody>
-                </table>
+                <div class="row g-2">
+                  @for (item of gene_interested; track item; let i = $index) {
+                  <a class="col text-decoration-none" (click)="geneRerout(item.name)" href="javascript:void(0)">
+                    <h5 class="mb-0">{{item.name}}</h5>
+                    <small class="text-muted">{{item.stableId ?? ''}}</small>
+                  </a>
+                  }
+                </div>
+
               </div>
             </div>
           </div>
@@ -86,12 +75,13 @@
         </div>
       </div>
       <div class="tab-pane fade" id="manual" role="tabpanel" aria-labelledby="manual-tab" tabindex="0">
-        <textarea class="form-control mt-2" placeholder="Myh6, Gata6, Tbx5..." [(ngModel)]="genesEntered"></textarea>
+        <textarea class="form-control mt-2" placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5..." [(ngModel)]="genesEntered"></textarea>
         <div class="d-flex justify-content-center">
-          <button [disabled]="!this.browser || genesEntered.length == 0" class="btn btn-mcaredb mt-3" (click)="getDiffExpGenesEntered()">
+          <button [disabled]="!this.browser || genesEntered.length == 0" class="btn btn-mcaredb mt-3"
+            (click)="getDiffExpGenesEntered()">
             <i class="fa fa-magnifying-glass">
             </i>
-            Get DEG data of popular genes
+            Get DEG data of entered genes
           </button>
         </div>
       </div>
@@ -136,8 +126,8 @@
       <h6 class="col" style="color: #4CAF50;">No Change</h6>
       <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
       <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
-      <h6>Not have a significant fit</h6>
-      <hr />-->
+      <h6>Not have a significant fit</h6>-->
+      <hr />
       <h4>Notes</h4>
       <p><small class="text-muted">All p-values higher than 0.05 were hidden in the scatter plots.</small></p>
     </div>

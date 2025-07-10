@@ -15,6 +15,7 @@ import { DxTagBoxModule } from 'devextreme-angular/ui/tag-box';
 import GeneList from '../../../assets/geneDict.json'
 import { setInterval, clearInterval } from 'timers';
 import { GeneConversionService } from 'src/app/services/name-converter.service';
+import { Router } from '@angular/router';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -102,7 +103,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   fakeInterval: any | undefined;
 
 
-  constructor(private databaseService: DatabaseService, databaseConstService: DatabaseConstsService, private lociService: LociService, private nameConverterService: GeneConversionService) {
+  constructor(private databaseService: DatabaseService, databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router) {
     this.cell_types = databaseConstService.getDECellTypes();
     this.selected_cells = this.cell_types;
     this.load_progress = 0;
@@ -244,7 +245,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   }
 
   getDiffExpGenesInterest() {
-    console.log(this.genes_interested)
+    this.loading = true;
+    this.completely_loaded = false;
     const convertedList: number[] = this.genes_interested.map((str) => {
       // Remove 'ENSG' from the beginning of each string
       const strippedString = str.replace('ENSMUSG', '');
@@ -540,7 +542,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
 
   async getDiffExpGenesEntered() {
     let gene_list = this.genesEntered.split(",").map(item => item.trim());
-    console.log(gene_list)
+    let false_genes: string[] = [];
     let check_passed = true;
     for (let i = 0; i < gene_list.length; i++) {
       if (!gene_list[i].startsWith("ENSMUSG") && gene_list[i] != '') {
@@ -550,22 +552,20 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           console.log(result);
         } catch (e) {
           check_passed = false;
-          alert(`Entered gene ${gene_list[i]} not found!`);
-          console.log(e)
-          break;
+          false_genes.push(gene_list[i])
         }
       } else {
         if (!this.nameConverterService.isEnsembleIncluded(gene_list[i])) {
           check_passed = false;
+          false_genes.push(gene_list[i])
         }
       }
-      console.log(check_passed);
     }
     if (check_passed) {
       this.loading = true;
       this.completely_loaded = false;
       this.getDiffExpGeneralData(gene_list);
-    }
+    } else alert(`Entered gene(s): ${false_genes.join(", ")} not found!`)
   }
 
   // prettyOrderer(diff_list: DiffExp[]){
@@ -584,4 +584,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   //   ensg_list.sort((a, b) => (a.gene! > b.gene!) ? 1 : -1)
   //   return(named_list.concat(ensg_list))
   // }
+  geneRerout(item: string) {
+    this.lociService.setLocus(item);
+    this.router.navigate(['/igv']);
+  }
 }
