@@ -60,6 +60,7 @@ export class GeneCardComponent implements OnInit {
   temp: DiffExp[] = [];
   num_studies: Number;
   en_id: string;
+  ensembl_id: string;
   sig_up_color: string = 'rgb(255, 87, 51)'
   sli_up_color: string = 'rgb(255, 195, 0)'
   no_change_color: string = 'rgb(76, 175, 80)'
@@ -93,7 +94,7 @@ export class GeneCardComponent implements OnInit {
     this.temp.push(this.gene_list[0])
     let temp_string = "00000000000" + this.gene_list[0].gene?.toString()
     this.en_id = "ENSMUSG" + temp_string.slice(-11)
-
+    this.ensembl_id = this.en_id;
     this.geneConversionService.convertEnsembleToGene(this.en_id).then((result: string) => {
       this.en_id = result == "" ? this.en_id : result;
       /*if(this.en_id.length<15){
@@ -1661,20 +1662,19 @@ export class GeneCardComponent implements OnInit {
     // Track ranges separately for each group
     let min_lfc1_Sham = Number.POSITIVE_INFINITY;
     let max_lfc1_Sham = Number.NEGATIVE_INFINITY;
-    let max_p_val1_Sham = Number.NEGATIVE_INFINITY;
+    let max_p_val1_Sham = 100;
 
     let min_lfc3_Sham = Number.POSITIVE_INFINITY;
     let max_lfc3_Sham = Number.NEGATIVE_INFINITY;
-    let max_p_val3_Sham = Number.NEGATIVE_INFINITY;
-
+    let max_p_val3_Sham = 100;
     // Track ranges separately for each group
     let min_lfc1_MI = Number.POSITIVE_INFINITY;
     let max_lfc1_MI = Number.NEGATIVE_INFINITY;
-    let max_p_val1_MI = Number.NEGATIVE_INFINITY;
+    let max_p_val1_MI = 100;
 
     let min_lfc3_MI = Number.POSITIVE_INFINITY;
     let max_lfc3_MI = Number.NEGATIVE_INFINITY;
-    let max_p_val3_MI = Number.NEGATIVE_INFINITY;
+    let max_p_val3_MI = 100;
 
 
     // Initialize variables for both groups ShamvsMI
@@ -1696,20 +1696,20 @@ export class GeneCardComponent implements OnInit {
     // Track ranges separately for each group
     let min_lfcP1_1 = Number.POSITIVE_INFINITY;
     let max_lfcP1_1 = Number.NEGATIVE_INFINITY;
-    let max_p_valP1_1 = Number.NEGATIVE_INFINITY;
+    let max_p_valP1_1 = 100;
 
     let min_lfcP8_1 = Number.POSITIVE_INFINITY;
     let max_lfcP8_1 = Number.NEGATIVE_INFINITY;
-    let max_p_valP8_1 = Number.NEGATIVE_INFINITY;
+    let max_p_valP8_1 = 100;
 
     // Track ranges separately for each group
     let min_lfcP1_3 = Number.POSITIVE_INFINITY;
     let max_lfcP1_3 = Number.NEGATIVE_INFINITY;
-    let max_p_valP1_3 = Number.NEGATIVE_INFINITY;
+    let max_p_valP1_3 = 100;
 
     let min_lfcP8_3 = Number.POSITIVE_INFINITY;
     let max_lfcP8_3 = Number.NEGATIVE_INFINITY;
-    let max_p_valP8_3 = Number.NEGATIVE_INFINITY;
+    let max_p_valP8_3 = 100;
 
     for (let i = 0; i < cluster_number1_Sham; i++) {
       let gene = group1_Sham[i];
@@ -1998,7 +1998,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2078,7 +2078,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2153,7 +2153,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2220,7 +2220,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2292,7 +2292,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2374,7 +2374,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2453,7 +2453,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
@@ -2520,7 +2520,7 @@ export class GeneCardComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return "1e" + Math.round(Math.log10(val));
         }
       }
     }
