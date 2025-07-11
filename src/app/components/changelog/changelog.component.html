@@ -7,25 +7,38 @@
             </small>
         </div>
         <p class="text-muted">This is a pre-release version.</p>
-        <h3 id="important-to-know">Important to Know</h3>
-        <ul>
-            <li><strong>New KEGG Version</strong>: We used a newer KEGG pathway version to perform NES calculation.</li>
-        </ul>
         <h3 id="new-features">New Features</h3>
         <ul>
             <li>
-                <p><strong>KEGG Pathway information</strong>: Now you can view the KEGG pathway information. Note that
-                    some descriptions aren&#39;t available on the kegg.jp website.</p>
+                <p><strong>Pathway browser</strong>: We added a pathway button in <code>Pathway Enrichment</code> page
+                    which is linked to <code>biocyc.org</code> for GO or <code>kegg.jp</code> for KEGG.</p>
             </li>
             <li>
-                <p><strong>Command search</strong>: You can use optional commands
-                    <code>--[option1]=&lt;value1&gt;, --[option2]=&lt;value2&gt;</code> to search files.</p>
+                <p><strong>Searching multiple genes</strong>: You can now perform searching DEG data for multiple genes,
+                    even they aren&#39;t on the same chromosome.</p>
             </li>
+        </ul>
+        <h3 id="fixed-issues">Fixed Issues</h3>
+        <ul>
+            <li>Now you can run DEG searching without always receiving <code>Too many or too few genes selected</code>.
+                This is because you have to run it after <code>igv.esm.js</code> loaded. Now, the buttons are disabled
+                before it is completely loaded.</li>
+        </ul>
+        <h3 id="known-issues">Known Issues</h3>
+        <ul>
+            <li>When you switch between tabs in <code>Genome Browser</code>, you may see the IGV control disappeared.
+                Simply refresh the webpage to get it back.</li>
         </ul>
         <h3 id="miscellaneous">Miscellaneous</h3>
         <ul>
-            <li>We updated the y-axis for the P-value / log2 Fold change chart to be logarithmic.</li>
+            <li>
+                <p>Ensembl IDs will be shown in default for DEG results.</p>
+            </li>
+            <li>
+                <p>We refreshed some controls in <code>igv.esm.js</code> in order to fit the design themes.</p>
+            </li>
         </ul>
+
         <p class="mb-0">See full version history on <a href="https://github.com/AnthonyShea/MouseHeartDatabase"
                 target="_blank">GitHub</a>.</p>
     </div>

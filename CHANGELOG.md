@@ -1,6 +1,28 @@
 # Version history
 
-The latest version is **1.2507.37.0**, compiled on 8 July 2025.
+The latest version is **1.2507.55.0**, compiled on 11 July 2025.
+
+## 1.2507.55.0 - 11 July 2025
+
+### New Features
+
+- **Pathway browser**: We added a pathway button in `Pathway Enrichment` page which is linked to `biocyc.org` for GO or `kegg.jp` for KEGG.
+
+- **Searching multiple genes**: You can now perform searching DEG data for multiple genes, even they aren't on the same chromosome.
+
+### Fixed Issues
+
+- Now you can run DEG searching without always receiving `Too many or too few genes selected`. This is because you have to run it after `igv.esm.js` loaded. Now, the buttons are disabled before it is completely loaded.
+
+### Known Issues
+
+- When you switch between tabs in `Genome Browser`, you may see the IGV control disappeared. Simply refresh the webpage to get it back.
+
+### Miscellaneous
+
+- Ensembl IDs will be shown in default for DEG results.
+
+- We refreshed some controls in `igv.esm.js` in order to fit the design themes.
 
 ## 1.2507.37.0 - 8 July 2025
 
