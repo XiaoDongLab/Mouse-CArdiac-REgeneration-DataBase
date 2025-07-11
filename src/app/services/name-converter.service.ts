@@ -30,14 +30,16 @@ export class GeneConversionService {
     }
   }
 
-  async isEnsembleIncluded(ensembelId: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
+  async isEnsembleNotIncluded(ensembelId: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
       this.mappingsLoaded$.pipe(
         filter(loaded => loaded), // Wait until mappings are loaded
         take(1) // Take the first value and complete the observable
       ).subscribe(() => {
-        if (!(ensembelId in this.ensembleToGeneMapping)) {
-          reject('Gene not found');
+        if (!(ensembelId.toUpperCase() in this.ensembleToGeneMapping || ('ENSMUSG' + `00000000000${ensembelId.replace("ENSMUSG", "")}`.slice(-11)).toUpperCase() in this.ensembleToGeneMapping)) {
+          resolve(true);
+        } else {
+          resolve(false);
         }
       });
     });
