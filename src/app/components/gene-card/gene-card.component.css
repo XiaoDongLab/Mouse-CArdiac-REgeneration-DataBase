@@ -318,7 +318,7 @@ canvas,
     bottom: calc(0px - var(--bs-border-width));
     height: .25rem;
     content: ' ';
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-pink);
     width: 1rem;
     border-radius: .125rem;
     transition: .1s ease-in-out;
@@ -331,7 +331,7 @@ canvas,
     bottom: calc(0px - var(--bs-border-width));
     height: .25rem;
     content: ' ';
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-pink);
     width: .75rem;
     border-radius: .125rem;
 }
