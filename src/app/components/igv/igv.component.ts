@@ -545,7 +545,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     let false_genes: string[] = [];
     let check_passed = true;
     for (let i = 0; i < gene_list.length; i++) {
-      if (!gene_list[i].startsWith("ENSMUSG") && gene_list[i] != '') {
+      if (!gene_list[i].startsWith("ENSMUSG") && gene_list[i] != '' && isNaN(Number(gene_list[i]))) {
         try {
           const result = await this.nameConverterService.convertGeneToEnsemble(gene_list[i]);
           gene_list[i] = result;
@@ -555,12 +555,14 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           false_genes.push(gene_list[i])
         }
       } else {
-        if (!this.nameConverterService.isEnsembleIncluded(gene_list[i])) {
+        if (await this.nameConverterService.isEnsembleNotIncluded(gene_list[i])) {
           check_passed = false;
-          false_genes.push(gene_list[i])
+          false_genes.push("ENSMUSG" + ("00000000000" + gene_list[i].replace("ENSMUSG", "")).slice(-11))
         }
       }
     }
+    console.log(gene_list);
+    console.log(false_genes)
     if (check_passed) {
       this.loading = true;
       this.completely_loaded = false;

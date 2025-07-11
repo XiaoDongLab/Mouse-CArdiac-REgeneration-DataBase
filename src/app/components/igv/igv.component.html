@@ -17,7 +17,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="interest-tab" data-bs-toggle="pill" type="button" role="tab" data-bs-target="#interest"
-          aria-controls="interest" aria-selected="false">View genes of interest</a>
+          aria-controls="interest" aria-selected="false">Core genes</a>
       </li>
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="manual-tab" data-bs-toggle="pill" type="button" role="tab"
@@ -75,7 +75,7 @@
         </div>
       </div>
       <div class="tab-pane fade" id="manual" role="tabpanel" aria-labelledby="manual-tab" tabindex="0">
-        <textarea class="form-control mt-2" placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5..." [(ngModel)]="genesEntered"></textarea>
+        <textarea class="form-control mt-2" placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5, ENSMUSG00000001517, 21944, ..." [(ngModel)]="genesEntered"></textarea>
         <div class="d-flex justify-content-center">
           <button [disabled]="!this.browser || genesEntered.length == 0" class="btn btn-mcaredb mt-3"
             (click)="getDiffExpGenesEntered()">
