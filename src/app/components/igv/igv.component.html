@@ -31,7 +31,8 @@
       <div class="tab-pane fade show active" id="explore" role="tabpanel" aria-labelledby="explore-tab" tabindex="0">
         <div #igvdiv class="igv" part="igv"></div>
         <div class="d-flex justify-content-center mt-3">
-          <button [disabled]="!this.browser" color="accent" (click)="getInRangeGenes()" class="btn btn-mcaredb mb-1">
+          <button [disabled]="!browser || (genes.length != 0) && (load_progress < 100)" color="accent"
+            (click)="getInRangeGenes()" class="btn btn-mcaredb mb-1">
             <i class="fa fa-arrow-up"></i>
             Get DEG data in window
           </button>
@@ -41,8 +42,8 @@
         <div class="accordion mt-2" id="geneInterestedAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                data-bs-target="#geneInterested" aria-expanded="true" aria-controls="geneInterested">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#geneInterested"
+                aria-expanded="true" aria-controls="geneInterested">
                 <div class="row">
                   <div class="col-12">
                     <h4>List of genes interested</h4>
@@ -67,7 +68,8 @@
           </div>
         </div>
         <div class="d-flex justify-content-center">
-          <button [disabled]="!this.browser" class="btn btn-mcaredb mt-3" (click)="getDiffExpGenesInterest()">
+          <button [disabled]="!this.browser || (genes.length != 0) && (load_progress < 100)"
+            class="btn btn-mcaredb mt-3" (click)="getDiffExpGenesInterest()">
             <i class="fa fa-magnifying-glass">
             </i>
             Get DEG data of popular genes
@@ -75,10 +77,12 @@
         </div>
       </div>
       <div class="tab-pane fade" id="manual" role="tabpanel" aria-labelledby="manual-tab" tabindex="0">
-        <textarea class="form-control mt-2" placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5, ENSMUSG00000001517, 21944, ..." [(ngModel)]="genesEntered"></textarea>
+        <textarea class="form-control mt-2"
+          placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5, ENSMUSG00000001517, 21944, ..."
+          [(ngModel)]="genesEntered"></textarea>
         <div class="d-flex justify-content-center">
-          <button [disabled]="!this.browser || genesEntered.length == 0" class="btn btn-mcaredb mt-3"
-            (click)="getDiffExpGenesEntered()">
+          <button [disabled]="!this.browser || genesEntered.length == 0 || (genes.length != 0) && (load_progress < 100)"
+            class="btn btn-mcaredb mt-3" (click)="getDiffExpGenesEntered()">
             <i class="fa fa-magnifying-glass">
             </i>
             Get DEG data of entered genes
@@ -120,16 +124,22 @@
         <i class="fa fa-arrows-rotate"></i> Apply
       </button>
       <hr />
-      <!--<h4>Legends</h4>
-      <h6 class="col" style="color:#9C27B0;">Significantly Downregulated</h6>
-      <h6 class="col" style="color: #00BCD4;">Slightly Downregulated</h6>
-      <h6 class="col" style="color: #4CAF50;">No Change</h6>
-      <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
-      <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
-      <h6>Not have a significant fit</h6>-->
+      <h4>Legends</h4>
+      <div class="color-legend">
+        <h6 class="col" style="color:#9C27B0;">Significantly Downregulated</h6>
+        <h6 class="col" style="color: #00BCD4;">Slightly Downregulated</h6>
+        <h6 class="col" style="color: #4CAF50;">No Change</h6>
+        <h6 class="col" style="color: #FFC300;">Slightly Upregulated</h6>
+        <h6 class="col" style="color: #FF5733;">Significantly Upregulated</h6>
+        <h6 class="col" style="color: black;">Not have a significant fit</h6>
+      </div>
       <hr />
       <h4>Notes</h4>
-      <p><small class="text-muted">All p-values higher than 0.05 were hidden in the scatter plots.</small></p>
+      <ol>
+        <li class="text-muted">All clusters with -Log<sub>10</sub>P-val less than 0.01 were hidden in the model plot.
+        </li>
+        <li class="text-muted">Numbers on the meta plot were hidden if the sample size is less than 2.</li>
+      </ol>
     </div>
   </div>
   }

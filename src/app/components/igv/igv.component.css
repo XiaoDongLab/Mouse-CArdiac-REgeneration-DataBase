@@ -372,3 +372,7 @@
 .genes-interested .accordion-body {
   padding: 0px !important;
 }
+
+::ng-deep [data-bs-theme=dark] .color-legend {
+  filter: invert(1) hue-rotate(180deg);
+}
