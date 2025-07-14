@@ -552,3 +552,7 @@
     border: var(--bs-border-width) solid var(--bs-border-color-translucent);
     border-radius: var(--bs-border-radius)
 }
+
+::ng-deep .popover-body {
+    white-space: pre-line;
+}
