@@ -45,31 +45,63 @@
         <div class="row">
           <div class="col-3">
             <h3 class="chart-label">Sham</h3>
-            <apx-chart [series]="meta_chart_options1_Sham.series!" [chart]="meta_chart_options1_Sham.chart!"
+            <!--<apx-chart [series]="meta_chart_options1_Sham.series!" [chart]="meta_chart_options1_Sham.chart!"
               [plotOptions]="meta_chart_options1_Sham.plotOptions!" [xaxis]="meta_chart_options1_Sham.xaxis!"
               [colors]="meta_chart_options1_Sham.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_1_Sham > 40 ? 40 : sum_1_Sham) * 2.5 + '%'">
+              @for (item of series_1_Sham; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_1_Sham * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
           <div class="col-3">
             <h3 class="chart-label">MI</h3>
-            <apx-chart [series]="meta_chart_options1_MI.series!" [chart]="meta_chart_options1_MI.chart!"
+            <!--<apx-chart [series]="meta_chart_options1_MI.series!" [chart]="meta_chart_options1_MI.chart!"
               [plotOptions]="meta_chart_options1_MI.plotOptions!" [xaxis]="meta_chart_options1_MI.xaxis!"
               [colors]="meta_chart_options1_MI.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_1_MI > 40 ? 40 : sum_1_MI) * 2.5 + '%'">
+              @for (item of series_1_MI; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_1_MI * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
           <div class="col-3">
             <h3 class="chart-label">P1 + P2</h3>
-            <apx-chart [series]="meta_chart_optionsP1_1.series!" [chart]="meta_chart_optionsP1_1.chart!"
+            <!--<apx-chart [series]="meta_chart_optionsP1_1.series!" [chart]="meta_chart_optionsP1_1.chart!"
               [plotOptions]="meta_chart_optionsP1_1.plotOptions!" [xaxis]="meta_chart_optionsP1_1.xaxis!"
               [colors]="meta_chart_optionsP1_1.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_1_P1 > 40 ? 40 : sum_1_P1) * 2.5 + '%'">
+              @for (item of series_1_P1; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_1_P1 * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
           <div class="col-3">
             <h3 class="chart-label">P8</h3>
-            <apx-chart [series]="meta_chart_optionsP8_1.series!" [chart]="meta_chart_optionsP8_1.chart!"
+            <!--<apx-chart [series]="meta_chart_optionsP8_1.series!" [chart]="meta_chart_optionsP8_1.chart!"
               [plotOptions]="meta_chart_optionsP8_1.plotOptions!" [xaxis]="meta_chart_optionsP8_1.xaxis!"
               [colors]="meta_chart_optionsP8_1.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_1_P8 > 40 ? 40 : sum_1_P8) * 2.5 + '%'">
+              @for (item of series_1_P8; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_1_P8 * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -80,31 +112,63 @@
         <div class="row">
           <div class="col-3">
             <h3 class="chart-label">Sham</h3>
-            <apx-chart [series]="meta_chart_options3_Sham.series!" [chart]="meta_chart_options3_Sham.chart!"
+            <!--<apx-chart [series]="meta_chart_options3_Sham.series!" [chart]="meta_chart_options3_Sham.chart!"
               [plotOptions]="meta_chart_options3_Sham.plotOptions!" [xaxis]="meta_chart_options3_Sham.xaxis!"
               [colors]="meta_chart_options3_Sham.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_3_Sham > 40 ? 40 : sum_3_Sham) * 2.5 + '%'">
+              @for (item of series_3_Sham; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_3_Sham * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
           <div class="col-3">
             <h3 class="chart-label">MI</h3>
-            <apx-chart [series]="meta_chart_options3_MI.series!" [chart]="meta_chart_options3_MI.chart!"
+            <!--<apx-chart [series]="meta_chart_options3_MI.series!" [chart]="meta_chart_options3_MI.chart!"
               [plotOptions]="meta_chart_options3_MI.plotOptions!" [xaxis]="meta_chart_options3_MI.xaxis!"
               [colors]="meta_chart_options3_MI.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_3_MI > 40 ? 40 : sum_3_MI) * 2.5 + '%'">
+              @for (item of series_3_MI; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_3_MI * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
           <div class="col-3">
             <h3 class="chart-label">P1 + P2</h3>
-            <apx-chart [series]="meta_chart_optionsP1_3.series!" [chart]="meta_chart_optionsP1_3.chart!"
+            <!--<apx-chart [series]="meta_chart_optionsP1_3.series!" [chart]="meta_chart_optionsP1_3.chart!"
               [plotOptions]="meta_chart_optionsP1_3.plotOptions!" [xaxis]="meta_chart_optionsP1_3.xaxis!"
               [colors]="meta_chart_optionsP1_3.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_3_P1 > 40 ? 40 : sum_3_P1) * 2.5 + '%'">
+              @for (item of series_3_P1; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_3_P1 * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
           <div class="col-3">
             <h3 class="chart-label">P8</h3>
-            <apx-chart [series]="meta_chart_optionsP8_3.series!" [chart]="meta_chart_optionsP8_3.chart!"
+            <!--<apx-chart [series]="meta_chart_optionsP8_3.series!" [chart]="meta_chart_optionsP8_3.chart!"
               [plotOptions]="meta_chart_optionsP8_3.plotOptions!" [xaxis]="meta_chart_optionsP8_3.xaxis!"
               [colors]="meta_chart_optionsP8_3.colors!">
-            </apx-chart>
+            </apx-chart>-->
+            <div class="progress-stacked" [style.width]="(sum_3_P8 > 40 ? 40 : sum_3_P8) * 2.5 + '%'">
+              @for (item of series_3_P8; track $index; let i = $index) {
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
+                aria-valuemax="100" [style.width]="(item / sum_3_P8 * 100) + '%'">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]"></div>
+              </div>
+              }
+            </div>
           </div>
         </div>
       </div>

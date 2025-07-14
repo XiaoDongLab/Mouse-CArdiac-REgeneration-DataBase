@@ -31,29 +31,32 @@ export class GeneCardComponent implements OnInit {
   @Input() gene_list: any[] = [];
   @Input() indices: Indices[] = [];
   @Input() completely_loaded: boolean = false;
-  //@Input() en_id!: string | undefined;
   @ViewChild('child') child: MapsComponent;
-
-  // public meta_chart_options: Partial<ChartOptions>;
-  // public model_chart_options: Partial<ChartOptions>;
-  public meta_chart_options1_Sham: Partial<ChartOptions>;
   public model_chart_options1_Sham: Partial<ChartOptions>;
-  public meta_chart_options3_Sham: Partial<ChartOptions>;
   public model_chart_options3_Sham: Partial<ChartOptions>;
-  public meta_chart_options1_MI: Partial<ChartOptions>;
   public model_chart_options1_MI: Partial<ChartOptions>;
-  public meta_chart_options3_MI: Partial<ChartOptions>;
   public model_chart_options3_MI: Partial<ChartOptions>;
-  public meta_chart_options: Partial<ChartOptions>;
   public model_chart_options: Partial<ChartOptions>;
-  public meta_chart_optionsP1_1: Partial<ChartOptions>;
   public model_chart_optionsP1_1: Partial<ChartOptions>;
-  public meta_chart_optionsP1_3: Partial<ChartOptions>;
   public model_chart_optionsP1_3: Partial<ChartOptions>;
-  public meta_chart_optionsP8_1: Partial<ChartOptions>;
   public model_chart_optionsP8_1: Partial<ChartOptions>;
-  public meta_chart_optionsP8_3: Partial<ChartOptions>;
   public model_chart_optionsP8_3: Partial<ChartOptions>;
+  sum_1_Sham: number;
+  series_1_Sham: number[];
+  sum_1_MI: number;
+  series_1_MI: number[];
+  sum_3_MI: number;
+  series_3_MI: number[];
+  sum_3_Sham: number;
+  series_3_Sham: number[];
+  sum_1_P1: number;
+  series_1_P1: number[];
+  sum_1_P8: number;
+  series_1_P8: number[];
+  sum_3_P1: number;
+  series_3_P1: number[];
+  sum_3_P8: number;
+  series_3_P8: number[];
   to_map: any;
   avg_fixed_effect: String;
   avg_p_val: String;
@@ -67,6 +70,7 @@ export class GeneCardComponent implements OnInit {
   sli_dn_color: string = 'rgb(0, 188, 212)'
   sig_dn_color: string = 'rgb(156, 39, 176)'
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
+  progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color].slice().reverse();
   lfc_sig_cutoff = 0.0116
   lfc_minor_sig_cutoff = 0.0037
   display = 'ShamMI';
@@ -104,487 +108,6 @@ export class GeneCardComponent implements OnInit {
       console.error('Error converting ensemble ID to gene:', error);
     });
 
-    this.meta_chart_options1_Sham = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-    this.meta_chart_options1_MI = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-
-
-    this.meta_chart_options3_MI = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-    this.meta_chart_options3_Sham = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-
-
-
-
-
-    this.meta_chart_optionsP1_1 = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-    this.meta_chart_optionsP1_3 = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-
-
-
-    this.meta_chart_optionsP8_1 = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
-
-    this.meta_chart_optionsP8_3 = {
-      series: [
-        {
-          name: 'BAD',
-          data: [4]
-        },
-        {
-          name: 'Good',
-          data: [1]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: '100%',
-        stacked: true,
-        sparkline: {
-          enabled: true
-        }
-      },
-      colors: [this.no_sig_fit_color, this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // colors: {
-          //   backgroundBarColors: ['#FF5733', '#FFC300', '#4CAF50', '#00BCD4', '#9C27B0'], // Specify colors for each classification
-          //   backgroundBarOpacity: 1,
-          //   backgroundBarRadius: 0,
-          // },
-        }
-      },
-      xaxis: {
-        labels: {
-          show: false,
-        },
-        categories: [''],
-        tickAmount: 0,
-        position: 'top',
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false,
-        labels: {
-          show: false
-        },
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-
-        }
-      },
-    };
     if (this.completely_loaded) {
 
       this.model_chart_options1_Sham = {
@@ -841,7 +364,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        
+
         markers: {
           size: 5
         },
@@ -926,7 +449,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        
+
         markers: {
           size: 5
         },
@@ -1020,7 +543,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        
+
         markers: {
           size: 5
         },
@@ -1116,7 +639,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        
+
         markers: {
           size: 5
         },
@@ -1203,7 +726,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        
+
         markers: {
           size: 5
         },
@@ -1288,7 +811,7 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-        
+
         markers: {
           size: 5
         },
@@ -1365,269 +888,56 @@ export class GeneCardComponent implements OnInit {
   }
 
   createInitialDisplayData() {
-    // console.log("Starting createDisplayData");
     let P1_3_temp = this.removeNullString(this.gene_list[0].P1_3).split(',');
     let meta_series_infoP1_3 = P1_3_temp.map(val => this.removeNullNumber(val));
     const P1_3_sum = meta_series_infoP1_3.reduce((sum, p) => sum + p);
-    this.meta_chart_optionsP1_3.chart!.width = P1_3_sum > 20 ? '100%' : Math.trunc(P1_3_sum * 5).toString() + '%';
-    // console.log(meta_series_infoP1_3);
-    this.meta_chart_optionsP1_3.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP1_3[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP1_3[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP1_3[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP1_3[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP1_3[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP1_3[4]]
-      },
-    ];
+    this.sum_3_P1 = P1_3_sum;
+    this.series_3_P1 = meta_series_infoP1_3.slice().reverse();
 
     let P1_1_temp = this.removeNullString(this.gene_list[0].P1_1).split(',');
     let meta_series_infoP1_1 = P1_1_temp.map(val => this.removeNullNumber(val));
     const P1_1_sum = meta_series_infoP1_1.reduce((sum, p) => sum + p);
-    this.meta_chart_optionsP1_1.chart!.width = P1_1_sum > 20 ? '100%' : Math.trunc(P1_1_sum * 5).toString() + '%';
-    // console.log(meta_series_infoP1_1);
-    this.meta_chart_optionsP1_1.series! = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP1_1[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP1_1[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP1_1[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP1_1[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP1_1[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP1_1[4]]
-      },
-    ];
+    this.sum_1_P1 = P1_1_sum;
+    this.series_1_P1 = meta_series_infoP1_1.slice().reverse();
 
     let P8_3_temp = this.removeNullString(this.gene_list[0].P8_3).split(',');
     let meta_series_infoP8_3 = P8_3_temp.map(val => this.removeNullNumber(val));
     const P8_3_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
-    this.meta_chart_optionsP8_3.chart!.width = P8_3_sum > 20 ? '100%' : Math.trunc(P8_3_sum * 5).toString() + '%';
-    // console.log(meta_series_infoP8_3);
-    this.meta_chart_optionsP8_3.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP8_3[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP8_3[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP8_3[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP8_3[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP8_3[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP8_3[4]]
-      },
-    ];
+    this.sum_3_P8 = P8_3_sum;
+    this.series_3_P8 = meta_series_infoP8_3.slice().reverse();
 
     let P8_1_temp = this.removeNullString(this.gene_list[0].P8_1).split(',');
     let meta_series_infoP8_1 = P8_1_temp.map(val => this.removeNullNumber(val));
-    const P8_1_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
-    this.meta_chart_optionsP8_1.chart!.width = P8_1_sum > 20 ? '100%' : Math.trunc(P8_1_sum * 5).toString() + '%';
-    // console.log(meta_series_infoP8_1);
-    this.meta_chart_optionsP8_1.series! = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP8_1[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP8_1[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP8_1[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP8_1[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP8_1[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP8_1[4]]
-      },
-    ];
+    const P8_1_sum = meta_series_infoP8_1.reduce((sum, p) => sum + p);
+    this.sum_1_P8 = P8_1_sum;
+    this.series_1_P8 = meta_series_infoP8_1.slice().reverse();
 
     let Sham_3_temp = this.removeNullString(this.gene_list[0].Sham_3).split(',');
     let meta_series_infoSham_3 = Sham_3_temp.map(val => this.removeNullNumber(val));
     const Sham_3_sum = meta_series_infoSham_3.reduce((sum, p) => sum + p);
-    this.meta_chart_options3_Sham.chart!.width = Sham_3_sum > 20 ? '100%' : Math.trunc(Sham_3_sum * 5).toString() + '%';
-    // console.log(meta_series_infoSham_3);
-    this.meta_chart_options3_Sham.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoSham_3[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoSham_3[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoSham_3[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoSham_3[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoSham_3[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoSham_3[4]]
-      },
-    ];
+    this.sum_3_Sham = Sham_3_sum;
+    this.series_3_Sham = meta_series_infoSham_3.slice().reverse();
 
     let Sham_1_temp = this.removeNullString(this.gene_list[0].Sham_1).split(',');
     let meta_series_infoSham_1 = Sham_1_temp.map(val => this.removeNullNumber(val));
     const Sham_1_sum = meta_series_infoSham_1.reduce((sum, p) => sum + p);
-    this.meta_chart_options1_Sham.chart!.width = Sham_1_sum > 20 ? '100%' : Math.trunc(Sham_1_sum * 5).toString() + '%';
-    // console.log(meta_series_infoSham_1);
-    this.meta_chart_options1_Sham.series! = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoSham_1[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoSham_1[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoSham_1[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoSham_1[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoSham_1[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoSham_1[4]]
-      },
-    ];
+    this.sum_1_Sham = Sham_1_sum;
+    this.series_1_Sham = meta_series_infoSham_1.slice().reverse();
 
     let MI_3_temp = this.removeNullString(this.gene_list[0].MI_3).split(',');
     let meta_series_infoMI_3 = MI_3_temp.map(val => this.removeNullNumber(val));
     const MI_3_sum = meta_series_infoMI_3.reduce((sum, p) => sum + p);
-    this.meta_chart_options3_MI.chart!.width = MI_3_sum > 20 ? '100%' : Math.trunc(MI_3_sum * 5).toString() + '%';
-    // console.log(meta_series_infoMI_3);
-    this.meta_chart_options3_MI.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoMI_3[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoMI_3[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoMI_3[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoMI_3[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoMI_3[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoMI_3[4]]
-      },
-    ];
+    this.sum_3_MI = MI_3_sum;
+    this.series_3_MI = meta_series_infoMI_3.slice().reverse();
 
     let MI_1_temp = this.removeNullString(this.gene_list[0].MI_1).split(',');
     let meta_series_infoMI_1 = MI_1_temp.map(val => this.removeNullNumber(val));
     const MI_1_sum = meta_series_infoMI_1.reduce((sum, p) => sum + p);
-    this.meta_chart_options1_MI.chart!.width = MI_1_sum > 20 ? '100%' : Math.trunc(MI_1_sum * 5).toString() + '%';
-    // console.log(meta_series_infoMI_1);
-    this.meta_chart_options1_MI.series! = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoMI_1[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoMI_1[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoMI_1[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoMI_1[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoMI_1[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoMI_1[4]]
-      },
-    ];
+    this.sum_1_MI = MI_1_sum;
+    this.series_1_MI = meta_series_infoMI_1.slice().reverse();
   }
 
   createDisplayData() {
-    // console.log("Starting createDisplayData");
-    // console.log("Genes:", this.gene_list); // Log first few genes
-    // Check what PSD values exist in the gene list
-    // console.log("PSD Values in Gene List:", this.gene_list.map(gene => gene.PSD));
 
 
     // Split gene_list into PSD groups P1vsP8
@@ -1930,41 +1240,9 @@ export class GeneCardComponent implements OnInit {
 
     let num_ticks = 5
 
-    //Setup MetaChart
-    this.meta_chart_options1_Sham.chart!.width = cluster_number1_Sham > 20 ? '100%' : Math.trunc(cluster_number1_Sham * 5).toString() + '%'
-    this.meta_chart_options1_Sham.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_info1_Sham[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_info1_Sham[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_info1_Sham[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_info1_Sham[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_info1_Sham[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_info1_Sham[4]]
-      },
-    ]
-
     //Setup ModelChart
     this.model_chart_options1_Sham.series = [{ data: model_data1_Sham }];
 
-    // Debug X-Axis settings
-    // console.log("X-Axis Range for ModelChart:");
-    // console.log("Min LFC:", min_lfc1_Sham, "Max LFC:", max_lfc1_Sham);
 
     this.model_chart_options1_Sham.xaxis = {
       title: {
@@ -2002,50 +1280,14 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
-    //this.model_chart_options.title = {text: this.gene_list[0].gene!.toString(),align: "center"}
-    //this.model_chart_options.xaxis = {min: min_lfc, max: max_lfc}
+    
     //Set Heights Model Graph
     let scaler_Sham = cluster_number1_Sham > 15 ? cluster_number1_Sham : 15
     let height_Sham = (scaler_Sham * 15).toString() + 'px'
     //this.model_chart_options.chart!.height = height
 
-
-
-    //Setup MetaChart
-    this.meta_chart_options1_MI.chart!.width = cluster_number1_MI > 20 ? '100%' : Math.trunc(cluster_number1_MI * 5).toString() + '%'
-    this.meta_chart_options1_MI.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_info1_MI[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_info1_MI[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_info1_MI[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_info1_MI[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_info1_MI[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_info1_MI[4]]
-      },
-    ]
-
     //Setup ModelChart
     this.model_chart_options1_MI.series = [{ data: model_data1_MI }]
-
-    // Debug X-Axis settings
-    // console.log("X-Axis Range for ModelChart:");
-    // console.log("Min LFC:", min_lfc1_MI, "Max LFC:", max_lfc1_MI);
 
     this.model_chart_options1_MI.xaxis = {
       title: {
@@ -2082,44 +1324,11 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
-    //this.model_chart_options.title = {text: this.gene_list[0].gene!.toString(),align: "center"}
-    //this.model_chart_options.xaxis = {min: min_lfc, max: max_lfc}
+    
     //Set Heights Model Graph
     let scaler = cluster_number1_MI > 15 ? cluster_number1_MI : 15
     let height = (scaler * 15).toString() + 'px'
-    //this.model_chart_options.chart!.height = height
 
-
-
-
-    //Setup MetaChart
-    this.meta_chart_options3_Sham.chart!.width = cluster_number3_Sham > 20 ? '100%' : Math.trunc(cluster_number3_Sham * 5).toString() + '%'
-    this.meta_chart_options3_Sham.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_info3_Sham[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_info3_Sham[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_info3_Sham[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_info3_Sham[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_info3_Sham[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_info3_Sham[4]]
-      },
-    ]
     //Setup ModelChart
     this.model_chart_options3_Sham.series = [{ data: model_data3_Sham }]
     this.model_chart_options3_Sham.xaxis = {
@@ -2158,35 +1367,6 @@ export class GeneCardComponent implements OnInit {
       }
     }
 
-
-    //Setup MetaChart
-    this.meta_chart_options3_MI.chart!.width = cluster_number3_MI > 20 ? '100%' : Math.trunc(cluster_number3_MI * 5).toString() + '%'
-    this.meta_chart_options3_MI.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_info3_MI[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_info3_MI[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_info3_MI[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_info3_MI[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_info3_MI[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_info3_MI[4]]
-      },
-    ]
     //Setup ModelChart
     this.model_chart_options3_MI.series = [{ data: model_data3_MI }]
     this.model_chart_options3_MI.xaxis = {
@@ -2225,41 +1405,8 @@ export class GeneCardComponent implements OnInit {
       }
     }
 
-    //Setup MetaChart
-    this.meta_chart_optionsP1_1.chart!.width = cluster_numberP1_1 > 20 ? '100%' : Math.trunc(cluster_numberP1_1 * 5).toString() + '%'
-    this.meta_chart_optionsP1_1.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP1_1[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP1_1[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP1_1[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP1_1[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP1_1[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP1_1[4]]
-      },
-    ]
-
     //Setup ModelChart
     this.model_chart_optionsP1_1.series = [{ data: model_dataP1_1 }]
-
-    // Debug X-Axis settings
-    // console.log("X-Axis Range for ModelChart:");
-    // console.log("Min LFC:", min_lfcP1_1, "Max LFC:", max_lfcP1_1);
 
     this.model_chart_optionsP1_1.xaxis = {
       title: {
@@ -2296,52 +1443,9 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
-    //this.model_chart_options.title = {text: this.gene_list[0].gene!.toString(),align: "center"}
-    //this.model_chart_options.xaxis = {min: min_lfc, max: max_lfc}
-    //Set Heights Model Graph
-
-
-    //test comment
-    //let scaler_Sham = cluster_numberP1_1 > 15 ? cluster_numberP1_1 : 15
-    //let height_Sham = (scaler_Sham * 15).toString() + 'px'
-
-
-
-    //Setup MetaChart
-    this.meta_chart_optionsP1_3.chart!.width = cluster_numberP1_3 > 20 ? '100%' : Math.trunc(cluster_numberP1_3 * 5).toString() + '%'
-    this.meta_chart_optionsP1_3.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP1_3[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP1_3[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP1_3[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP1_3[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP1_3[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP1_3[4]]
-      },
-    ]
 
     //Setup ModelChart
     this.model_chart_optionsP1_3.series = [{ data: model_dataP1_3 }]
-
-    // Debug X-Axis settings
-    // console.log("X-Axis Range for ModelChart:");
-    // console.log("Min LFC:", min_lfcP1_3, "Max LFC:", max_lfcP1_3);
 
     this.model_chart_optionsP1_3.xaxis = {
       title: {
@@ -2378,48 +1482,7 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
-    //this.model_chart_options.title = {text: this.gene_list[0].gene!.toString(),align: "center"}
-    //this.model_chart_options.xaxis = {min: min_lfc, max: max_lfc}
-    //Set Heights Model Graph
 
-
-
-    ///test comment
-
-    //   let scaler = cluster_numberP1_3 > 15 ? cluster_numberP1_3 : 15
-    //    let height = (scaler * 15).toString() + 'px'
-
-
-
-
-    //Setup MetaChart
-    this.meta_chart_optionsP8_1.chart!.width = cluster_numberP8_1 > 20 ? '100%' : Math.trunc(cluster_numberP8_1 * 5).toString() + '%'
-    this.meta_chart_optionsP8_1.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP8_1[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP8_1[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP8_1[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP8_1[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP8_1[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP8_1[4]]
-      },
-    ]
     //Setup ModelChart
     this.model_chart_optionsP8_1.series = [{ data: model_dataP8_1 }]
     this.model_chart_optionsP8_1.xaxis = {
@@ -2458,35 +1521,6 @@ export class GeneCardComponent implements OnInit {
       }
     }
 
-
-    //Setup MetaChart
-    this.meta_chart_optionsP8_3.chart!.width = cluster_numberP8_3 > 20 ? '100%' : Math.trunc(cluster_numberP8_3 * 5).toString() + '%'
-    this.meta_chart_optionsP8_3.series = [
-      {
-        name: "Non-Significant Fit",
-        data: [meta_series_infoP8_3[5]]
-      },
-      {
-        name: "Significantly Downregulated",
-        data: [meta_series_infoP8_3[0]]
-      },
-      {
-        name: "Slightly Downregulated",
-        data: [meta_series_infoP8_3[1]]
-      },
-      {
-        name: "No Change",
-        data: [meta_series_infoP8_3[2]]
-      },
-      {
-        name: "Slightly Upregulated",
-        data: [meta_series_infoP8_3[3]]
-      },
-      {
-        name: "Significantly Upregulated",
-        data: [meta_series_infoP8_3[4]]
-      },
-    ]
     //Setup ModelChart
     this.model_chart_optionsP8_3.series = [{ data: model_dataP8_3 }]
     this.model_chart_optionsP8_3.xaxis = {
@@ -2524,6 +1558,40 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
+
+    const P1_3_sum = meta_series_infoP1_3.reduce((sum, p) => sum + p);
+    this.sum_3_P1 = P1_3_sum;
+    this.series_3_P1 = meta_series_infoP1_3.slice().reverse();
+
+    const P1_1_sum = meta_series_infoP1_1.reduce((sum, p) => sum + p);
+    this.sum_1_P1 = P1_1_sum;
+    this.series_1_P1 = meta_series_infoP1_1.slice().reverse();
+
+    const P8_3_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
+    this.sum_3_P8 = P8_3_sum;
+    this.series_3_P8 = meta_series_infoP8_3.slice().reverse();
+
+    const P8_1_sum = meta_series_infoP8_1.reduce((sum, p) => sum + p);
+    this.sum_1_P8 = P8_1_sum;
+    this.series_1_P8 = meta_series_infoP8_1.slice().reverse();
+
+    const Sham_3_sum = meta_series_info3_Sham.reduce((sum, p) => sum + p);
+    this.sum_3_Sham = Sham_3_sum;
+    this.series_3_Sham = meta_series_info3_Sham.slice().reverse();
+
+    const Sham_1_sum = meta_series_info1_Sham.reduce((sum, p) => sum + p);
+    this.sum_1_Sham = Sham_1_sum;
+    this.series_1_Sham = meta_series_info1_Sham.slice().reverse();
+
+    const MI_3_sum = meta_series_info3_MI.reduce((sum, p) => sum + p);
+    this.sum_3_MI = MI_3_sum;
+    this.series_3_MI = meta_series_info3_MI.slice().reverse();
+
+    const MI_1_sum = meta_series_info1_MI.reduce((sum, p) => sum + p);
+    this.sum_1_MI = MI_1_sum;
+    this.series_1_MI = meta_series_info1_MI.slice().reverse();
+
+    console.log(this.sum_1_MI)
   }
 
   updateMetaSeriesInfo(info: number[], lfc: number, pval: number) {

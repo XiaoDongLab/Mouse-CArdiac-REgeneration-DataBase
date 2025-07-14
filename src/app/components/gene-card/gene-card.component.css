@@ -359,3 +359,7 @@ canvas,
     gap: 1rem;
     justify-content: center;
 }
+
+.progress-stacked, .progress {
+    height: 1.5rem;
+}
