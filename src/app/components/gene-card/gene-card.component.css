@@ -363,3 +363,7 @@ canvas,
 .progress-stacked, .progress {
     height: 1.5rem;
 }
+
+::ng-deep [data-bs-theme=dark] .gene-card .progress-stacked {
+    filter: invert(1) hue-rotate(180deg);
+}
