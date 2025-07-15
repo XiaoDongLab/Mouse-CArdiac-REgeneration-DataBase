@@ -181,7 +181,7 @@
     transition: .1s ease-in-out;
   }
 
-  ::ng-deep .maps .nav-link.active:focus::before, ::ng-deep .maps .nav-link.active:active::before {
+  .maps .nav-link.active:focus::before, .maps .nav-link.active:active::before {
     display: flex;
     position: absolute;
     left: calc(0px - var(--bs-border-width));
@@ -219,7 +219,7 @@
     bottom: calc(0px - var(--bs-border-width));
     height: .25rem;
     content: ' ';
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-pink);
     width: 1rem;
     border-radius: .125rem;
     transition: .1s ease-in-out;
@@ -232,7 +232,7 @@
     bottom: calc(0px - var(--bs-border-width));
     height: .25rem;
     content: ' ';
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-pink);
     width: .75rem;
     border-radius: .125rem;
   }
@@ -249,10 +249,20 @@
     border-radius: var(--bs-border-radius);
   }
 
+  .maps .nav-link.active {
+    border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+    background-color: rgba(var(--bs-pink-rgb), 0.2);
+    border-radius: var(--bs-border-radius)
+  }
+
   .maps .navbar-nav {
     flex-direction: row;
     justify-content: center;
   }
+}
+
+.navbar-nav {
+  gap: .5rem
 }
 
 .image {

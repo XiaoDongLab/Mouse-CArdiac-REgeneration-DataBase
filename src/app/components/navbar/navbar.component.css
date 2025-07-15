@@ -184,3 +184,7 @@
     width: 1rem;
   }
 }
+
+.navbar-nav {
+  gap: .5rem
+}
