@@ -356,7 +356,7 @@ canvas,
 
 .maps.navbar-nav {
     flex-direction: row !important;
-    gap: 1rem;
+    gap: .5rem;
     justify-content: center;
 }
 
