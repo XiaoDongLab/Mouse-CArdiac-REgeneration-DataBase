@@ -348,6 +348,7 @@
   position: relative;
   padding-left: .5rem;
   cursor: pointer;
+  text-align: center;
   padding-right: .5rem;
   border: var(--bs-border-width) solid transparent;
   border-radius: var(--bs-border-radius);
