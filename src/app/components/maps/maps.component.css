@@ -252,7 +252,8 @@
   .maps .nav-link.active {
     border: var(--bs-border-width) solid var(--bs-border-color-translucent);
     background-color: rgba(var(--bs-pink-rgb), 0.2);
-    border-radius: var(--bs-border-radius)
+    border-radius: var(--bs-border-radius);
+    box-shadow: var(--bs-box-shadow);
   }
 
   .maps .navbar-nav {

@@ -50,7 +50,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   deg_sorted_list: Map<String, number>;
   load_progress: number;
   gene_interested: Gene[] = [];
+  prevGene: string = "";
+  nextGene: string = "";
   genesEntered: string = '';
+  genes_index: number = 0;
   trackUrl = 'https://www.encodeproject.org/files/ENCFF092EKO/@@download/ENCFF092EKO.bigWig';
   options = {
     genome: "mm10",
@@ -203,7 +206,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           }
         ],
       };
-      this.lociService.setLocus(null)
     }
     this.createBrowser();
     console.log(this.lociService.getLocus())
@@ -256,6 +258,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     this.databaseService.getGeneDiffExpGeneral(convertedList)
       .subscribe({
         next: (data) => {
+          this.genes_index = 0;
           console.log(data);
           this.initial_genes = data;
           this.grouped_genes = data.map(gene => [gene]);
@@ -265,7 +268,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.grouped_genes.forEach((gene, idx) => {
             this.deg_sorted_list.set(gene[0]?.gene?.toString() ?? '', idx);
           })
-          console.log(this.deg_sorted_list);
+          this.nameConverterService.convertEnsembleToGene("ENSMUSG" + ("00000000000" + this.grouped_genes[0][0].gene).slice(-11)).then(data => {
+            this.browser.search(data);
+          });
+          this.moveGenes(this.grouped_genes, 'none');
           // console.log(this.initial_genes[0]);
           // this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
           // this.subsetCorrectCellAndTissueTypes()
@@ -290,7 +296,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  getDiffExpGeneralData(gene_names: any[] = this.display!.map((obj) => obj.en_id!)) {
+  getDiffExpGeneralData(gene_names: any[] = this.display!.map((obj) => obj.en_id!), entered: boolean = false) {
     // this.gene_names = this.display!.map((obj) => obj.en_id!)
     const convertedList: number[] = gene_names.map((str) => {
       // Remove 'ENSG' from the beginning of each string
@@ -302,6 +308,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     this.databaseService.getGeneDiffExpGeneral(convertedList)
       .subscribe({
         next: (data) => {
+          this.genes_index = 0;
           console.log(data);
           this.initial_genes = data;
           this.grouped_genes = data.map(gene => [gene]);
@@ -311,6 +318,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.grouped_genes.forEach((gene, idx) => {
             this.deg_sorted_list.set(gene[0]?.gene?.toString() ?? '', idx);
           })
+          if (entered) {
+            this.nameConverterService.convertEnsembleToGene("ENSMUSG" + ("00000000000" + this.grouped_genes[0][0].gene).slice(-11)).then(data => {
+              this.browser.search(data);
+            });
+            this.moveGenes(this.grouped_genes, 'none');
+          }
           console.log(this.deg_sorted_list);
           // console.log(this.initial_genes[0]);
           // this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
@@ -566,7 +579,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     if (check_passed) {
       this.loading = true;
       this.completely_loaded = false;
-      this.getDiffExpGeneralData(gene_list);
+      this.getDiffExpGeneralData(gene_list, true);
     } else alert(`Entered gene(s): ${false_genes.join(", ")} not found!`)
   }
 
@@ -586,8 +599,35 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   //   ensg_list.sort((a, b) => (a.gene! > b.gene!) ? 1 : -1)
   //   return(named_list.concat(ensg_list))
   // }
-  geneRerout(item: string) {
-    this.lociService.setLocus(item);
-    this.router.navigate(['/igv']);
+
+  moveGenes(gene_group: DiffExp[][], direction: 'left' | 'right' | 'none') {
+    if (direction == 'right') {
+      this.nameConverterService.convertEnsembleToGene(
+        "ENSMUSG" + ("00000000000" + gene_group[this.getIndex(++this.genes_index, gene_group.length)][0].gene).slice(-11)
+      ).then(data => {
+        this.browser.search(data);
+      });
+    } else if (direction == 'left') {
+      this.nameConverterService.convertEnsembleToGene(
+        "ENSMUSG" + ("00000000000" + gene_group[this.getIndex(--this.genes_index, gene_group.length)][0].gene).slice(-11)
+      ).then(data => {
+        this.browser.search(data);
+      })
+    }
+    this.nameConverterService.convertEnsembleToGene(
+      "ENSMUSG" + ("00000000000" + gene_group[this.getIndex(this.genes_index + 1, gene_group.length)][0].gene).slice(-11)
+    ).then(data => {
+      this.nextGene = data;
+    });
+    this.nameConverterService.convertEnsembleToGene(
+      "ENSMUSG" + ("00000000000" + gene_group[this.getIndex(this.genes_index - 1, gene_group.length)][0].gene).slice(-11)
+    ).then(data => {
+      this.prevGene = data;
+    });
   }
+
+  getIndex(x: number, length: number): number {
+    return x - length * Math.floor(x / length);
+  }
+
 }
