@@ -9,33 +9,19 @@
         <p class="text-muted">This is a pre-release version.</p>
         <h3 id="new-features">New Features</h3>
         <ul>
-            <li>
-                <p><strong>Pathway browser</strong>: We added a pathway button in <code>Pathway Enrichment</code> page
-                    which is linked to <code>biocyc.org</code> for GO or <code>kegg.jp</code> for KEGG.</p>
-            </li>
-            <li>
-                <p><strong>Searching multiple genes</strong>: You can now perform searching DEG data for multiple genes,
-                    even they aren&#39;t on the same chromosome.</p>
-            </li>
-        </ul>
-        <h3 id="fixed-issues">Fixed Issues</h3>
-        <ul>
-            <li>Now you can run DEG searching without always receiving <code>Too many or too few genes selected</code>.
-                This is because you have to run it after <code>igv.esm.js</code> loaded. Now, the buttons are disabled
-                before it is completely loaded.</li>
-        </ul>
-        <h3 id="known-issues">Known Issues</h3>
-        <ul>
-            <li>When you switch between tabs in <code>Genome Browser</code>, you may see the IGV control disappeared.
-                Simply refresh the webpage to get it back.</li>
+            <li><strong>navigate between genes</strong>: When you are viewing DEG results of
+                <code>Genes interested</code> or <code>Genes entered manually</code>, you can navigate IGV viewport
+                between genes. Orders are determined by expression results.</li>
         </ul>
         <h3 id="miscellaneous">Miscellaneous</h3>
         <ul>
             <li>
-                <p>Ensembl IDs will be shown in default for DEG results.</p>
+                <p>Now IGV viewport will always display in three tabs in Genome Browser.</p>
             </li>
             <li>
-                <p>We refreshed some controls in <code>igv.esm.js</code> in order to fit the design themes.</p>
+                <p>We updated stylesheets in <code>igv.js</code> to fit mobile devices and dark theme. When you check
+                    the buttons in IGV navbar, please move your mouse out of the button container to view the status.
+                    Otherwise, they may always show as selected since the hover style is the same as checked style.</p>
             </li>
         </ul>
 

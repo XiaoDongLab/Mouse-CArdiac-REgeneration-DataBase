@@ -1,6 +1,18 @@
 # Version history
 
-The latest version is **1.2507.55.0**, compiled on 11 July 2025.
+The latest version is **1.2507.75.0**, compiled on 16 July 2025.
+
+## 1.2507.75.0 - 16 July 2025
+
+### New Features
+
+- **navigate between genes**: When you are viewing DEG results of `Genes interested` or `Genes entered manually`, you can navigate IGV viewport between genes. Orders are determined by expression results.
+
+### Miscellaneous
+
+- Now IGV viewport will always display in three tabs in Genome Browser.
+
+- We updated stylesheets in `igv.js` to fit mobile devices and dark theme. When you check the buttons in IGV navbar, please move your mouse out of the button container to view the status. Otherwise, they may always show as selected since the hover style is the same as checked style.
 
 ## 1.2507.55.0 - 11 July 2025
 
