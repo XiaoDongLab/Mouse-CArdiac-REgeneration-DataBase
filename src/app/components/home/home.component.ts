@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageService } from 'src/app/services/image.service';
 import { DatabaseService } from 'src/app/services/database.service';
-import { ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexTheme, ApexStroke} from "ng-apexcharts";
+import { ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexTheme, ApexStroke } from "ng-apexcharts";
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+declare const bootstrap: any;
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -16,21 +18,21 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css'],
-    standalone: false
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
+  standalone: false
 })
 export class HomeComponent implements OnInit {
   charts_ready = false;
   selected_age_group = 'all ages';
-  tissue_list = ['kidney','human bone marrow', 'pancreas', 'placenta', 'lung', 'blood', 'dermis']
+  tissue_list = ['kidney', 'human bone marrow', 'pancreas', 'placenta', 'lung', 'blood', 'dermis']
   public tissue_chart_options: Partial<ChartOptions>;
   public sex_chart_options: Partial<ChartOptions>;
   sample_info: any[];
   tissue_dict: any = {};
   sex_dict: any = {};
-  age_dict: any = {'0-9':0,'10-19':0,'20-29':0,'30-49':0,'50-64':0,'65-99':0,'100+':0,}
+  age_dict: any = { '0-9': 0, '10-19': 0, '20-29': 0, '30-49': 0, '50-64': 0, '65-99': 0, '100+': 0, }
   logo_list: any[];
   cell_total: string;
   min_age = -1
@@ -47,9 +49,10 @@ export class HomeComponent implements OnInit {
       text: 'TBD'
     }
   ]
-  
+
   constructor(private imageService: ImageService, private databaseService: DatabaseService) {
-    this.is_https = window.location.protocol === 'https:'? true : false;
+    ModuleRegistry.registerModules([AllCommunityModule]);
+    this.is_https = window.location.protocol === 'https:' ? true : false;
     this.databaseService.getSampleInfoForHomepage().subscribe({
       next: (data) => {
         this.sample_info = data;
@@ -61,24 +64,31 @@ export class HomeComponent implements OnInit {
       error: (e) => console.error(e)
     });
     this.logo_list = this.imageService.getLogoImages()
-   }
+  }
+
+  ngAfterViewInit(): void {
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    console.log(popoverList)
+  }
 
   ngOnInit(): void {
-
+      
   }
+
 
   ngOnChanges(): void {
     this.preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
-  test(age_group: any){
-    if(this.selected_age_group == age_group){
-      this.selected_age_group = 'All Ages' 
-       this.min_age = -1
-       this.max_age = 1000
-     }
-     else{
-      switch (age_group){
+  test(age_group: any) {
+    if (this.selected_age_group == age_group) {
+      this.selected_age_group = 'All Ages'
+      this.min_age = -1
+      this.max_age = 1000
+    }
+    else {
+      switch (age_group) {
         case '0-9':
           this.min_age = -1;
           this.max_age = 10;
@@ -109,9 +119,9 @@ export class HomeComponent implements OnInit {
           break;
       }
       this.selected_age_group = age_group;
-     }
-     for(let i = 0; i < this.logo_list.length; i ++){
-      this.logo_list[i].url = this.logo_list[i].name == this.selected_age_group ? [this.logo_list[i].url.slice(0,-4),"_selected",this.logo_list[i].url.slice(-4)].join('') : this.logo_list[i].url.replace("_selected", "");
+    }
+    for (let i = 0; i < this.logo_list.length; i++) {
+      this.logo_list[i].url = this.logo_list[i].name == this.selected_age_group ? [this.logo_list[i].url.slice(0, -4), "_selected", this.logo_list[i].url.slice(-4)].join('') : this.logo_list[i].url.replace("_selected", "");
     }
     this.makeDictionaries();
     this.tissue_chart_options.series = Object.values(this.tissue_dict);
@@ -120,15 +130,15 @@ export class HomeComponent implements OnInit {
     this.sex_chart_options.labels = Object.keys(this.sex_dict);
   }
 
-  makeDictionaries(){
+  makeDictionaries() {
     let temp_tissue_dict: any = {};
     let temp_sex_dict: any = {};
-    let temp_age_dict: any = {'0-9':0,'10-19':0,'20-29':0,'30-49':0,'50-64':0,'65-99':0,'100+':0,}
+    let temp_age_dict: any = { '0-9': 0, '10-19': 0, '20-29': 0, '30-49': 0, '50-64': 0, '65-99': 0, '100+': 0, }
     let cell_count = 0;
-    
-    for(let i=0; i<this.sample_info.length; i++){
+
+    for (let i = 0; i < this.sample_info.length; i++) {
       let sample = this.sample_info[i];
-      if(isNaN(this.getAge(sample.age))){
+      if (isNaN(this.getAge(sample.age))) {
         console.log(sample)
       }
       let age = this.getAge(sample.age)
@@ -136,7 +146,7 @@ export class HomeComponent implements OnInit {
       //Get Age information to always be displayed
       let age_group = this.getAgeGroup(age);
       temp_age_dict[age_group] = temp_age_dict[age_group] + 1;
-      if(!(age >= this.min_age && age < this.max_age)){
+      if (!(age >= this.min_age && age < this.max_age)) {
         continue;
       }
 
@@ -166,7 +176,7 @@ export class HomeComponent implements OnInit {
     this.age_dict = temp_age_dict;
     this.cell_total = cell_count.toLocaleString();
   }
-  makeChart(input_dict: any){
+  makeChart(input_dict: any) {
     let chart: Partial<ChartOptions> = {
       series: Object.values(input_dict),
       chart: {
@@ -174,7 +184,7 @@ export class HomeComponent implements OnInit {
         height: "400",
       },
       legend: {
-        show:false
+        show: false
       },
       labels: Object.keys(input_dict),
       responsive: [
@@ -192,25 +202,25 @@ export class HomeComponent implements OnInit {
       ],
       data_labels: {
         formatter: function (val, opts) {
-            return opts.w.config.labels[opts.seriesIndex]
+          return opts.w.config.labels[opts.seriesIndex]
         },
-        style:{
+        style: {
           fontSize: '16px'
         }
       },
-      options:{
-        pie:{
-          donut:{
-            labels:{
-              show:true,
-              total:{
-                show:true,
-                label:"Total Samples",
+      options: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              total: {
+                show: true,
+                label: "Total Samples",
                 fontSize: '30px',
                 fontWeight: 700,
                 color: ' #E85A4F'
               },
-              value:{
+              value: {
                 fontFamily: 'RobotoCondensed-Bold',
                 fontSize: '50px',
                 color: '#8E8D8A',
@@ -221,67 +231,71 @@ export class HomeComponent implements OnInit {
           }
         }
       },
-      theme:{
-        monochrome:{
-          enabled:true,
+      theme: {
+        monochrome: {
+          enabled: true,
           color: '#E85A4F',
-          shadeTo:'dark',
+          shadeTo: 'dark',
           shadeIntensity: 0.75
         }
       },
-      stroke:{
-        width:2,
+      stroke: {
+        width: 2,
         colors: ['#E0DCCC']
       }
     };
-    return(chart)
+    return (chart)
   }
 
-  getAge(age:any){
+  getAge(age: any) {
     let ret_age = -10
-    if(age.toLowerCase().includes('w') || age.toLowerCase().includes('f')){
+    if (age.toLowerCase().includes('w') || age.toLowerCase().includes('f')) {
       ret_age = 0
     }
-    else if(age.includes('-')){
+    else if (age.includes('-')) {
       let ages = age.split('-')
-      ret_age  = (Number(ages[0]) + Number(ages[1]))/2
+      ret_age = (Number(ages[0]) + Number(ages[1])) / 2
     }
-    else if(age.includes('+')){
-      ret_age  = Number(age.replace("+",""))
+    else if (age.includes('+')) {
+      ret_age = Number(age.replace("+", ""))
     }
     else {
       ret_age = Number(age)
     }
-    return(ret_age)
+    return (ret_age)
   }
 
-  getAgeGroup(age:number){
-    if(age < 10){
-      return('0-9')
+  getAgeGroup(age: number) {
+    if (age < 10) {
+      return ('0-9')
     }
-    else if(age < 20){
-      return('10-19')
+    else if (age < 20) {
+      return ('10-19')
     }
-    else if(age < 30){
-      return('20-29')
+    else if (age < 30) {
+      return ('20-29')
     }
-    else if(age < 50){
-      return('30-49')
+    else if (age < 50) {
+      return ('30-49')
     }
-    else if(age < 65){
-      return('50-64')
+    else if (age < 65) {
+      return ('50-64')
     }
-    else if(age < 100){
-      return('65-99')
+    else if (age < 100) {
+      return ('65-99')
     }
-    return('100+')
+    return ('100+')
   }
-  prettify(input_name:string){
+  prettify(input_name: string) {
     input_name = input_name.replace("_", " ")
     const words = input_name.split(" ");
     for (let i = 0; i < words.length; i++) {
-        words[i] = words[i][0].toUpperCase() + words[i].slice(1);
+      words[i] = words[i][0].toUpperCase() + words[i].slice(1);
     }
-    return(words.join(" "));
+    return (words.join(" "));
+  }
+
+  copyCitation(): void {
+    navigator.clipboard.writeText("Abcd, E., 2025, https://mcaredb.org/");
   }
 }

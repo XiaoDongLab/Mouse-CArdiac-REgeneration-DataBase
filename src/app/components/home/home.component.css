@@ -70,7 +70,8 @@
 }
 
 .mcaredb-title {
-  color: var(--bs-pink); font-weight: normal;
+  color: var(--bs-pink) !important; 
+  font-weight: normal;
 }
 
 .mcaredb-title > b {
