@@ -8,11 +8,6 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: .5rem;
-}
-
-::ng-deep .accordion-settings {
-    margin-bottom: .5rem;
 }
 
 ::ng-deep .accordion-settings .accordion-item {
@@ -169,4 +164,20 @@
     backdrop-filter: blur(100px);
     z-index: 1;
     transition: .1s ease-in-out;
+}
+
+.settings-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: .5rem
+}
+
+.settings-list > * {
+    width: 100%;
+    margin: 0;
+}
+
+.settings-list > h5:not(:first-of-type) {
+    margin: .5rem 0 0 0;
 }
