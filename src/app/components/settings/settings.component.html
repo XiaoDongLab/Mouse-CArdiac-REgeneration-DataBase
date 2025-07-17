@@ -1,6 +1,7 @@
 <div class="row mt-2 g-2">
     <h3 class="col-12">Settings</h3>
     <div class="col-md-8 col-sm-12">
+        <h5>General</h5>
         <div class="accordion accordion-settings" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -55,6 +56,22 @@
                 <input type="range" class="form-range" min="-5" max="5" step="1" id="font-size-range"
                     (change)="fontSizeChange()" [(ngModel)]="fontSize" />
                 <span class="font-size-display">{{((this.fontSize / 20 + 1) * 100).toFixed(0)}}%</span>
+            </div>
+        </div>
+
+        <h5>Data analysis</h5>
+        <div class="card-settings">
+            <i class="fa fa-chart-simple"></i>
+            <div class="settings-title">
+                <span class="main-title">Non-significant clusters</span>
+                <span class="description text-muted">Clusters with -Log<sub>10</sub>(Adj p-value) less than 0.01 are
+                    hideen by default.</span>
+            </div>
+            <div class="settings-option">
+                <div class="form-check form-switch form-check-reverse">
+                    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" [(ngModel)]="showNonsigCluster" (change)="showNonsigClusterChange()">
+                    <label class="form-check-label" for="switchCheckChecked">{{showNonsigCluster ? 'Show' : 'Hide'}}</label>
+                </div>
             </div>
         </div>
     </div>

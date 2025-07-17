@@ -11,9 +11,10 @@ export class SettingsComponent implements OnInit {
 
   Version: string = "";
   CompileDate: string = "";
-  colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
-  fontSize: number = localStorage["fontSize"] ? localStorage["fontSize"] : 0;
-  highContrast: number = localStorage["highContrast"] ? localStorage["highContrast"] : 1;
+  colorPreference: number = localStorage["colorPreference"] ?? 0;
+  fontSize: number = localStorage["fontSize"] ?? 0;
+  highContrast: number = localStorage["highContrast"] ?? 1;
+  showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"]) ?? false;
   constructor() { }
 
   ngOnInit(): void {
@@ -70,4 +71,8 @@ export class SettingsComponent implements OnInit {
     changelogToast!.style.display = "none";
   }
 
+  showNonsigClusterChange(): void {
+    localStorage["showNogSigCluster"] = this.showNonsigCluster;
+    console.log(localStorage["showNogSigCluster"])
+  }
 }
