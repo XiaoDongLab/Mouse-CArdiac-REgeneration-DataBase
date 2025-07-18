@@ -15,6 +15,7 @@ export class SettingsComponent implements OnInit {
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
   showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"]) ?? false;
+  useYAxisType: number = localStorage["useYAxisType"] ?? 0; // 0 -> -lgP-val; 1 -> P-val;
   constructor() { }
 
   ngOnInit(): void {
@@ -74,5 +75,9 @@ export class SettingsComponent implements OnInit {
   showNonsigClusterChange(): void {
     localStorage["showNogSigCluster"] = this.showNonsigCluster;
     console.log(localStorage["showNogSigCluster"])
+  }
+
+  useYAxisChange(): void {
+    localStorage["useYAxisType"] = this.useYAxisType;
   }
 }

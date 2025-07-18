@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 163">
+	<g>
+		<path d="M 10 30 C 8 60 0 70 0 90 Q 0 100 10 110 C 10 100 33 80 35 70 C 38 80 13 100 12 112 C 12 138 42 163 76 163 C 97 163 125 123 118 96 C 119 78 119 69 106 64 C 97 73 98 78 99 86 C 89 76 102 59 123 45 C 129 41 122 30 117 33 C 110 37 104 38 95 49 C 88 47 77 43 74 63 C 73 67 70 66 71 63 C 74 43 84 43 94 45 C 99 39 102 37 106 35 C 105 29 101 25 95 22 C 95 15 96 10 98 4 C 99 1 86 -2 85 2 C 83 7 82 11 82 16 C 82 21 72 18 73 15 C 74 11 75 6 75 3 C 75 -1 63 -1 63 3 C 63 7 63 11 62 15 C 61 19 53 18 52 15 C 51 12 50 7 50 3 C 50 -1 38 -1 39 3 C 41 10 41 14 41 19 C 41 27 24 30 29 58 Q 27 57 23 57 Q 24 56 27 56 C 26 50 24 40 30 30 C 33 25 10 25 10 30 Z" fill="#d54040"/>
+<path d="M 12 112 C 12 138 42 163 76 163 C 92 163 86 119 59 99 C 40 85 13 100 12 112 Z" fill="#d54040" /></g>
+<g transform="translate(374.7, 0)"><path d="M 10 30 C 8 60 0 70 0 90 Q 0 100 10 110 C 10 100 33 80 35 70 C 38 80 13 100 12 112 C 12 138 42 163 76 163 C 97 163 125 123 118 96 C 119 78 119 69 106 64 C 97 73 98 78 99 86 C 89 76 102 59 123 45 C 129 41 122 30 117 33 C 110 37 104 38 95 49 C 88 47 77 43 74 63 C 73 67 70 66 71 63 C 74 43 84 43 94 45 C 99 39 102 37 106 35 C 105 29 101 25 95 22 C 95 15 96 10 98 4 C 99 1 86 -2 85 2 C 83 7 82 11 82 16 C 82 21 72 18 73 15 C 74 11 75 6 75 3 C 75 -1 63 -1 63 3 C 63 7 63 11 62 15 C 61 19 53 18 52 15 C 51 12 50 7 50 3 C 50 -1 38 -1 39 3 C 41 10 41 14 41 19 C 41 27 24 30 29 58 Q 27 57 23 57 Q 24 56 27 56 C 26 50 24 40 30 30 C 33 25 10 25 10 30 Z" fill="#d54040"/>
+<path d="M 12 112 C 12 138 42 163 76 163 C 92 163 86 119 59 99 C 40 85 13 100 12 112 Z" fill="#8c1d1d" /></g>
+<path d="M 150 80 L 340 80 340 75 350 82 340 89 340 84 150 84 150 80 Z" fill="currentColor" />
+<path d="M 248 80 L 248 60 C 248 58 252 58 252 60 L 252 80 248 80 Z" fill="currentColor" />
+<text x="250" y="40" alignment-baseline="central" text-anchor="middle" font-family="inherit" fill="currentColor">+1d</text>
+<path d="M 248 80 L 248 60 C 248 58 252 58 252 60 L 252 80 248 80 Z" fill="currentColor" transform="translate(-70,0)" />
+<text x="180" y="40" alignment-baseline="central" text-anchor="middle" font-family="inherit" fill="currentColor">Sham/MI</text>
+<path d="M 248 80 L 248 60 C 248 58 252 58 252 60 L 252 80 248 80 Z" fill="currentColor" transform="translate(70,0)" />
+<text x="320" y="40" alignment-baseline="central" text-anchor="middle" font-family="inherit" fill="currentColor">+3d</text>
+<text x="250" y="110" alignment-baseline="central" text-anchor="middle" font-family="inherit" fill="currentColor">Neonatal</text>
+<text x="250" y="130" alignment-baseline="central" text-anchor="middle" font-family="inherit" fill="currentColor">Full regenerative capacity</text>
+</svg>

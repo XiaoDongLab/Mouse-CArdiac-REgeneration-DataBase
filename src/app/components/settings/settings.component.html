@@ -77,6 +77,20 @@
                     </div>
                 </div>
             </div>
+            <div class="card-settings">
+                <i class="fa fa-up-down"></i>
+                <div class="settings-title">
+                    <span class="main-title">Scatter plot Y-axis</span>
+                    <span class="description text-muted">...</span>
+                </div>
+                <div class="settings-option">
+                    <select class="form-select" (change)="useYAxisChange()"
+                        [(ngModel)]="useYAxisType" aria-label="Y-axis type">
+                        <option value="0">-Log<sub>10</sub>(Adj P-val)</option>
+                        <option value="1">P-val</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-1 col-sm-12">
@@ -84,8 +98,7 @@
     </div>
     <div class="col-md-3 col-sm-12">
         <h6>Mouse Cardiac Regeneration Database</h6>
-        <span><small class="text-muted">Version {{Version}}</small></span>
-        <p><small class="text-muted">Compiled on {{CompileDate}}</small></p>
+        <p><small class="text-muted">{{Version}} ({{CompileDate}})</small></p>
         <p>This resource is provided for research or educational purposes only. It must not be used for clinical
             diagnosis
             or commercial decision making.</p>

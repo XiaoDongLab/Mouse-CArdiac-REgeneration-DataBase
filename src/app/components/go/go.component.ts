@@ -374,7 +374,7 @@ export class GoComponent implements OnInit {
     }
     this.go_chart_options.yaxis = {
       title: {
-        text: "-Log10(Adjusted P-Value)",
+        text: localStorage["useYAxisType"] == '1' ? "P-Value" : "-Log10(Adjusted P-Value)",
         style: {
           fontSize: '16px',
           color: '#000000'
@@ -385,7 +385,7 @@ export class GoComponent implements OnInit {
       labels: {
         formatter: function (val) {
           // Round the y-axis label to an integer
-          return Math.round(val).toString();
+          return localStorage["useYAxisType"] == '1' ? ("1e" + -Math.round(val)) : (Math.round(val).toString());
         },
         style: {
           colors: "#000000",
