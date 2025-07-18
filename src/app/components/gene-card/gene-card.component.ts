@@ -124,7 +124,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 1 && gene.Surgery === 'Sham' && (gene.p_value !== 0)) : (gene.PSD === 1 && gene.Surgery === 'Sham'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 1 && gene.Surgery === 'Sham' && (gene.p_value !== 0)) : (gene.PSD === 1 && gene.Surgery === 'Sham'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -235,7 +235,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 1 && gene.Surgery === 'MI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === 'MI'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 1 && gene.Surgery === 'MI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === 'MI'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -374,7 +374,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 3 && gene.Surgery === 'Sham' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === 'Sham'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === 'Sham' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === 'Sham'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -474,7 +474,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 3 && gene.Surgery === 'MI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === 'MI'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === 'MI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === 'MI'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -575,7 +575,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 1 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 1 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
 
 
@@ -684,7 +684,7 @@ export class GeneCardComponent implements OnInit {
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === '' && (gene.natal_status == 'P1' || gene.natal_status == 'P2') && gene.Comparison === 'ShamvsMI'));
               // console.log(psd1_genes);
               // console.log("^^ psd1 genes ^^")
               let slected_gene = psd1_genes[opts.dataPointIndex];
@@ -796,7 +796,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -896,7 +896,7 @@ export class GeneCardComponent implements OnInit {
           type: "scatter",
           events: {
             dataPointSelection: (e, chart, opts) => {
-              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"]) ? (gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI'));
+              const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI'));
               let slected_gene = psd1_genes[opts.dataPointIndex];
               this.to_map = {
                 pmid: slected_gene.pmid,
@@ -1156,7 +1156,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val1_Sham) max_p_val1_Sham = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
 
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data1_Sham.push(formatted_data);
@@ -1179,7 +1179,7 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data3_Sham.push(formatted_data);
     }
@@ -1199,7 +1199,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val1_MI) max_p_val1_MI = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data1_MI.push(formatted_data);
     }
@@ -1219,7 +1219,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_val3_MI) max_p_val3_MI = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_data3_MI.push(formatted_data);
     }
@@ -1239,7 +1239,7 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP1_1.push(formatted_data);
     }
@@ -1258,7 +1258,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP8_1) max_p_valP8_1 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
 
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP8_1.push(formatted_data);
@@ -1279,7 +1279,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP1_3) max_p_valP1_3 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP1_3.push(formatted_data);
     }
@@ -1302,7 +1302,7 @@ export class GeneCardComponent implements OnInit {
       if (p_value > max_p_valP8_3) max_p_valP8_3 = p_value;
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
-      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"])) continue;
+      if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
       let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
       model_dataP8_3.push(formatted_data);
     }
