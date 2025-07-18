@@ -1,6 +1,26 @@
 # Version history
 
-The latest version is **1.2507.75.0**, compiled on 16 July 2025.
+The latest version is **1.2507.88.1**, compiled on 18 July 2025.
+
+## 1.2507.88.1 - 18 July 2025
+
+### Important to Know
+
+- **Legends**: We add legends on the home page for neonatal and postnatal mice. 
+
+### New Features
+
+- **Citation link**: You can now cite this webcite by clicking the copy button on the home page. The citation text will automatically paste in your clipboard.
+
+- **View non-significant clusters**: You can switch whether you want to display extremely non-significant (i.e. -Log<sub>10</sub>(Adj P-value) = 0) clusters in the settings page.
+
+- **Switch between Y-axis types**: You can choose your preference in logarithmic P-value axis or -Log<sub>10</sub>(Adj P-value) axis in the pathway enrichment page.
+  
+### Miscellaneous
+
+- We adjusted the colors in the differential expression page. Please note that these colors have not passed grayscale test, therefore it is suggested to use threshold lines in the modelplots to determine Log<sub>2</sub>FC.
+  
+- The database is adjusted to fit the new data. Threshold values were also changed to adapt previous corrections.
 
 ## 1.2507.75.0 - 16 July 2025
 

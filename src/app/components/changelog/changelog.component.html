@@ -1,29 +1,45 @@
 <div class="row g-2">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 id="1-2506-50-0-25-june-2025" class="p-0 m-0">{{ Version }}</h2>
+            <h2 id="1-2506-50-0-25-june-2025">{{ Version }}</h2>
             <small class="text-muted">
                 <i class="fa fa-clock"></i> {{ CompileDate }}
             </small>
         </div>
-        <p class="text-muted">This is a pre-release version.</p>
+        <!--<p class="text-muted">This is a pre-release version.</p>-->
+        <h3 id="important-to-know">Important to Know</h3>
+        <ul>
+            <li><strong>Legends</strong>: We add legends on the home page for neonatal and postnatal mice. </li>
+        </ul>
         <h3 id="new-features">New Features</h3>
         <ul>
-            <li><strong>navigate between genes</strong>: When you are viewing DEG results of
-                <code>Genes interested</code> or <code>Genes entered manually</code>, you can navigate IGV viewport
-                between genes. Orders are determined by expression results.</li>
+            <li>
+                <p><strong>Citation link</strong>: You can now cite this webcite by clicking the copy button on the home
+                    page. The citation text will automatically paste in your clipboard.</p>
+            </li>
+            <li>
+                <p><strong>View non-significant clusters</strong>: You can switch whether you want to display extremely
+                    non-significant (i.e. -Log<sub>10</sub>(Adj P-value) = 0) clusters in the settings page.</p>
+            </li>
+            <li>
+                <p><strong>Switch between Y-axis types</strong>: You can choose your preference in logarithmic P-value
+                    axis or -Log<sub>10</sub>(Adj P-value) axis in the pathway enrichment page.</p>
+            </li>
         </ul>
         <h3 id="miscellaneous">Miscellaneous</h3>
         <ul>
             <li>
-                <p>Now IGV viewport will always display in three tabs in Genome Browser.</p>
+                <p>We adjusted the colors in the differential expression page. Please note that these colors have not
+                    passed grayscale test, therefore it is suggested to use threshold lines in the modelplots to
+                    determine Log<sub>2</sub>FC.</p>
             </li>
             <li>
-                <p>We updated stylesheets in <code>igv.js</code> to fit mobile devices and dark theme. When you check
-                    the buttons in IGV navbar, please move your mouse out of the button container to view the status.
-                    Otherwise, they may always show as selected since the hover style is the same as checked style.</p>
+                <p>The database is adjusted to fit the new data. Threshold values were also changed to adapt previous
+                    corrections.</p>
             </li>
         </ul>
+
+
 
         <p class="mb-0">See full version history on <a href="https://github.com/AnthonyShea/MouseHeartDatabase"
                 target="_blank">GitHub</a>.</p>
