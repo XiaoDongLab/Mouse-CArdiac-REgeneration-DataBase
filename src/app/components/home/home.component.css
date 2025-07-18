@@ -5,10 +5,26 @@
 }
 
 .research-focus {
+  display: flex;
   background: rgba(var(--bs-pink-rgb), .2);
-  border-left: 4px solid #d63384;
-  padding: 1.5rem;
+  border-radius: var(--bs-border-radius-xl);
+  padding: 1.5rem 2.5rem;
   font-size: 1.1rem;
+  align-items: center;
+}
+
+.highlight-section {
+  position: relative;
+}
+
+.research-focus::before {
+  content: ' ';
+  width: .375rem;
+  height: 4rem;
+  border-radius: .25rem;
+  background-color: var(--bs-pink);
+  position: absolute;
+  left: 0px;
 }
 
 .feature-card {
