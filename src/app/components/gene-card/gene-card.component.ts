@@ -64,15 +64,17 @@ export class GeneCardComponent implements OnInit {
   num_studies: Number;
   en_id: string;
   ensembl_id: string;
-  sig_up_color: string = 'rgb(255, 87, 51)'
-  sli_up_color: string = 'rgb(255, 195, 0)'
-  no_change_color: string = 'rgb(76, 175, 80)'
-  sli_dn_color: string = 'rgb(0, 188, 212)'
-  sig_dn_color: string = 'rgb(156, 39, 176)'
+  sig_up_color: string = 'rgb(99, 99, 255)'
+  sli_up_color: string = 'rgb(255, 99, 255)'
+  no_change_color: string = 'rgb(50, 255, 50)'
+  sli_dn_color: string = 'rgb(170, 170, 0)'
+  sig_dn_color: string = 'rgb(255, 99, 99)'
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
   progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color].slice().reverse();
-  lfc_sig_cutoff = 0.0116
-  lfc_minor_sig_cutoff = 0.0037
+  // lfc_sig_cutoff = 0.0116
+  // lfc_minor_sig_cutoff = 0.0037
+  lfc_sig_cutoff = 0.58
+  lfc_minor_sig_cutoff = 0.25
   display = 'ShamMI';
 
 
@@ -198,10 +200,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -319,10 +336,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -408,10 +440,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -493,10 +540,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -587,10 +649,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -685,10 +762,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -770,10 +862,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
@@ -855,10 +962,25 @@ export class GeneCardComponent implements OnInit {
           ],
           xaxis: [
             {
-              x: 0,
+              x: 0.25,
               strokeDashArray: 7,
               borderColor: 'grey',
-            }
+            },
+            {
+              x: 0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.25,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
+            {
+              x: -0.58,
+              strokeDashArray: 7,
+              borderColor: 'grey',
+            },
           ]
         }
       };
