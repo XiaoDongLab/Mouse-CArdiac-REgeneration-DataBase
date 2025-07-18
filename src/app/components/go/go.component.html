@@ -7,7 +7,7 @@
 </div>
 }
 <div class="row g-2">
-  <div class="col-md-3 col-sm-12">
+  <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>Comparison Type</h4>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType"
@@ -44,16 +44,19 @@
       <div class="d-flex mb-2 justify-content-between align-items-center">
         <h4 class="mb-0">Pathways</h4>
         @if (pathway_info != '' && pathway_info != null) {
-        <div class="inline-flex">
-          <a class="btn btn-sm btn-link btn-floating text-body" title="Pathway browser" tabindex="0" target="_blank"
+        <div class="btn-group">
+          <a class="btn btn-sm btn-link text-decoration-none" title="Pathway browser" tabindex="0" target="_blank"
             [href]="pathway_groupby_go ? `https://biocyc.org/HUMAN/NEW-IMAGE?type=ECOCYC-CLASS&object=${go_terms[0].goid}#cy_${go_terms[0].goid}` : `https://www.kegg.jp/pathway/${go_terms[0].goid}`">
             <i class="fa fa-map"></i>
+            Diagram
           </a>
-          <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" title="Pathway information" class="btn btn-sm btn-link btn-floating text-body"
-            role="button" data-bs-toggle="popover"
+          <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" title="Pathway information"
+            class="btn btn-sm btn-link text-decoration-none" role="button" data-bs-toggle="popover"
             [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
             [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i
-              class="fa fa-info-circle"></i></a>
+              class="fa fa-info-circle"></i>
+              Info
+          </a>
         </div>
         }
       </div>
@@ -113,7 +116,7 @@
       </button>-->
     </div>
   </div>
-  <div class="col-md-6 col-sm-12">
+  <div class="col-lg-6 col-md-12">
     <apx-chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!" [xaxis]="go_chart_options.xaxis!"
       [yaxis]="go_chart_options.yaxis!" [markers]="go_chart_options.markers!"
       [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!">
@@ -181,7 +184,7 @@
   </div>-->
   </div>
 
-  <div class="col-md-3 col-sm-12 scroll-lg">
+  <div class="col-lg-3 col-md-12 scroll-lg">
     <div class="row g-2">
       @if (!loading) {
       <div class="col-12">

@@ -122,7 +122,7 @@
     </div>
   </div>
   @if (this.genes.length > 0) {
-  <div class="col-md-3 col-sm-12">
+  <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>Cell Types</h4>
       <!--<dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
@@ -165,17 +165,18 @@
       </div>
       <hr />
       <h4>Notes</h4>
-      <ol>
-        <li class="text-muted">All clusters with -Log<sub>10</sub>P-val less than 0.01 were hidden in the model plot.
+      <ul>
+        <li class="text-muted">All clusters with -Log<sub>10</sub>P-val less than 0.01 were hidden in the model plot by default.
         </li>
+        <li class="text-muted">If you want to view all non-significant clusters, you can navigate to settings page and turn on the switch.</li>
         <li class="text-muted">Numbers on the meta plot were hidden if the sample size is less than 2.</li>
-      </ol>
+      </ul>
     </div>
   </div>
   }
 
   @if (this.genes.length > 0) {
-  <div class="col-md-9 col-sm-12 mt-2" [class.searching]="loading">
+  <div class="col-lg-9 col-md-12 mt-2" [class.searching]="loading">
     <div class="accordion" id="accordionExample">
       @for (gene_list of this.grouped_genes; track gene_list) {
       @if (gene_list[0]) {

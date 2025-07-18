@@ -7,7 +7,7 @@
 </div>
 }
 <div class="row g-2">
-  <div class="col-md-3 col-sm-12">
+  <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4>File type</h4>
       <ng-select [items]="species" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
@@ -111,7 +111,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-9 col-sm-12">
+  <div class="col-lg-9 col-md-12">
     @if (query_completed) {
     <h5>
       @if (selectedRowKeys.length <= 1) { <span>{{selectedRowKeys.length}} File Totaling</span>
