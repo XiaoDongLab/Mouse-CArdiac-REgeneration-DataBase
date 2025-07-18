@@ -19,7 +19,7 @@
     </ul>
   </div>
   <div class="col-xl-9 col-lg-8 col-md-12">
-    <div class="row g-2">
+    <div class="row">
       <div class="text-center col-12">
         @if (display=='UMAP') {
         <img class="image img-fluid" id="myimage" [src]='this.umap' />
@@ -67,7 +67,7 @@
           </div>
           <div class="col-12">
             <span>-Log<sub>10</sub>(Adjusted P-Value)</span>
-            <h4>{{selected_info.pvalue.toExponential(2)}}</h4>
+            <h4>{{selected_info.pvalue > 500 ? selected_info.pvalue.toExponential(2) : selected_info.pvalue.toPrecision(4)}}</h4>
           </div>
           <div class="col-12">
             <span>% Change</span>
