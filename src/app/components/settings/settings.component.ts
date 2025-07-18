@@ -14,7 +14,7 @@ export class SettingsComponent implements OnInit {
   colorPreference: number = localStorage["colorPreference"] ?? 0;
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
-  showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"]) ?? false;
+  showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false) ;
   useYAxisType: number = localStorage["useYAxisType"] ?? 0; // 0 -> -lgP-val; 1 -> P-val;
   constructor() { }
 
