@@ -1,3 +1,6 @@
 [submodule "KEGGPathwaysEnrich"]
 	path = KEGGPathwaysEnrich
 	url = git@github.com:Itsuki5696/KEGGPathwaysEnrich.git
+[submodule "igv-modern"]
+	path = igv-modern
+	url = https://github.com/Itsuki5696/igv-modern

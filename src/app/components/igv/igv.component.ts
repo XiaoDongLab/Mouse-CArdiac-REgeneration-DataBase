@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 //import * as igv from 'igv'
-import igv from 'node_modules/igv/dist/igv.esm.js'
+// import igv from 'node_modules/igv/dist/igv.esm.js'
+import igv from '../../../js/igv.esm.js'
 import { Positions } from 'src/app/models/positions.model';
 import { DatabaseService } from 'src/app/services/database.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle } from "ng-apexcharts";
