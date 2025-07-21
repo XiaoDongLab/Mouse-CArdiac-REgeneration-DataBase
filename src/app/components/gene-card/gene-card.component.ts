@@ -31,7 +31,7 @@ export class GeneCardComponent implements OnInit {
   @Input() gene_list: any[] = [];
   @Input() indices: Indices[] = [];
   @Input() completely_loaded: boolean = false;
-  @ViewChild('child') child: MapsComponent;
+  @ViewChild('chart') child: MapsComponent;
   public model_chart_options1_Sham: Partial<ChartOptions>;
   public model_chart_options3_Sham: Partial<ChartOptions>;
   public model_chart_options1_MI: Partial<ChartOptions>;
