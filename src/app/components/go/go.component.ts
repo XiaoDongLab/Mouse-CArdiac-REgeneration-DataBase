@@ -1,5 +1,5 @@
-import { Component, NgZone, OnInit, Type } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels } from "ng-apexcharts";
+import { Component, NgZone, OnInit, SimpleChanges, Type, ViewChild } from '@angular/core';
+import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels, ChartComponent } from "ng-apexcharts";
 import { GoTerm } from 'src/app/models/goTerm.model';
 import { DatabaseService } from 'src/app/services/database.service';
 import { GeneConversionService } from 'src/app/services/name-converter.service';
@@ -34,6 +34,7 @@ export type ChartOptions = {
   standalone: false
 })
 export class GoComponent implements OnInit {
+  @ViewChild('chart') chart!: ChartComponent;
   // Anthony
   comparisonTypes = [
     { text: 'P1 vs P8: MI - PSD1', value: '1' },  // text is correct value, young_old is becuase i am lazy to change
@@ -50,7 +51,8 @@ export class GoComponent implements OnInit {
 
   loading: boolean = true;
   public go_chart_options: Partial<ChartOptions>;
-  public hist_chart_options: Partial<ChartOptions>;
+  public pathway_chart_options: Partial<ChartOptions>;
+  // public hist_chart_options: Partial<ChartOptions>;
   go_terms: GoTerm[] = [];
   term_selected = false;
   selected_term: GoTerm;
@@ -119,53 +121,10 @@ export class GoComponent implements OnInit {
   pathway_groupby_kegg: boolean = false;
 
   constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, private databaseConstsService: DatabaseConstsService) {
-    this.databaseService.loadKEGGInfo().subscribe({
-      next: data => {
-        this.kegg_pathway_info = data;
-      }
-    })
-    // Get GO Pathways
-    this.databaseService.getPathways().subscribe({
-      next: (data) => {
-        //this.pathways = data.slice(0,100);
-        this.pathways = data.sort(([, a], [, b]) => b - a);
-      },
-      error: (e) => {
-        console.error(e);
-      },
-      complete: () => { }
-    });
-
-    this.databaseService.getGiniScores().subscribe({
-      next: (data) => {
-        this.gini_scores = data
-        this.makeGiniPlot()
-        this.setHistogramLines()
-      },
-      error: (e) => {
-        console.error(e);
-      },
-      complete: () => { }
-    });
-
-
-    this.databaseService.getKEGGPathways().subscribe({
-      next: (data) => {
-        this.kegg_pathways = data
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-    this.prepareData()
-  }
-
-  ngOnInit(): void {
-    // Get KEGG Pathways
     this.go_chart_options = {
       series: [{
         name: 'TEST',
-        data: [],
+        data: [{ x: 0, y: 0 }],
       }],
       chart: {
         height: 400,
@@ -198,11 +157,9 @@ export class GoComponent implements OnInit {
       },
       markers: {
         size: 5,
-        shape: "circle"
       },
       yaxis: {
         title: {
-          text: "-Log10(Adjusted P-Value)",
           style: {
             fontSize: '16px',
             color: "#000"
@@ -222,89 +179,51 @@ export class GoComponent implements OnInit {
             borderColor: 'black',
           }
         ]
-      },
-      fill: {
-        type: "pattern",
-        pattern: {
-          style: "verticalLines",
-        }
-      },
-      title: {
-        text: 'TEST@',
-        align: "center",
-        style: {
-          color: '#000'
-        }
-      },
+      }
     };
+    this.databaseService.loadKEGGInfo().subscribe({
+      next: data => {
+        this.kegg_pathway_info = data;
+      }
+    })
+    // Get GO Pathways
+    this.databaseService.getPathways().subscribe({
+      next: (data) => {
+        //this.pathways = data.slice(0,100);
+        this.pathways = data.sort(([, a], [, b]) => b - a);
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => { }
+    });
 
-    this.hist_chart_options = {
-      series: [{
-        name: 'Frequency',
-        data: []
-      }],
-      chart: {
-        height: 400,
-        parentHeightOffset: 0,
-        type: "area",
-        animations: {
-          enabled: true
-        },
-        zoom: {
-          enabled: false
-        }
+    /*this.databaseService.getGiniScores().subscribe({
+      next: (data) => {
+        this.gini_scores = data
+        this.makeGiniPlot()
+        this.setHistogramLines()
       },
-      dataLabels: {
-        enabled: false
+      error: (e) => {
+        console.error(e);
       },
-      yaxis: {
-        title: {
-          text: "Gini Index Frequency",
-          style: {
-            fontSize: '16px',
-            color: '#000'
-          }
-        },
-        labels: {
-          style: {
-            colors: '#000',
-          }
-        }
+      complete: () => { }
+    });*/
+
+
+    this.databaseService.getKEGGPathways().subscribe({
+      next: (data) => {
+        this.kegg_pathways = data
       },
-      xaxis: {
-        title: {
-          text: "Gini Index",
-          offsetY: 90,
-          offsetX: -20,
-          style: {
-            fontSize: '20px',
-            color: '#000'
-          }
-        },
-        tickAmount: 10, // Attempt to set the number of ticks to 10
-        labels: {
-          formatter: function (value) {
-            return Number(value).toFixed(1);
-          },
-          style: {
-            colors: '#000',
-          }
-        }
-      },
-      tooltip: {
-        enabled: true,
-        x: {
-          formatter: function (value) {
-            return Number(value).toFixed(2); // Format x-axis tooltip values to 3 decimal places
-          }
-        }
-      },
-      stroke: {
-        curve: "smooth",
-        colors: ['#808080'] // Set the line color here 
-      },
-      colors: ['#708090'], // Set the fill color here
-    };
+      error: (err) => {
+        console.error(err);
+      }
+    });
+    this.prepareData()
+  }
+
+  ngOnInit(): void {
+    // Get KEGG Pathways
 
   }
 
@@ -334,10 +253,10 @@ export class GoComponent implements OnInit {
       // let formatted_data = { x: Number(go_term.nes), y: Number(go_term.P_Value), fillColor: color, label: label };
       // anthony
       // Convert adjusted p-value to -log10(p-value)
-      let pval_transformed = -Math.log10(Number(go_term.P_Value));
+      let pval_transformed = 0 - Math.log10(Number(go_term.P_Value));
       let formatted_data = {
         x: Number(go_term.nes),
-        y: pval_transformed,
+        y: Math.round(pval_transformed * 10 ** 3) / 10 ** 3,
         fillColor: color,
         label: label
       };
@@ -351,7 +270,9 @@ export class GoComponent implements OnInit {
       else {
         this.downreg_enrich_list = this.downreg_enrich_list.concat(enrich_list)
       }
-    }
+    };
+    console.log(go_data)
+
     //calculte gene prevalance
     this.countOccurrences(this.upreg_enrich_list, 'UP')
     this.countOccurrences(this.downreg_enrich_list, 'DOWN')
@@ -454,6 +375,9 @@ export class GoComponent implements OnInit {
       });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.prepareData();
+  }
 
   countOccurrences(gene_list: string[], direction: string): void {
     this.geneConversionService.convertEnsemblListToGeneList(gene_list)
@@ -565,6 +489,28 @@ export class GoComponent implements OnInit {
     return { color: `rgb(${r},${g},${b})` };
   }
 
+  ngAfterViewInit() {
+    /*this.go_chart_options.chart = {
+      height: 400,
+      type: "scatter",
+      animations: {
+        enabled: true
+      },
+      toolbar: {
+        show: false
+      },
+      events: {
+        dataPointSelection: (e, chart, opts) => {
+          this.zone.run(() => {
+            this.selected_term = this.go_terms[opts.dataPointIndex];
+            this.getGeneSymbols(this.selected_term);
+            this.term_selected = true;
+          });
+        }
+      }
+    }*/
+  }
+
   prepareData() {
     this.loading = true;
     this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0])
@@ -600,7 +546,7 @@ export class GoComponent implements OnInit {
     }
   }
 
-  makeGiniPlot() {
+  /* makeGiniPlot() {
     const numBins = 100;
     const binCounts: number[] = Array(numBins).fill(0);
     for (const gini_score of this.gini_scores) {
@@ -624,9 +570,9 @@ export class GoComponent implements OnInit {
 
     // Update chart options
     this.hist_chart_options.series = [{ data: plotData }];
-  }
+  }*/
 
-  setHistogramLines() {
+  /*setHistogramLines() {
     let selected_gini_score = this.gini_scores.find(item => item.pathway === "\"" + this.selected_pathway + "\"");
     this.hist_chart_options.annotations = {
       xaxis: [
@@ -642,13 +588,13 @@ export class GoComponent implements OnInit {
         }
       ]
     }
-  }
+  }*/
 
   getNewData() {
     this.loading = true;
     this.term_selected = false;
     this.prepareData()
-    this.setHistogramLines()
+    // this.setHistogramLines()
   }
 
   onSearchModeChanged(event: any): void {

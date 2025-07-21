@@ -506,6 +506,6 @@
     background-color: transparent !important;
 }
 
-::ng-deep .apexcharts-disable-transitions * {
-  transition: .15s !important;
+::ng-deep .apexcharts-disable-transitions.apexcharts-canvas *, ::ng-deep .apexcharts-disable-transitions .apexcharts-tooltip {
+  transition: all .15s ease-in-out !important;
 }
