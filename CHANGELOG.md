@@ -2,6 +2,20 @@
 
 The latest version is **1.2507.88.1**, compiled on 18 July 2025.
 
+## 1.2507.106.1 - 21 July 2025
+
+### Fixed issues
+
+- We have added missing animations to charts in Pathway Enrichment page.
+  
+- We fixed an issue that you may not able to view modelplots when you use the website first time.
+
+### Miscellaneous
+
+- We added MIT license to the [Github repo](https://github.com/AnthonyShea/MouseHeartDatabase/) as well as the settings page.
+
+- We added our modified `igv.js` submodule to the [Github repo](https://github.com/AnthonyShea/MouseHeartDatabase/).
+
 ## 1.2507.88.1 - 18 July 2025
 
 ### Important to Know
