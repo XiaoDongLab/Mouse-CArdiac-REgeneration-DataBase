@@ -505,3 +505,7 @@
 ::ng-deep .ng-dropdown-panel {
     background-color: transparent !important;
 }
+
+::ng-deep .apexcharts-disable-transitions * {
+  transition: .15s !important;
+}

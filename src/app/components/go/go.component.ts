@@ -169,7 +169,6 @@ export class GoComponent implements OnInit {
       }],
       chart: {
         height: 400,
-        parentHeightOffset: 0,
         type: "scatter",
         events: {
           dataPointSelection: (e, chart, opts) => {
@@ -180,6 +179,9 @@ export class GoComponent implements OnInit {
             });
           }
         },
+        animations: {
+          enabled: true
+        },
         zoom: {
           enabled: false
         }
@@ -187,7 +189,8 @@ export class GoComponent implements OnInit {
       tooltip: {
         enabled: true,    // Enable the tooltip
         shared: false,    // Only show the tooltip for the hovered point
-        intersect: true,  // Tooltip appears only on exact hover，
+        intersect: true,  // Tooltip appears only on exact hover
+        // Enable the tooltip
         custom: function ({ series, seriesIndex, dataPointIndex, w }) {
           const dataPoint = w.config.series[seriesIndex].data[dataPointIndex];
           return `<div style="font-size: 14px;">${dataPoint.label}</div>`;
@@ -244,6 +247,9 @@ export class GoComponent implements OnInit {
         height: 400,
         parentHeightOffset: 0,
         type: "area",
+        animations: {
+          enabled: true
+        },
         zoom: {
           enabled: false
         }
@@ -286,6 +292,7 @@ export class GoComponent implements OnInit {
         }
       },
       tooltip: {
+        enabled: true,
         x: {
           formatter: function (value) {
             return Number(value).toFixed(2); // Format x-axis tooltip values to 3 decimal places

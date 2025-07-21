@@ -13960,6 +13960,7 @@ fieldset:disabled .btn {
   box-shadow: var(--bs-box-shadow) !important;
   font-family: var(--bs-font-sans-serif) !important;
   font-size: var(--bs-tooltip-font-size) !important;
+  transition: .15s !important;
 }
 
 .apexcharts-svg * {

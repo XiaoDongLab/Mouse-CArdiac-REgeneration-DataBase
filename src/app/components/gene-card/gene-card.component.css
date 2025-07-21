@@ -224,7 +224,7 @@ canvas,
     filter: var(--bs-canvas-filter);
 }
 
-.apexcharts-tooltip {
+::ng-deep .apexcharts-tooltip {
     background-color: rgba(var(--bs-body-bg-rgb), .1) !important;
     color: var(--bs-body-color) !important;
     backdrop-filter: blur(100px) !important;
