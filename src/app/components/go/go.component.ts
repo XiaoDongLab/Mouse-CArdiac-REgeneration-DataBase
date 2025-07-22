@@ -1,5 +1,5 @@
 import { Component, NgZone, OnInit, SimpleChanges, Type, ViewChild } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels, ChartComponent } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels, ChartComponent, ApexTheme } from "ng-apexcharts";
 import { GoTerm } from 'src/app/models/goTerm.model';
 import { DatabaseService } from 'src/app/services/database.service';
 import { GeneConversionService } from 'src/app/services/name-converter.service';
@@ -9,6 +9,7 @@ import { PathwayinfoService } from 'src/app/services/pathwayinfo.service';
 import { GiniScore } from 'src/app/models/giniScore.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
 import { min } from 'rxjs';
+import { AppComponent } from 'src/app/app.component';
 declare const bootstrap: any;
 
 export type ChartOptions = {
@@ -16,6 +17,7 @@ export type ChartOptions = {
   chart: ApexChart;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
+  theme?: ApexTheme;
   plotOptions: ApexPlotOptions;
   fill: ApexFill;
   title: ApexTitleSubtitle;
@@ -120,11 +122,11 @@ export class GoComponent implements OnInit {
   pathway_groupby_go: boolean = true; // False is KEGG
   pathway_groupby_kegg: boolean = false;
 
-  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, private databaseConstsService: DatabaseConstsService) {
+  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, public appComponent: AppComponent) {
     this.go_chart_options = {
       series: [{
         name: 'TEST',
-        data: [{ x: 0, y: 0 }],
+        data: [],
       }],
       chart: {
         height: 400,
@@ -138,12 +140,16 @@ export class GoComponent implements OnInit {
             });
           }
         },
+        background: 'transparent',
         animations: {
           enabled: true
         },
         zoom: {
           enabled: false
         }
+      },
+      theme: {
+        mode: 'dark'
       },
       tooltip: {
         enabled: true,    // Enable the tooltip
@@ -160,27 +166,37 @@ export class GoComponent implements OnInit {
       },
       yaxis: {
         title: {
+          text: localStorage["useYAxisType"] == '1' ? "P-Value" : "-Log10(Adjusted P-Value)",
           style: {
-            fontSize: '16px',
-            color: "#000"
+            fontSize: '1rem',
+            fontFamily: 'var(--bs-body-font-family)'
+          }
+        },
+      },
+      xaxis: {
+        title: {
+          text: "Normalized Enrichment Score",
+          style: {
+            fontFamily: 'var(--bs-body-font-family)',
+            fontSize: '1rem'
           }
         },
         labels: {
           style: {
-            colors: '#000',
+            fontFamily: 'var(--bs-body-font-family)'
           }
-        }
+        },
       },
       annotations: {
         yaxis: [
           {
             y: 1.30103,
             strokeDashArray: 10,
-            borderColor: 'black',
           }
         ]
       }
     };
+    console.log(appComponent.getColorTheme() ? 'dark' : 'light');
     this.databaseService.loadKEGGInfo().subscribe({
       next: data => {
         this.kegg_pathway_info = data;
@@ -283,13 +299,13 @@ export class GoComponent implements OnInit {
       title: {
         text: "Normalized Enrichment Score",
         style: {
-          fontSize: '16px',
-          color: "#000000"
+          fontFamily: 'var(--bs-body-font-family)',
+          fontSize: '1rem'
         }
       },
       labels: {
         style: {
-          colors: "#000000"
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       type: "numeric", // Ensure x-axis is numeric
@@ -304,8 +320,8 @@ export class GoComponent implements OnInit {
       title: {
         text: localStorage["useYAxisType"] == '1' ? "P-Value" : "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: '#000000'
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0,
@@ -316,7 +332,7 @@ export class GoComponent implements OnInit {
           return localStorage["useYAxisType"] == '1' ? ("1e" + -Math.round(val)) : (Math.round(val).toString());
         },
         style: {
-          colors: "#000000",
+          fontFamily: 'var(--bs-body-font-family)'
         }
       }
     }
