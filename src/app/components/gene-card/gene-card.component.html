@@ -1,7 +1,7 @@
 <h2 class="gene-card accordion-header">
   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
     [attr.data-bs-target]="'#collapse' + en_id" aria-expanded="false" [attr.aria-controls]="'collapse' + en_id">
-    <div class="row">
+    <div class="row g-2">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
           <div class="row">
@@ -38,8 +38,10 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-3">
-        <h6>Post Surgery Day Sequencing: 1</h6>
+      <div class="col-md-12 col-lg-3 d-flex">
+        <div class="d-flex justify-content-center align-items-center">
+          <h6 class="mb-0">Post Surgery Day Sequencing: 1</h6>
+        </div>
       </div>
       <div class="col-md-12 col-lg-9">
         <div class="row">
@@ -51,11 +53,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_1_Sham > 40 ? 40 : sum_1_Sham) * 2.5 + '%'">
               @for (item of series_1_Sham; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_1_Sham * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_Sham * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -70,11 +72,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_1_MI > 40 ? 40 : sum_1_MI) * 2.5 + '%'">
               @for (item of series_1_MI; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_1_MI * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_MI * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -89,11 +91,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_1_P1 > 40 ? 40 : sum_1_P1) * 2.5 + '%'">
               @for (item of series_1_P1; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_1_P1 * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_P1 * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -108,11 +110,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_1_P8 > 40 ? 40 : sum_1_P8) * 2.5 + '%'">
               @for (item of series_1_P8; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_1_P8 * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_P8 * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -121,8 +123,10 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-3">
-        <h6>Post Surgery Day Sequencing: 3</h6>
+      <div class="col-md-12 col-lg-3 d-flex">
+        <div class="d-flex justify-content-center align-items-center">
+          <h6 class="mb-0">Post Surgery Day Sequencing: 3</h6>
+        </div>
       </div>
       <div class="col-md-12 col-lg-9">
         <div class="row">
@@ -134,11 +138,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_3_Sham > 40 ? 40 : sum_3_Sham) * 2.5 + '%'">
               @for (item of series_3_Sham; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_3_Sham * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_Sham * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -153,11 +157,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_3_MI > 40 ? 40 : sum_3_MI) * 2.5 + '%'">
               @for (item of series_3_MI; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_3_MI * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_MI * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -172,11 +176,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_3_P1 > 40 ? 40 : sum_3_P1) * 2.5 + '%'">
               @for (item of series_3_P1; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_3_P1 * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_P1 * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -191,11 +195,11 @@
             </apx-chart>-->
             <div class="progress-stacked" [style.width]="(sum_3_P8 > 40 ? 40 : sum_3_P8) * 2.5 + '%'">
               @for (item of series_3_P8; track $index; let i = $index) {
-              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15" aria-valuemin="0"
-                aria-valuemax="100" [style.width]="(item / sum_3_P8 * 100) + '%'">
+              <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
+                aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_P8 * 100) + '%'">
                 <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
                   @if (item >= 2) {
-                    {{item}}
+                  {{item}}
                   }
                 </div>
               </div>
@@ -216,9 +220,15 @@
   @if (completely_loaded) {
   <div class="accordion-body">
     <div class="row">
-      <div class="col-12">
-        <p class="text-muted text-center"><small>Clusters with cell type "All Cells" were shown as
-            semi-transparent datapoints.</small></p>
+      <div class="col-12 mb-1">
+        <div class="d-flex flex-column flex-wrap">
+          <span class="text-muted"><small>Clusters with cell type "All Cells" were shown as
+              semi-transparent datapoints.</small></span>
+          <span class="text-muted"><small>All clusters with -Log<sub>10</sub>P-val less than 0.01 were hidden in the
+              model plot by default.</small></span>
+          <span class="text-muted"><small>If you want to view all non-significant clusters, you can navigate to settings
+              page and turn on the switch.</small></span>
+        </div>
       </div>
       <ul class="col-12 navbar-nav maps mb-2">
         <li class="nav-item">
@@ -235,7 +245,7 @@
             apexNoMinHeight [plotOptions]="model_chart_options1_Sham.plotOptions!"
             [markers]="model_chart_options1_Sham.markers!" [xaxis]="model_chart_options1_Sham.xaxis!"
             [yaxis]="model_chart_options1_Sham.yaxis!" [title]="model_chart_options1_Sham.title!"
-            [tooltip]="model_chart_options1_Sham.tooltip!"
+            [tooltip]="model_chart_options1_Sham.tooltip!" [theme]="model_chart_options1_Sham.theme!"
             [annotations]="model_chart_options1_Sham.annotations!"></apx-chart>
         </div>
         <div class="col-lg-6 col-md-12" style="height: 300px;">
@@ -243,21 +253,22 @@
             [plotOptions]="model_chart_options1_MI.plotOptions!" [markers]="model_chart_options1_MI.markers!"
             [xaxis]="model_chart_options1_MI.xaxis!" [yaxis]="model_chart_options1_MI.yaxis!"
             [title]="model_chart_options1_MI.title!" [tooltip]="model_chart_options1_MI.tooltip!"
-            [annotations]="model_chart_options1_MI.annotations!"></apx-chart>
+            [annotations]="model_chart_options1_MI.annotations!" [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
         <div class="col-lg-6 col-md-12" style="height: 300px;">
           <apx-chart [series]="model_chart_options3_Sham.series!" [chart]="model_chart_options3_Sham.chart!"
             [plotOptions]="model_chart_options3_Sham.plotOptions!" [markers]="model_chart_options3_Sham.markers!"
             [xaxis]="model_chart_options3_Sham.xaxis!" [yaxis]="model_chart_options3_Sham.yaxis!"
             [title]="model_chart_options3_Sham.title!" [tooltip]="model_chart_options3_Sham.tooltip!"
-            [annotations]="model_chart_options3_Sham.annotations!"></apx-chart>
+            [annotations]="model_chart_options3_Sham.annotations!"
+            [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
         <div class="col-lg-6 col-md-12" style="height: 300px;">
           <apx-chart [series]="model_chart_options3_MI.series!" [chart]="model_chart_options3_MI.chart!"
             [plotOptions]="model_chart_options3_MI.plotOptions!" [markers]="model_chart_options3_MI.markers!"
             [xaxis]="model_chart_options3_MI.xaxis!" [yaxis]="model_chart_options3_MI.yaxis!"
             [title]="model_chart_options3_MI.title!" [tooltip]="model_chart_options3_MI.tooltip!"
-            [annotations]="model_chart_options3_MI.annotations!"></apx-chart>
+            [annotations]="model_chart_options3_MI.annotations!" [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
       </div>
       }
@@ -268,28 +279,28 @@
             [plotOptions]="model_chart_optionsP1_1.plotOptions!" [markers]="model_chart_optionsP1_1.markers!"
             [xaxis]="model_chart_optionsP1_1.xaxis!" [yaxis]="model_chart_optionsP1_1.yaxis!"
             [title]="model_chart_optionsP1_1.title!" [tooltip]="model_chart_optionsP1_1.tooltip!"
-            [annotations]="model_chart_optionsP1_1.annotations!"></apx-chart>
+            [annotations]="model_chart_optionsP1_1.annotations!" [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
         <div class="col-lg-6 col-md-12" style="height: 300px;">
           <apx-chart [series]="model_chart_optionsP8_1.series!" [chart]="model_chart_optionsP8_1.chart!"
             [plotOptions]="model_chart_optionsP8_1.plotOptions!" [markers]="model_chart_optionsP8_1.markers!"
             [xaxis]="model_chart_optionsP8_1.xaxis!" [yaxis]="model_chart_optionsP8_1.yaxis!"
             [title]="model_chart_optionsP8_1.title!" [tooltip]="model_chart_optionsP8_1.tooltip!"
-            [annotations]="model_chart_optionsP8_1.annotations!"></apx-chart>
+            [annotations]="model_chart_optionsP8_1.annotations!" [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
         <div class="col-lg-6 col-md-12" style="height: 300px;">
           <apx-chart [series]="model_chart_optionsP1_3.series!" [chart]="model_chart_optionsP1_3.chart!"
             [plotOptions]="model_chart_optionsP1_3.plotOptions!" [markers]="model_chart_optionsP1_3.markers!"
             [xaxis]="model_chart_optionsP1_3.xaxis!" [yaxis]="model_chart_optionsP1_3.yaxis!"
             [title]="model_chart_optionsP1_3.title!" [tooltip]="model_chart_optionsP1_3.tooltip!"
-            [annotations]="model_chart_optionsP1_3.annotations!"></apx-chart>
+            [annotations]="model_chart_optionsP1_3.annotations!" [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
         <div class="col-lg-6 col-md-12" style="height: 300px;">
           <apx-chart [series]="model_chart_optionsP8_3.series!" [chart]="model_chart_optionsP8_3.chart!"
             [plotOptions]="model_chart_optionsP8_3.plotOptions!" [markers]="model_chart_optionsP8_3.markers!"
             [xaxis]="model_chart_optionsP8_3.xaxis!" [yaxis]="model_chart_optionsP8_3.yaxis!"
             [title]="model_chart_optionsP8_3.title!" [tooltip]="model_chart_optionsP8_3.tooltip!"
-            [annotations]="model_chart_optionsP8_3.annotations!"></apx-chart>
+            [annotations]="model_chart_optionsP8_3.annotations!" [theme]="model_chart_options1_Sham.theme!"></apx-chart>
         </div>
       </div>
       }

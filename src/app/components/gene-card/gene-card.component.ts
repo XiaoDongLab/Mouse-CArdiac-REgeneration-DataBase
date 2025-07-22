@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexTheme } from "ng-apexcharts";
 import { DiffExp } from 'src/app/models/diffExp.model';
 import { Indices } from 'src/app/models/indices.model';
 import { MapsComponent } from '../maps/maps.component';
 import { GeneConversionService } from '../../services/name-converter.service';
+import { AppComponent } from 'src/app/app.component';
 
 
 export type ChartOptions = {
@@ -15,6 +16,7 @@ export type ChartOptions = {
   fill: ApexFill;
   title: ApexTitleSubtitle;
   tooltip: ApexTooltip;
+  theme?: ApexTheme;
   markers: ApexMarkers;
   annotations: ApexAnnotations;
   colors?: string[]; // Add colors property
@@ -66,8 +68,8 @@ export class GeneCardComponent implements OnInit {
   ensembl_id: string;
   sig_up_color: string = 'rgb(99, 99, 255)'
   sli_up_color: string = 'rgb(255, 99, 255)'
-  no_change_color: string = 'rgb(50, 255, 50)'
-  sli_dn_color: string = 'rgb(170, 170, 0)'
+  no_change_color: string = 'rgb(0, 142, 0)'
+  sli_dn_color: string = 'rgb(157, 136, 0)'
   sig_dn_color: string = 'rgb(255, 99, 99)'
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
   progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color].slice().reverse();
@@ -76,10 +78,11 @@ export class GeneCardComponent implements OnInit {
   lfc_sig_cutoff = 0.58
   lfc_minor_sig_cutoff = 0.25
   display = 'ShamMI';
+  colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
 
 
   model_selected = false;
-  constructor(private geneConversionService: GeneConversionService) { }
+  constructor(private geneConversionService: GeneConversionService, public appComponent: AppComponent) { }
 
   makeid(length: number): string {
     var result = '';
@@ -93,6 +96,11 @@ export class GeneCardComponent implements OnInit {
 
   onItemSelected_Nav(text: any) {
     this.display = text;
+  }
+
+  getColorTheme(): boolean {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
   }
 
   ngOnInit(): void {
@@ -116,11 +124,15 @@ export class GeneCardComponent implements OnInit {
         series: [{
           name: this.gene_list[0].gene?.toString(),
           data: [],
-        }
-        ],
+        }],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
           height: '100%',
           type: "scatter",
+          background: 'transparent',
+          fontFamily: 'var(--bs-body-font-family)',
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
@@ -159,27 +171,20 @@ export class GeneCardComponent implements OnInit {
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '14px',
-              fontFamily: 'var(--bs-body-font-family)',
-              color: '#000',
-            }
+
           }
         },
         fill: {
           type: "pattern",
           pattern: {
             style: "verticalLines",
-
           }
         },
         title: {
           // text: this.gene_list[0].gene!.toString(),
           text: 'Sham - PSD1',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -195,29 +200,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -227,11 +227,15 @@ export class GeneCardComponent implements OnInit {
         series: [{
           name: this.gene_list[0].gene?.toString(),
           data: [],
-        }
-        ],
+        }],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
+          fontFamily: 'var(--bs-body-font-family)',
           height: '100%',
           type: "scatter",
+          background: 'transparent',
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
@@ -265,21 +269,9 @@ export class GeneCardComponent implements OnInit {
           }
         },
         xaxis: {
-          axisBorder: {
-            color: "#000"
-          },
-          axisTicks: {
-            color: "#000"
-          },
           labels: {
-            style: {
-              colors: "#000",
-            }
+
           },
-          //type: "numeric",
-          //tickAmount: 10,
-          //min: -2,
-          //max: 2
         },
         markers: {
           size: 5
@@ -287,21 +279,8 @@ export class GeneCardComponent implements OnInit {
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '16px',
-            }
+
           },
-          labels: {
-            style: {
-              colors: "#000",
-            }
-          },
-          axisBorder: {
-            color: "#000"
-          },
-          axisTicks: {
-            color: "#000"
-          }
         },
         fill: {
           type: "pattern",
@@ -313,9 +292,7 @@ export class GeneCardComponent implements OnInit {
         title: {
           text: 'MI - PSD1',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -331,29 +308,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -372,6 +344,8 @@ export class GeneCardComponent implements OnInit {
         chart: {
           height: '100%',
           type: "scatter",
+          background: 'transparent',
+          fontFamily: 'var(--bs-body-font-family)',
           events: {
             dataPointSelection: (e, chart, opts) => {
               const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === 'Sham' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === 'Sham'));
@@ -402,24 +376,19 @@ export class GeneCardComponent implements OnInit {
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '18px'
-            }
+
           }
         },
         fill: {
           type: "pattern",
           pattern: {
             style: "verticalLines",
-
           }
         },
         title: {
           text: 'Sham - PSD3',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -435,29 +404,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -469,9 +433,14 @@ export class GeneCardComponent implements OnInit {
           data: [],
         }
         ],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
           height: '100%',
           type: "scatter",
+          fontFamily: 'var(--bs-body-font-family)',
+          background: 'transparent',
           events: {
             dataPointSelection: (e, chart, opts) => {
               const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === 'MI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === 'MI'));
@@ -502,24 +471,19 @@ export class GeneCardComponent implements OnInit {
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '18px'
-            }
+
           }
         },
         fill: {
           type: "pattern",
           pattern: {
             style: "verticalLines",
-
           }
         },
         title: {
           text: 'MI - PSD3',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -535,29 +499,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -569,9 +528,14 @@ export class GeneCardComponent implements OnInit {
           data: [],
         }
         ],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
           height: '100%',
           type: "scatter",
+          fontFamily: 'var(--bs-body-font-family)',
+          background: 'transparent',
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
@@ -604,16 +568,13 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-
         markers: {
           size: 5
         },
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '18px'
-            }
+
           }
         },
         fill: {
@@ -626,9 +587,7 @@ export class GeneCardComponent implements OnInit {
         title: {
           text: 'P1 - PSD1',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -644,29 +603,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -678,9 +632,14 @@ export class GeneCardComponent implements OnInit {
           data: [],
         }
         ],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
           height: '100%',
           type: "scatter",
+          fontFamily: 'var(--bs-body-font-family)',
+          background: 'transparent',
           events: {
             dataPointSelection: (e, chart, opts) => {
               // console.log("Cluster Clicked - DataPoint Index:", opts.dataPointIndex);
@@ -724,24 +683,19 @@ export class GeneCardComponent implements OnInit {
           logBase: 10,
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '18px'
-            }
+
           }
         },
         fill: {
           type: "pattern",
           pattern: {
             style: "verticalLines",
-
           }
         },
         title: {
           text: 'P1 - PSD3',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -757,29 +711,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -791,9 +740,14 @@ export class GeneCardComponent implements OnInit {
           data: [],
         }
         ],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
           height: '100%',
           type: "scatter",
+          fontFamily: 'var(--bs-body-font-family)',
+          background: 'transparent',
           events: {
             dataPointSelection: (e, chart, opts) => {
               const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 1 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI'));
@@ -824,24 +778,19 @@ export class GeneCardComponent implements OnInit {
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-            style: {
-              fontSize: '18px'
-            }
+
           }
         },
         fill: {
           type: "pattern",
           pattern: {
             style: "verticalLines",
-
           }
         },
         title: {
           text: 'P8 - PSD1',
           align: "center",
-          style: {
-            color: "#000"
-          }
+
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -857,29 +806,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -891,9 +835,14 @@ export class GeneCardComponent implements OnInit {
           data: [],
         }
         ],
+        theme: {
+          mode: this.getColorTheme() ? 'dark' : 'light'
+        },
         chart: {
           height: '100%',
           type: "scatter",
+          fontFamily: 'var(--bs-body-font-family)',
+          background: 'transparent',
           events: {
             dataPointSelection: (e, chart, opts) => {
               const psd1_genes = this.gene_list.filter(gene => !JSON.parse(localStorage["showNogSigCluster"] ?? false) ? (gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI' && gene.p_value !== 0) : (gene.PSD === 3 && gene.Surgery === '' && gene.natal_status === 'P8' && gene.Comparison === 'ShamvsMI'));
@@ -917,7 +866,6 @@ export class GeneCardComponent implements OnInit {
             enabled: false
           }
         },
-
         markers: {
           size: 5
         },
@@ -925,7 +873,7 @@ export class GeneCardComponent implements OnInit {
           title: {
             text: "-Log10(Adjusted P-Value)",
             style: {
-              fontSize: '18px'
+              fontSize: '1rem'
             }
           }
         },
@@ -933,15 +881,11 @@ export class GeneCardComponent implements OnInit {
           type: "pattern",
           pattern: {
             style: "verticalLines",
-
           }
         },
         title: {
           text: 'P8 - PSD3',
           align: "center",
-          style: {
-            color: "#000"
-          }
         },
         tooltip: {
           enabled: true,    // Enable the tooltip
@@ -957,29 +901,24 @@ export class GeneCardComponent implements OnInit {
             {
               y: 1.30103,
               strokeDashArray: 10,
-              borderColor: 'black',
             }
           ],
           xaxis: [
             {
               x: 0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: 0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.25,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
             {
               x: -0.58,
               strokeDashArray: 7,
-              borderColor: 'grey',
             },
           ]
         }
@@ -1369,10 +1308,9 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
-
       },
       tooltip: {
         enabled: false
@@ -1388,8 +1326,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1401,7 +1339,7 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
-    
+
     //Set Heights Model Graph
     let scaler_Sham = cluster_number1_Sham > 15 ? cluster_number1_Sham : 15
     let height_Sham = (scaler_Sham * 15).toString() + 'px'
@@ -1414,8 +1352,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000",
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1432,8 +1370,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1445,7 +1383,7 @@ export class GeneCardComponent implements OnInit {
         }
       }
     }
-    
+
     //Set Heights Model Graph
     let scaler = cluster_number1_MI > 15 ? cluster_number1_MI : 15
     let height = (scaler * 15).toString() + 'px'
@@ -1456,8 +1394,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1474,8 +1412,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1494,8 +1432,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1512,8 +1450,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1533,8 +1471,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1551,8 +1489,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1572,8 +1510,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1590,8 +1528,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1610,8 +1548,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1628,8 +1566,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,
@@ -1648,8 +1586,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "Fixed Effect (Log2 Fold Change)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       tooltip: {
@@ -1666,8 +1604,8 @@ export class GeneCardComponent implements OnInit {
       title: {
         text: "-Log10(Adjusted P-Value)",
         style: {
-          fontSize: '16px',
-          color: "#000"
+          fontSize: '1rem',
+          fontFamily: 'var(--bs-body-font-family)'
         }
       },
       min: 0.01,

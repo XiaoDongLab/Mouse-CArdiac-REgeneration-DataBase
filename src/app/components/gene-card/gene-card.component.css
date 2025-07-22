@@ -119,10 +119,9 @@ apx-chart>div {
 }
 
 .chart-label {
-    margin-top: 10px;
-    margin-bottom: 3px;
-    font-weight: 500;
-    font-size: 14px;
+    margin-bottom: 0.25rem;
+    font-weight: var(--bs-body-font-weight);
+    font-size: var(--bs-body-font-size)
 }
 
 apx-chart {
@@ -365,6 +364,6 @@ canvas,
     height: 1.5rem;
 }
 
-::ng-deep [data-bs-theme=dark] .gene-card .progress-stacked {
+/*::ng-deep [data-bs-theme=dark] .gene-card .progress-stacked {
     filter: invert(1) hue-rotate(180deg);
-}
+}*/
