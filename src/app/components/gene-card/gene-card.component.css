@@ -360,10 +360,22 @@ canvas,
     justify-content: center;
 }
 
-.progress-stacked, .progress {
+.progress-stacked,
+.progress {
     height: 1.5rem;
 }
 
 /*::ng-deep [data-bs-theme=dark] .gene-card .progress-stacked {
     filter: invert(1) hue-rotate(180deg);
 }*/
+
+/* This removes the auxiliary marker in apexcharts, which should only exist in a one-datapoint scatter plot. */
+/*::ng-deep .apexcharts-series-markers-wrap>g[class=""] {
+    opacity: 0 !important;
+}
+*/
+
+/* This removes the auxiliary marker in apexcharts, which should only exist in a one-datapoint scatter plot. */
+::ng-deep .apexcharts-series-markers-wrap path[default-marker-size=1.5] {
+    opacity: 0 !important;
+}

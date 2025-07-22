@@ -14098,7 +14098,6 @@ dx-autocomplete:focus {
   background-color: rgba(var(--bs-body-color-rgb), .2) !important;
 }
 
-
 canvas,
 img {
   filter: var(--bs-canvas-filter) !important;
