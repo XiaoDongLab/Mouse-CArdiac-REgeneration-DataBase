@@ -374,6 +374,109 @@
   padding: 0px !important;
 }
 
-::ng-deep [data-bs-theme=dark] .color-legend {
+/*::ng-deep [data-bs-theme=dark] .color-legend {
   filter: invert(1) hue-rotate(180deg);
+}*/
+
+.color-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.color-legend > h6 {
+  margin: 0;
+  font-size: 1rem;
+  width: 100%;
+  padding: .25rem 1rem;
+  border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+  color: white;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+}
+
+.color-legend > h6 > svg, .color-legend > h6 > i {
+  width: 1rem;
+}
+
+.color-legend > h6:first-of-type {
+  border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
+}
+
+.color-legend > h6:last-of-type {
+  border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+}
+
+.color-legend > h6.sg-dn {
+  background-color: rgb(255, 99, 99);
+}
+
+.color-legend > h6.sg-dn:hover {
+  background-color: rgb(235, 79, 79);
+}
+
+.color-legend > h6.sg-dn:focus, .color-legend > h6.sg-dn:active {
+  background-color: rgb(215, 59, 59);
+}
+
+.color-legend > h6.sl-dn {
+  background-color: rgb(157, 136, 0);
+}
+
+.color-legend > h6.sl-dn:hover {
+  background-color: rgb(137, 116, 0);
+}
+
+.color-legend > h6.sl-dn:focus, .color-legend > h6.sl-dn:active {
+  background-color: rgb(117, 96, 0);
+}
+
+.color-legend > h6.no-cg {
+  background-color: rgb(0, 142, 0);
+}
+
+.color-legend > h6.no-cg:hover {
+  background-color: rgb(0, 122, 0);
+}
+
+.color-legend > h6.no-cg:focus, .color-legend > h6.no-cg:active {
+  background-color: rgb(0, 102, 0);
+}
+
+.color-legend > h6.sl-up {
+  background-color: rgb(255, 99, 255);
+}
+
+.color-legend > h6.sl-up:hover {
+  background-color: rgb(235, 79, 235);
+}
+
+.color-legend > h6.sl-up:focus, .color-legend > h6.sl-up:active {
+  background-color: rgb(215, 59, 215);
+}
+
+.color-legend > h6.sg-up {
+  background-color: rgb(99, 99, 255);
+}
+
+.color-legend > h6.sg-up:hover {
+  background-color: rgb(79, 79, 235);
+}
+
+.color-legend > h6.sg-up:focus, .color-legend > h6.sg-up:active {
+  background-color: rgb(59, 59, 215);
+}
+
+.color-legend > h6.no-ft {
+  background-color: rgb(0, 0, 0);
+}
+
+.color-legend > h6.no-ft:hover {
+  background-color: rgb(20, 20, 20);
+}
+
+.color-legend > h6.no-ft:focus, .color-legend > h6.no-ft:active {
+  background-color: rgb(40, 40, 40);
 }

@@ -17,6 +17,7 @@ import GeneList from '../../../assets/geneDict.json'
 import { setInterval, clearInterval } from 'timers';
 import { GeneConversionService } from 'src/app/services/name-converter.service';
 import { Router } from '@angular/router';
+declare const bootstrap: any;
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -209,7 +210,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       };
     }
     this.createBrowser();
-    console.log(this.lociService.getLocus())
   }
 
   async createBrowser() {
@@ -371,6 +371,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     window.clearInterval(this.fakeInterval)
     this.load_progress = 0;
     this.fakeProgress(convertedList.length);
+
+    setTimeout(() => {
+
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    }, 100);
     this.databaseService.getGeneDiffExp(convertedList)
       .subscribe({
         next: (data) => {

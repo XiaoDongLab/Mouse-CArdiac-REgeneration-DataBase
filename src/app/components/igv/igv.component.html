@@ -53,8 +53,7 @@
                   </div>
                 </button>
               </h2>
-              <div id="geneInterested" class="accordion-collapse collapse"
-                data-bs-parent="#geneInterestedAccordion">
+              <div id="geneInterested" class="accordion-collapse collapse" data-bs-parent="#geneInterestedAccordion">
                 <div class="accordion-body">
                   <div class="row g-2">
                     @for (item of gene_interested; track item; let i = $index) {
@@ -156,21 +155,15 @@
       <hr />
       <h4>Legends</h4>
       <div class="color-legend">
-        <h6 class="col" style="color:rgb(255, 99, 99);">Significantly Downregulated</h6>
-        <h6 class="col" style="color: rgb(170, 170, 0);">Slightly Downregulated</h6>
-        <h6 class="col" style="color: rgb(50, 255, 50);">No Change</h6>
-        <h6 class="col" style="color: rgb(255, 99, 255);">Slightly Upregulated</h6>
-        <h6 class="col" style="color: rgb(99, 99, 255);">Significantly Upregulated</h6>
-        <h6 class="col" style="color: black;">Not have a significant fit</h6>
+        <h6 class="sg-up" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and Log2FC &gt; 0.58"><i class="fa fa-angles-up"></i> Significantly Upregulated</h6>
+        <h6 class="sl-up" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and 0.58 &ge; Log2FC &gt; 0.25"><i class="fa fa-chevron-up"></i> Slightly Upregulated</h6>
+        <h6 class="no-cg" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and 0.25 &ge; Log2FC &gt; -0.25"><i class="fa fa-grip-lines"></i> No Change</h6>
+        <h6 class="sl-dn" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and -0.25 &ge; Log2FC &gt; -0.58"><i class="fa fa-chevron-down"></i> Slightly Downregulated</h6>
+        <h6 class="sg-dn" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and -0.58 &gt; Log2FC"><i class="fa fa-angles-down"></i> Significantly Downregulated</h6>
+        <h6 class="no-ft" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &gt; 0.05 (equivalent to -log10P-val &lt; 1.30103)"><i class="fa fa-xmark"></i> Not have a significant fit</h6>
       </div>
       <hr />
-      <h4>Notes</h4>
-      <ul>
-        <li class="text-muted">All clusters with -Log<sub>10</sub>P-val less than 0.01 were hidden in the model plot by default.
-        </li>
-        <li class="text-muted">If you want to view all non-significant clusters, you can navigate to settings page and turn on the switch.</li>
-        <li class="text-muted">Numbers on the meta plot were hidden if the sample size is less than 2.</li>
-      </ul>
+      <small class="text-muted">Numbers on the meta plot were hidden if the sample size is less than 2.</small>
     </div>
   </div>
   }
