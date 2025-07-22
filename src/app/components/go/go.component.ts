@@ -72,7 +72,8 @@ export class GoComponent implements OnInit {
     { text: 'Name Starts With', value: 'startsWith' }
   ];
   tissue_types: string[] = ['Heart'];
-  selected_tissues: string[] = this.tissue_types
+  selected_tissues: string[] = this.tissue_types;
+  colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
   cell_types = [
     "All Cells",
     "Cardiac cell",
@@ -149,7 +150,7 @@ export class GoComponent implements OnInit {
         }
       },
       theme: {
-        mode: 'dark'
+        mode: this.getColorTheme() ? 'dark' : 'light'
       },
       tooltip: {
         enabled: true,    // Enable the tooltip
@@ -169,7 +170,7 @@ export class GoComponent implements OnInit {
           text: localStorage["useYAxisType"] == '1' ? "P-Value" : "-Log10(Adjusted P-Value)",
           style: {
             fontSize: '1rem',
-            fontFamily: 'var(--bs-body-font-family)'
+            fontFamily: 'var(--bs-body-font-family)',
           }
         },
       },
@@ -369,6 +370,10 @@ export class GoComponent implements OnInit {
     return `rgb(${r},${g},${b})`;
   }
 
+  getColorTheme(): boolean {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
+  }
 
   getGeneSymbols(selected_term: GoTerm): void {
     let ensemble_list = selected_term.coreenrichment.split('/')
