@@ -60,6 +60,11 @@ export class AppComponent implements OnInit {
       document.documentElement.setAttribute("data-bs-theme", "dark");
     } else document.documentElement.setAttribute("data-bs-theme", "light");
   }
+
+  getColorTheme(): boolean {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
+  }
   static Version = "1.2507.106.1";
   static CompileDate = "21 July 2025";
   title = 'Mouse Cardiac Regeneration Database';

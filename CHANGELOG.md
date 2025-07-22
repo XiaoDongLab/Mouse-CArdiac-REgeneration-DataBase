@@ -1,6 +1,6 @@
 # Version history
 
-The latest version is **1.2507.88.1**, compiled on 18 July 2025.
+The latest version is **1.2507.106.1**, compiled on 21 July 2025.
 
 ## 1.2507.106.1 - 21 July 2025
 
