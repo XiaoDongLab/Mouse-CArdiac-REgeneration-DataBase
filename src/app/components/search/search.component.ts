@@ -409,7 +409,7 @@ export class SearchComponent implements OnInit {
 
   downloadWrapper() {
     document.getElementById("downloadButton")?.setAttribute("disabled", "true");
-    alert('Download Started');
+    // alert('Download Started');
     this.selected_download_method = 'Download Standardized Data';
     let selected_ids = this.gridApi.getSelectedRows().map(row => row.study_id + '/' + row.platform)
     if (this.selected_download_method == 'Download Standardized Data' && selected_ids.length > 0) {
