@@ -379,3 +379,30 @@ canvas,
 ::ng-deep .apexcharts-series-markers-wrap path[default-marker-size=1.5] {
     opacity: 0 !important;
 }
+
+::ng-deep .apexcharts-menu-icon {
+    padding: .25rem;
+    line-height: 1;
+    color: var(--bs-body-color);
+    width: unset !important;
+    height: unset !important;
+    border-radius: var(--bs-border-radius-sm);
+    transition: .15s ease-in-out;
+}
+
+::ng-deep .apexcharts-menu-icon:hover {
+    background-color: rgba(var(--bs-body-color-rgb), .1);
+    color: var(--bs-body-color);
+}
+
+::ng-deep .apexcharts-menu-icon:focus, ::ng-deep .apexcharts-menu-icon:active {
+    background-color: rgba(var(--bs-body-color-rgb), .2);
+    color: var(--bs-body-color);
+}
+
+::ng-deep .apexcharts-menu-icon > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: var(--bs-body-color);
+    color: var(--bs-body-color);
+}
