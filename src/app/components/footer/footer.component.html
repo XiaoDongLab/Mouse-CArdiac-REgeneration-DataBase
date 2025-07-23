@@ -7,8 +7,8 @@
                 <div class="row">
                     <p>Mouse Cardiac Regeneration Database</p>
                     <small class="text-muted">© 2025 <a href="https://dong.umn.edu/" target="_blank">The Dong Lab</a>,
-                        <a href="https://med.umn.edu/aging" target="_blank">MIBAM</a>, University of Minnesota. All
-                        rights reserved.</small>
+                    <a href="https://med.umn.edu/aging" target="_blank">MIBAM</a>, University of Minnesota.
+                    {{'footer.copyright' | translate}}</small>
                     <!--<div class="d-flex">
                         <small class="text-muted"><a href="javascript:void(0);" target="_blank"
                                 (click)="showToastControl('citationToast');">Citation</a></small>
@@ -25,7 +25,8 @@
                     href="https://github.com/AnthonyShea/MouseHeartDatabase" role="button">
                     <i class="fab fa-github"></i>
                 </a>
-                <a class="btn btn-link btn-floating text-body btn-lg" target="_blank" href="mailto:author@example.com" role="button">
+                <a class="btn btn-link btn-floating text-body btn-lg" target="_blank" href="mailto:author@example.com"
+                    role="button">
                     <i class="fa fa-envelope"></i>
                 </a>
             </div>
@@ -34,22 +35,25 @@
     <!-- Copyright -->
 </footer>
 
-<!--<div class="toast-container position-fixed top-0 start-0 w-100 h-100">
-    <div id="citationToast" class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed"
-        role="alert" aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+
+<div class="toast-container position-fixed top-0 start-0 w-100 h-100">
+    <div id="citationToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
         <div class="toast-header">
             <strong class="me-auto">Citation</strong>
             <a type="button" (click)="hideToastControl('citationToast');" data-bs-dismiss="toast" aria-label="Close"
                 class="btn-macclose"></a>
         </div>
-        <div class="toast-body">
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
             <input type="text" class="form-control" readonly value="Abcd, E., 2025, https://mcaredb.org/" />
         </div>
     </div>
-    <div id="changelogToast" class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column"
-        role="alert" aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+    <div id="changelogToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
         <div class="toast-header">
-            <strong class="me-auto">Changelog</strong>
+            <strong class="me-auto" translate="footer.window.changelog.title"></strong>
             <a type="button" (click)="hideToastControl('changelogToast');" data-bs-dismiss="toast" aria-label="Close"
                 class="btn-macclose"></a>
         </div>
@@ -57,16 +61,71 @@
             <app-changelog></app-changelog>
         </div>
     </div>
-    <div id="licenseToast" class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed"
-        role="alert" aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+    <div id="licenseToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
         <div class="toast-header">
-            <strong class="me-auto">License</strong>
+            <strong class="me-auto" translate="footer.window.license.title"></strong>
             <a type="button" (click)="hideToastControl('licenseToast');" data-bs-dismiss="toast" aria-label="Close"
                 class="btn-macclose"></a>
         </div>
-        <div class="toast-body">
-            <p>License here</p>
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
+            <div class="d-flex flex-column">
+                <p>MIT License</p>
+                <p>Copyright (c) 2025 The Dong Lab, MIBAM, University of Minnesota</p>
+                <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+                    of this software and associated documentation files (the "Software"), to deal
+                    in the Software without restriction, including without limitation the rights
+                    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                    copies of the Software, and to permit persons to whom the Software is
+                    furnished to do so, subject to the following conditions:</p>
+                <p>The above copyright notice and this permission notice shall be included in all
+                    copies or substantial portions of the Software.</p>
+                <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                    SOFTWARE.</p>
+            </div>
+        </div>
+    </div>
+    <div id="languageToast"
+        class="toast full-screen bg-blurred top-50 start-50 translate-middle position-fixed flex-column" role="alert"
+        aria-live="assertive" data-bs-autohide="false" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto" translate="navbar.language.title"></strong>
+            <a type="button" (click)="hideToastControl('languageToast');" data-bs-dismiss="toast" aria-label="Close"
+                class="btn-macclose"></a>
+        </div>
+        <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
+            <div class="d-flex w-100 flex-column">
+                <div class="row g-2">
+                    <div class="col">
+                        <a class="card text-decoration-none" href="javascript:void(0)" (click)="switch('en-us')">
+                            <div class="card-body">
+                                <h5 class="text-mcaredb mb-0">English</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a class="card text-decoration-none" href="javascript:void(0)" (click)="switch('zh-cn')">
+                            <div class="card-body">
+                                <h5 class="text-mcaredb mb-0">简体中文</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a class="card text-decoration-none" href="javascript:void(0)">
+                            <div class="card-body">
+                                <h5 class="text-mcaredb mb-0">日本語</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="shadow-bg" class="position-fixed shadow top-0 start-0 w-100 h-100"></div>
-</div>-->
+</div>

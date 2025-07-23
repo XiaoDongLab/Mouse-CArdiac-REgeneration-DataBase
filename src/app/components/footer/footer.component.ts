@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import bootstrap from 'src/js/bootstrap.min.js'
 import { AppComponent } from 'src/app/app.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-footer',
@@ -12,7 +13,7 @@ export class FooterComponent implements OnInit {
 
   Version: string = "";
   CompileDate: string = "";
-  constructor() { 
+  constructor(public t: TranslateService) { 
 
   }
 
@@ -43,5 +44,10 @@ export class FooterComponent implements OnInit {
 
   readChangelog(): void {
     const ChangelogFile = "CHANGELOG.md";
+  }
+
+  switch(lang: string) {
+    this.t.use(lang);
+    this.hideToastControl('languageToast');
   }
 }
