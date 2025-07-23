@@ -273,3 +273,8 @@
 .image[data-bs-theme=dark] {
   border: var(--bs-border-width) solid var(--bs-border-color-translucent)
 }
+
+.nav-link > svg, .nav-link > i {
+  width: 1rem;
+  margin-right: .25rem;
+}
