@@ -108,7 +108,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   fakeInterval: any | undefined;
 
 
-  constructor(private databaseService: DatabaseService, databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router) {
+  constructor(private databaseService: DatabaseService, public databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router) {
     this.cell_types = databaseConstService.getDECellTypes();
     this.selected_cells = this.cell_types;
     this.load_progress = 0;
@@ -435,7 +435,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     this.loading = true;
     this.grouped_genes = JSON.parse(JSON.stringify(this.original_grouped_genes));
     console.log(this.grouped_genes);
-
+    this.selected_cells = this.selected_cells.length == 0 ? this.databaseConstService.getDECellTypes() : this.selected_cells;
     let selected_pmids: number[] = [];
     for (const key in this.pmid_tissue_dist) {
       if (this.selected_tissues.includes(key)) {

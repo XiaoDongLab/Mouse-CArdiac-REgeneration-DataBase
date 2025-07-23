@@ -390,7 +390,7 @@
   margin: 0;
   font-size: 1rem;
   width: 100%;
-  padding: .25rem 1rem;
+  padding: .5rem 1rem;
   border: var(--bs-border-width) solid var(--bs-border-color-translucent);
   color: white;
   cursor: pointer;
@@ -399,6 +399,7 @@
 
 .color-legend > h6 > svg, .color-legend > h6 > i {
   width: 1rem;
+  margin-right: 1rem;
 }
 
 .color-legend > h6:first-of-type {
