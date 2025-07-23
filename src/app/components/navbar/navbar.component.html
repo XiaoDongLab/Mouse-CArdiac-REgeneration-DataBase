@@ -17,25 +17,18 @@ selectionMode="single"
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
       <ul class="navbar-nav">
         @for (tab of tabs; track tab; let i = $index) {
-          <li class="nav-item">
-            <a class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
-              [style.color]="tab.color" href="javascript:void(0);">
-              <i class="fa {{tab.icon}}"></i>
-              {{ tab.text }}
-            </a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
+            [style.color]="tab.color" href="javascript:void(0);">
+            <i class="fa {{tab.icon}}"></i>
+            {{ tab.text | translate }}
+          </a>
+        </li>
         }
+        <li class="nav-item">
+          <a class="nav-link" (click)="showToastControl('languageToast')"><i class="fa fa-language"></i>&nbsp;</a>
+        </li>
       </ul>
-      <div class="d-flex align-right">
-        <!--<div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch"
-          (click)="onDarkModeSwitchClick()">
-        <label class="form-check-label" for="switchCheckDefault">Dark mode (Experimental)</label>
-      </div>-->
     </div>
   </div>
-</div>
 </nav>
-
-<script>
-</script>

@@ -5,6 +5,12 @@ import { Title } from '@angular/platform-browser';
 import { title } from 'process';
 import { AppComponent } from 'src/app/app.component';
 import { fromEvent, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function httpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, '../../../assets/locale/', '.json');
+}
 
 @Component({
     selector: 'app-navbar',
@@ -25,32 +31,32 @@ export class NavbarComponent implements OnInit {
     this.tabs = [
       {
         id: 0,
-        text: 'Home',
+        text: 'navbar.home',
         path: 'home',
         icon: 'fa-home',
         customClass: '.nav-link', // Add custom class identifier.
       },
       {
         id: 1,
-        text: 'Genome Browser',
+        text: 'navbar.genome',
         icon: 'fa-server',
         path: 'igv',
       },
       {
         id: 2,
-        text: 'Pathway Enrichment',
+        text: 'navbar.pathway',
         icon: 'fa-magnifying-glass',
         path: 'go',
       },
       {
         id: 3,
-        text: 'Search & Download',
+        text: 'navbar.download',
         icon: 'fa-download',
         path: 'search',
       },
       {
         id: 4,
-        text: 'Settings',
+        text: 'navbar.settings',
         icon: 'fa-gear',
         path: 'settings',
       },
@@ -93,6 +99,7 @@ export class NavbarComponent implements OnInit {
     });
     this.selected_path = this.router.url.split('/')[1];
     this.updateSelectedTab();
+    document.getElementById("shadow-bg")!.style.display = "none";
   }
 
   selectTab(index: number) {
@@ -131,6 +138,21 @@ export class NavbarComponent implements OnInit {
       document.documentElement.setAttribute('data-bs-theme', 'dark');
       document.getElementById("darkModeBtn")!.innerHTML = "<i class=\"fa fa-moon\"><\/i>";
     }
+  }
+
+  showToastControl(control_id: string): void {
+    // Don't use the default method of bootstrap here. I don't know why but
+    // if you try to use it, probably any else collapse elements won't
+    // function normally.
+    const changelogToast = document.getElementById(control_id);
+    document.getElementById("shadow-bg")!.style.display = "block";
+    changelogToast!.style.display = "flex";
+  }
+
+  hideToastControl(control_id: string): void {
+    const changelogToast = document.getElementById(control_id);
+    document.getElementById("shadow-bg")!.style.display = "none";
+    changelogToast!.style.display = "none";
   }
 }
 
