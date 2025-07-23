@@ -60,7 +60,7 @@
     margin: 0 .5rem;
     border: var(--bs-border-width) solid var(--bs-border-color-translucent);
     top: .5rem;
-    border-radius: var(--bs-border-radius-lg);
+    border-radius: var(--bs-border-radius-xl);
   }
 }
 
