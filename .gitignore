@@ -3,6 +3,7 @@
 # Compiled output
 /dist
 /frontend
+/*.zip
 /tmp
 /out-tsc
 /bazel-out

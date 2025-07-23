@@ -3,7 +3,15 @@ import { ImageService } from 'src/app/services/image.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexTheme, ApexStroke } from "ng-apexcharts";
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 declare const bootstrap: any;
+
+export function httpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, '../../../assets/locale/', '.json');
+}
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;

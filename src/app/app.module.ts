@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/search.component';
-import { HomeComponent } from './components/home/home.component';
+import { HomeComponent, httpLoaderFactory } from './components/home/home.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgvComponent } from './components/igv/igv.component';
@@ -24,8 +24,10 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { CommonModule } from '@angular/common';
 import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { AllCommunityModule } from 'ag-grid-community';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent,
         routingComponents,
         SearchComponent,
@@ -44,6 +46,14 @@ import { AllCommunityModule } from 'ag-grid-community';
         BrowserModule,
         CommonModule,
         AgGridModule,
+        TranslateModule.forRoot({
+            defaultLanguage: 'en-us',
+            loader: {
+                provide: TranslateLoader,
+                useFactory: httpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
         AppRoutingModule,
         HttpClientModule,
         NgLabelTemplateDirective,
@@ -53,7 +63,8 @@ import { AllCommunityModule } from 'ag-grid-community';
         NgApexchartsModule,
         FormsModule,
         ReactiveFormsModule], providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+            { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+            provideHttpClient(withInterceptorsFromDi())
+        ]
+})
 export class AppModule { }

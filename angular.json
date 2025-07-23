@@ -13,6 +13,12 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "zh-Hans": "src/i18n/messages.zh-cn.xlf"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -23,7 +29,8 @@
             },
             "index": "src/index.html",
             "polyfills": [
-              "src/polyfills.ts"
+              "src/polyfills.ts",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -41,7 +48,8 @@
               "src/js/bootstrap.bundle.js",
               "src/fontawesome-free-6.7.2-web/js/all.min.js"
             ],
-            "browser": "src/main.ts"
+            "browser": "src/main.ts",
+            "localize": ["zh-cn", "ja-jp"]
           },
           "configurations": {
             "production": {
@@ -99,7 +107,10 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts",
+              "@angular/localize/init"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [

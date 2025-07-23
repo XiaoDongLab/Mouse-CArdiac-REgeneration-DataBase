@@ -6,20 +6,24 @@
       <h1 class="mcaredb-title text-center"><b>M</b>ouse <b>CA</b>rdiac
         <b>RE</b>generation <b>D</b>ata<b>B</b>ase
       </h1>
-      <h3 class="text-center">Exploring Cardiac Regeneration Through Developmental Transcriptomics</h3>
+      <!--<h3 class="text-center" i18n>Exploring Cardiac Regeneration Through Developmental Transcriptomics</h3>-->
+      <h3 class="text-center" translate="home.subtitle"></h3>
       <div class="d-flex justify-content-center">
         <div class="highlight-section">
           <div class="text-center">
             <div class="research-focus">
-              <span>Neonatal (P1 - P6) vs. Postnatal (P7+) Heart Regeneration Capacity: <br />
-              Uncovering the molecular drivers of cardiomyocyte proliferation decline</span>
+              <!--Neonatal (P1 - P6) vs. Postnatal (P7+) Heart Regeneration Capacity:-->
+              {{ 'home.research-focus1' | translate }}
+              <br />
+              <!--Uncovering the molecular drivers of cardiomyocyte proliferation decline-->
+              {{ 'home.research-focus2' | translate }}
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-12">
-      <h3>Cite this website
+      <h3><span translate="home.cite"></span> 
         <a tabindex="0" class="text-mcaredb text-decoration-none" (click)="copyCitation()" role="button"
           data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Copied!">
           <i class="fa fa-copy"></i>
@@ -29,16 +33,15 @@
     </div>
     <!-- Database Features new-->
     <div class="col-12">
-      <h3>User Guide</h3>
+      <h3 translate="home.userguide"></h3>
       <div class="accordion" id="accordionExample">
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
               <div class="row">
-                <h3>Genome Browser</h3>
-                <p class="mb-0">View how Genes differ in expression levels accross Age, Cell Groups and Experimental
-                  Conditions</p>
+                <h3 translate="home.genomebrowser"></h3>
+                <p class="mb-0" i18n>View how Genes differ in expression levels accross Age, Cell Groups and Experimental Conditions</p>
               </div>
             </button>
           </h2>
@@ -84,31 +87,30 @@
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
                       data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
+                      <span class="visually-hidden" i18n>Previous</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
                       data-bs-slide="next">
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
+                      <span class="visually-hidden" i18n>Next</span>
                     </button>
                   </div>
 
                 </div>
                 <div class="col-lg-4 col-md-12">
-                  <h4>How to use IGV</h4>
+                  <h4 i18n>How to use IGV</h4>
                   <ol>
-                    <li>Use the search bar to navigate to a specific gene, or drag on the IGV window to select certain
+                    <li i18n>Use the search bar to navigate to a specific gene, or drag on the IGV window to select certain
                       areas. You can view chromatin accessibility (Histone CHIP-seq) and methylation level (WGBS) tracks
                       in IGV.</li>
-                    <li>Click "Get Differential Expression Data" to get data of each gene.</li>
+                    <li i18n>Click "Get Differential Expression Data" to get data of each gene.</li>
                   </ol>
-                  <h4>Key Features</h4>
+                  <h4 i18n>Key Features</h4>
                   <ul>
-                    <li>View comparison groups in the card body. You can compare P1 / P8 (Group 1) or Sham / MI (Group
+                    <li i18n>View comparison groups in the card body. You can compare P1 / P8 (Group 1) or Sham / MI (Group
                       2) currently.</li>
-                    <li>Click the card to expand statistical data. Hit any data point on the scatter plot to show UMAP,
+                    <li i18n>Click the card to expand statistical data. Hit any data point on the scatter plot to show UMAP,
                       TSNE and meta information.</li>
-                    <li></li>
                   </ul>
                 </div>
               </div>
@@ -120,8 +122,8 @@
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
               <div class="row">
-                <h3>Go Term Enrichment</h3>
-                <p class="mb-0">Explore how various pathways are impacted accross Age, and Experimental Conditions</p>
+                <h3 i18n>Pathway Enrichment</h3>
+                <p class="mb-0" i18n>Explore how various pathways are impacted accross Age, and Experimental Conditions</p>
               </div>
             </button>
           </h2>
@@ -133,12 +135,12 @@
                     alt="Pathway analysis interface">
                 </div>
                 <div class="col-md-6 col-sm-12">
-                  <h4>Workflow</h4>
+                  <h4 i18n>Workflow</h4>
                   <ul>
-                    <li>Start with gene list from differential expression results</li>
-                    <li>Select ontology database (BP, MF, CC)</li>
-                    <li>Adjust FDR cutoff using slider (default q &lt; 0.05)</li>
-                    <li>Export network diagrams or table results</li>
+                    <li i18n>Start with gene list from differential expression results</li>
+                    <li i18n>Select ontology database (BP, MF, CC)</li>
+                    <li i18n>Adjust FDR cutoff using slider (default q &lt; 0.05)</li>
+                    <li i18n>Export network diagrams or table results</li>
                   </ul>
                 </div>
               </div>
@@ -150,8 +152,8 @@
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
               <div class="row">
-                <h3>Search and Download</h3>
-                <p class="mb-1">Download our Results from our Differential Gene Expression Analysis</p>
+                <h3 i18n>Search and Download</h3>
+                <p class="mb-1" i18n>Download our Results from our Differential Gene Expression Analysis</p>
               </div>
             </button>
           </h2>
@@ -163,39 +165,33 @@
                     alt="Data download interface">
                 </div>
                 <div class="col-md-6 col-sm-12">
-                  <h4>Key Features</h4>
+                  <h4 i18n>Key Features</h4>
                   <ul>
-                    <li>Modify any search criteria according to your need, then click "Search" button.</li>
-                    <li>Select samples in the table and click "Download Standardized Data" to start your download.</li>
-                    <li>All files were packed as zip format, as your browser may prevent downloading multiple files at
-                      the same time.</li>
+                    <li i18n>Modify any search criteria according to your need, then click "Search" button.</li>
+                    <li i18n>Select samples in the table and click "Download Standardized Data" to start your download.</li>
+                    <li i18n>All files were packed as zip format, as your browser may prevent downloading multiple files at the same time.</li>
                   </ul>
-                  <h4>Available Formats:</h4>
+                  <h4 i18n>Available Formats:</h4>
                   <table class="table">
                     <tr>
-                      <th>Data Type</th>
-                      <th>Format</th>
-                      <th>Resolution</th>
+                      <th i18n>Data Type</th>
+                      <th i18n>Format</th>
+                      <th i18n>Resolution</th>
                     </tr>
                     <tr>
-                      <td>DEG Results</td>
+                      <td i18n>DEG Results</td>
                       <td>CSV, XLSX</td>
-                      <td>Per-gene</td>
+                      <td i18n>Per-gene</td>
                     </tr>
                     <tr>
                       <td>Expression Matrix</td>
                       <td>H5AD</td>
-                      <td>Single-cell</td>
+                      <td i18n>Single-cell</td>
                     </tr>
                     <tr>
-                      <td>Pathway Results</td>
+                      <td i18n>Pathway Results</td>
                       <td>JSON, PNG</td>
-                      <td>Publication-ready</td>
-                    </tr>
-                    <tr>
-                      <td>Info</td>
-                      <td>CSV</td>
-                      <td>N/A</td>
+                      <td i18n>Publication-ready</td>
                     </tr>
                   </table>
                 </div>
@@ -207,11 +203,11 @@
     </div>
     <!-- Age Comparison Visual (placeholder) -->
     <div class="col-12 mt-3">
-      <h3>Legends</h3>
+      <h3 i18n>Legends</h3>
       <div class="row g-2">
         <div class="col-md-6 col-sm-12">
           <div class="card">
-            <h5 class="card-header text-bg-success text-center">Neonatal Phase (P1 - 6)</h5>
+            <h5 class="card-header text-bg-success text-center" i18n>Neonatal Phase (P1 - 6)</h5>
             <div class="card-body">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 163">
                 <g>
@@ -231,9 +227,9 @@
                 <path d="M 150 80 L 340 80 340 75 350 82 340 89 340 84 150 84 150 80 Z" fill="currentColor" />
                 <path d="M 248 80 L 248 60 C 248 58 252 58 252 60 L 252 80 248 80 Z" fill="currentColor" />
                 <text x="270" y="20" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Myocardial</text>
+                  fill="currentColor" i18n>Myocardial</text>
                 <text x="270" y="40" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Infarction</text>
+                  fill="currentColor" i18n>Infarction</text>
                 <g transform="translate(180, 15) scale(0.2 0.2)" text-anchor="">
                   <path
                     d="M 10 30 C 8 60 0 70 0 90 Q 0 100 10 110 C 10 100 33 80 35 70 C 38 80 13 100 12 112 C 12 138 42 163 76 163 C 97 163 125 123 118 96 C 119 78 119 69 106 64 C 97 73 98 78 99 86 C 89 76 102 59 123 45 C 129 41 122 30 117 33 C 110 37 104 38 95 49 C 88 47 77 43 74 63 C 73 67 70 66 71 63 C 74 43 84 43 94 45 C 99 39 102 37 106 35 C 105 29 101 25 95 22 C 95 15 96 10 98 4 C 99 1 86 -2 85 2 C 83 7 82 11 82 16 C 82 21 72 18 73 15 C 74 11 75 6 75 3 C 75 -1 63 -1 63 3 C 63 7 63 11 62 15 C 61 19 53 18 52 15 C 51 12 50 7 50 3 C 50 -1 38 -1 39 3 C 41 10 41 14 41 19 C 41 27 24 30 29 58 Q 27 57 23 57 Q 24 56 27 56 C 26 50 24 40 30 30 C 33 25 10 25 10 30 Z"
@@ -242,9 +238,9 @@
                     stroke="currentColor" stroke-dasharray="5" stroke-width="5" />
                 </g>
                 <text x="250" y="110" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Neonatal</text>
+                  fill="currentColor" i18n>Neonatal</text>
                 <text x="250" y="130" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">High regenerative capacity</text>
+                  fill="currentColor" i18n>High regenerative capacity</text>
                 <g transform="translate(210,15) scale(0.2, 0.2) rotate(15)">
                   <path d="M 40 0 L 0 50 20 60 0 100 40 50 20 40 40 0 Z" fill="#DADA00" />
                 </g>
@@ -266,7 +262,7 @@
         </div>
         <div class="col-md-6 col-sm-12">
           <div class="card">
-            <h5 class="card-header text-bg-secondary text-center">Postnatal Phase (P7+)</h5>
+            <h5 class="card-header text-bg-secondary text-center" i18n>Postnatal Phase (P7+)</h5>
             <div class="card-body">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 163">
                 <g>
@@ -286,9 +282,9 @@
                 <path d="M 150 80 L 340 80 340 75 350 82 340 89 340 84 150 84 150 80 Z" fill="currentColor" />
                 <path d="M 248 80 L 248 60 C 248 58 252 58 252 60 L 252 80 248 80 Z" fill="currentColor" />
                 <text x="270" y="20" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Myocardial</text>
+                  fill="currentColor" i18n>Myocardial</text>
                 <text x="270" y="40" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Infarction</text>
+                  fill="currentColor" i18n>Infarction</text>
                 <g transform="translate(180, 15) scale(0.2 0.2)" text-anchor="">
                   <path
                     d="M 10 30 C 8 60 0 70 0 90 Q 0 100 10 110 C 10 100 33 80 35 70 C 38 80 13 100 12 112 C 12 138 42 163 76 163 C 97 163 125 123 118 96 C 119 78 119 69 106 64 C 97 73 98 78 99 86 C 89 76 102 59 123 45 C 129 41 122 30 117 33 C 110 37 104 38 95 49 C 88 47 77 43 74 63 C 73 67 70 66 71 63 C 74 43 84 43 94 45 C 99 39 102 37 106 35 C 105 29 101 25 95 22 C 95 15 96 10 98 4 C 99 1 86 -2 85 2 C 83 7 82 11 82 16 C 82 21 72 18 73 15 C 74 11 75 6 75 3 C 75 -1 63 -1 63 3 C 63 7 63 11 62 15 C 61 19 53 18 52 15 C 51 12 50 7 50 3 C 50 -1 38 -1 39 3 C 41 10 41 14 41 19 C 41 27 24 30 29 58 Q 27 57 23 57 Q 24 56 27 56 C 26 50 24 40 30 30 C 33 25 10 25 10 30 Z"
@@ -297,9 +293,9 @@
                     stroke="currentColor" stroke-dasharray="5" stroke-width="5" />
                 </g>
                 <text x="250" y="110" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Postnatal</text>
+                  fill="currentColor" i18n>Postnatal</text>
                 <text x="250" y="130" alignment-baseline="central" text-anchor="middle" font-family="inherit"
-                  fill="currentColor">Regenerative ability reduced</text>
+                  fill="currentColor" i18n>Regenerative ability reduced</text>
                 <g transform="translate(210,15) scale(0.2, 0.2) rotate(15)">
                   <path d="M 40 0 L 0 50 20 60 0 100 40 50 20 40 40 0 Z" fill="#DADA00" />
                 </g>
@@ -322,7 +318,7 @@
       </div>
     </div>
     <div class="col-12 mt-3">
-      <h3>References</h3>
+      <h3 i18n>References</h3>
       <div class="row g-2">
         <div class="col-md-6 col-sm-12">
           <h5>Data Sources</h5>
@@ -347,7 +343,7 @@
               target="_blank">https://doi.org/10.1038/s44161-024-00428-w</a></p>
         </div>
         <div class="col-md-6 col-sm-12">
-          <h5>Software & Frameworks</h5>
+          <h5 i18n>Software & Frameworks</h5>
           <!--List all frameworks here-->
           <ul>
             <li><b><a href="https://getbootstrap.com" target="_blank">Bootstrap v5.3</a></b> - MIT license</li>
