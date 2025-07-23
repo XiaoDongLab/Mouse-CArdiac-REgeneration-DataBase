@@ -4537,7 +4537,7 @@ fieldset:disabled .btn {
   --bs-navbar-toggler-border-color: rgba(var(--bs-emphasis-color-rgb), 0.15);
   --bs-navbar-toggler-border-radius: var(--bs-border-radius);
   --bs-navbar-toggler-focus-width: 0.25rem;
-  --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
+  --bs-navbar-toggler-transition: all 0.15s ease-in-out;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -4634,12 +4634,17 @@ fieldset:disabled .btn {
 
 .navbar-toggler:hover {
   text-decoration: none;
+  background-color: rgba(var(--bs-body-color-rgb), .1);
+}
+
+.navbar-toggler:active {
+  background-color: rgba(var(--bs-body-color-rgb), .2);
 }
 
 .navbar-toggler:focus {
   text-decoration: none;
   outline: 0;
-  box-shadow: 0 0 0 var(--bs-navbar-toggler-focus-width);
+  box-shadow: 0 0 0 var(--bs-navbar-toggler-focus-width) #db77a997;
 }
 
 .navbar-toggler-icon {
