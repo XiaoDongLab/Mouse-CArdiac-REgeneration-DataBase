@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { AppComponent } from 'src/app/app.component';
 
 @Component({
-    selector: 'app-settings',
-    templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.css'],
-    standalone: false
+  selector: 'app-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.css'],
+  standalone: false
 })
 export class SettingsComponent implements OnInit {
 
@@ -14,9 +15,9 @@ export class SettingsComponent implements OnInit {
   colorPreference: number = localStorage["colorPreference"] ?? 0;
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
-  showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false) ;
+  showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false);
   useYAxisType: number = localStorage["useYAxisType"] ?? 0; // 0 -> -lgP-val; 1 -> P-val;
-  constructor() { }
+  constructor(public t: TranslateService) { }
 
   ngOnInit(): void {
     this.Version = AppComponent.Version;
@@ -30,12 +31,17 @@ export class SettingsComponent implements OnInit {
   setColorTheme(): void {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (prefersDark && this.colorPreference == 0 || this.colorPreference == 2) {
-        document.documentElement.setAttribute("data-bs-theme", "dark");
+      document.documentElement.setAttribute("data-bs-theme", "dark");
     } else document.documentElement.setAttribute("data-bs-theme", "light");
   }
 
   setContrast(): void {
-    document.body.style.filter = this.highContrast == 2 ? 'contrast(2)': 'none';
+    document.body.style.filter = this.highContrast == 2 ? 'contrast(2)' : 'none';
+  }
+
+  switch(lang: string) {
+    this.t.use(lang);
+    this.hideToastControl('languageToast');
   }
 
   colorPreferenceChange(): void {
@@ -52,7 +58,7 @@ export class SettingsComponent implements OnInit {
     this.setContrast();
     localStorage["highContrast"] = this.highContrast;
   }
-  
+
   CiteClick(): void {
     window.prompt('Citation', 'Abcd, E., 2025, https://mcaredb.org/');
   }
