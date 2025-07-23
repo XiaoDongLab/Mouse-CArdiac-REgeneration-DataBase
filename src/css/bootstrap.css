@@ -3616,6 +3616,10 @@ fieldset:disabled .btn {
   color: #fff !important;
 }
 
+.text-mcaredb {
+  color: #d63384 !important;
+}
+
 .border-mcaredb {
   border: var(--bs-border-width) solid #d63384 !important;
 }
