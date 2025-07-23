@@ -26,7 +26,7 @@
       <h4>Cell Types</h4>
       <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" placeholder="Select Cell Type(s)"
         [(ngModel)]="selected_cell_types" [selectableGroup]="true" [selectableGroupAsModel]="false"
-        [closeOnSelect]="false" [addTag]="false" [multiple]="true">
+        [closeOnSelect]="false" [addTag]="false" [multiple]="true" (change)="prepareData()">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
             <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"

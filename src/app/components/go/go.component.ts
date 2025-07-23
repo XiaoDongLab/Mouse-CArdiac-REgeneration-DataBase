@@ -535,6 +535,7 @@ export class GoComponent implements OnInit {
   prepareData() {
     this.loading = true;
     this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0])
+    this.selected_cell_types = this.selected_cell_types.length == 0 ? this.cell_types : this.selected_cell_types;
     if (this.pathway_groupby_go) {
       this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
         .subscribe({
