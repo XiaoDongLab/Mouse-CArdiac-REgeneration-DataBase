@@ -5,6 +5,98 @@
         "research-focus2": "Uncovering the molecular drivers of cardiomyocyte proliferation decline",
         "cite": "Cite this website ",
         "userguide": "User Guide",
-        "genomebrowser": "Genome Browser"
+        "genomebrowser": "Genome Browser",
+        "gb-description": "View how Genes differ in expression levels accross Age, Cell Groups and Experimental Conditions",
+        "prev": "Previous",
+        "next": "Next",
+        "igv": "How to use IGV",
+        "igv-1": "Use the search bar to navigate to a specific gene, or drag on the IGV window to select certain areas. You can view chromatin accessibility (Histone CHIP-seq) and methylation level (WGBS) tracks in IGV.",
+        "igv-2": "Click \"Get Differential Expression Data\" to get data of each gene.",
+        "igv-key": {
+            "key": "Key Features",
+            "d1": "View comparison groups in the card body. You can compare P1 / P8 (Group 1) or Sham / MI (Group 2) currently.",
+            "d2": "Click the card to expand statistical data. Hit any data point on the scatter plot to show UMAP, TSNE and meta information."
+        },
+        "pathway": {
+            "title": "Pathway Enrichment",
+            "subtitle": "Explore how various pathways are impacted accross Age, and Experimental Conditions",
+            "card": {
+                "t1": "Workflow",
+                "d1": "Start with gene list from differential expression results",
+                "d2": "Select ontology database (BP, MF, CC)",
+                "d3": "Adjust FDR cutoff using slider (default q < 0.05)",
+                "d4": "Export network diagrams or table results"
+            }
+        },
+        "download": {
+            "title": "Search and Download",
+            "subtitle": "Download our Results from our Differential Gene Expression Analysis",
+            "card": {
+                "t1": "Key Features",
+                "d1": "Modify any search criteria according to your need, then click \"Search\" button.",
+                "d2": "Select samples in the table and click \"Download Standardized Data\" to start your download.",
+                "d3": "All files were packed as zip format, as your browser may prevent downloading multiple files at the same time.",
+                "t2": "Available Formats:",
+                "r1c1": "Data Type",
+                "r1c2": "Format",
+                "r1c3": "Resolution",
+                "r2c1": "DEG Results",
+                "r2c3": "Per-gene",
+                "r3c1": "Expression Matrix",
+                "r3c3": "Single-cell",
+                "r4c1": "Pathway Results",
+                "r4c3": "Publication-ready"
+            }
+        },
+        "legend": {
+            "title": "Legends",
+            "neonatal": {
+                "title": "Neonatal Phase (P1 - 6)",
+                "mi1": "Myocardial",
+                "mi2": "Infarction",
+                "d": "Neonatal",
+                "capacity": "High regenerative capacity"
+            },
+            "postnatal": {
+                "title": "Postnatal Phase (P7+)",
+                "mi1": "Myocardial",
+                "mi2": "Infarction",
+                "d": "Postnatal",
+                "capacity": "Regenerative ability reduced"
+            }
+        },
+        "ref": {
+            "title": "References",
+            "data": "Data Sources",
+            "software": "Software & Frameworks"
+        }
+    },
+    "navbar": {
+        "home": "Home",
+        "genome": "Genome Browser",
+        "pathway": "Pathway Enrichment",
+        "download": "Search & Download",
+        "settings": "Settings",
+        "language": {
+            "title": "Language"
+        }
+    },
+    "footer": {
+        "copyright": "All rights reserved.",
+        "window": {
+            "changelog": {
+                "title": "Changelog"
+            },
+            "license": {
+                "title": "License"
+            }
+        }
+    },
+    "igv": {
+        "mininav": {
+            "explore-chromosome": "Explore chromosome",
+            "core-genes": "Core genes",
+            "search-genes": "Search genes"
+        }
     }
 }
