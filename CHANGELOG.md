@@ -2,7 +2,11 @@
 
 The latest version is **1.2507.106.1**, compiled on 21 July 2025.
 
-## 1.2507.106.1 - 21 July 2025
+## 1.2507.124.1 - 21 July 2025
+
+### New Features
+
+- **Cutoff popover**: You can now view the cutoff values of P-value and Log2FC by clicking the buttons in the selection bar in Genome Browser.
 
 ### Fixed issues
 
@@ -10,11 +14,21 @@ The latest version is **1.2507.106.1**, compiled on 21 July 2025.
   
 - We fixed an issue that you may not able to view modelplots when you use the website first time.
 
+- We fixed an issue that the website may receive error response if you clear all cell type selections.
+  
+- We fixed an issue that changing cell types will not result in a new query.
+
 ### Miscellaneous
 
 - We added MIT license to the [Github repo](https://github.com/AnthonyShea/MouseHeartDatabase/) as well as the settings page.
 
 - We added our modified `igv.js` submodule to the [Github repo](https://github.com/AnthonyShea/MouseHeartDatabase/).
+
+- We updated colors in ApexCharts to avoid any color inverts in dark mode.
+  
+- P-value and Log2FC cutoffs are now displaying on the modelplot as well as descriptions.
+
+- More icons were added to the website.
 
 ## 1.2507.88.1 - 18 July 2025
 
