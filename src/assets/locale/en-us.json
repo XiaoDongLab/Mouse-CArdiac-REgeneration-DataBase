@@ -69,7 +69,8 @@
             "title": "References",
             "data": "Data Sources",
             "software": "Software & Frameworks"
-        }
+        },
+        "citepopup": "Copied!"
     },
     "navbar": {
         "home": "Home",
@@ -97,6 +98,122 @@
             "explore-chromosome": "Explore chromosome",
             "core-genes": "Core genes",
             "search-genes": "Search genes"
+        },
+        "page": {
+            "p1": {
+                "btn-get": "Get DEG data in window"
+            },
+            "p2": {
+                "btn-get": "Get DEG data of all popular genes"
+            },
+            "p3": {
+                "btn-get": "Get DEG data of entered genes"
+            }
+        },
+        "filterarea": {
+            "celltype": "Cell Types",
+            "apply": "Apply",
+            "legend": "Legends",
+            "sg-up": "Significantly Upregulated",
+            "sl-up": "Slightly Upregulated",
+            "no-cg": "No Change",
+            "sl-dn": "Slightly Downregulated",
+            "sg-dn": "Significantly Downregulated",
+            "no-ft": "Not have a significant fit",
+            "note1": "Numbers on the meta plot were hidden if the sample size is less than 2."
+        }
+    },
+    "genecard": {
+        "title": {
+            "cluster": "Clusters Detected",
+            "study": "Studies Detected",
+            "psd1": "Post Surgery Day Sequencing: 1",
+            "psd3": "Post Surgery Day Sequencing: 3"
+        },
+        "body": {
+            "loading": "Data loading. Click Apply to refresh.",
+            "d1": "Clusters with cell type \"All Cells\" were shown as semi-transparent datapoints.",
+            "d2": "All clusters with -Log10P-val less than 0.01 were hidden in the model plot by default.",
+            "d3": "If you want to view all non-significant clusters, you can navigate to settings page and turn on the switch."
+        }
+    },
+    "maps": {
+        "navbar": {
+            "metainfo": "Meta Info"
+        },
+        "body": {
+            "no-tsne": "TSNE not available for this study",
+            "study-info": "Study Information",
+            "first-author": "First Author",
+            "year": "Year Published",
+            "cluster-info": "Cluster Information",
+            "celltypes": "Other Possible Cell Types",
+            "adjpval": "Adjusted P-Value",
+            "change": "% Change"
+        }
+    },
+    "pathway": {
+        "filterarea": {
+            "comparison": "Comparison Type",
+            "celltype": "Cell Types",
+            "pathway": "Pathways",
+            "diagram": "Diagram",
+            "info": "Info",
+            "groupby": "Group By",
+            "go": "GO Pathways",
+            "go-d": "Gene Ontology (GO) annotates and classifies gene sets through BP, CC, and MF.",
+            "kegg": "KEGG Pathways",
+            "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) looks at pathways through DEGs."
+        },
+        "body": {
+            "select": "Select Cluster To See Details",
+            "selected": "Selected Cluster",
+            "cluster": "Cluster",
+            "nes": "NES",
+            "pval": "P-Value",
+            "enriched": "Genes enriched",
+            "up": "Upregulated",
+            "down": "Downregulated"
+        }
+    },
+    "settings": {
+        "settings": "Settings",
+        "general": "General",
+        "displaymode": "Display mode",
+        "displaymode-d": "The website will follow your system's preferences by default.",
+        "colortheme": "Color theme",
+        "colors": {
+            "sys-set": "System settings",
+            "light": "Light",
+            "dark": "Dark"
+        },
+        "contrast": "Contrast",
+        "contrasts": {
+            "normal": "Normal",
+            "high": "High"
+        },
+        "fontsize": "Font size",
+        "fontsize-d": "System settings applied to this by default.",
+        "data": "Data analysis",
+        "nonsig-data": "Non-significant clusters",
+        "nonsig-data-d": "Clusters with Adjusted p-value 1.00 in DEG results",
+        "show": "Show",
+        "hide": "Hide",
+        "yaxis": "Scatter plot Y-axis",
+        "yaxis-d": "DEG results will always use -Log10(Adj P-val).",
+        "adjpval": "Adj P-val"
+    },
+    "download": {
+        "filterarea": {
+            "filetype": "File type",
+            "celltype": "Cell type",
+            "advanced": "Advanced",
+            "btn": "Download Standardized Data"
+        },
+        "body": {
+            "select": "Selected File(s):",
+            "total": "Total:",
+            "d": "Downloading multiple or large files requires zipping in the backend side which may cause temporary slow down."
         }
     }
 }
