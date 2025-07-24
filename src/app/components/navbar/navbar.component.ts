@@ -7,6 +7,7 @@ import { AppComponent } from 'src/app/app.component';
 import { fromEvent, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateService } from '@ngx-translate/core';
 
 export function httpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/locale/', '.json');
@@ -27,7 +28,7 @@ export class NavbarComponent implements OnInit {
   @ViewChild('customTabTemplate', { static: true }) customTabTemplate: TemplateRef<any>;
   @ViewChild('navbarTop', {static: false}) navbar: ElementRef<HTMLElement>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private title: Title) {
+  constructor(private router: Router, private route: ActivatedRoute, private title: Title, private t: TranslateService) {
     this.tabs = [
       {
         id: 0,
@@ -104,7 +105,7 @@ export class NavbarComponent implements OnInit {
 
   selectTab(index: number) {
     const selectedTab = this.tabs[index];
-    this.title.setTitle(selectedTab.text + " - MCareDB"); 
+    this.title.setTitle(this.t.instant(selectedTab.text) + " - MCareDB"); 
     this.router.navigate([selectedTab.path]);
   }
 

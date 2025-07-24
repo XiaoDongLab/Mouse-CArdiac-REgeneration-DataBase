@@ -75,6 +75,7 @@ export class GeneCardComponent implements OnInit {
   sig_dn_color: string = 'rgb(255, 99, 99)'
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
   progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color].slice().reverse();
+  labels = ["Significantly downregulated", "Slightly downregulated", "No change", "Slightly upregulated", "Significantly upregulated", "No significant fit"].slice().reverse();
   // lfc_sig_cutoff = 0.0116
   // lfc_minor_sig_cutoff = 0.0037
   lfc_sig_cutoff = 0.58

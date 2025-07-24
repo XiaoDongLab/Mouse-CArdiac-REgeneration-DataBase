@@ -18,7 +18,7 @@ selectionMode="single"
       <ul class="navbar-nav">
         @for (tab of tabs; track tab; let i = $index) {
         <li class="nav-item">
-          <a class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
+          <a tabindex="0" class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
             [style.color]="tab.color" href="javascript:void(0);">
             <i class="fa {{tab.icon}}"></i>
             {{ tab.text | translate }}
@@ -26,7 +26,7 @@ selectionMode="single"
         </li>
         }
         <li class="nav-item">
-          <a class="nav-link" (click)="showToastControl('languageToast')"><i class="fa fa-language"></i>&nbsp;</a>
+          <a tabindex="0" class="nav-link" (click)="showToastControl('languageToast')"><i class="fa fa-language"></i>&nbsp;</a>
         </li>
       </ul>
     </div>

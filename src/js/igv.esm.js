@@ -69531,6 +69531,7 @@ class ChromosomeSelectWidget {
     this.select = document.createElement('select');
     this.select.setAttribute('name', 'chromosome-select-widget');
     this.select.setAttribute('class', 'form-select');
+    this.select.setAttribute("aria-label", "Chromosome selection");
     this.container.appendChild(this.select);
 
     this.select.addEventListener('change', () => {
@@ -70546,6 +70547,7 @@ class ZoomWidget {
     this.slider = document.createElement('input');
     this.slider.type = 'range';
     this.slider.classList.add('form-range');
+    this.slider.setAttribute("aria-label", "Zoom in or out")
 
     this.slider.min = `${sliderMin}`;
     this.slider.max = `${sliderMax}`;

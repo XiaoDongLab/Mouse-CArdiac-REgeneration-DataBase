@@ -85,18 +85,18 @@
         }
       </div>-->
       <h5 class="mt-2" translate="pathway.filterarea.groupby"></h5>
-      <input type="radio" class="btn-check" name="options-base" id="option5" [value]="true" autocomplete="off"
+      <input tabindex="0" type="radio" class="btn-check" name="options-base" id="option5" [value]="true" autocomplete="off"
         [(ngModel)]="pathway_groupby_go" (change)="onPathwayChange()">
-      <label class="btn btn-outline-mcaredb w-100 text-start" for="option5">
+      <label tabindex="0" class="btn btn-outline-mcaredb w-100 text-start" for="option5">
         <div class="d-flex flex-column w-100 justify-content-left">
           <h5 translate="pathway.filterarea.go"></h5>
           <small translate="pathway.filterarea.go-d"></small>
         </div>
       </label>
 
-      <input type="radio" class="btn-check" name="options-base" id="option6" [value]="false" autocomplete="off"
+      <input tabindex="0" type="radio" class="btn-check" name="options-base" id="option6" [value]="false" autocomplete="off"
         [(ngModel)]="pathway_groupby_go" (change)="onPathwayChange()">
-      <label class="btn btn-outline-mcaredb w-100 text-start mt-2" for="option6">
+      <label tabindex="0" class="btn btn-outline-mcaredb w-100 text-start mt-2" for="option6">
         <div class="d-flex flex-column w-100 justify-content-left">
           <h5 translate="pathway.filterarea.kegg"></h5>
           <small translate="pathway.filterarea.kegg-d"></small>
@@ -149,13 +149,13 @@
                 </div>
                 <hr />
                 <small class="text-muted">PMID</small>
-                <h5><a href="https://pubmed.ncbi.nlm.nih.gov/{{selected_term.pmid}}">{{selected_term.pmid}}</a></h5>
+                <h5><a tabindex="0" href="https://pubmed.ncbi.nlm.nih.gov/{{selected_term.pmid}}">{{selected_term.pmid}}</a></h5>
               </div>
               <div class="position-absolute top-0 end-0 bottom-0
                   overflow-auto  list-group list-group-flush" style="width: 50%;">
                 <h6 class="text-center"><br />{{'pathway.body.enriched' | translate}}</h6>
                 @for (item of selected_core_enrichment; track item) {
-                <button type="button" class="list-group-item list-group-item-action" (click)="geneRerout(item)">
+                <button tabindex="0" type="button" class="list-group-item list-group-item-action" (click)="geneRerout(item)">
                   {{item}}
                 </button>
                 }

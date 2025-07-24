@@ -6,7 +6,7 @@
             <div class="accordion accordion-settings" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        <button tabindex="0" class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                             <i class="fa fa-palette"></i>
                             <div class="settings-title">
@@ -22,7 +22,7 @@
                                 <span class="main-title" translate="settings.colortheme"></span>
                             </div>
                             <div class="settings-option">
-                                <select class="form-select" id="color-mode-select" (change)="colorPreferenceChange()"
+                                <select tabindex="0" class="form-select" id="color-mode-select" (change)="colorPreferenceChange()"
                                     [(ngModel)]="colorPreference" aria-label="Color mode">
                                     <option value="0" translate="settings.colors.sys-set"></option>
                                     <option value="1" translate="settings.colors.light"></option>
@@ -36,7 +36,7 @@
                                 <span class="main-title" translate="settings.contrast"></span>
                             </div>
                             <div class="settings-option">
-                                <select class="form-select" id="color-mode-select" (change)="contrastChange()"
+                                <select tabindex="0" class="form-select" id="color-mode-select" (change)="contrastChange()"
                                     [(ngModel)]="highContrast" aria-label="Color mode">
                                     <option value="1" translate="settings.contrasts.normal"></option>
                                     <option value="2" translate="settings.contrasts.high"></option>
@@ -53,7 +53,7 @@
                     <span class="description text-muted" translate="settings.fontsize-d"></span>
                 </div>
                 <div class="settings-option">
-                    <input type="range" class="form-range" min="-5" max="5" step="1" id="font-size-range"
+                    <input type="range" tabindex="0" class="form-range" min="-5" max="5" step="1" id="font-size-range" aria-label="Font size"
                         (change)="fontSizeChange()" [(ngModel)]="fontSize" />
                     <span class="font-size-display">{{((this.fontSize / 20 + 1) * 100).toFixed(0)}}%</span>
                 </div>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="settings-option">
                     <div class="form-check form-switch form-check-reverse">
-                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked"
+                        <input tabindex="0" class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked"
                             [(ngModel)]="showNonsigCluster" (change)="showNonsigClusterChange()">
                         <label class="form-check-label" for="switchCheckChecked">{{showNonsigCluster ? ('settings.show' | translate) : ('settings.hide' | translate)}}</label>
                     </div>
@@ -80,7 +80,7 @@
                     <span class="description text-muted" translate="settings.yaxis-d"></span>
                 </div>
                 <div class="settings-option">
-                    <select class="form-select" (change)="useYAxisChange()" [(ngModel)]="useYAxisType"
+                    <select tabindex="0" class="form-select" (change)="useYAxisChange()" [(ngModel)]="useYAxisType"
                         aria-label="Y-axis type">
                         <option value="0">-Log<sub>10</sub>({{'settings.adjpval' | translate}})</option>
                         <option value="1">{{'settings.adjpval' | translate}}</option>
