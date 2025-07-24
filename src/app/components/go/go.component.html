@@ -9,7 +9,7 @@
 <div class="row g-2">
   <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
-      <h4>Comparison Type</h4>
+      <h4 translate="pathway.filterarea.comparison"></h4>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType"
         (change)="prepareData()">
         @for (item of comparisonTypes; track item) {
@@ -23,7 +23,7 @@
       [showSelectionControls]="true" [(value)]='selected_tissues'></dx-tag-box>-->
       <hr />
       <!--CELL TYPE SELECT BOX-->
-      <h4>Cell Types</h4>
+      <h4 translate="pathway.filterarea.celltype"></h4>
       <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" placeholder="Select Cell Type(s)"
         [(ngModel)]="selected_cell_types" [selectableGroup]="true" [selectableGroupAsModel]="false"
         [closeOnSelect]="false" [addTag]="false" [multiple]="true" (change)="prepareData()">
@@ -42,20 +42,18 @@
         [(value)]='selected_cell_types'></dx-tag-box>-->
       <hr />
       <div class="d-flex mb-2 justify-content-between align-items-center">
-        <h4 class="mb-0">Pathways</h4>
+        <h4 class="mb-0" translate="pathway.filterarea.pathway"></h4>
         @if (pathway_info != '' && pathway_info != null) {
         <div class="btn-group">
           <a class="btn btn-sm btn-link text-decoration-none" title="Pathway browser" tabindex="0" target="_blank"
             [href]="pathway_groupby_go ? `https://biocyc.org/HUMAN/NEW-IMAGE?type=ECOCYC-CLASS&object=${go_terms[0].goid}#cy_${go_terms[0].goid}` : `https://www.kegg.jp/pathway/${go_terms[0].goid}`">
-            <i class="fa fa-map"></i>
-            Diagram
+            <i class="fa fa-map"></i> {{'pathway.filterarea.diagram' | translate}}
           </a>
           <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" title="Pathway information"
             class="btn btn-sm btn-link text-decoration-none" role="button" data-bs-toggle="popover"
             [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
             [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i
-              class="fa fa-info-circle"></i>
-              Info
+              class="fa fa-info-circle"></i> {{'pathway.filterarea.info' | translate}}
           </a>
         </div>
         }
@@ -86,13 +84,13 @@
           data-bs-content="This function is currently unavailable due to technical issues."><i class="fa fa-info-circle"></i></a>
         }
       </div>-->
-      <h5 class="mt-2">Group by</h5>
+      <h5 class="mt-2" translate="pathway.filterarea.groupby"></h5>
       <input type="radio" class="btn-check" name="options-base" id="option5" [value]="true" autocomplete="off"
         [(ngModel)]="pathway_groupby_go" (change)="onPathwayChange()">
       <label class="btn btn-outline-mcaredb w-100 text-start" for="option5">
         <div class="d-flex flex-column w-100 justify-content-left">
-          <h5>GO Pathways</h5>
-          <small>Gene Ontology (GO) annotates and classifies gene sets through BP, CC, and MF.</small>
+          <h5 translate="pathway.filterarea.go"></h5>
+          <small translate="pathway.filterarea.go-d"></small>
         </div>
       </label>
 
@@ -100,8 +98,8 @@
         [(ngModel)]="pathway_groupby_go" (change)="onPathwayChange()">
       <label class="btn btn-outline-mcaredb w-100 text-start mt-2" for="option6">
         <div class="d-flex flex-column w-100 justify-content-left">
-          <h5>KEGG Pathways</h5>
-          <small>Kyoto Encyclopedia of Genes and Genomes (KEGG) looks at pathways through DEGs.</small>
+          <h5 translate="pathway.filterarea.kegg"></h5>
+          <small translate="pathway.filterarea.kegg-d"></small>
         </div>
       </label>
       <!--<h6 class="mt-2">Search mode</h6>
@@ -122,7 +120,7 @@
     </apx-chart>
     @if (!term_selected&&!loading) {
     <div class="mt-3">
-      <p class="text-center text-muted">Select Cluster To See Details</p>
+      <p class="text-center text-muted" translate="pathway.body.select"></p>
     </div>
     }
     @if (term_selected) {
@@ -130,21 +128,21 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header text-center">
-            <h4 class="mb-0">Selected Cluster</h4>
+            <h4 class="mb-0" translate="pathway.body.selected"></h4>
           </div>
           <div class="card-body position-relative">
             <div class="row">
               <div class="col-6">
-                <small class="text-muted">Cluster</small>
+                <small class="text-muted" translate="pathway.body.cluster"></small>
                 <h5>{{selected_term.cell_type}}</h5>
                 <hr />
                 <div class="row">
                   <div class="col-6">
-                    <small class="text-muted">NES</small>
+                    <small class="text-muted" translate="pathway.body.nes"></small>
                     <h5>{{selected_term.nes}}</h5>
                   </div>
                   <div class="col-6">
-                    <small class="text-muted">P-Value</small>
+                    <small class="text-muted" translate="pathway.body.pval"></small>
                     <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">
                       {{(selected_term.P_Value > 0.0001 ? selected_term.P_Value.toFixed(4) : "&lt;0.0001")}}</h5>
                   </div>
@@ -155,7 +153,7 @@
               </div>
               <div class="position-absolute top-0 end-0 bottom-0
                   overflow-auto  list-group list-group-flush" style="width: 50%;">
-                <h6 class="text-center"><br />Genes enriched</h6>
+                <h6 class="text-center"><br />{{'pathway.body.enriched' | translate}}</h6>
                 @for (item of selected_core_enrichment; track item) {
                 <button type="button" class="list-group-item list-group-item-action" (click)="geneRerout(item)">
                   {{item}}
@@ -189,7 +187,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h4 class="mb-0"><i class="fa fa-arrow-up"></i> Upregulated</h4>
+            <h4 class="mb-0"><i class="fa fa-arrow-up"></i> {{'pathway.body.up' | translate}}</h4>
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of upreg_gene_counts; track item) {
@@ -209,7 +207,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h4 class="mb-0"><i class="fa fa-arrow-down"></i> Downregulated</h4>
+            <h4 class="mb-0"><i class="fa fa-arrow-down"></i> {{'pathway.body.down' | translate}}</h4>
           </div>
           <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
             @for (item of downreg_gene_counts; track item) {

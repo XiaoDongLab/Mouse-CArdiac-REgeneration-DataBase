@@ -13,7 +13,7 @@
       (click)="onItemSelected_Nav('Model Visualization')">Model Visualization</a>
     </li>-->
       <li class="nav-item">
-        <a class="nav-link" [class.active]="display == 'Meta Info'" (click)="onItemSelected_Nav('Meta Info')"><i class="fa fa-info-circle"></i> Meta Info</a>
+        <a class="nav-link" [class.active]="display == 'Meta Info'" (click)="onItemSelected_Nav('Meta Info')"><i class="fa fa-info-circle"></i> {{'maps.navbar.metainfo' | translate}}</a>
       </li>
     </ul>
   </div>
@@ -33,13 +33,13 @@
       @if (display === 'tsne' && this.tsne === null) {
       <div id="myimage" class="col-12">
         <p class="text-muted text-center">
-          TSNE not available for this study
+          {{'maps.body.no-tsne' | translate}}
         </p>
       </div>
       }
       @if (display=='Meta Info') {
       <div class='col-md-6 col-sm-12'>
-        <h4>Study Information</h4>
+        <h4 translate="maps.body.study-info"></h4>
         <div class="row">
           <div class="col-12">
             <h5>
@@ -47,32 +47,32 @@
             </h5>
           </div>
           <div class="col-12">
-            <span>First Author</span>
+            <span translate="maps.body.first-author"></span>
             <h5>{{author}}</h5>
           </div>
           <div class="col-12">
-            <span>Year Published</span>
+            <span translate="maps.body.year"></span>
             <h5>{{year}}</h5>
           </div>
         </div>
       </div>
       <div class="col-md-6 col-sm-12">
-        <h4>Cluster Information</h4>
+        <h4 translate="maps.body.cluster-info"></h4>
         <div class="row">
           <div class="col-12">
-            <span>Other Possible Cell Types</span>
+            <span translate="maps.body.celltypes"></span>
             <h5>{{ selected_info.cell_type2 }}</h5>
             @if (selected_info.cell_type2 != selected_info.cell_type3) {
             <h5>{{ selected_info.cell_type3 }}</h5>
             }
           </div>
           <div class="col-12">
-            <span>-Log<sub>10</sub>(Adjusted P-Value)</span>
+            <span>-Log<sub>10</sub>({{'maps.body.adjpval' | translate}})</span>
             <h4>{{selected_info.pvalue > 500 ? selected_info.pvalue.toExponential(2) :
               selected_info.pvalue.toPrecision(4)}}</h4>
           </div>
           <div class="col-12">
-            <span>% Change</span>
+            <span translate="maps.body.change"></span>
             <h4 [ngClass]="{'text-danger': decade_change < 0, 'text-success': decade_change >= 0}">
               @if (decade_change < 0) { <span>
                 <i class="fa fa-arrow-down"></i>

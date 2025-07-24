@@ -351,7 +351,7 @@ export class SearchComponent implements OnInit {
     this.selectedRowData = event.selectedRowsData;
     let selected_ids = this.selectedRowData.map(row => row.sample_id);
     if (selected_ids.length == 0) {
-      this.downloadSize = "0 Bytes"
+      this.downloadSize = "0 B"
     } else {
       console.log(selected_ids)
       this.databaseService.getTarSize(selected_ids).subscribe({

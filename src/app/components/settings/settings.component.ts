@@ -12,6 +12,7 @@ export class SettingsComponent implements OnInit {
 
   Version: string = "";
   CompileDate: string = "";
+  Branch: string = ""
   colorPreference: number = localStorage["colorPreference"] ?? 0;
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
@@ -22,6 +23,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.Version = AppComponent.Version;
     this.CompileDate = AppComponent.CompileDate;
+    this.Branch = AppComponent.Branch;
     document.getElementById("shadow-bg")!.style.display = "none";
     this.setColorTheme();
     this.setContrast();

@@ -9,7 +9,7 @@
 <div class="row g-2">
   <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
-      <h4>File type</h4>
+      <h4 translate="download.filterarea.filetype"></h4>
       <ng-select [items]="species" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
         placeholder="Select species..." class="mb-2" [selectableGroup]="true" [selectableGroupAsModel]="false"
         [closeOnSelect]="false" [(ngModel)]="selected_species" groupBy="species" [ariaMultiLine]="true" [addTag]="false"
@@ -24,7 +24,7 @@
         </ng-template>
       </ng-select>
       <hr />
-      <h4>Cell type</h4>
+      <h4 translate="download.filterarea.celltype"></h4>
       <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
         placeholder="Select cell types..." class="mb-2" [selectableGroup]="true" [selectableGroupAsModel]="false"
         [closeOnSelect]="false" [(ngModel)]="selected_cells" groupBy="cell_types" [addTag]="false" [multiple]="true">
@@ -43,20 +43,17 @@
         (input)="onInputChange($event)">
       <hr />
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h4 class="mb-0">Advanced</h4>
-        <a tabindex="0" data-bs-trigger="focus"
-          class="btn btn-sm btn-link btn-floating text-body"
-          role="button"
-          data-bs-toggle="popover"
-          data-bs-title="Command Center"
-          data-bs-content="Use --[option]=&lt;value&gt; for your customized search.
+        <h4 class="mb-0" translate="download.filterarea.advanced"></h4>
+        <a tabindex="0" data-bs-trigger="focus" class="btn btn-sm btn-link btn-floating text-body" role="button"
+          data-bs-toggle="popover" data-bs-title="Command Center" data-bs-content="Use --[option]=&lt;value&gt; for your customized search.
           Use _ to replace spaces. Use comma or spaces to split your commands.
           For example:
           --cell-type=cardiomyocyte_2, --pmid=34489413">
           <i class="fa fa-info-circle"></i>
         </a>
       </div>
-      <textarea class="form-control" placeholder="--comparison=shamvsmi&#10;--group=psd3" (input)="commandChanged($event)"></textarea>
+      <textarea class="form-control" placeholder="--comparison=shamvsmi&#10;--group=psd3"
+        (input)="commandChanged($event)"></textarea>
       <hr />
       <!--<h4>Category</h4>
       <div class="row g-1">
@@ -105,8 +102,7 @@
       <div class="row g-1">
         <button id="downloadButton" [disabled]="selectedRowKeys.length == 0" class="col-12 btn btn-mcaredb"
           icon="download" (click)="downloadWrapper()">
-          <i class="fa fa-download"></i>
-          Download Standardized Data
+          <i class="fa fa-download"></i> {{'download.filterarea.btn' | translate}}
         </button>
       </div>
     </div>
@@ -114,15 +110,9 @@
   <div class="col-lg-9 col-md-12">
     @if (query_completed) {
     <h5>
-      @if (selectedRowKeys.length <= 1) { <span>{{selectedRowKeys.length}} File Totaling</span>
-        }
-        @if (selectedRowKeys.length > 1) {
-        <span>{{selectedRowKeys.length}} Files Totaling</span>
-        }
-        <span>&nbsp;{{downloadSize == null ? "0 Bytes" : downloadSize}} Selected</span>
+      {{'download.body.select' | translate}} {{selectedRowKeys.length}}, {{'download.body.total' | translate}} {{downloadSize == null ? "0 B" : downloadSize}}
     </h5>
-    <p><small class="text-muted">Downloading multiple or large files requires zipping in the backend side
-        which may cause temporary slow down.</small></p>
+    <p><small class="text-muted" translate="download.body.d"></small></p>
     <ag-grid-angular class="ag-theme-quartz w-100 h-100" [rowData]="display" [columnDefs]="columnDefs"
       [rowSelection]="'multiple'" [rowMultiSelectWithClick]="true" [suppressRowClickSelection]="true"
       domLayout="autoHeight" (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged_New()">

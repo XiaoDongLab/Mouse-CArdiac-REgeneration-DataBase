@@ -1,8 +1,8 @@
 <div class="row mt-2 g-2">
-    <h3 class="col-12">Settings</h3>
+    <h3 class="col-12" translate="settings.settings"></h3>
     <div class="col-md-8 col-sm-12">
         <div class="settings-list">
-            <h5>General</h5>
+            <h5 translate="settings.general"></h5>
             <div class="accordion accordion-settings" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
@@ -10,10 +10,8 @@
                             data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                             <i class="fa fa-palette"></i>
                             <div class="settings-title">
-                                <span class="main-title">Display mode</span>
-                                <span class="description text-muted">The website will follow your system's preferences
-                                    by
-                                    default.</span>
+                                <span class="main-title" translate="settings.displaymode"></span>
+                                <span class="description text-muted" translate="settings.displaymode-d"></span>
                             </div>
                         </button>
                     </h2>
@@ -21,27 +19,27 @@
                         <div class="accordion-body">
                             <i></i>
                             <div class="settings-title">
-                                <span class="main-title">Color theme</span>
+                                <span class="main-title" translate="settings.colortheme"></span>
                             </div>
                             <div class="settings-option">
                                 <select class="form-select" id="color-mode-select" (change)="colorPreferenceChange()"
                                     [(ngModel)]="colorPreference" aria-label="Color mode">
-                                    <option value="0">System settings</option>
-                                    <option value="1">Light</option>
-                                    <option value="2">Dark</option>
+                                    <option value="0" translate="settings.colors.sys-set"></option>
+                                    <option value="1" translate="settings.colors.light"></option>
+                                    <option value="2" translate="settings.colors.dark"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="accordion-body">
                             <i></i>
                             <div class="settings-title">
-                                <span class="main-title">Contrast</span>
+                                <span class="main-title" translate="settings.contrast"></span>
                             </div>
                             <div class="settings-option">
                                 <select class="form-select" id="color-mode-select" (change)="contrastChange()"
                                     [(ngModel)]="highContrast" aria-label="Color mode">
-                                    <option value="1">Normal</option>
-                                    <option value="2">High</option>
+                                    <option value="1" translate="settings.contrasts.normal"></option>
+                                    <option value="2" translate="settings.contrasts.high"></option>
                                 </select>
                             </div>
                         </div>
@@ -51,8 +49,8 @@
             <div class="card-settings">
                 <i class="fa fa-text-height"></i>
                 <div class="settings-title">
-                    <span class="main-title">Font size</span>
-                    <span class="description text-muted">System settings applied to this by default.</span>
+                    <span class="main-title" translate="settings.fontsize"></span>
+                    <span class="description text-muted" translate="settings.fontsize-d"></span>
                 </div>
                 <div class="settings-option">
                     <input type="range" class="form-range" min="-5" max="5" step="1" id="font-size-range"
@@ -60,34 +58,32 @@
                     <span class="font-size-display">{{((this.fontSize / 20 + 1) * 100).toFixed(0)}}%</span>
                 </div>
             </div>
-            <h5>Data analysis</h5>
+            <h5 translate="settings.data"></h5>
             <div class="card-settings">
                 <i class="fa fa-chart-simple"></i>
                 <div class="settings-title">
-                    <span class="main-title">Non-significant clusters</span>
-                    <span class="description text-muted">Clusters with Adjusted p-value 1.00 in DEG results</span>
+                    <span class="main-title" translate="settings.nonsig-data"></span>
+                    <span class="description text-muted" translate="settings.nonsig-data-d"></span>
                 </div>
                 <div class="settings-option">
                     <div class="form-check form-switch form-check-reverse">
                         <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked"
                             [(ngModel)]="showNonsigCluster" (change)="showNonsigClusterChange()">
-                        <label class="form-check-label" for="switchCheckChecked">{{showNonsigCluster ? 'Show' :
-                            'Hide'}}</label>
+                        <label class="form-check-label" for="switchCheckChecked">{{showNonsigCluster ? ('settings.show' | translate) : ('settings.hide' | translate)}}</label>
                     </div>
                 </div>
             </div>
             <div class="card-settings">
                 <i class="fa fa-up-down"></i>
                 <div class="settings-title">
-                    <span class="main-title">Scatter plot Y-axis</span>
-                    <span class="description text-muted">DEG results will always use -Log<sub>10</sub>(Adj
-                        P-val).</span>
+                    <span class="main-title" translate="settings.yaxis"></span>
+                    <span class="description text-muted" translate="settings.yaxis-d"></span>
                 </div>
                 <div class="settings-option">
                     <select class="form-select" (change)="useYAxisChange()" [(ngModel)]="useYAxisType"
                         aria-label="Y-axis type">
-                        <option value="0">-Log<sub>10</sub>(Adj P-val)</option>
-                        <option value="1">P-val</option>
+                        <option value="0">-Log<sub>10</sub>({{'settings.adjpval' | translate}})</option>
+                        <option value="1">{{'settings.adjpval' | translate}}</option>
                     </select>
                 </div>
             </div>
@@ -98,7 +94,7 @@
     </div>
     <div class="col-md-3 col-sm-12">
         <h6>Mouse Cardiac Regeneration Database</h6>
-        <p><small class="text-muted">{{Version}} ({{CompileDate}})</small></p>
+        <p><small class="text-muted">{{Version}} ({{Branch}}.{{CompileDate}})</small></p>
         <p>This resource is provided for research or educational purposes only. It must not be used for clinical
             diagnosis
             or commercial decision making.</p>
