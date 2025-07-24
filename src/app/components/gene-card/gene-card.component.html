@@ -11,13 +11,17 @@
           <div class="row justify-content-right align-right">
             <span class="text-end text-muted">
               <small>
-                @if (completely_loaded) {Clusters Detected: {{ gene_list.length }}}
+                @if (completely_loaded) {
+                  {{'genecard.title.cluster' | translate}}: {{ gene_list.length }}
+                }
                 @else {&nbsp;} <!--Just to occupy space-->
               </small>
             </span>
             <span class="text-end text-muted">
               <small>
-                @if (completely_loaded) {Studies Detected: {{ num_studies }}}
+                @if (completely_loaded) {
+                  {{'genecard.title.study' | translate}}: {{ num_studies }}
+                }
                 @else {&nbsp;} <!--Just to occupy space-->
               </small>
             </span>
@@ -40,7 +44,7 @@
       </div>
       <div class="col-md-12 col-lg-3 d-flex">
         <div class="d-flex justify-content-center align-items-center">
-          <h6 class="mb-0">Post Surgery Day Sequencing: 1</h6>
+          <h6 class="mb-0" translate="genecard.title.psd1"></h6>
         </div>
       </div>
       <div class="col-md-12 col-lg-9">
@@ -55,7 +59,7 @@
               @for (item of series_1_Sham; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_Sham * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -74,7 +78,7 @@
               @for (item of series_1_MI; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_MI * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -93,7 +97,7 @@
               @for (item of series_1_P1; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_P1 * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -112,7 +116,7 @@
               @for (item of series_1_P8; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_1_P8 * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -125,7 +129,7 @@
       </div>
       <div class="col-md-12 col-lg-3 d-flex">
         <div class="d-flex justify-content-center align-items-center">
-          <h6 class="mb-0">Post Surgery Day Sequencing: 3</h6>
+          <h6 class="mb-0" translate="genecard.title.psd3"></h6>
         </div>
       </div>
       <div class="col-md-12 col-lg-9">
@@ -140,7 +144,7 @@
               @for (item of series_3_Sham; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_Sham * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -159,7 +163,7 @@
               @for (item of series_3_MI; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_MI * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -178,7 +182,7 @@
               @for (item of series_3_P1; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_P1 * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -197,7 +201,7 @@
               @for (item of series_3_P8; track $index; let i = $index) {
               <div class="progress" role="progressbar" [attr.aria-label]="'Segment' + i" aria-valuenow="15"
                 aria-valuemin="0" aria-valuemax="100" [style.width]="(item / sum_3_P8 * 100) + '%'">
-                <div class="progress-bar" [style.background-color]="progressbar_colors[i]">
+                <div class="progress-bar" [style.background-color]="progressbar_colors[i]" data-bs-toggle="tooltip" data-bs-placement="top"  [attr.data-bs-title]="item">
                   @if (item >= 2) {
                   {{item}}
                   }
@@ -214,7 +218,7 @@
 <div [id]="'collapse' + en_id" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
   @if (!completely_loaded) {
   <div class="accordion-body">
-    <p class="text-muted text-center mb-0">Data loading. Click Apply to refresh.</p>
+    <p class="text-muted text-center mb-0" translate="genecard.body.loading"></p>
   </div>
   }
   @if (completely_loaded) {
@@ -222,12 +226,9 @@
     <div class="row">
       <div class="col-12 mb-1">
         <div class="d-flex flex-column flex-wrap">
-          <span class="text-muted"><small>Clusters with cell type "All Cells" were shown as
-              semi-transparent datapoints.</small></span>
-          <span class="text-muted"><small>All clusters with -Log<sub>10</sub>P-val less than 0.01 were hidden in the
-              model plot by default.</small></span>
-          <span class="text-muted"><small>If you want to view all non-significant clusters, you can navigate to settings
-              page and turn on the switch.</small></span>
+          <span class="text-muted"><small translate="genecard.body.d1"></small></span>
+          <span class="text-muted"><small translate="genecard.body.d2"></small></span>
+          <span class="text-muted"><small translate="genecard.body.d3"></small></span>
         </div>
       </div>
       <ul class="col-12 navbar-nav maps mb-2">

@@ -6,6 +6,8 @@ import { MapsComponent } from '../maps/maps.component';
 import { GeneConversionService } from '../../services/name-converter.service';
 import { AppComponent } from 'src/app/app.component';
 
+declare const bootstrap: any;
+
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -995,6 +997,11 @@ export class GeneCardComponent implements OnInit {
     const MI_1_sum = meta_series_infoMI_1.reduce((sum, p) => sum + p);
     this.sum_1_MI = MI_1_sum;
     this.series_1_MI = meta_series_infoMI_1.slice().reverse();
+
+    setTimeout(() => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }, 100)
   }
 
   createDisplayData() {
@@ -1650,7 +1657,10 @@ export class GeneCardComponent implements OnInit {
     this.sum_1_MI = MI_1_sum;
     this.series_1_MI = meta_series_info1_MI.slice().reverse();
 
-    console.log(this.sum_1_MI)
+    setTimeout(() => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }, 100)
   }
 
   updateMetaSeriesInfo(info: number[], lfc: number, pval: number) {
