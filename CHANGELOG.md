@@ -1,8 +1,20 @@
 # Version history
 
-The latest version is **1.2507.124.1**, compiled on 23 July 2025.
+The latest stable version is **1.2507.124.1**, compiled on 23 July 2025.
 
-## 1.2507.124.1 - 23 July 2025
+The latest development version is **2.2507.11.0**, compiled on 24 July 2025.
+
+## 2.2507.11.0 (feature-i18n) - 24 July 2025
+
+### New Features
+
+- **Multilanguage support**: We're configuring support for Chinese (Simplified), Chinese (Traditional) and Japanese. Some of the pages are still under translation.
+  
+### Miscellaneous
+
+- Now in Genome Browser, you can see the cluster number of each group by hovering the metaplots.
+
+## 1.2507.124.1 (main) - 23 July 2025
 
 ### New Features
 

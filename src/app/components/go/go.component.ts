@@ -10,6 +10,7 @@ import { GiniScore } from 'src/app/models/giniScore.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
 import { min } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
+import { TranslateService } from '@ngx-translate/core';
 declare const bootstrap: any;
 
 export type ChartOptions = {
@@ -123,7 +124,7 @@ export class GoComponent implements OnInit {
   pathway_groupby_go: boolean = true; // False is KEGG
   pathway_groupby_kegg: boolean = false;
 
-  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, public appComponent: AppComponent) {
+  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, public appComponent: AppComponent, private t: TranslateService) {
     this.go_chart_options = {
       series: [{
         name: 'TEST',
@@ -176,7 +177,7 @@ export class GoComponent implements OnInit {
       },
       xaxis: {
         title: {
-          text: "Normalized Enrichment Score",
+          text: "Normalized Enrichment Score (NES)",
           style: {
             fontFamily: 'var(--bs-body-font-family)',
             fontSize: '1rem'
@@ -298,7 +299,7 @@ export class GoComponent implements OnInit {
     this.go_chart_options.series = [{ data: go_data }];
     this.go_chart_options.xaxis = {
       title: {
-        text: "Normalized Enrichment Score",
+        text: "Normalized Enrichment Score (NES)",
         style: {
           fontFamily: 'var(--bs-body-font-family)',
           fontSize: '1rem'

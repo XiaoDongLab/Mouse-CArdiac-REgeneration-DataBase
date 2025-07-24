@@ -7,18 +7,18 @@
         "userguide": "ユーザーガイド",
         "genomebrowser": "ゲノムブラウザ",
         "gb-description": "年齢、細胞群、実験条件によって遺伝子発現レベルがどのように変化するかを確認",
-        "prev": "上一张",
-        "next": "下一张",
+        "prev": "前",
+        "next": "次",
         "igv": "使用基因组浏览器（IGV）",
         "igv-1": "使用搜索栏导航至特定基因，或在 IGV 窗口上拖动以选择特定区域。您可以在 IGV 中查看染色质可及性 (Histone CHIP-seq) 和甲基化水平 (WGBS) 轨迹。",
         "igv-2": "点击“获取差异表达数据”即可获取每个基因的数据。",
         "igv-key": {
-            "key": "主要功能",
+            "key": "主な機能",
             "d1": "查看基因卡片中的对照组。您可以比较 P1 / P8（第 1 组）或 Sham / MI（第 2 组）。",
             "d2": "点击基因卡片展开统计数据。点击散点图上的任意数据点即可显示 UMAP、TSNE 和元信息。"
         },
         "pathway": {
-            "title": "通路富集",
+            "title": "経路の強化",
             "subtitle": "探索不同年龄和实验条件对各种通路的影响",
             "card": {
                 "t1": "流程",
@@ -176,15 +176,15 @@
         }
     },
     "settings": {
-        "settings": "设置",
+        "settings": "設定",
         "general": "通用",
         "displaymode": "显示",
         "displaymode-d": "默认采用系统设置",
         "colortheme": "主题",
         "colors": {
-            "sys-set": "系统设置",
-            "light": "浅色",
-            "dark": "深色"
+            "sys-set": "システム",
+            "light": "ライトモード",
+            "dark": "ダークモード"
         },
         "contrast": "对比度",
         "contrasts": {

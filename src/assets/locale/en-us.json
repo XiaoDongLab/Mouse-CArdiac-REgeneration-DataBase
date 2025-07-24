@@ -173,7 +173,8 @@
             "pval": "P-Value",
             "enriched": "Genes enriched",
             "up": "Upregulated",
-            "down": "Downregulated"
+            "down": "Downregulated",
+            "xaxis": "Normalized Enrichment Score"
         }
     },
     "settings": {

@@ -167,13 +167,14 @@
         },
         "body": {
             "select": "点击样本查看详细信息",
-            "selected": "选择的样本",
+            "selected": "选中样本",
             "cluster": "簇",
             "nes": "NES",
             "pval": "P 值",
             "enriched": "富集基因",
             "up": "表达量上调",
-            "down": "表达量下调"
+            "down": "表达量下调",
+            "xaxis": "标准化富集分数（NES）"
         }
     },
     "settings": {

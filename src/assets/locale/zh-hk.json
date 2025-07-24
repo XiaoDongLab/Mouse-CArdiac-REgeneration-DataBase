@@ -1,0 +1,219 @@
+{
+    "home": {
+        "subtitle": "通過轉錄組研究小鼠心髒再生機理",
+        "research-focus1": "新生期（P1 - P6）與出生後期（P7+）心髒再生能力比較：",
+        "research-focus2": "揭示心肌細胞增殖衰退的分子驅動因素",
+        "cite": "引用本網站 ",
+        "userguide": "用戶指南",
+        "genomebrowser": "基因組瀏覽器",
+        "gb-description": "查看基因在不同年齡、細胞組和實驗條件下的表達水平差異",
+        "prev": "上一張",
+        "next": "下一張",
+        "igv": "使用基因組瀏覽器（IGV）",
+        "igv-1": "使用蒐索欄導航至特定基因，或在 IGV 窗口上拖動以選擇特定區域。您可以在 IGV 中查看染色質可及性 (Histone CHIP-seq) 和甲基化水平 (WGBS) 軌跡。",
+        "igv-2": "點擊“獲取差異表達數據”即可獲取每個基因的數據。",
+        "igv-key": {
+            "key": "主要功能",
+            "d1": "查看基因卡片中的對照組。您可以比較 P1 / P8（第 1 組）或 Sham / MI（第 2 組）。",
+            "d2": "點擊基因卡片展開統計數據。點擊散點圖上的任意數據點即可顯示 UMAP、TSNE 和元信息。"
+        },
+        "pathway": {
+            "title": "通路富集",
+            "subtitle": "探索不同年齡和實驗條件對各種通路的影響",
+            "card": {
+                "t1": "流程",
+                "d1": "導航至差異表達結果的基因列表",
+                "d2": "選擇您想要查看的通路。您可以選擇 GO 或 KEGG",
+                "d3": "使用滑塊調整 FDR 閾值（默認 q < 0.05）",
+                "d4": "查看散點圖以及表格結果"
+            }
+        },
+        "download": {
+            "title": "蒐索及下載",
+            "subtitle": "下載我們的差異基因表達分析結果",
+            "card": {
+                "t1": "主要功能",
+                "d1": "根據您的需要修改任何蒐索條件，然後單擊“蒐索”按鈕。",
+                "d2": "選擇表中的樣本，然後單擊“下載標準化數據”開始下載。",
+                "d3": "所有文件均以 zip 格式打包，因爲您的瀏覽器可能會阻止同時下載多個文件。",
+                "t2": "可用格式：",
+                "r1c1": "數據類型",
+                "r1c2": "文件格式",
+                "r1c3": "分辨率",
+                "r2c1": "差異基因表達",
+                "r2c3": "P基因",
+                "r3c1": "表達矩陣",
+                "r3c3": "單細胞",
+                "r4c1": "通路富集結果",
+                "r4c3": "（可直接用於髮表）"
+            }
+        },
+        "legend": {
+            "title": "圖例",
+            "neonatal": {
+                "title": "新生期 (P1 - 6)",
+                "mi1": "心肌梗死",
+                "mi2": "MI",
+                "d": "新生期",
+                "capacity": "高再生能力"
+            },
+            "postnatal": {
+                "title": "出生後期 (P7+)",
+                "mi1": "心肌梗死",
+                "mi2": "MI",
+                "d": "出生後期",
+                "capacity": "再生能力顯著下滑"
+            }
+        },
+        "ref": {
+            "title": "引用",
+            "data": "參考文獻",
+            "software": "技術支持"
+        },
+        "citepopup": "複製成功！"
+    },
+    "navbar": {
+        "home": "首頁",
+        "genome": "基因組瀏覽器",
+        "pathway": "通路富集分析",
+        "download": "蒐索及下載",
+        "settings": "設置",
+        "language": {
+            "title": "語言"
+        }
+    },
+    "footer": {
+        "copyright": "保留所有權利。",
+        "window": {
+            "changelog": {
+                "title": "更新曆史"
+            },
+            "license": {
+                "title": "許可証"
+            }
+        }
+    },
+    "igv": {
+        "mininav": {
+            "explore-chromosome": "探索染色體",
+            "core-genes": "主要基因",
+            "search-genes": "蒐索基因"
+        },
+        "page": {
+            "p1": {
+                "btn-get": "獲取視窗內基因差異表達數據"
+            },
+            "p2": {
+                "btn-get": "獲取主要基因差異表達數據"
+            },
+            "p3": {
+                "btn-get": "獲取輸入基因差異表達數據"
+            }
+        },
+        "filterarea": {
+            "celltype": "細胞類型",
+            "apply": "應用",
+            "legend": "圖例",
+            "sg-up": "顯著上調",
+            "sl-up": "輕微上調",
+            "no-cg": "無變化",
+            "sl-dn": "輕微下調",
+            "sg-dn": "顯著下調",
+            "no-ft": "無統計學意義",
+            "note1": "樣本量小於 2 時元圖上的文字將被隱藏。"
+        }
+    },
+    "genecard": {
+        "title": {
+            "cluster": "樣本數",
+            "study": "研究數",
+            "psd1": "術後 1 日測序",
+            "psd3": "術後 3 日測序"
+        },
+        "body": {
+            "loading": "數據加載中。點擊“應用”刷新。",
+            "d1": "樣本類型爲“所有細胞”的數據點爲半透明。",
+            "d2": "散點圖默認隱藏了所有 -Log10P-val 小於 0.01 的樣本。",
+            "d3": "如果要查看所有不顯著的樣本，請在設置中打開此選項。"
+        }
+    },
+    "maps": {
+        "navbar": {
+            "metainfo": "元信息"
+        },
+        "body": {
+            "no-tsne": "TSNE 不可用",
+            "study-info": "關於本研究",
+            "first-author": "第一作者",
+            "year": "髮表日期",
+            "cluster-info": "樣本信息",
+            "celltypes": "其他可用的細胞類型",
+            "adjpval": "調整後 P 值",
+            "change": "百分比變化"
+        }
+    },
+    "pathway": {
+        "filterarea": {
+            "comparison": "比較類型",
+            "celltype": "細胞類型",
+            "pathway": "通路",
+            "diagram": "通路列表",
+            "info": "關於",
+            "groupby": "分組依據",
+            "go": "GO 通路",
+            "go-d": "Gene Ontology（GO）通過BP、CC、MF對基因集進行注釋和分類。",
+            "kegg": "KEGG 通路",
+            "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) 通過差異表達分析研究通路。"
+        },
+        "body": {
+            "select": "點擊樣本查看詳細信息",
+            "selected": "選擇的樣本",
+            "cluster": "簇",
+            "nes": "NES",
+            "pval": "P 值",
+            "enriched": "富集基因",
+            "up": "表達量上調",
+            "down": "表達量下調"
+        }
+    },
+    "settings": {
+        "settings": "設置",
+        "general": "通用",
+        "displaymode": "顯示",
+        "displaymode-d": "默認採用繫統設置",
+        "colortheme": "主題",
+        "colors": {
+            "sys-set": "繫統設置",
+            "light": "淺色",
+            "dark": "深色"
+        },
+        "contrast": "對比度",
+        "contrasts": {
+            "normal": "正常",
+            "high": "高對比度"
+        },
+        "fontsize": "字號",
+        "fontsize-d": "默認採用繫統設置",
+        "data": "數據分析",
+        "nonsig-data": "無顯著意義樣本",
+        "nonsig-data-d": "樣本的 -Log10(調整後 P 值) 小於 0.01",
+        "show": "顯示",
+        "hide": "隱藏",
+        "yaxis": "散點圖 Y 軸",
+        "yaxis-d": "差異表達分析中的散點圖使用 -Log10(調整後 P 值)",
+        "adjpval": "調整後 P 值"
+    },
+    "download": {
+        "filterarea": {
+            "filetype": "文件類型",
+            "celltype": "細胞類型",
+            "advanced": "高級篩選",
+            "btn": "下載標準化數據"
+        },
+        "body": {
+            "select": "已選擇文件：",
+            "total": "總計：",
+            "d": "下載多個文件或大體積文件時，響應速度可能因壓縮降低。"
+        }
+    }
+}

@@ -433,7 +433,7 @@
     --ag-menu-border: var(--ag-inherited-menu-border, solid 1px color-mix(in srgb, transparent, var(--ag-foreground-color) 20%));
     --ag-menu-separator-color: var(--ag-inherited-menu-separator-color, var(--ag-border-color));
     --ag-menu-shadow: var(--ag-inherited-menu-shadow, var(--ag-popup-shadow));
-    --ag-menu-text-color: var(--ag-inherited-menu-text-color, color-mix(in srgb, var(--ag-background-color), var(--ag-foreground-color) 95%));
+    --ag-menu-text-color: var(--bs-body-color);
     --ag-modal-overlay-background-color: var(--ag-inherited-modal-overlay-background-color, color-mix(in srgb, transparent, var(--ag-background-color) 66%));
     --ag-odd-row-background-color: var(--ag-inherited-odd-row-background-color, var(--ag-background-color));
     --ag-panel-background-color: var(--ag-inherited-panel-background-color, var(--ag-background-color));
@@ -520,7 +520,7 @@
     --ag-tab-spacing: var(--ag-inherited-tab-spacing, 0);
     --ag-tab-text-color: var(--ag-inherited-tab-text-color, color-mix(in srgb, transparent, var(--ag-text-color) 70%));
     --ag-tab-top-padding: var(--ag-inherited-tab-top-padding, var(--ag-spacing));
-    --ag-text-color: var(--ag-inherited-text-color, var(--ag-foreground-color));
+    --ag-text-color: var(--bs-body-color);
     --ag-toggle-button-height: var(--ag-inherited-toggle-button-height, 18px);
     --ag-toggle-button-off-background-color: var(--ag-inherited-toggle-button-off-background-color, color-mix(in srgb, var(--ag-background-color), var(--ag-foreground-color) 30%));
     --ag-toggle-button-on-background-color: var(--ag-inherited-toggle-button-on-background-color, var(--ag-accent-color));

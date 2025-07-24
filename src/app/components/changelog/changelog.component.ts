@@ -11,12 +11,14 @@ export class ChangelogComponent implements OnInit {
 
   Version: string = "";
   CompileDate: string = "";
+  Branch: string = "";
 
   constructor() { }
 
   ngOnInit(): void {
     this.Version = AppComponent.Version;
     this.CompileDate = AppComponent.CompileDate;
+    this.Branch = AppComponent.Branch;
   }
 
 }
