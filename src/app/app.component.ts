@@ -65,7 +65,8 @@ export class AppComponent implements OnInit {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
   }
-  static Version = "1.2507.124.1";
-  static CompileDate = "23 July 2025";
+  static Version = "2.2507.8.1";
+  static CompileDate = "20250723";
+  static Branch = "feature-i18n"
   title = 'Mouse Cardiac Regeneration Database';
 }
