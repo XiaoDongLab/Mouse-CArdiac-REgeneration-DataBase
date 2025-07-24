@@ -19,14 +19,14 @@ selectionMode="single"
         @for (tab of tabs; track tab; let i = $index) {
         <li class="nav-item">
           <a tabindex="0" class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
-            [style.color]="tab.color" href="javascript:void(0);">
+            [style.color]="tab.color" href="javascript:void(0);" [ariaLabel]="tab.text">
             <i class="fa {{tab.icon}}"></i>
             {{ tab.text | translate }}
           </a>
         </li>
         }
         <li class="nav-item">
-          <a tabindex="0" class="nav-link" (click)="showToastControl('languageToast')"><i class="fa fa-language"></i>&nbsp;</a>
+          <a tabindex="0" class="nav-link" (click)="showToastControl('languageToast')" aria-label="Language"><i class="fa fa-language"></i>&nbsp;</a>
         </li>
       </ul>
     </div>

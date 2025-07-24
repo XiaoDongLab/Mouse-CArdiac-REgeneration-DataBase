@@ -202,7 +202,9 @@
         "hide": "Hide",
         "yaxis": "Scatter plot Y-axis",
         "yaxis-d": "DEG results will always use -Log10(Adj P-val).",
-        "adjpval": "Adj P-val"
+        "adjpval": "Adj P-val",
+        "changelog": "Changelog",
+        "license": "License"
     },
     "download": {
         "filterarea": {

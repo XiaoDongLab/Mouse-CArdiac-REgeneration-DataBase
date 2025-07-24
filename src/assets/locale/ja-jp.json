@@ -3,36 +3,36 @@
         "subtitle": "トランスクリプトーム解析によるマウスの心臓再生のメカニズムの研究",
         "research-focus1": "新生児期（P1～P6）と出生後期（P7+）の心臓再生能力の比較：",
         "research-focus2": "心筋細胞の増殖低下の分子的要因の解明",
-        "cite": "サイトを引用する",
+        "cite": "サイトを引用する ",
         "userguide": "ユーザーガイド",
         "genomebrowser": "ゲノムブラウザ",
         "gb-description": "年齢、細胞群、実験条件によって遺伝子発現レベルがどのように変化するかを確認",
         "prev": "前",
         "next": "次",
-        "igv": "使用基因组浏览器（IGV）",
-        "igv-1": "使用搜索栏导航至特定基因，或在 IGV 窗口上拖动以选择特定区域。您可以在 IGV 中查看染色质可及性 (Histone CHIP-seq) 和甲基化水平 (WGBS) 轨迹。",
-        "igv-2": "点击“获取差异表达数据”即可获取每个基因的数据。",
+        "igv": "ゲノムブラウザ（IGV）",
+        "igv-1": "使用搜索栏导航至特定遺伝子，或在 IGV 窗口上拖动以选择特定区域。您可以在 IGV 中查看染色质可及性 (Histone CHIP-seq) 和甲基化水平 (WGBS) 轨迹。",
+        "igv-2": "点击“获取差异表达数据”即可获取每个遺伝子的数据。",
         "igv-key": {
             "key": "主な機能",
-            "d1": "查看基因卡片中的对照组。您可以比较 P1 / P8（第 1 组）或 Sham / MI（第 2 组）。",
-            "d2": "点击基因卡片展开统计数据。点击散点图上的任意数据点即可显示 UMAP、TSNE 和元信息。"
+            "d1": "「遺伝子カード」を見せて中的对照组。您可以比较 P1 / P8（第 1 组）或 Sham / MI（第 2 组）。",
+            "d2": "点击「遺伝子カード」展开统计数据。点击散点图上的任意数据点即可显示 UMAP、TSNE 和元信息。"
         },
         "pathway": {
-            "title": "経路の強化",
+            "title": "パスウェイ強化",
             "subtitle": "探索不同年龄和实验条件对各种通路的影响",
             "card": {
                 "t1": "流程",
-                "d1": "导航至差异表达结果的基因列表",
+                "d1": "导航至差异表达结果的遺伝子列表",
                 "d2": "选择您想要查看的通路。您可以选择 GO 或 KEGG",
                 "d3": "使用滑块调整 FDR 阈值（默认 q < 0.05）",
                 "d4": "查看散点图以及表格结果"
             }
         },
         "download": {
-            "title": "搜索及下载",
-            "subtitle": "下载我们的差异基因表达分析结果",
+            "title": "検索・ダウンロード",
+            "subtitle": "DEGデータをダウンロードする",
             "card": {
-                "t1": "主要功能",
+                "t1": "主な機能",
                 "d1": "根据您的需要修改任何搜索条件，然后单击“搜索”按钮。",
                 "d2": "选择表中的样本，然后单击“下载标准化数据”开始下载。",
                 "d3": "所有文件均以 zip 格式打包，因为您的浏览器可能会阻止同时下载多个文件。",
@@ -40,8 +40,8 @@
                 "r1c1": "数据类型",
                 "r1c2": "文件格式",
                 "r1c3": "分辨率",
-                "r2c1": "差异基因表达",
-                "r2c3": "P基因",
+                "r2c1": "差异遺伝子表达",
+                "r2c3": "遺伝子",
                 "r3c1": "表达矩阵",
                 "r3c3": "单细胞",
                 "r4c1": "通路富集结果",
@@ -49,43 +49,43 @@
             }
         },
         "legend": {
-            "title": "图例",
+            "title": "凡例",
             "neonatal": {
                 "title": "新生期 (P1 - 6)",
-                "mi1": "心肌梗死",
+                "mi1": "心筋梗塞",
                 "mi2": "MI",
                 "d": "新生期",
-                "capacity": "高再生能力"
+                "capacity": "高い再生能力"
             },
             "postnatal": {
-                "title": "出生后期 (P7+)",
-                "mi1": "心肌梗死",
+                "title": "生後期 (P7+)",
+                "mi1": "心筋梗塞",
                 "mi2": "MI",
-                "d": "出生后期",
-                "capacity": "再生能力显著下滑"
+                "d": "生後期",
+                "capacity": "再生能力の低下"
             }
         },
         "ref": {
-            "title": "引用",
+            "title": "参照",
             "data": "参考文献",
-            "software": "技术支持"
+            "software": "テクニカルサポート"
         }
     },
     "navbar": {
-        "home": "首页",
-        "genome": "基因组浏览器",
-        "pathway": "通路富集分析",
-        "download": "搜索及下载",
-        "settings": "设置",
+        "home": "ホーム",
+        "genome": "ゲノムブラウザ",
+        "pathway": "パスウェイ強化",
+        "download": "検索・ダウンロード",
+        "settings": "設定",
         "language": {
-            "title": "语言"
+            "title": "言語"
         }
     },
     "footer": {
         "copyright": "保留所有权利。",
         "window": {
             "changelog": {
-                "title": "更新历史"
+                "title": "更新の内容"
             },
             "license": {
                 "title": "许可证"
@@ -94,25 +94,25 @@
     },
     "igv": {
         "mininav": {
-            "explore-chromosome": "探索染色体",
-            "core-genes": "主要基因",
-            "search-genes": "搜索基因"
+            "explore-chromosome": "染色体を探る",
+            "core-genes": "主な遺伝子",
+            "search-genes": "遺伝子を検索"
         },
         "page": {
             "p1": {
-                "btn-get": "获取视窗内基因差异表达数据"
+                "btn-get": "ビューポート内の遺伝子を検索"
             },
             "p2": {
-                "btn-get": "获取主要基因差异表达数据"
+                "btn-get": "主な遺伝子を検索"
             },
             "p3": {
-                "btn-get": "获取输入基因差异表达数据"
+                "btn-get": "入力された遺伝子を検索"
             }
         },
         "filterarea": {
-            "celltype": "细胞类型",
-            "apply": "应用",
-            "legend": "图例",
+            "celltype": "細胞の種類",
+            "apply": "適用する",
+            "legend": "凡例",
             "sg-up": "显著上调",
             "sl-up": "轻微上调",
             "no-cg": "无变化",
@@ -138,80 +138,82 @@
     },
     "maps": {
         "navbar": {
-            "metainfo": "元信息"
+            "metainfo": "メタデータ"
         },
         "body": {
-            "no-tsne": "TSNE 不可用",
-            "study-info": "关于本研究",
+            "no-tsne": "TSNE は利用不可",
+            "study-info": "この研究について",
             "first-author": "第一作者",
             "year": "发表日期",
-            "cluster-info": "样本信息",
-            "celltypes": "其他可用的细胞类型",
-            "adjpval": "调整后 P 值",
+            "cluster-info": "クラスタインフォメーション",
+            "celltypes": "其他可用的細胞の種類",
+            "adjpval": "調整済み P 値",
             "change": "百分比变化"
         }
     },
     "pathway": {
         "filterarea": {
             "comparison": "比较类型",
-            "celltype": "细胞类型",
-            "pathway": "通路",
-            "diagram": "通路列表",
-            "info": "关于",
+            "celltype": "細胞の種類",
+            "pathway": "パスウェイ",
+            "diagram": "マップ",
+            "info": "概要",
             "groupby": "分组依据",
-            "go": "GO 通路",
-            "go-d": "Gene Ontology（GO）通过BP、CC、MF对基因集进行注释和分类。",
-            "kegg": "KEGG 通路",
-            "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) 通过差异表达分析研究通路。"
+            "go": "GO パスウェイ",
+            "go-d": "Gene Ontology（GO）通过BP、CC、MF对遺伝子集进行注释和分类。",
+            "kegg": "KEGG パスウェイ",
+            "kegg-d": "KEGG は分子レベルの情報から細胞、個体、エコシステムといった高次生命システムレベルの機能や有用性を理解するためのリソースです。"
         },
         "body": {
-            "select": "点击样本查看详细信息",
-            "selected": "选择的样本",
-            "cluster": "簇",
+            "select": "詳細を表示するにはクラスターを選択してください",
+            "selected": "選択されたクラスタ",
+            "cluster": "クラスタ",
             "nes": "NES",
-            "pval": "P 值",
-            "enriched": "富集基因",
-            "up": "表达量上调",
-            "down": "表达量下调"
+            "pval": "P 値",
+            "enriched": "遺伝子が豊富",
+            "up": "アップレギュレーション",
+            "down": "ダウンレギュレーション"
         }
     },
     "settings": {
         "settings": "設定",
-        "general": "通用",
-        "displaymode": "显示",
-        "displaymode-d": "默认采用系统设置",
-        "colortheme": "主题",
+        "general": "一般",
+        "displaymode": "表示",
+        "displaymode-d": "システム設定はデフォルトで適用される",
+        "colortheme": "テーマ",
         "colors": {
-            "sys-set": "システム",
+            "sys-set": "システム設定",
             "light": "ライトモード",
             "dark": "ダークモード"
         },
-        "contrast": "对比度",
+        "contrast": "コントラスト",
         "contrasts": {
-            "normal": "正常",
-            "high": "高对比度"
+            "normal": "普通",
+            "high": "高コントラスト"
         },
-        "fontsize": "字号",
-        "fontsize-d": "默认采用系统设置",
+        "fontsize": "フォントサイズ",
+        "fontsize-d": "システム設定はデフォルトで適用される",
         "data": "数据分析",
         "nonsig-data": "无显著意义样本",
-        "nonsig-data-d": "样本的 -Log10(调整后 P 值) 小于 0.01",
-        "show": "显示",
-        "hide": "隐藏",
-        "yaxis": "散点图 Y 轴",
-        "yaxis-d": "差异表达分析中的散点图使用 -Log10(调整后 P 值)",
-        "adjpval": "调整后 P 值"
+        "nonsig-data-d": "样本的 -Log10(調整済み P 値) 小于 0.01",
+        "show": "表示",
+        "hide": "非表示",
+        "yaxis": "散布図のY軸",
+        "yaxis-d": "差异表达分析中的散点图使用 -Log10(調整済み P 値)",
+        "adjpval": "調整済み P 値",
+        "changelog": "Changelog",
+        "license": "License"
     },
     "download": {
         "filterarea": {
             "filetype": "文件类型",
-            "celltype": "细胞类型",
+            "celltype": "細胞の種類",
             "advanced": "高级筛选",
-            "btn": "下载标准化数据"
+            "btn": "ダウンロード"
         },
         "body": {
-            "select": "已选择文件：",
-            "total": "总计：",
+            "select": "選択された：",
+            "total": "全部で：",
             "d": "下载多个文件或大体积文件时，响应速度可能因后台压缩降低。"
         }
     }

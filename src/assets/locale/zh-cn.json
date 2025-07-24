@@ -202,7 +202,9 @@
         "hide": "隐藏",
         "yaxis": "散点图 Y 轴",
         "yaxis-d": "差异表达分析中的散点图使用 -Log10(调整后 P 值)",
-        "adjpval": "调整后 P 值"
+        "adjpval": "调整后 P 值",
+        "changelog": "更新历史",
+        "license": "许可证"
     },
     "download": {
         "filterarea": {
