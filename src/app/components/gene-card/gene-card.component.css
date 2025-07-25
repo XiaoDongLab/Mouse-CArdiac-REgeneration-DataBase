@@ -323,7 +323,6 @@ canvas,
     transition: .1s ease-in-out;
 }
 
-.maps .nav-link.active:focus::after,
 .maps .nav-link.active:active::after {
     display: flex;
     position: absolute;
@@ -352,6 +351,7 @@ canvas,
     border: var(--bs-border-width) solid var(--bs-border-color-translucent);
     background: rgba(var(--bs-pink-rgb), .2);
     border-radius: var(--bs-border-radius);
+    box-shadow: var(--bs-box-shadow);
 }
 
 .maps.navbar-nav {
@@ -395,7 +395,7 @@ canvas,
     color: var(--bs-body-color);
 }
 
-::ng-deep .apexcharts-menu-icon:focus, ::ng-deep .apexcharts-menu-icon:active {
+::ng-deep .apexcharts-menu-icon:active {
     background-color: rgba(var(--bs-body-color-rgb), .2);
     color: var(--bs-body-color);
 }

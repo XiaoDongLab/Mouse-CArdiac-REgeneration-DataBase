@@ -181,7 +181,7 @@
     transition: .1s ease-in-out;
   }
 
-  .maps .nav-link.active:focus::before, .maps .nav-link.active:active::before {
+  .maps .nav-link.active:active::before {
     display: flex;
     position: absolute;
     left: calc(0px - var(--bs-border-width));
@@ -225,7 +225,6 @@
     transition: .1s ease-in-out;
   }
 
-  .maps .nav-link.active:focus::after,
   .maps .nav-link.active:active::after {
     display: flex;
     position: absolute;

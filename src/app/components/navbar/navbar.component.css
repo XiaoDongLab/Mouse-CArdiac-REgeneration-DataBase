@@ -85,7 +85,6 @@
     transition: .1s ease-in-out;
   }
 
-  .nav-link.active:focus::after,
   .nav-link.active:active::after {
     display: flex;
     position: absolute;
@@ -140,7 +139,6 @@
     transition: .1s ease-in-out;
   }
 
-  .nav-link.active:focus::before,
   .nav-link.active:active::before {
     display: flex;
     position: absolute;
