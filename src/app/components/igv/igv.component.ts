@@ -305,7 +305,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       // Convert the remaining string to a number
       return parseInt(strippedString, 10);
     });
-
+    
     this.databaseService.getGeneDiffExpGeneral(convertedList)
       .subscribe({
         next: (data) => {
