@@ -97,7 +97,7 @@
                     <span class="description text-muted" translate="settings.fdrqval-d"></span>
                 </div>
                 <div class="settings-option">
-                    <input type="range" class="form-range" min="0.001" max="0.1" step="0.001"
+                    <input tabindex="0" type="range" class="form-range" min="0.001" max="0.1" step="0.001"
                         [(ngModel)]="fdr_cutoff" (change)="fdrCutoffChanged()" />
                     <span class="font-size-display">{{fdr_cutoff}}</span>
                 </div>
