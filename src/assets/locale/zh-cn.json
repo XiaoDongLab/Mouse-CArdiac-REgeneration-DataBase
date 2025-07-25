@@ -163,7 +163,8 @@
             "go": "GO 通路",
             "go-d": "Gene Ontology（GO）通过BP、CC、MF对基因集进行注释和分类。",
             "kegg": "KEGG 通路",
-            "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) 通过差异表达分析研究通路。"
+            "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) 通过差异表达分析研究通路。",
+            "fdrqval": "FDR 阈值"
         },
         "body": {
             "select": "点击样本查看详细信息",
@@ -204,7 +205,9 @@
         "yaxis-d": "差异表达分析中的散点图使用 -Log10(调整后 P 值)",
         "adjpval": "调整后 P 值",
         "changelog": "更新历史",
-        "license": "许可证"
+        "license": "许可证",
+        "fdrqval": "FDR 阈值",
+        "fdrqval-d": "默认 FDR 阈值为 0.05。"
     },
     "download": {
         "filterarea": {

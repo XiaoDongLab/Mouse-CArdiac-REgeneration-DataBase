@@ -162,7 +162,8 @@
             "go": "GO パスウェイ",
             "go-d": "Gene Ontology（GO）通过BP、CC、MF对遺伝子集进行注释和分类。",
             "kegg": "KEGG パスウェイ",
-            "kegg-d": "KEGG は分子レベルの情報から細胞、個体、エコシステムといった高次生命システムレベルの機能や有用性を理解するためのリソースです。"
+            "kegg-d": "KEGG は分子レベルの情報から細胞、個体、エコシステムといった高次生命システムレベルの機能や有用性を理解するためのリソースです。",
+            "fdrqval": "FDR 阈值"
         },
         "body": {
             "select": "詳細を表示するにはクラスターを選択してください",
@@ -202,7 +203,9 @@
         "yaxis-d": "差异表达分析中的散点图使用 -Log10(調整済み P 値)",
         "adjpval": "調整済み P 値",
         "changelog": "Changelog",
-        "license": "License"
+        "license": "License",
+        "fdrqval": "FDR 阈值",
+        "fdrqval-d": "默认 FDR 阈值为 0.05。"
     },
     "download": {
         "filterarea": {
