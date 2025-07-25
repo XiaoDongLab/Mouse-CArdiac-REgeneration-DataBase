@@ -8,7 +8,7 @@
 :root,
 [data-bs-theme=light] {
   --bs-blue: var(--bs-pink);
-  --bs-indigo: #6610f2;
+  --bs-indigo: #6332b2;
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
   --bs-red: #dc3545;
