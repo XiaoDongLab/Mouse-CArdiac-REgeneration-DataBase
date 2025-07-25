@@ -69688,7 +69688,7 @@ class MultiTrackSelectButton extends NavbarButton {
 
     this.navbar = navbar;
     this.enableMultiTrackSelection = false;  // Initial state
-    this.button.addEventListener('mouseenter', event => {
+    /*this.button.addEventListener('mouseenter', event => {
       if (false === enableMultiTrackSelection) {
         this.setState(true);
       }
@@ -69698,7 +69698,7 @@ class MultiTrackSelectButton extends NavbarButton {
       if (false === enableMultiTrackSelection) {
         this.setState(false);
       }
-    });
+    });*/
 
     const mouseClickHandler = () => {
       // Toggle the selection state
@@ -69779,7 +69779,7 @@ class CursorGuideButton extends NavbarButton {
 
     super(parent, browser, 'Crosshairs', buttonLabel, cursorImage, cursorImageHover, browser.doShowCursorGuide);
 
-    this.button.addEventListener('mouseenter', () => {
+    /*this.button.addEventListener('mouseenter', () => {
       if (false === browser.doShowCursorGuide) {
         this.setState(true);
       }
@@ -69789,7 +69789,7 @@ class CursorGuideButton extends NavbarButton {
       if (false === browser.doShowCursorGuide) {
         this.setState(false);
       }
-    });
+    });*/
 
     const mouseClickHandler = () => {
 
@@ -69859,7 +69859,7 @@ class CenterLineButton extends NavbarButton {
 
     super(parent, browser, 'Center Line', buttonLabel, centerlineImage, centerlineImageHover, browser.config.showCenterGuide);
 
-    this.button.addEventListener('mouseenter', () => {
+    /*this.button.addEventListener('mouseenter', () => {
       if (false === browser.doShowCenterLine) {
         this.setState(true);
       }
@@ -69869,7 +69869,7 @@ class CenterLineButton extends NavbarButton {
       if (false === browser.doShowCenterLine) {
         this.setState(false);
       }
-    });
+    });*/
 
     const mouseClickHandler = () => {
 
@@ -69937,7 +69937,7 @@ class TrackLabelControl extends NavbarButton {
 
     super(parent, browser, 'Track Labels', buttonLabel, trackLabelsImage, trackLabelsImageHover, browser.config.showTrackLabels);
 
-    this.button.addEventListener('mouseenter', () => {
+    /*this.button.addEventListener('mouseenter', () => {
       if (false === browser.doShowTrackLabels) {
         this.setState(true);
       }
@@ -69947,7 +69947,7 @@ class TrackLabelControl extends NavbarButton {
       if (false === browser.doShowTrackLabels) {
         this.setState(false);
       }
-    });
+    });*/
 
     const mouseClickHandler = () => {
       browser.doShowTrackLabels = !browser.doShowTrackLabels;
@@ -70023,7 +70023,7 @@ class ROITableControl extends NavbarButton {
 
     super(parent, browser, ['ROI', 'Regions of Interest Table'], buttonLabel, roiImage, roiImageHover, false);
 
-    this.button.addEventListener('mouseenter', () => {
+    /*this.button.addEventListener('mouseenter', () => {
       if (false === browser.doShowROITable) {
         this.setState(true);
       }
@@ -70033,7 +70033,7 @@ class ROITableControl extends NavbarButton {
       if (false === browser.doShowROITable) {
         this.setState(false);
       }
-    });
+    });*/
 
     this.button.addEventListener('click', () => this.buttonHandler(!browser.doShowROITable));
 
@@ -70152,7 +70152,7 @@ class SampleInfoControl extends NavbarButton {
 
     this.showSampleInfo = false;
 
-    this.button.addEventListener('mouseenter', () => {
+    /*this.button.addEventListener('mouseenter', () => {
       if (false === this.showSampleInfo) {
         this.setState(true);
       }
@@ -70162,7 +70162,7 @@ class SampleInfoControl extends NavbarButton {
       if (false === this.showSampleInfo) {
         this.setState(false);
       }
-    });
+    });*/
 
     this.button.addEventListener('click', () => {
       this.performClickWithState(browser, undefined);
@@ -70256,7 +70256,7 @@ class SampleNameControl extends NavbarButton {
 
     super(parent, browser, 'Sample Names', sampleNameButtonLabel, sampleNameImage, sampleNameImageHover, browser.config.showSampleNames);
 
-    this.button.addEventListener('mouseenter', () => {
+   /*this.button.addEventListener('mouseenter', () => {
       if (false === browser.showSampleNames) {
         this.setState(true);
       }
@@ -70266,7 +70266,7 @@ class SampleNameControl extends NavbarButton {
       if (false === browser.showSampleNames) {
         this.setState(false);
       }
-    });
+    });*/
 
     this.button.addEventListener('click', () => {
       this.performClickWithState(browser, undefined);
@@ -70438,7 +70438,7 @@ class SaveImageControl extends NavbarButton {
 
     super(parent, browser, 'Save Image', buttonLabel, imageSaveImageSVG, imageSaveImageHoverSVG, false);
 
-    this.button.addEventListener('mouseenter', () => this.setState(true));
+    /*this.button.addEventListener('mouseenter', () => this.setState(true));
 
     this.button.addEventListener('mouseleave', () => {
 
@@ -70449,7 +70449,7 @@ class SaveImageControl extends NavbarButton {
       }
 
       this.setState(false);
-    });
+    });*/
 
     this.dropdown = new Dropdown(this.button.parentNode, { top: 24, left: -88 });
 
@@ -73141,19 +73141,22 @@ a:not([href]):not([class]):hover {
 }
 
 .btn-outline-mcaredb {
-  --bs-btn-color: #d63384;
-  --bs-btn-border-color: #d63384;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #d63384;
+  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-border-color: var(--bs-body-color);
+  /*--bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #bb2d74;
+  --bs-btn-hover-border-color: #ab2a6b;*/
+  --bs-btn-hover-color: #d63384;
+  --bs-btn-hover-bg: transparent;
   --bs-btn-hover-border-color: #d63384;
   --bs-btn-focus-shadow-rgb: 225, 83, 97;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #d63384;
-  --bs-btn-active-border-color: #d63384;
+  --bs-btn-active-bg: #ab2a6b;
+  --bs-btn-active-border-color: #97275f;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #d63384;
-  --bs-btn-disabled-border-color: #d63384;
+  --bs-btn-disabled-bg: #cc528f;
+  --bs-btn-disabled-border-color: #cc528f;
   --bs-gradient: none;
 }
 
@@ -75082,9 +75085,13 @@ transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     border-radius: .375rem;
     backdrop-filter: blur(100px);
     background-color: rgba(var(--bs-body-color-rgb), 0.1);
-    z-index: 2;
+    z-index: 0;
     cursor: pointer;
     transition: .2s ease-in-out;
+}
+
+canvas {
+  z-index: -1 !important;
 }
 
 .igv-track-label:hover,
@@ -75515,6 +75522,7 @@ transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   background-color: var(--bs-secondary-bg);
   border-radius: var(--bs-border-radius);
   overflow: hidden;
+  z-index: 2;
 }
 
 .igv-ui-popover > div:last-of-type {
