@@ -72,7 +72,9 @@
 }
 
 ::ng-deep .font-size-display {
+    text-align: right;
     font-size: 1rem !important;
+    width: 4rem !important;
 }
 
 ::ng-deep .card-settings > .settings-title *,::ng-deep .accordion-settings .settings-title * {

@@ -68,6 +68,7 @@ export class GoComponent implements OnInit {
   pathways: any;
   kegg_pathway_info: any;
   kegg_pathways: any;
+  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
   search_modes = [
     { text: 'Name Contains', value: 'contains' },
     { text: 'Name Starts With', value: 'startsWith' }
@@ -192,7 +193,7 @@ export class GoComponent implements OnInit {
       annotations: {
         yaxis: [
           {
-            y: 1.30103,
+            y: 0 - Math.log10(this.fdr_cutoff),
             strokeDashArray: 10,
           }
         ]
@@ -636,5 +637,16 @@ export class GoComponent implements OnInit {
   }
   onPathwayChange() {
     this.prepareData();
+  }
+
+  fdrCutoffChanged() {
+    this.go_chart_options.annotations = {
+      yaxis: [
+        {
+          y: 0 - Math.log10(this.fdr_cutoff),
+          strokeDashArray: 10,
+        }
+      ]
+    }
   }
 }

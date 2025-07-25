@@ -81,6 +81,7 @@ export class GeneCardComponent implements OnInit {
   lfc_sig_cutoff = 0.58
   lfc_minor_sig_cutoff = 0.25
   display = 'ShamMI';
+  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
   colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
 
 
@@ -201,7 +202,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -309,7 +310,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -405,7 +406,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -500,7 +501,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -604,7 +605,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -712,7 +713,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -807,7 +808,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -902,7 +903,7 @@ export class GeneCardComponent implements OnInit {
         annotations: {
           yaxis: [
             {
-              y: 1.30103,
+              y: 0 - Math.log10(this.fdr_cutoff),
               strokeDashArray: 10,
             }
           ],
@@ -1666,7 +1667,7 @@ export class GeneCardComponent implements OnInit {
 
   updateMetaSeriesInfo(info: number[], lfc: number, pval: number) {
     let i = -1
-    if (pval < 1.30103) {
+    if (pval < 0 - Math.log10(this.fdr_cutoff)) {
       i = 5
     }
     else if (lfc <= -this.lfc_sig_cutoff) {
@@ -1708,7 +1709,7 @@ export class GeneCardComponent implements OnInit {
 
 
   getFillColor(p_val: number, lfc: number, cell_type: string) {
-    if (p_val < 1.30103) {
+    if (p_val < 0 - Math.log10(this.fdr_cutoff)) {
       return 'rgba(0, 0, 0, ' + (!cell_type.includes("All") ? "1)" : "0.5)");
     }
     if (lfc < -this.lfc_sig_cutoff) {

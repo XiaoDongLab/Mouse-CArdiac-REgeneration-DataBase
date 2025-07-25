@@ -22,8 +22,9 @@
                                 <span class="main-title" translate="settings.colortheme"></span>
                             </div>
                             <div class="settings-option">
-                                <select tabindex="0" class="form-select" id="color-mode-select" (change)="colorPreferenceChange()"
-                                    [(ngModel)]="colorPreference" aria-label="Color mode">
+                                <select tabindex="0" class="form-select" id="color-mode-select"
+                                    (change)="colorPreferenceChange()" [(ngModel)]="colorPreference"
+                                    aria-label="Color mode">
                                     <option value="0" translate="settings.colors.sys-set"></option>
                                     <option value="1" translate="settings.colors.light"></option>
                                     <option value="2" translate="settings.colors.dark"></option>
@@ -36,8 +37,8 @@
                                 <span class="main-title" translate="settings.contrast"></span>
                             </div>
                             <div class="settings-option">
-                                <select tabindex="0" class="form-select" id="color-mode-select" (change)="contrastChange()"
-                                    [(ngModel)]="highContrast" aria-label="Color mode">
+                                <select tabindex="0" class="form-select" id="color-mode-select"
+                                    (change)="contrastChange()" [(ngModel)]="highContrast" aria-label="Color mode">
                                     <option value="1" translate="settings.contrasts.normal"></option>
                                     <option value="2" translate="settings.contrasts.high"></option>
                                 </select>
@@ -53,8 +54,8 @@
                     <span class="description text-muted" translate="settings.fontsize-d"></span>
                 </div>
                 <div class="settings-option">
-                    <input type="range" tabindex="0" class="form-range" min="-5" max="5" step="1" id="font-size-range" aria-label="Font size"
-                        (change)="fontSizeChange()" [(ngModel)]="fontSize" />
+                    <input type="range" tabindex="0" class="form-range" min="-5" max="5" step="1" id="font-size-range"
+                        aria-label="Font size" (change)="fontSizeChange()" [(ngModel)]="fontSize" />
                     <span class="font-size-display">{{((this.fontSize / 20 + 1) * 100).toFixed(0)}}%</span>
                 </div>
             </div>
@@ -67,9 +68,11 @@
                 </div>
                 <div class="settings-option">
                     <div class="form-check form-switch form-check-reverse">
-                        <input tabindex="0" class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked"
-                            [(ngModel)]="showNonsigCluster" (change)="showNonsigClusterChange()">
-                        <label class="form-check-label" for="switchCheckChecked">{{showNonsigCluster ? ('settings.show' | translate) : ('settings.hide' | translate)}}</label>
+                        <input tabindex="0" class="form-check-input" type="checkbox" role="switch"
+                            id="switchCheckChecked" [(ngModel)]="showNonsigCluster"
+                            (change)="showNonsigClusterChange()">
+                        <label class="form-check-label" for="switchCheckChecked">{{showNonsigCluster ? ('settings.show'
+                            | translate) : ('settings.hide' | translate)}}</label>
                     </div>
                 </div>
             </div>
@@ -85,6 +88,18 @@
                         <option value="0">-Log<sub>10</sub>({{'settings.adjpval' | translate}})</option>
                         <option value="1">{{'settings.adjpval' | translate}}</option>
                     </select>
+                </div>
+            </div>
+            <div class="card-settings">
+                <i class="fa fa-check"></i>
+                <div class="settings-title">
+                    <span class="main-title" translate="settings.fdrqval"></span>
+                    <span class="description text-muted" translate="settings.fdrqval-d"></span>
+                </div>
+                <div class="settings-option">
+                    <input type="range" class="form-range" min="0.001" max="0.1" step="0.001"
+                        [(ngModel)]="fdr_cutoff" (change)="fdrCutoffChanged()" />
+                    <span class="font-size-display">{{fdr_cutoff}}</span>
                 </div>
             </div>
         </div>

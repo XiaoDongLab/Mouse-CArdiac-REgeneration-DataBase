@@ -17,6 +17,7 @@ export class SettingsComponent implements OnInit {
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
   showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false);
+  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
   useYAxisType: number = localStorage["useYAxisType"] ?? 0; // 0 -> -lgP-val; 1 -> P-val;
   constructor(public t: TranslateService) { }
 
@@ -87,5 +88,9 @@ export class SettingsComponent implements OnInit {
 
   useYAxisChange(): void {
     localStorage["useYAxisType"] = this.useYAxisType;
+  }
+
+  fdrCutoffChanged(): void {
+    localStorage["fdrCutoff"] = this.fdr_cutoff;
   }
 }
