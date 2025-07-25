@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { fromEvent, debounceTime, takeUntil, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -14,11 +15,14 @@ export class AppComponent implements OnInit {
   colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
   fontSize: number = localStorage["fontSize"] ? localStorage["fontSize"] : 0;
   highContrast: number = localStorage["highContrast"] ? localStorage["highContrast"] : 1;
+  defLanguage: string = localStorage["defLanguage"] ?? 'def';
   navHeight = 0;
   private destroy$ = new Subject<void>();
   @ViewChild(NavbarComponent, {static: false}) navbar!: NavbarComponent;
-  constructor() {
-
+  constructor(private t: TranslateService) {
+    this.t.addLangs(["en-us", "zh-cn", "zh-hk", "ja-jp"]);
+    const userLang = navigator.language.toLowerCase();
+    this.t.use(this.defLanguage === 'def' ? (this.t.langs.includes(userLang) ? userLang : 'en-us') : this.defLanguage);
   }
 
   ngOnInit(): void {

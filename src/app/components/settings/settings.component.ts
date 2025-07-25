@@ -19,6 +19,7 @@ export class SettingsComponent implements OnInit {
   showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false);
   fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
   useYAxisType: number = localStorage["useYAxisType"] ?? 0; // 0 -> -lgP-val; 1 -> P-val;
+  defLanguage: string = localStorage["defLanguage"] ?? 'def';
   constructor(public t: TranslateService) { }
 
   ngOnInit(): void {
@@ -92,5 +93,11 @@ export class SettingsComponent implements OnInit {
 
   fdrCutoffChanged(): void {
     localStorage["fdrCutoff"] = this.fdr_cutoff;
+  }
+
+  defLanguageChanged(): void {
+    localStorage["defLanguage"] = this.defLanguage;
+    const userLang = navigator.language.toLowerCase();
+    this.t.use(this.defLanguage === 'def' ? (this.t.langs.includes(userLang) ? userLang : 'en-us') : this.defLanguage);
   }
 }

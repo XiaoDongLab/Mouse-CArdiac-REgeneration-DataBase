@@ -59,6 +59,22 @@
                     <span class="font-size-display">{{((this.fontSize / 20 + 1) * 100).toFixed(0)}}%</span>
                 </div>
             </div>
+            <div class="card-settings">
+                <i class="fa fa-language"></i>
+                <div class="settings-title">
+                    <span class="main-title" translate="settings.language"></span>
+                    <span class="description text-muted" translate="settings.language-d"></span>
+                </div>
+                <div class="settings-option">
+                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" [(ngModel)]="defLanguage" aria-label="default language">
+                        <option value="def">{{'settings.colors.sys-set' | translate}}</option>
+                        <option value="en-us">English</option>
+                        <option value="zh-cn">简体中文</option>
+                        <option value="zh-hk">繁体中文</option>
+                        <option value="ja-jp">日本語</option>
+                    </select>
+                </div>
+            </div>
             <h5 translate="settings.data"></h5>
             <div class="card-settings">
                 <i class="fa fa-chart-simple"></i>

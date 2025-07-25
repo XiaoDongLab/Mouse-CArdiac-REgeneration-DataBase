@@ -205,7 +205,9 @@
         "changelog": "Changelog",
         "license": "License",
         "fdrqval": "FDR 阈值",
-        "fdrqval-d": "默认 FDR 阈值为 0.05。"
+        "fdrqval-d": "默认 FDR 阈值为 0.05。",
+        "language": "显示语言",
+        "language-d": "默认显示语言为英语。"
     },
     "download": {
         "filterarea": {

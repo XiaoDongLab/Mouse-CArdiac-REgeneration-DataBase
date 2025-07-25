@@ -207,7 +207,9 @@
         "changelog": "Changelog",
         "license": "License",
         "fdrqval": "FDR Cutoff",
-        "fdrqval-d": "Default cutoff value will be 0.05."
+        "fdrqval-d": "Default cutoff value will be 0.05.",
+        "language": "Display language",
+        "language-d": "Default language will be English if you use the website first time."
     },
     "download": {
         "filterarea": {

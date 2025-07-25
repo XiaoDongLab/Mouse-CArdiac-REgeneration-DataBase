@@ -21,6 +21,7 @@ export class FooterComponent implements OnInit {
     // document.getElementById("shadow-bg")!.style.display = "none";
     this.Version = AppComponent.Version;
     this.CompileDate = AppComponent.CompileDate;
+    console.log(this.t.currentLang)
   }
   
   CiteClick(): void {

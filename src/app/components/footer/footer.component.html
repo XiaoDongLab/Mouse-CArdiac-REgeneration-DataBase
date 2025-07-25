@@ -102,30 +102,30 @@
             <div class="d-flex w-100 flex-column">
                 <div class="row g-2">
                     <div class="col">
-                        <a class="btn text-decoration-none" href="javascript:void(0)" (click)="switch('en-us')">
+                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'en-us'" [class.btn-mcaredb]="t.currentLang == 'en-us'" [class.active]="t.currentLang == 'en-us'" href="javascript:void(0)" (click)="switch('en-us')">
                             <div class="card-body">
-                                <h5 class="text-mcaredb mb-0">English</h5>
+                                <h5 class="mb-0">English</h5>
                             </div>
                         </a>
                     </div>
                     <div class="col">
-                        <a class="card text-decoration-none" href="javascript:void(0)" (click)="switch('zh-cn')">
+                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'zh-cn'" [class.btn-mcaredb]="t.currentLang == 'zh-cn'" [class.active]="t.currentLang == 'zh-cn'" href="javascript:void(0)" (click)="switch('zh-cn')">
                             <div class="card-body">
-                                <h5 class="text-mcaredb mb-0">简体中文</h5>
+                                <h5 class="mb-0">简体中文</h5>
                             </div>
                         </a>
                     </div>
                     <div class="col">
-                        <a class="card text-decoration-none" href="javascript:void(0)" (click)="switch('zh-hk')">
+                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'zh-hk'" [class.btn-mcaredb]="t.currentLang == 'zh-hk'" [class.active]="t.currentLang == 'zh-hk'" href="javascript:void(0)" (click)="switch('zh-hk')">
                             <div class="card-body">
-                                <h5 class="text-mcaredb mb-0">繁體中文</h5>
+                                <h5 class="mb-0">繁體中文</h5>
                             </div>
                         </a>
                     </div>
                     <div class="col">
-                        <a class="card text-decoration-none" href="javascript:void(0)" (click)="switch('ja-jp')">
+                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'ja-jp'" [class.btn-mcaredb]="t.currentLang == 'ja-jp'" [class.active]="t.currentLang == 'ja-jp'" href="javascript:void(0)" (click)="switch('ja-jp')">
                             <div class="card-body">
-                                <h5 class="text-mcaredb mb-0">日本語</h5>
+                                <h5 class="mb-0">日本語</h5>
                             </div>
                         </a>
                     </div>
