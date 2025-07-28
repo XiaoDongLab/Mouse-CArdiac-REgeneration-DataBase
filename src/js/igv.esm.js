@@ -36947,8 +36947,8 @@ class GenericColorPicker extends GenericContainer {
     this.container.appendChild(this.colorSwatchContainer);
 
     // nth-child(3) - More Colors interative color picker
-    this.moreColorsContainer = div();
-    this.container.appendChild(this.moreColorsContainer);
+    /* this.moreColorsContainer = div();
+    this.container.appendChild(this.moreColorsContainer); */
 
     // nth-child(4) - Recent Colors - swatches
     this.recentColorsSwatches = div();
@@ -36956,7 +36956,7 @@ class GenericColorPicker extends GenericContainer {
 
     this.recentColors = [];
 
-    this.moreColorsPresentationColor = undefined;
+    // this.moreColorsPresentationColor = undefined;
 
   }
 
@@ -36986,7 +36986,7 @@ class GenericColorPicker extends GenericContainer {
     }
 
     // Present MoreColors picker
-    this.decorateMoreColorsButton(this.moreColorsContainer, colorHandler);
+    // this.decorateMoreColorsButton(this.moreColorsContainer, colorHandler);
 
   }
 
@@ -73619,7 +73619,6 @@ opacity: .25 !important;
     z-index: 2048;
     background-color: var(--bs-body-bg);
     color: vat(--bs-body-color);
-    cursor: pointer;
     border: var(--bs-border-width) solid var(--bs-border-color-translucent);
     font-family: var(--bs-body-font-family);
     border-radius: var(--bs-border-radius);
@@ -73701,7 +73700,6 @@ opacity: .25 !important;
     border-width: thin;
     border-color: #7F7F7F;
     background-color: white;
-
 }
 
 .igv-ui-generic-dialog-container .igv-ui-generic-dialog-label-input input {
