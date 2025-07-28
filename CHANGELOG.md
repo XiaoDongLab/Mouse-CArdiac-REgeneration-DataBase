@@ -1,8 +1,18 @@
 # Version history
 
-The latest stable version is **1.2507.124.1**, compiled on 23 July 2025.
+The latest stable version is **2.2507.150.1**, compiled on 28 July 2025.
 
-The latest development version is **2.2507.11.0**, compiled on 24 July 2025.
+## 2.2507.150.1 (main) - 28 July 2025
+
+### New Features
+
+- **Adjust threshold P-value**: You can adjust your default threshold p-value in settings.
+
+- **Language support**: Now support for Chinese/Simplified is fully configured.
+
+### Miscellaneous
+
+- We adjusted some designs to fit the accessibility standards.
 
 ## 2.2507.11.0 (feature-i18n) - 24 July 2025
 
