@@ -617,3 +617,9 @@
   animation: pulse 1.5s infinite;
   /* Apply the pulsing animation */
 }
+
+::ng-deep ng-select {
+    max-width: 100%;
+    flex-shrink: 1;
+    min-width: 0;
+}

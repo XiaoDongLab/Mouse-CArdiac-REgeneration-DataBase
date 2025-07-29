@@ -58,8 +58,43 @@ export class DatabaseConstsService {
     "Activated fibroblast"
   ];
 
+  searchCellTypes = [
+    "All Cells",
+    "Cardiac cell",
+    "B cell",
+    "T cell",
+    "Red blood cell",
+    "Granulocyte",
+    "Cardiomyocyte",
+    "Cardiomyocyte 1",
+    "Cardiomyocyte 2",
+    "Cardiomyocyte 3",
+    "Cardiomyocyte 4",
+    "Sinoatrial node (SAN) cell",
+    "Sinoatrial node cell",
+    "Endothelial cell",
+    "Endothelial cell 2",
+    "Endothelial cell 3",
+    "Endothelial cell 4",
+    "Endothelial cell 5",
+    "Endothelial cell 6",
+    "Macrophage",
+    "Macrophage 2",
+    "M2 macrophage",
+    "Fibroblast",
+    "Fibroblast 2",
+    "Fibroblast 3",
+    "Fibroblast 4",
+    "Fibroblast 5",
+    "Fibroblast 6",
+    "Mural cell",
+    "Well-established epicardial progenitor cell",
+    "Progenitor cell",
+    "Activated fibroblast"
+  ];
+
   species: string[] = [
-    "matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Go Enrich", "DEG Results"
+    "matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Pathway Enrich", "DEG Results"
   ]
 
   DiffExpPMIDTissueDict: { [key: string]: number[] } = {
@@ -99,6 +134,10 @@ export class DatabaseConstsService {
   }
   getDECellTypes() {
     return this.DiffExpCellTypes
+  }
+
+  getSearchCellTypes() {
+    return this.searchCellTypes;
   }
 
   constructor(private http: HttpClient) { }

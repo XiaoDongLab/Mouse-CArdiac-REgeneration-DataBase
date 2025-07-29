@@ -71,6 +71,7 @@ export class SearchComponent implements OnInit {
   species: string[] = [];
   health: string[] = [];
   age_type: string[] = [];
+  pmids: string[] = [];
   pmid: string = '';
 
   selected_tissues: string[] = [];
@@ -79,6 +80,7 @@ export class SearchComponent implements OnInit {
   selected_age: number[] = [];
   selected_health: string[] = [];
   selected_age_type: string[] = [];
+  selected_pmid: string[] = [];
   neonatal_selected: boolean;
   postnatal_selected: boolean;
   others_selected: boolean;
@@ -139,15 +141,17 @@ export class SearchComponent implements OnInit {
     //this.species = databaseConstService.getSpecies();
     //this.cell_types = databaseConstService.getCellTypes();
     this.health = ['All', 'Cancer', 'Healthy'];
-    this.species = ["matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Go Enrich", "DEG Results"];
-    this.cell_types = databaseConstService.getDECellTypes();
+    this.cell_types = databaseConstService.getSearchCellTypes();
     this.age_type = ['neonatal', 'postnatal'];
 
     this.selected_tissues = this.tissue_types;
     this.selected_cells = this.cell_types;
-    this.selected_species = ["matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Go Enrich", "DEG Results"];
+    this.selected_species = ["matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Pathway Enrich", "DEG Results"];
+    this.species = [...this.selected_species];
     this.selected_age = [0, 110];
     this.selected_age_type = ['neonatal', 'postnatal'];
+    this.pmids = ["34489413", "33296652", "38510108"];
+    this.selected_pmid = [...this.pmids];
     this.selected_health = ['All'];
     this.neonatal_selected = true;
     this.postnatal_selected = true;
@@ -188,11 +192,19 @@ export class SearchComponent implements OnInit {
   }
 
   onInputChange(event: any) {
-    this.pmid = event.target.value;
-    this.samplesTest();
+    const pmid = event.target.value;
+    console.log(this.display)
+    if (!pmid) this.display = this.DISPLAY_DATA;
+    else {
+      this.display = this.DISPLAY_DATA.filter(item => item.study_id.toString().includes(pmid))
+    }
+    
+    // this.samplesTest();
+
   }
 
   samplesTest() {
+    this.query_completed = false;
     if (this.postnatal_selected && this.neonatal_selected) {
       this.selected_age = [0, 110];
     }
@@ -222,11 +234,12 @@ export class SearchComponent implements OnInit {
     }
     backend_health_select = this.addBackendHealth(this.selected_health)
 
-    let pmid_selected = this.pmid == '' ? 'undefined' : this.pmid
+    let pmid_selected = this.pmid == '' ? 'undefined' : this.pmid;
+    console.log(this.formatForDB(this.selected_cells))
     this.databaseService.getSamplesTest(this.selected_species, backend_tissue_select, this.formatForDB(this.selected_cells), this.selected_age, backend_health_select, pmid_selected)
       .subscribe({
         next: (data) => {
-          console.log(data);
+          // console.log(data);
 
           this.DISPLAY_DATA = data;
           this.display = data;
@@ -239,7 +252,7 @@ export class SearchComponent implements OnInit {
           this.query_completed = true;
 
           data.forEach(element => {
-            console.log(element.age);
+            // console.log(element.age);
             element.age = element.age == "-1" ? "Others" : Number.parseInt(String(element.age)) <= 58 ? "Neonatal" : "Postnatal";
           });
         },
@@ -290,7 +303,9 @@ export class SearchComponent implements OnInit {
     return arr;
   }
   onSpeciesChanged($event: any) {
-    this.samplesTest();
+    if (this.selected_species.length > 0 && this.selected_cells.length > 0 && this.selected_pmid.length > 0) {
+      this.samplesTest();
+    }
   }
   onAgeSelectionChanged($event: any) {
     this.selected_age_type = [];
@@ -708,7 +723,7 @@ export class SearchComponent implements OnInit {
             filterModel[this.column_dicts[field.toLowerCase() as keyof typeof this.column_dicts]] = {
               filterType: 'text',
               type: 'contains',
-              filter: value.replace("_", " "),
+              filter: value.replace("-", " "),
             };
           }
           console.log(config)
