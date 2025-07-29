@@ -109,9 +109,9 @@ export class SearchComponent implements OnInit {
     { field: 'cell_types', headerName: 'Cell Type', filter: true },
     { field: 'disease_status', headerName: 'Group', filter: true },
     { field: 'notes', headerName: 'Comparison', filter: true },
-    { field: 'age', headerName: 'Category', filter: true },
-    { field: 'platform', headerName: 'File name', filter: true },
-    { field: 'species', headerName: 'File type', filter: true }
+    // { field: 'age', headerName: 'Category', filter: true },
+    // { field: 'platform', headerName: 'File name', filter: true },
+    { field: 'species', headerName: 'File Type', filter: true }
   ];
 
   column_dicts = {
@@ -145,7 +145,11 @@ export class SearchComponent implements OnInit {
     this.age_type = ['neonatal', 'postnatal'];
 
     this.selected_tissues = this.tissue_types;
-    this.selected_cells = this.cell_types;
+    this.selected_cells = ["Cardiomyocyte",
+      "Cardiomyocyte 1",
+      "Cardiomyocyte 2",
+      "Cardiomyocyte 3",
+      "Cardiomyocyte 4"];
     this.selected_species = ["matrix", "barcodes", "tsne", "umap", "info", "features", "diffExp", "Pathway Enrich", "DEG Results"];
     this.species = [...this.selected_species];
     this.selected_age = [0, 110];
@@ -198,7 +202,7 @@ export class SearchComponent implements OnInit {
     else {
       this.display = this.DISPLAY_DATA.filter(item => item.study_id.toString().includes(pmid))
     }
-    
+
     // this.samplesTest();
 
   }
@@ -236,14 +240,18 @@ export class SearchComponent implements OnInit {
 
     let pmid_selected = this.pmid == '' ? 'undefined' : this.pmid;
     console.log(this.formatForDB(this.selected_cells))
-    this.databaseService.getSamplesTest(this.selected_species, backend_tissue_select, this.formatForDB(this.selected_cells), this.selected_age, backend_health_select, pmid_selected)
+    this.databaseService.getSamplesTest(this.selected_species, backend_tissue_select, this.formatForDB(this.selected_cells), this.selected_age, backend_health_select, this.selected_pmid)
       .subscribe({
         next: (data) => {
           // console.log(data);
 
           this.DISPLAY_DATA = data;
           this.display = data;
-          this, this.cleanDisplay()
+          this, this.cleanDisplay();
+          console.log(this.display)
+          if (this.selected_cells.length != this.cell_types.length || this.selected_species.length != this.species.length) {
+            this.display = this.display.filter(item => item.cell_types != '')
+          }
           // this.tissue_chart_options = this.makeDonutChart(this.tissue_dict)
           // this.sex_chart_options = this.makeDonutChart(this.sex_dict)
           // this.age_chart_options = this.makeBarChart(this.age_dict)
@@ -303,6 +311,7 @@ export class SearchComponent implements OnInit {
     return arr;
   }
   onSpeciesChanged($event: any) {
+    console.log(this.selected_pmid)
     if (this.selected_species.length > 0 && this.selected_cells.length > 0 && this.selected_pmid.length > 0) {
       this.samplesTest();
     }

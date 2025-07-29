@@ -11,8 +11,9 @@
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
         <h4 translate="download.filterarea.filetype" class="mb-0"></h4>
-        <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_species = species.slice(); samplesTest()">
-          <i class="fa fa-refresh"></i> Reset
+        <button class="btn btn-sm btn-link text-decoration-none"
+          (click)="selected_species = species.slice(); samplesTest()">
+          <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
         </button>
       </div>
       <ng-select [items]="species" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
@@ -31,8 +32,9 @@
       <hr />
       <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
         <h4 translate="download.filterarea.celltype" class="mb-0"></h4>
-        <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cells = cell_types.slice(); samplesTest()">
-          <i class="fa fa-refresh"></i> Reset
+        <button class="btn btn-sm btn-link text-decoration-none"
+          (click)="selected_cells = cell_types.slice(); samplesTest()">
+          <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
         </button>
       </div>
       <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
@@ -51,14 +53,14 @@
       <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
         <h4 class="mb-0">PMID</h4>
         <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_pmid = pmids.slice(); samplesTest()">
-          <i class="fa fa-refresh"></i> Reset
+          <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
         </button>
       </div>
       <!--<input type="text" placeholder="Optional" class="form-control" aria-describedby="basic-addon1"
         (input)="onInputChange($event)">-->
       <ng-select [items]="pmids" [searchable]="true" [clearable]="true" (change)="onSpeciesChanged($event)"
-        placeholder="Select PMID..." [selectableGroup]="true" [selectableGroupAsModel]="false"
-        [closeOnSelect]="false" [(ngModel)]="selected_pmid" groupBy="pmid" [addTag]="false" [multiple]="true">
+        placeholder="Select PMID..." [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+        [(ngModel)]="selected_pmid" groupBy="pmid" [addTag]="false" [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="form-check">
             <input id="item-{{ index }}" type="checkbox" class="form-check-input" [ngModel]="item$.selected" />
@@ -76,7 +78,7 @@
           Use - to replace spaces. Use comma or spaces to split your commands.
           For example:
           --cell-type=cardiomyocyte-2, --pmid=34489413">
-          <i class="fa fa-info-circle"></i> Info
+          <i class="fa fa-info-circle"></i> {{ 'pathway.filterarea.info' | translate }}
         </a>
       </div>
       <textarea class="form-control" placeholder="--comparison=shamvsmi&#10;--group=psd3"
