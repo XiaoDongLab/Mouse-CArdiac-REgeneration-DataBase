@@ -632,8 +632,11 @@ export class GoComponent implements OnInit {
   onTissuesChanged($event: any) {
     this.selected_tissues = $event.value
   }
-  onCellsChanged($event: any) {
-    this.selected_cell_types = $event.value
+
+  onCellsChanged() {
+    if (this.selected_cell_types.length > 0) {
+      this.prepareData();
+    }
   }
   onPathwayChange() {
     this.prepareData();
