@@ -84,6 +84,7 @@ export class GeneCardComponent implements OnInit {
   fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
   colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
 
+  tooltipList: any[];
 
   model_selected = false;
   constructor(private geneConversionService: GeneConversionService, public appComponent: AppComponent) { }
@@ -1002,7 +1003,8 @@ export class GeneCardComponent implements OnInit {
 
     setTimeout(() => {
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+      this.tooltipList = tooltipList;
     }, 100)
   }
 
@@ -1659,6 +1661,7 @@ export class GeneCardComponent implements OnInit {
     this.sum_1_MI = MI_1_sum;
     this.series_1_MI = meta_series_info1_MI.slice().reverse();
 
+    document.querySelectorAll('.tooltip').forEach(item => { item.remove() });
     setTimeout(() => {
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
       const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
