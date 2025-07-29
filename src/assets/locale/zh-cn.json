@@ -164,7 +164,8 @@
             "go-d": "Gene Ontology（GO）通过BP、CC、MF对基因集进行注释和分类。",
             "kegg": "KEGG 通路",
             "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) 通过差异表达分析研究通路。",
-            "fdrqval": "FDR 阈值"
+            "fdrqval": "FDR 阈值",
+            "reset": "重置"
         },
         "body": {
             "select": "点击样本查看详细信息",
