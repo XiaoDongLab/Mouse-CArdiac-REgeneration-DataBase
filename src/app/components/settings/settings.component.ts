@@ -13,7 +13,7 @@ export class SettingsComponent implements OnInit {
   Version: string = "";
   CompileDate: string = "";
   Branch: string = ""
-  colorPreference: number = localStorage["colorPreference"] ?? 0;
+  colorPreference: number = localStorage["colorPreference"] ?? 1;
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
   showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false);
@@ -32,11 +32,20 @@ export class SettingsComponent implements OnInit {
     document.body.style.fontSize = ((this.fontSize / 20 + 1) * 100).toFixed(0) + '%';
   }
 
+  // setColorTheme(): void {
+  //   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  //   if (prefersDark && this.colorPreference == 0 || this.colorPreference == 2) {
+  //     document.documentElement.setAttribute("data-bs-theme", "dark");
+  //   } else document.documentElement.setAttribute("data-bs-theme", "light");
+  // }
+
   setColorTheme(): void {
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (prefersDark && this.colorPreference == 0 || this.colorPreference == 2) {
+    if (this.colorPreference == 2) {
       document.documentElement.setAttribute("data-bs-theme", "dark");
-    } else document.documentElement.setAttribute("data-bs-theme", "light");
+    } else {
+      // Default to light mode
+      document.documentElement.setAttribute("data-bs-theme", "light");
+    }
   }
 
   setContrast(): void {

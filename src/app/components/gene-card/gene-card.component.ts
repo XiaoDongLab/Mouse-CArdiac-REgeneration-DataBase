@@ -125,6 +125,9 @@ export class GeneCardComponent implements OnInit {
 
     if (this.completely_loaded) {
 
+    const isDarkMode = this.getColorTheme();
+    const axisColor = isDarkMode ? '#FFFFFF' : '#000000';
+
       this.model_chart_options1_Sham = {
         series: [{
           name: this.gene_list[0].gene?.toString(),
@@ -176,7 +179,11 @@ export class GeneCardComponent implements OnInit {
         yaxis: {
           title: {
             text: "-Log10(Adjusted P-Value)",
-
+          },
+          labels: {
+            style: {
+              colors: axisColor // Add this for x-axis labels
+            }
           }
         },
         fill: {

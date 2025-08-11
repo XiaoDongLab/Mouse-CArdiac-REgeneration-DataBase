@@ -25,7 +25,8 @@
                                 <select tabindex="0" class="form-select" id="color-mode-select"
                                     (change)="colorPreferenceChange()" [(ngModel)]="colorPreference"
                                     aria-label="Color mode">
-                                    <option value="0" translate="settings.colors.sys-set"></option>
+                                    <!-- sys settings causing coloring issues for axes table (ie when I switch to light mode the text dissapears)-->
+                                    <!-- <option value="0" translate="settings.colors.sys-set"></option> -->
                                     <option value="1" translate="settings.colors.light"></option>
                                     <option value="2" translate="settings.colors.dark"></option>
                                 </select>

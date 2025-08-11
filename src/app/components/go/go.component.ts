@@ -68,7 +68,20 @@ export class GoComponent implements OnInit {
   pathways: any;
   kegg_pathway_info: any;
   kegg_pathways: any;
-  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
+  fdr_cutoff: number = 1;
+
+
+
+  // Add to component properties
+  filtered_go_terms: GoTerm[] = [];
+  nes_min: number | null = null;   // Actual min filter (null = -Infinity)
+  nes_max: number | null = null;   // Actual max filter (null = +Infinity)
+  nes_min_bound: number = -10;     // Current min value for slider
+  nes_max_bound: number = 10;      // Current max value for slider
+  nes_slider_min: number = -10;    // Min possible value for slider
+  nes_slider_max: number = 10;     // Max possible value for slider
+
+
   search_modes = [
     { text: 'Name Contains', value: 'contains' },
     { text: 'Name Starts With', value: 'startsWith' }
@@ -137,9 +150,12 @@ export class GoComponent implements OnInit {
         events: {
           dataPointSelection: (e, chart, opts) => {
             this.zone.run(() => {
-              this.selected_term = this.go_terms[opts.dataPointIndex];
-              this.getGeneSymbols(this.selected_term);
-              this.term_selected = true;
+              // Use filtered_go_terms instead of go_terms
+              if (this.filtered_go_terms && this.filtered_go_terms.length > opts.dataPointIndex) {
+                this.selected_term = this.filtered_go_terms[opts.dataPointIndex];
+                this.getGeneSymbols(this.selected_term);
+                this.term_selected = true;
+              }
             });
           }
         },
@@ -194,10 +210,45 @@ export class GoComponent implements OnInit {
         yaxis: [
           {
             y: 0 - Math.log10(this.fdr_cutoff),
+            borderColor: '#FF4560', // example color for FDR line
             strokeDashArray: 10,
+            label: {
+              text: `FDR cutoff: ${this.fdr_cutoff.toFixed(4)}`,
+              style: {
+                color: '#FF4560',
+                background: 'transparent',
+              },
+            },
           }
+        ],
+        xaxis: [
+          {
+            x: -5,
+            borderColor: '#008FFB',
+            strokeDashArray: 5,
+            label: {
+              text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(2)}`,
+              style: {
+                color: '#008FFB',
+                background: 'transparent',
+              },
+            },
+          },
+          {
+            x: 5,
+            borderColor: '#14c71dff',
+            strokeDashArray: 5,
+            label: {
+              text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(2)}`,
+              style: {
+                color: '#14c71dff',
+                background: 'transparent',
+              },
+            },
+          },
         ]
       }
+
     };
     console.log(appComponent.getColorTheme() ? 'dark' : 'light');
     this.databaseService.loadKEGGInfo().subscribe({
@@ -217,19 +268,6 @@ export class GoComponent implements OnInit {
       complete: () => { }
     });
 
-    /*this.databaseService.getGiniScores().subscribe({
-      next: (data) => {
-        this.gini_scores = data
-        this.makeGiniPlot()
-        this.setHistogramLines()
-      },
-      error: (e) => {
-        console.error(e);
-      },
-      complete: () => { }
-    });*/
-
-
     this.databaseService.getKEGGPathways().subscribe({
       next: (data) => {
         this.kegg_pathways = data
@@ -242,35 +280,122 @@ export class GoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Get KEGG Pathways
+    this.prepareData();
+    
+    // Apply initial filtering
+    this.nes_min = this.nes_min_bound;
+    this.nes_max = this.nes_max_bound;
+    this.nesFilterChanged();
 
   }
 
+
+  // Update nesMinChanged and nesMaxChanged
+  nesMinChanged(): void {
+    if (this.nes_min_bound > this.nes_max_bound) {
+      this.nes_min_bound = this.nes_max_bound;
+    }
+    
+    // Save to localStorage
+    localStorage["nes_min_bound"] = this.nes_min_bound;
+    
+    // Apply filtering - use actual values, not null
+    this.nes_min = this.nes_min_bound;
+    
+    console.log(`Min changed: ${this.nes_min_bound}`);
+    
+    // Recreate the chart data
+    this.createDisplayData();
+  }
+
+  nesMaxChanged(): void {
+    if (this.nes_max_bound < this.nes_min_bound) {
+      this.nes_max_bound = this.nes_min_bound;
+    }
+    
+    // Save to localStorage
+    localStorage["nes_max_bound"] = this.nes_max_bound;
+    
+    // Apply filtering - use actual values, not null
+    this.nes_max = this.nes_max_bound;
+    
+    console.log(`Max changed: ${this.nes_max_bound}`);
+    
+    // Recreate the chart data
+    this.createDisplayData();
+  }
+
+
+  nesFilterChanged(): void {
+    // Save to localStorage
+    localStorage["nes_min_bound"] = this.nes_min_bound;
+    localStorage["nes_max_bound"] = this.nes_max_bound;
+    
+    // Apply filtering
+    this.nes_min = this.nes_min_bound === this.nes_slider_min ? null : this.nes_min_bound;
+    this.nes_max = this.nes_max_bound === this.nes_slider_max ? null : this.nes_max_bound;
+    
+    // Recreate the chart data
+    this.createDisplayData();
+  }
+
+
   createDisplayData() {
-    console.log(this.go_terms)
-    this.upreg_enrich_list = []
-    this.downreg_enrich_list = []
+    console.log('Starting createDisplayData');
+    console.log(`NES Filter: min=${this.nes_min}, max=${this.nes_max}`);
+    console.log(`NES Slider Bounds: min_bound=${this.nes_min_bound}, max_bound=${this.nes_max_bound}`);
+    console.log(`Data Range: min=${Math.min(...this.go_terms.map(t => t.nes))}, max=${Math.max(...this.go_terms.map(t => t.nes))}`);
+
+    let filteredTerms = this.go_terms.filter(term => {
+      const nes = term.nes;
+    
+      const fdr = term.P_Value; // Or term.FDR if that's how your data names it
+      const passMin = this.nes_min === null ? true : nes >= this.nes_min;
+      const passMax = this.nes_max === null ? true : nes <= this.nes_max;
+      const passFDR = this.fdr_cutoff === null ? true : fdr <= this.fdr_cutoff;
+
+      if (!passMin) console.log(`Filtered out (min): ${term.cell_type} NES=${nes} < ${this.nes_min}`);
+      if (!passMax) console.log(`Filtered out (max): ${term.cell_type} NES=${nes} > ${this.nes_max}`);
+      if (!passFDR) console.log(`Filtered out (FDR): ${term.cell_type} FDR=${fdr} > ${this.fdr_cutoff}`);
+
+      return passMin && passMax && passFDR;
+    });
+
+    
+    console.log(`Filtered terms count: ${filteredTerms.length}/${this.go_terms.length}`);
+    
+    // Calculate min/max from filtered data
+    let min_nes = filteredTerms.length > 0 ? 
+      filteredTerms.reduce((prev, cur) => (prev.nes < cur.nes) ? prev : cur).nes : 0;
+    
+    let max_nes = filteredTerms.length > 0 ? 
+      filteredTerms.reduce((prev, cur) => (prev.nes > cur.nes) ? prev : cur).nes : 0;
+
+    min_nes = Math.floor(min_nes - 1);
+    max_nes = Math.ceil(max_nes + 1);
+    
+    console.log(`Calculated min_nes: ${min_nes}, max_nes: ${max_nes}`);
+    
+    // NOW USE FILTERED TERMS FOR THE REST OF THE FUNCTION
+    this.upreg_enrich_list = [];
+    this.downreg_enrich_list = [];
     let go_data = [];
-    let min_nes = this.go_terms.reduce((prev, cur) => {
-      return (prev && prev.nes < cur.nes) ? prev : cur;
-    }).nes;
-    let max_nes = this.go_terms.reduce((prev, cur) => {
-      return (prev && prev.nes > cur.nes) ? prev : cur;
-    }).nes;
-    min_nes = Math.floor(min_nes - 1)
-    max_nes = Math.ceil(max_nes + 1)
+
     let max_p_val = -Math.log10(Number(this.go_terms.reduce((prev, cur) => {
       return (prev && prev.P_Value < cur.P_Value) ? prev : cur;
     }).P_Value));
-    for (let i = 0; i < this.go_terms.length; i++) {
-      let go_term = this.go_terms[i];
+    
+    // Loop through FILTERED TERMS, not this.go_terms
+    for (let i = 0; i < filteredTerms.length; i++) {
+      let go_term = filteredTerms[i]; // Use filtered term
+      
       let color = this.getColorForValue(go_term.nes, min_nes, max_nes);
       let label = go_term.cell_type;
+      
       if (label.includes("All")) {
         color = color.replace("rgb", "rgba").replace(")", ",.5)");
       }
-      // let formatted_data = { x: Number(go_term.nes), y: Number(go_term.P_Value), fillColor: color, label: label };
-      // anthony
+      
       // Convert adjusted p-value to -log10(p-value)
       let pval_transformed = 0 - Math.log10(Number(go_term.P_Value));
       let formatted_data = {
@@ -279,17 +404,20 @@ export class GoComponent implements OnInit {
         fillColor: color,
         label: label
       };
-
+      
       go_data.push(formatted_data);
-      //set core enrichment values
+      this.filtered_go_terms = filteredTerms;
+
+      
+      // Set core enrichment values
       let enrich_list = go_term.coreenrichment.split('/');
       if (Number(go_term.nes >= 0)) {
-        this.upreg_enrich_list = this.upreg_enrich_list.concat(enrich_list)
-      }
-      else {
-        this.downreg_enrich_list = this.downreg_enrich_list.concat(enrich_list)
+        this.upreg_enrich_list = this.upreg_enrich_list.concat(enrich_list);
+      } else {
+        this.downreg_enrich_list = this.downreg_enrich_list.concat(enrich_list);
       }
     };
+
     console.log(go_data)
 
     //calculte gene prevalance
@@ -368,7 +496,6 @@ export class GoComponent implements OnInit {
       g = Math.round(colorWhite[1] + (colorFirebrick[1] - colorWhite[1]) * percentage);
       b = Math.round(colorWhite[2] + (colorFirebrick[2] - colorWhite[2]) * percentage);
     }
-
     return `rgb(${r},${g},${b})`;
   }
 
@@ -431,12 +558,6 @@ export class GoComponent implements OnInit {
         console.error('Error converting ensemble ID to gene:', error);
       });
   }
-
-  /*geneRerout($event: any){
-    console.log($event.itemData)
-    this.lociService.setLocus($event.itemData)
-    this.router.navigate(['/igv']);
-  }*/
 
   // Re-wrote
   geneRerout(item: string) {
@@ -512,28 +633,6 @@ export class GoComponent implements OnInit {
     return { color: `rgb(${r},${g},${b})` };
   }
 
-  ngAfterViewInit() {
-    /*this.go_chart_options.chart = {
-      height: 400,
-      type: "scatter",
-      animations: {
-        enabled: true
-      },
-      toolbar: {
-        show: false
-      },
-      events: {
-        dataPointSelection: (e, chart, opts) => {
-          this.zone.run(() => {
-            this.selected_term = this.go_terms[opts.dataPointIndex];
-            this.getGeneSymbols(this.selected_term);
-            this.term_selected = true;
-          });
-        }
-      }
-    }*/
-  }
-
   prepareData() {
     this.loading = true;
     this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0])
@@ -544,6 +643,27 @@ export class GoComponent implements OnInit {
           next: (data) => {
             this.selected_cell_types
             this.go_terms = data;
+            console.log('Loaded go_terms:', this.go_terms);
+
+            this.filtered_go_terms = []; // Reset filtered terms   maybe change below this
+
+            // Set initial slider range based on data
+            if (this.go_terms.length > 0) {
+              const minNES = Math.min(...this.go_terms.map(term => term.nes));
+              const maxNES = Math.max(...this.go_terms.map(term => term.nes));
+              
+              // Expand range by 10% on each side
+              this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
+              this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
+              
+              // Set initial bounds to full range
+              this.nes_min_bound = this.nes_slider_min;
+              this.nes_max_bound = this.nes_slider_max;
+              
+              // Initialize filters to full range
+              this.nes_min = this.nes_min_bound;
+              this.nes_max = this.nes_max_bound;
+            }
             this.createDisplayData();
             this.getPathDisplayData();
             this.loading = false;
@@ -558,6 +678,25 @@ export class GoComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.go_terms = data;
+            this.filtered_go_terms = []; // Reset filtered terms
+
+            // Set initial slider range based on data
+            if (this.go_terms.length > 0) {
+              const minNES = Math.min(...this.go_terms.map(term => term.nes));
+              const maxNES = Math.max(...this.go_terms.map(term => term.nes));
+              
+              // Expand range by 10% on each side
+              this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
+              this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
+              
+              // Set initial bounds to full range
+              this.nes_min_bound = this.nes_slider_min;
+              this.nes_max_bound = this.nes_slider_max;
+              
+              // Initialize filters to full range
+              this.nes_min = this.nes_min_bound;
+              this.nes_max = this.nes_max_bound;
+            }
             this.createDisplayData();
             this.getPathDisplayData();
             this.loading = false;
@@ -570,86 +709,93 @@ export class GoComponent implements OnInit {
     }
   }
 
-  /* makeGiniPlot() {
-    const numBins = 100;
-    const binCounts: number[] = Array(numBins).fill(0);
-    for (const gini_score of this.gini_scores) {
-      if (gini_score.UpGini != -1) {
-        const upBin = Math.min(Math.floor(gini_score.UpGini! * numBins), numBins - 1);
-        binCounts[upBin]++;
-      }
-      if (gini_score.DownGini != -1) {
-        const downBin = Math.min(Math.floor(gini_score.DownGini! * numBins), numBins - 1);
-        binCounts[downBin]++;
-      }
-      if (gini_score.DownGini === 1 || gini_score.UpGini === 1) {
-      }
-    }
-
-    // Convert binCounts to plotData array with {x, y}
-    const plotData = binCounts.map((count, index) => ({
-      x: index / (numBins - 1),  // x should be from 0 to 1
-      y: count
-    }));
-
-    // Update chart options
-    this.hist_chart_options.series = [{ data: plotData }];
-  }*/
-
-  /*setHistogramLines() {
-    let selected_gini_score = this.gini_scores.find(item => item.pathway === "\"" + this.selected_pathway + "\"");
-    this.hist_chart_options.annotations = {
-      xaxis: [
-        {
-          x: selected_gini_score?.UpGini,
-          borderColor: '#B22222', // Color of the first upreg value
-          borderWidth: 5
-        },
-        {
-          x: selected_gini_score?.DownGini,
-          borderColor: '#003366', // Color of the downreg upreg value
-          borderWidth: 5,
-        }
-      ]
-    }
-  }*/
-
   getNewData() {
     this.loading = true;
     this.term_selected = false;
     this.prepareData()
-    // this.setHistogramLines()
+    this.resetAnnotations()
   }
 
   onSearchModeChanged(event: any): void {
     console.log('Selected Search Mode:', event.value);
-    // Handle search mode change
-  }
-
-
-
-
-  onTissuesChanged($event: any) {
-    this.selected_tissues = $event.value
+    this.resetAnnotations()
   }
 
   onCellsChanged() {
     if (this.selected_cell_types.length > 0) {
       this.prepareData();
     }
+    this.resetAnnotations()
   }
   onPathwayChange() {
     this.prepareData();
+    this.resetAnnotations();
   }
 
-  fdrCutoffChanged() {
+  CutoffChanged() {
+    this.createDisplayData();
     this.go_chart_options.annotations = {
+      xaxis: [
+        {
+          x: this.nes_min,
+          borderColor: '#008FFB',
+          strokeDashArray: 5,
+          label: {
+            text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(2)}`,
+            style: {
+              color: '#008FFB',
+              background: 'transparent',
+            },
+          },
+        },
+        {
+          x: this.nes_max,
+          borderColor: '#14c71dff',
+          strokeDashArray: 5,
+          label: {
+            text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(2)}`,
+            style: {
+              color: '#14c71dff',
+              background: 'transparent',
+            },
+          },
+        },
+      ],
       yaxis: [
         {
           y: 0 - Math.log10(this.fdr_cutoff),
+          borderColor: '#FF4560', // example color for FDR line
           strokeDashArray: 10,
+          label: {
+            text: `FDR cutoff: ${this.fdr_cutoff.toFixed(4)}`,
+            style: {
+              color: '#FF4560',
+              background: 'transparent',
+            },
+          },
         }
       ]
     }
   }
+  
+  // Method to reset annotations
+  resetAnnotations() {
+    this.go_chart_options.annotations = {
+      yaxis: [],
+      xaxis: []
+    };
+    // If using ng-apexcharts, update the chart explicitly
+    if (this.chart && this.chart.updateOptions) {
+      this.zone.run(() => {
+        this.chart.updateOptions({
+          annotations: {
+            yaxis: [],
+            xaxis: []
+          }
+        }, true);
+      });
+    }
+  }
+
+
 }

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DocumentationPageComponent } from './documentation-page.component';
+import { CommonModule } from '@angular/common'; // Add this
 
-import { DocumentationComponent } from './documentation.component';
-
-describe('DocumentationComponent', () => {
-  let component: DocumentationComponent;
-  let fixture: ComponentFixture<DocumentationComponent>;
+describe('DocumentationPageComponent', () => {
+  let component: DocumentationPageComponent;
+  let fixture: ComponentFixture<DocumentationPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DocumentationComponent ]
-    })
-    .compileComponents();
-  });
+      // Remove the standalone import
+      // imports: [DocumentationPageComponent] // <-- REMOVE THIS LINE
+      declarations: [DocumentationPageComponent], // Add this instead
+      imports: [CommonModule] // Add this
+    }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DocumentationComponent);
+    fixture = TestBed.createComponent(DocumentationPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

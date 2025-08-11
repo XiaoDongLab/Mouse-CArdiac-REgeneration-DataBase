@@ -1,0 +1,116 @@
+<div class="container mx-auto p-4">
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold">Gene Expression Visualization</h1>
+    <p class="text-gray-600">Search and compare gene expression across conditions</p>
+  </header>
+
+  <!-- Search and Filter Section -->
+  <div class="mb-6 p-4 bg-white shadow rounded">
+    <div class="flex flex-wrap items-center gap-4">
+      <input
+        type="text"
+        [(ngModel)]="searchInput"
+        (keyup.enter)="loadExpression()"
+        placeholder="Enter gene symbol or Ensembl ID (e.g., Tnnc1, ENSMUSG...)"
+        class="flex-grow p-2 border rounded"
+      />
+      <button
+        (click)="loadExpression()"
+        [disabled]="loading || !searchInput"
+        class="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+      >
+        Add Gene
+      </button>
+      <select
+        [(ngModel)]="selectedCellType"
+        (ngModelChange)="refreshPlots()"
+        class="p-2 border rounded"
+      >
+        <option value="All Cells">All Cells</option>
+        <option *ngFor="let type of cellTypes" [value]="type">{{ type }}</option>
+      </select>
+      <select
+        [(ngModel)]="selectedSurgery"
+        (ngModelChange)="refreshPlots()"
+        class="p-2 border rounded"
+      >
+        <option *ngFor="let surgery of surgeries" [value]="surgery">{{ surgery }}</option>
+      </select>
+      <select
+        [(ngModel)]="selectedComparison"
+        (ngModelChange)="refreshPlots()"
+        class="p-2 border rounded"
+      >
+        <option *ngFor="let comparison of comparisons" [value]="comparison">{{ comparison }}</option>
+      </select>
+      <select
+        [(ngModel)]="selectedNatalStatus"
+        (ngModelChange)="refreshPlots()"
+        class="p-2 border rounded"
+      >
+        <option *ngFor="let status of natalStatuses" [value]="status">{{ status }}</option>
+      </select>
+      <label class="flex items-center gap-2">
+        <input type="checkbox" [(ngModel)]="logScale" (ngModelChange)="refreshPlots()" />
+        Log Scale
+      </label>
+
+      <label class="flex items-center gap-2">
+        <input 
+            type="checkbox" 
+            [(ngModel)]="splitByTime" 
+            (ngModelChange)="refreshPlots()"
+        />
+        Split by post-surgery time
+        </label>
+    </div>
+    <div class="mt-4" *ngIf="recentGenes.length > 0">
+      <span class="text-sm text-gray-600">Recent Searches:</span>
+      <span
+        *ngFor="let gene of recentGenes"
+        (click)="searchInput = gene; loadExpression()"
+        class="inline-block m-1 px-2 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
+      >
+        {{ gene }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="loading" class="text-center">
+    <p>Loading...</p>
+  </div>
+  <div *ngIf="!loading && expressionData.length === 0" class="text-center p-8">
+    <i class="fas fa-bar-chart-line text-4xl text-gray-400"></i>
+    <p class="text-gray-600">No Genes Added</p>
+    <p class="text-sm text-gray-500">Search for a gene above to visualize its expression data</p>
+  </div>
+  <div class="p-4 bg-white shadow rounded" *ngIf="!loading && expressionData.length > 0">
+    <!-- Single Chart Visualization -->
+    <div class="chart-container">
+      <apx-chart 
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [dataLabels]="chartOptions.dataLabels"
+        [plotOptions]="chartOptions.plotOptions"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [title]="chartOptions.title"
+        [tooltip]="chartOptions.tooltip"
+        [legend]="chartOptions.legend"
+      ></apx-chart>
+    </div>
+    <!-- Gene List and Remove Buttons -->
+    <div class="mt-4">
+      <h2 class="text-xl font-semibold mb-2">Selected Genes</h2>
+      <div class="flex flex-wrap gap-2">
+        <div *ngFor="let data of expressionData; let i = index" class="flex items-center gap-2">
+          <span class="px-2 py-1 bg-gray-200 rounded">{{ data.geneSymbol || data.ensemblId }}</span>
+          <button (click)="removeGene(i)" class="px-2 py-1 bg-red-500 text-white rounded">
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

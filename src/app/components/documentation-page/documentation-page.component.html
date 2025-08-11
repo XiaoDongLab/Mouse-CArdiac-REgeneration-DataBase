@@ -1,0 +1,218 @@
+<div class="container py-4">
+  <h1 class="mb-4">Documentation</h1>
+  
+  <!-- Terminology Section -->
+  <section class="mb-5">
+    <h2>Experimental Terminology</h2>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Definition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>P1</strong></td>
+            <td>Postnatal day 1 (neonatal mouse hearts)</td>
+          </tr>
+          <tr>
+            <td><strong>P2</strong></td>
+            <td>Postnatal day 2 (neonatal mouse hearts)</td>
+          </tr>
+          <tr>
+            <td><strong>P8</strong></td>
+            <td>Postnatal day 7 (transitional stage in cardiac development)</td>
+          </tr>
+          <tr>
+            <td><strong>Sham</strong></td>
+            <td>Control surgery without myocardial infarction (MI) induction</td>
+          </tr>
+          <tr>
+            <td><strong>MI</strong></td>
+            <td>Myocardial infarction model (experimental heart injury)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  
+  <!-- Cell Type Definitions -->
+  <section>
+    <h2>Cell Cluster Definitions</h2>
+    <div class="accordion" id="cellTypeAccordion">
+      <!-- Cardiomyocyte Subtypes -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#cardiomyocyteSubtypes"
+                  aria-expanded="false" aria-controls="cardiomyocyteSubtypes">
+            Cardiomyocyte Subtypes (1-5)
+          </button>
+        </h3>
+        <div id="cardiomyocyteSubtypes" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Specialized cardiomyocyte subtypes identified through single-nucleus RNA sequencing (Cui et al., Dev Cell, 2020). These populations exhibit distinct responses to cardiac injury and regeneration.</p>
+            <div class="accordion" id="cmSubtypeAccordion">
+              <!-- CM1 -->
+              <div class="accordion-item">
+                <h4 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" 
+                          data-bs-toggle="collapse" data-bs-target="#cm1"
+                          aria-expanded="false" aria-controls="cm1">
+                    Cardiomyocyte Subtype 1 (CM1)
+                  </button>
+                </h4>
+                <div id="cm1" class="accordion-collapse collapse" 
+                     data-bs-parent="#cmSubtypeAccordion">
+                  <div class="accordion-body">
+                    <p><strong>Description:</strong> The dominant cardiomyocyte population (50-75% of cells in P1/P8 hearts). Serves as the primary source for injury-responsive CM5 cells in non-regenerative hearts through transcriptional remodeling.</p>
+                    <p><strong>Top Marker Genes:</strong> Akap6, Ank2, Cacna1c, Camk2d, Cdh2, Celf2, Ctnna3, D830005E20Rik, Dip2c, Dmd</p>
+                  </div>
+                </div>
+              </div>
+              <!-- CM2 -->
+              <div class="accordion-item">
+                <h4 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" 
+                          data-bs-toggle="collapse" data-bs-target="#cm2"
+                          aria-expanded="false" aria-controls="cm2">
+                    Cardiomyocyte Subtype 2 (CM2)
+                  </button>
+                </h4>
+                <div id="cm2" class="accordion-collapse collapse" 
+                     data-bs-parent="#cmSubtypeAccordion">
+                  <div class="accordion-body">
+                    <p><strong>Description:</strong> Minor population (4-6%) expressing cell-cycle genes. Maintains consistent levels in both regenerative and non-regenerative hearts without injury-responsive proliferation changes.</p>
+                    <p><strong>Top Marker Genes:</strong> Atad2, Bard1, Blm, Brca1, Brip1, Cdca2, Cenpk, Cenpp, Cep128, Cep192</p>
+                  </div>
+                </div>
+              </div>
+              <!-- CM3 -->
+              <div class="accordion-item">
+                <h4 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" 
+                          data-bs-toggle="collapse" data-bs-target="#cm3"
+                          aria-expanded="false" aria-controls="cm3">
+                    Cardiomyocyte Subtype 3 (CM3)
+                  </button>
+                </h4>
+                <div id="cm3" class="accordion-collapse collapse" 
+                     data-bs-parent="#cmSubtypeAccordion">
+                  <div class="accordion-body">
+                    <p><strong>Description:</strong> Stable population (~14%) defined by dopaminergic metabolism gene expression (Ddc). Shows consistent presence across developmental stages without significant injury response changes.</p>
+                    <p><strong>Top Marker Genes:</strong> 1700042O10Rik, Ddc, Fignl1, Cacna1c, Palld, Ryr2, Akap6, Pdzd2, Fgf13, Ctnna3</p>
+                  </div>
+                </div>
+              </div>
+              <!-- CM4 -->
+              <div class="accordion-item">
+                <h4 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" 
+                          data-bs-toggle="collapse" data-bs-target="#cm4"
+                          aria-expanded="false" aria-controls="cm4">
+                    Cardiomyocyte Subtype 4 (CM4)
+                  </button>
+                </h4>
+                <div id="cm4" class="accordion-collapse collapse" 
+                     data-bs-parent="#cmSubtypeAccordion">
+                  <div class="accordion-body">
+                    <p><strong>Description:</strong> Regeneration-competent immature cardiomyocytes enriched in P1 hearts (>20%) but nearly absent in P8 hearts (&lt;4%). Characterized by embryonic gene expression (Tnni1, Myh7), glycolytic metabolism, and antioxidant activity. Shows dramatic cell-cycle entry post-injury (67% in G2/M phase at 3d post-MI) through NFYa-mediated proliferative programs.</p>
+                    <p><strong>Top Marker Genes:</strong> Actb, Actc1, Atp5a1, Atp5b, Atp5e, Atp5g1, Atp5g3, Atp5h, Atp5j, Atp5j2</p>
+                  </div>
+                </div>
+              </div>
+              <!-- CM5 -->
+              <div class="accordion-item">
+                <h4 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" 
+                          data-bs-toggle="collapse" data-bs-target="#cm5"
+                          aria-expanded="false" aria-controls="cm5">
+                    Cardiomyocyte Subtype 5 (CM5)
+                  </button>
+                </h4>
+                <div id="cm5" class="accordion-collapse collapse" 
+                     data-bs-parent="#cmSubtypeAccordion">
+                  <div class="accordion-body">
+                    <p><strong>Description:</strong> Injury-responsive population localized to infarct border zones. Dramatically induced in P8 hearts post-MI (3.5% → 13%). Expresses cytoskeletal regulators (Xirp2, Cd44) and shows pseudotime progression from CM1. Undergoes apoptosis and NFEL2L1-mediated hypertrophic remodeling in non-regenerative hearts.</p>
+                    <p><strong>Top Marker Genes:</strong> mt-Co1, Gm42418, mt-Cytb, mt-Nd4, mt-Atp6, mt-Nd1, mt-Co3, mt-Co2, AY036118, Myl2</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fibroblast (1-6) -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#Fibroblast"
+                  aria-expanded="false" aria-controls="Fibroblast">
+            Fibroblast (1-6)
+          </button>
+        </h3>
+        <div id="Fibroblast" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Fibroblast clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.</p>
+            <p><strong>Marker Genes:</strong> Acta2, Atxn1, Bcl6b, Bgn, Ckap4, Col1a1, Col1a2, Dcn, Ddr2, Tnnt2</p>
+          </div>
+        </div>
+      </div>
+      <!-- Endothelial Cells (1-6) -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#endothelialCells"
+                  aria-expanded="false" aria-controls="endothelialCells">
+            Endothelial Cells (1-6)
+          </button>
+        </h3>
+        <div id="endothelialCells" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Endothelial clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.</p>
+            <p><strong>Marker Genes:</strong> Acta2, Cd300lg, Cd34, Cdh5, Ednrb, Egfl7, Emcn, Epas1, Kdr, Pecam1</p>
+          </div>
+        </div>
+      </div>
+      <!-- Activated Fibroblast -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#activatedFibroblast"
+                  aria-expanded="false" aria-controls="activatedFibroblast">
+            Activated Fibroblast
+          </button>
+        </h3>
+        <div id="activatedFibroblast" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Fibroblasts activated in response to cardiac injury.</p>
+            <p><strong>Marker Genes:</strong> Acta2, Ckap4, Postn</p>
+          </div>
+        </div>
+      </div>
+      <!-- Epicardial Progenitor -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#epicardialProgenitor"
+                  aria-expanded="false" aria-controls="epicardialProgenitor">
+            Well-established Epicardial Progenitor Cell
+          </button>
+        </h3>
+        <div id="epicardialProgenitor" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Multipotent progenitor cells derived from the epicardium that give rise to cardiac fibroblasts, smooth muscle cells, and coronary vasculature during development and repair. Characterized by embryonic transcription factors and collagen production.</p>
+            <p><strong>Marker Genes:</strong> Aldh1a2, Gata5, Tbx18, Tcf21, Wt1, ENSMUSG00000040254</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

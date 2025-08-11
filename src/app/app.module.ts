@@ -25,6 +25,8 @@ import { CommonModule } from '@angular/common';
 import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { AllCommunityModule } from 'ag-grid-community';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { DocumentationPageComponent } from './components/documentation-page/documentation-page.component';
+import { ExpressionPageComponent } from './components/expression-page/expression-page.component';
 
 @NgModule({
     declarations: [
@@ -40,7 +42,9 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
         LoginComponent,
         ChangelogComponent,
         FooterComponent,
-        SettingsComponent
+        SettingsComponent,
+        DocumentationPageComponent,
+        ExpressionPageComponent
     ],
     bootstrap: [AppComponent], imports: [
         BrowserModule,

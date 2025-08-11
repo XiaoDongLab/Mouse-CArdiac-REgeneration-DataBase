@@ -13,8 +13,10 @@ export class DiffExp {
     PSD: number;
     Surgery: string;
     Comparison: string;
+    Exp: string;
+    Age: string;
 
-    constructor(gene: string | number, pmid: number,cell_type: string, cell_type2: string, cell_type3: string, lfc: number, slope: number, inter: number, p_value: number, plotting_id: number, natal_status: string, PSD: number, Surgery: string, Comparison: string) {
+    constructor(gene: string | number, pmid: number,cell_type: string, cell_type2: string, cell_type3: string, lfc: number, slope: number, inter: number, p_value: number, plotting_id: number, natal_status: string, PSD: number, Surgery: string, Comparison: string, Exp: string, Age: string) {
       this.gene = gene;
       this.pmid = pmid;
       this.cell_type = cell_type;
@@ -29,5 +31,7 @@ export class DiffExp {
       this.PSD = PSD;
       this.Surgery = Surgery;
       this.Comparison = Comparison;
+      this.Exp = Exp;
+      this.Age = Age;
     }
   }

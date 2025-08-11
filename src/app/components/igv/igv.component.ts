@@ -463,21 +463,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     this.completely_loaded = true;
   }
 
-
-
-  //  assignGeneNames(gene_list:DiffExp[]){
-  //   let id_name_map = new Map<string|undefined,string|undefined>();
-  //   this.display?.map(item => id_name_map.set(item.en_id,item.gene_name));
-  //   for(let i = 0; i<gene_list.length; i++){
-  //     let id: string|undefined = gene_list[i].gene
-  //     let name = id_name_map.get(id)
-  //     if(name != ''){
-  //       gene_list[i].gene = name
-  //     }
-  //   }
-  //   return(gene_list)
-  //  }
-
   onTissuesChanged($event: any) {
     this.selected_tissues = $event.value
   }
@@ -485,32 +470,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   onCellChanged($event: any) {
     this.selected_cells = $event.value
   }
-
-  // applyFilter(){
-  //   let new_indices = []
-  //   for(let i = 0; i< this.original_indices.length; i++){
-  //     if(this.selected_tissues.includes(this.original_indices[i].tissue_type!) && this.selected_cells.includes(this.original_indices[i].cell_type!)){
-  //       new_indices.push(i)
-  //     }
-  //   }
-  //   let filtered_genes = [];
-  //   console.log(this.original_genes)
-  //   for(let i = 0; i<this.original_genes.length; i++){
-  //     let gene = this.original_genes[i]
-  //     let temp = new DiffExp(
-  //       gene.gene!,
-  //       this.reorder(gene.fixed_effect, new_indices),
-  //       this.reorder(gene.conf_high, new_indices),
-  //       this.reorder(gene.conf_low, new_indices),
-  //       this.reorder(gene.y_int, new_indices),
-  //       this.reorder(gene.p_val, new_indices)
-  //     )
-  //     filtered_genes.push(temp)
-  //   }
-  //   console.log(filtered_genes)
-  //   this.genes = filtered_genes
-  //   this.selected_indices = this.reorder(this.original_indices, new_indices)
-  // }
 
   reorder(list: any, ids: any) {
     let new_list = []
@@ -589,23 +548,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       this.getDiffExpGeneralData(gene_list, true);
     } else alert(`Entered gene(s): ${false_genes.join(", ")} not found!`)
   }
-
-  // prettyOrderer(diff_list: DiffExp[]){
-  //   let named_list = []
-  //   let ensg_list = []
-  //   for(let i = 0; i<diff_list.length; i++){
-  //     let item = diff_list[i]
-  //     if(item.gene!.startsWith('ENSG')){
-  //       ensg_list.push(item)
-  //     }
-  //     else{
-  //       named_list.push(item)
-  //     }
-  //   }
-  //   named_list.sort((a, b) => (a.gene! > b.gene!) ? 1 : -1)
-  //   ensg_list.sort((a, b) => (a.gene! > b.gene!) ? 1 : -1)
-  //   return(named_list.concat(ensg_list))
-  // }
 
   moveGenes(gene_group: DiffExp[][], direction: 'left' | 'right' | 'none') {
     if (direction == 'right') {

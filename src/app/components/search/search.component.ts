@@ -540,7 +540,7 @@ export class SearchComponent implements OnInit {
   }
   makeDonutChart(input_dict: any) {
     let chart: Partial<DonutChartOptions> = {
-      series: Object.values(input_dict),
+      series: Object.values(input_dict).map(Number),
       chart: {
         type: "donut",
         height: '425',

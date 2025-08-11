@@ -77,6 +77,8 @@
         "genome": "Genome Browser",
         "pathway": "Pathway Enrichment",
         "download": "Search & Download",
+        "documentation": "Documentation",
+        "expression": "Expression",
         "settings": "Settings",
         "language": {
             "title": "Language"
@@ -165,6 +167,7 @@
             "kegg": "KEGG Pathways",
             "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) looks at pathways through DEGs.",
             "fdrqval": "FDR Cutoff",
+            "nes": "NES Cutoff",
             "reset": "Reset"
         },
         "body": {

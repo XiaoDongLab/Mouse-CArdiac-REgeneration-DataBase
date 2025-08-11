@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, sample } from 'rxjs';
+import { Observable, sample, of } from 'rxjs';
 import { Metadata } from '../models/metadata.model';
 import { Sample } from '../models/sample.model';
 import { Positions } from '../models/positions.model';
@@ -8,7 +8,7 @@ import { DiffExp } from '../models/diffExp.model';
 import { Indices } from '../models/indices.model';
 import { Image } from '../models/image.model';
 import JSZip from 'jszip';
-
+import { map, catchError } from 'rxjs/operators'; // Fix: Added map, catchError
 
 //Dev Base URL
 //const baseUrl = 'http://localhost:80/api/';
@@ -33,7 +33,7 @@ const tarSizeUrl =  baseUrl.concat('tarSize'.toString());
 const goEnrichUrl =  baseUrl.concat('goEnrich'.toString());
 const keggEnrichUrl =  baseUrl.concat('keggEnrich'.toString());
 const giniURL =  baseUrl.concat('gini'.toString());
-
+const cellTypesUrl = baseUrl.concat('cellTypes'); // New endpoint: /api/cellTypes returning string[]
 
 
 @Injectable({
@@ -42,14 +42,6 @@ const giniURL =  baseUrl.concat('gini'.toString());
 export class DatabaseService {
 
   constructor(private http: HttpClient) { }
-
-  // getAll(): Observable<User[]> {
-  //   return this.http.get<User[]>(baseUrl);
-  // }
-
-  // get(id: any): Observable<User> {
-  //   return this.http.get(`${baseUrl}/${id}`);
-  // }
 
   getAllDisplaySamples(): Observable<Sample[]> {
     return this.http.get<Sample[]>(sampleUrl);

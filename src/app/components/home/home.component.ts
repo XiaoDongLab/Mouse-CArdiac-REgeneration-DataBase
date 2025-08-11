@@ -132,9 +132,9 @@ export class HomeComponent implements OnInit {
       this.logo_list[i].url = this.logo_list[i].name == this.selected_age_group ? [this.logo_list[i].url.slice(0, -4), "_selected", this.logo_list[i].url.slice(-4)].join('') : this.logo_list[i].url.replace("_selected", "");
     }
     this.makeDictionaries();
-    this.tissue_chart_options.series = Object.values(this.tissue_dict);
+    this.tissue_chart_options.series = Object.values(this.tissue_dict).map(Number);
     this.tissue_chart_options.labels = Object.keys(this.tissue_dict);
-    this.sex_chart_options.series = Object.values(this.sex_dict);
+    this.sex_chart_options.series = Object.values(this.sex_dict).map(Number);
     this.sex_chart_options.labels = Object.keys(this.sex_dict);
   }
 
@@ -186,7 +186,7 @@ export class HomeComponent implements OnInit {
   }
   makeChart(input_dict: any) {
     let chart: Partial<ChartOptions> = {
-      series: Object.values(input_dict),
+      series: Object.values(input_dict).map(Number),
       chart: {
         type: "donut",
         height: "400",

@@ -35,38 +35,44 @@ export class NavbarComponent implements OnInit {
         text: 'navbar.home',
         path: 'home',
         icon: 'fa-home',
-        customClass: '.nav-link', // Add custom class identifier.
+        customClass: '.nav-link' // Add custom class identifier.
       },
       {
         id: 1,
         text: 'navbar.genome',
         icon: 'fa-server',
-        path: 'igv',
+        path: 'igv'
       },
       {
         id: 2,
         text: 'navbar.pathway',
         icon: 'fa-magnifying-glass',
-        path: 'go',
+        path: 'go'
       },
       {
         id: 3,
-        text: 'navbar.download',
+        text: 'navbar.expression',
         icon: 'fa-download',
-        path: 'search',
+        path: 'expression'
       },
       {
         id: 4,
+        text: 'navbar.download',
+        icon: 'fa-download',
+        path: 'search'
+      },
+      {
+        id: 5,
+        text: 'navbar.documentation',
+        icon: 'fa-file',
+        path: 'documentation'  // Points to new documentation page
+      },
+       {
+        id: 6,
         text: 'navbar.settings',
         icon: 'fa-gear',
-        path: 'settings',
+        path: 'settings'
       },
-      /* Delete documentation tab {
-        id: 4,
-        text: 'Documentation',
-        icon: 'file',
-        path: 'documentation',
-      },*/
     ];
   }
 

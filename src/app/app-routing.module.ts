@@ -9,6 +9,9 @@ import { GoComponent } from './components/go/go.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { SettingsComponent } from './components/settings/settings.component';
+import { DocumentationPageComponent } from './components/documentation-page/documentation-page.component'; // Correct import
+import { ExpressionPageComponent } from './components/expression-page/expression-page.component'; // Correct import
+
 
 const routes: Routes = [
   // Public route
@@ -21,6 +24,11 @@ const routes: Routes = [
   { path: 'igv', component: IgvComponent, canActivate: [AuthGuard] },
   { path: 'maps', component: MapsComponent, canActivate: [AuthGuard] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
+
+  { path: 'documentation', component: DocumentationPageComponent, canActivate: [AuthGuard] },
+  { path: 'expression', component: ExpressionPageComponent, data: { title: 'Gene Expression Visualization' } },
+
+
   
   // Default and wildcard routes now redirect to '/home'
   // If the user is not logged in, your AuthGuard should handle the redirection to '/login'
@@ -41,5 +49,7 @@ export const routingComponents = [
   IgvComponent,
   MapsComponent,
   SettingsComponent,
-  LoginComponent
+  LoginComponent,
+  DocumentationPageComponent, // Add new component
+  ExpressionPageComponent
 ];

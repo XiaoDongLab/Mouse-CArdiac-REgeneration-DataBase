@@ -1,0 +1,7 @@
+<!-- expression-plot.component.html -->
+<div class="plot-container" style="height: 350px;">
+  <apx-chart *ngIf="chartOptions" [series]="chartOptions.series" [chart]="chartOptions.chart"
+             [plotOptions]="chartOptions.plotOptions" [stroke]="chartOptions.stroke"
+             [fill]="chartOptions.fill" [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis"
+             [tooltip]="chartOptions.tooltip" [title]="chartOptions.title"></apx-chart>
+</div>
