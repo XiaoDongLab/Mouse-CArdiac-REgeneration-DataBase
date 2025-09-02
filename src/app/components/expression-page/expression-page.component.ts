@@ -132,15 +132,14 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
         const conditionDisplayName = this.conditionDisplayNames[conditionPart] || conditionPart;
         
         return `
-          <div class="apexcharts-tooltip-box apexcharts-tooltip-boxPlot" style="padding: 8px; background: white; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">
+          
             <div style="margin-bottom: 4px;">Gene: <strong>${genePart}</strong></div>
             <div style="margin-bottom: 4px;">Condition: <strong>${conditionDisplayName}</strong></div>
             <div style="margin-bottom: 2px;">Max: <strong>${data.y[4]?.toFixed(2)}</strong></div>
             <div style="margin-bottom: 2px;">Q3: <strong>${data.y[3]?.toFixed(2)}</strong></div>
             <div style="margin-bottom: 2px;">Median: <strong>${data.y[2]?.toFixed(2)}</strong></div>
             <div style="margin-bottom: 2px;">Q1: <strong>${data.y[1]?.toFixed(2)}</strong></div>
-            <div>Min: <strong>${data.y[0]?.toFixed(2)}</strong></div>
-          </div>
+            <div>Min: <strong>${data.y[0]?.toFixed(2)}</strong></div>]
         `;
       } catch (error) {
         console.error('Tooltip error:', error);
@@ -446,7 +445,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
             const max = boxData?.[4] ?? 'N/A';
             
             return `
-              <div style="padding: 10px; background: white; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              
                 <div><strong>Gene:</strong> ${genePart}</div>
                 <div><strong>Condition:</strong> ${conditionDisplayName}</div>
                 <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
@@ -455,7 +454,6 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
                 <div>Median: <strong>${typeof median === 'number' ? median.toFixed(2) : median}</strong></div>
                 <div>Q1: <strong>${typeof q1 === 'number' ? q1.toFixed(2) : q1}</strong></div>
                 <div>Min: <strong>${typeof min === 'number' ? min.toFixed(2) : min}</strong></div>
-              </div>
             `;
           } catch (error) {
             console.error('Tooltip error:', error);

@@ -14,11 +14,11 @@ selectionMode="single"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse justify-content-center overflow-x-auto" id="navbarSupportedContent">
       <ul class="navbar-nav">
         @for (tab of tabs; track tab; let i = $index) {
         <li class="nav-item">
-          <a tabindex="0" class="nav-link" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
+          <a tabindex="0" class="nav-link text-nowrap" [class.active]="selected_path === tab.path" (click)="selectTab(i)"
             [style.color]="tab.color" href="javascript:void(0);" [ariaLabel]="tab.text">
             <i class="fa {{tab.icon}}"></i>
             {{ tab.text | translate }}

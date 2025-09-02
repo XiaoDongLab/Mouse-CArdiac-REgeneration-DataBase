@@ -1,226 +1,164 @@
-<div style="height: 100vh; display: flex; flex-direction: column; margin: 0; padding: 0;">
-  <header style="padding: 1rem; flex-shrink: 0;">
-    <h1 class="text-3xl font-bold">Gene Expression Visualization</h1>
-    <p class="text-gray-600">Search and compare gene expression across conditions</p>
-  </header>
-
-  <!-- Three Column Layout -->
-  <div style="display: flex; flex: 1; min-height: 0;">
-    
-    <!-- Left Column: Add Gene Section -->
-    <div style="width: 320px; flex-shrink: 0;">
-      <div style="height: 100%; overflow-y: auto;" class="p-4 bg-white shadow rounded">
-        <div class="mb-4">
-          <h2 class="text-lg font-semibold mb-2">Add Gene</h2>
-          <p class="text-sm text-gray-600 mb-3">Select criteria and search for a gene to add with specific filter settings.</p>
+<div class="row g-2">
+  <div class="col-lg-3 col-md-12">
+    <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
+      <h2 class="text-lg font-semibold mb-2">Add Gene</h2>
+      <p class="text-sm text-gray-600 mb-3">Select criteria and search for a gene to add with specific filter settings.
+      </p>
+      <hr />
+      <h3>Search Criteria</h3>
+      <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-row gap-3 align-items-center">
+          <small class="text-muted text-nowrap">Cell Type</small>
+          <select [(ngModel)]="selectedCellType" class="form-select">
+            @for (type of cellTypes; track type) {
+            <option [value]="type">{{ type }}</option>
+            }
+          </select>
         </div>
-        
-        <!-- Filter Criteria -->
-        <div class="mb-6">
-          <h3 class="text-sm font-bold text-gray-800 mb-3">Search Criteria</h3>
-          <div class="space-y-4">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <label style="font-size: 0.875rem; font-weight: bold; color: #374151; width: 80px; flex-shrink: 0;">Cell Type</label>
-              <select
-                [(ngModel)]="selectedCellType"
-                style="width: 180px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; background-color: white;"
-              >
-                <option *ngFor="let type of cellTypes" [value]="type">{{ type }}</option>
-              </select>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <label style="font-size: 0.875rem; font-weight: bold; color: #374151; width: 80px; flex-shrink: 0;">Surgery</label>
-              <select
-                [(ngModel)]="selectedSurgery"
-                style="width: 180px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; background-color: white;"
-              >
-                <option *ngFor="let surgery of surgeries" [value]="surgery">{{ surgery }}</option>
-              </select>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <label style="font-size: 0.875rem; font-weight: bold; color: #374151; width: 80px; flex-shrink: 0;">Age Group</label>
-              <select
-                [(ngModel)]="selectedNatalStatus"
-                style="width: 180px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; background-color: white;"
-              >
-                <option *ngFor="let status of natalStatuses" [value]="status">{{ status }}</option>
-              </select>
-            </div>
+        <div class="d-flex flex-row gap-3 align-items-center">
+          <small class="text-muted text-nowrap">Surgery</small>
+          <select [(ngModel)]="selectedSurgery" class="form-select">
+            @for (surgery of surgeries; track surgery) {
+            <option [value]="surgery">{{ surgery }}</option>
+            }
+          </select>
+        </div>
+        <div class="d-flex flex-row gap-3 align-items-center">
+          <small class="text-muted text-nowrap">Age Group</small>
+          <select [(ngModel)]="selectedNatalStatus" class="form-select">
+            @for (status of natalStatuses; track status) {
+            <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <hr />
+      <h3>Gene Search</h3>
+      <input type="text" [(ngModel)]="searchInput" (keyup.enter)="loadExpression()"
+        placeholder="Enter gene symbol or Ensembl ID" class="form-control" />
+      <hr />
+      <button type="button" class="btn btn-mcaredb w-100" (click)="loadExpression()"
+        [disabled]="loading || !searchInput">
+        {{ loading ? 'Adding...' : 'Add Gene' }}
+      </button>
+      <hr />
+      <h3>Display Options</h3>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" value="" id="checkDefault" checked disabled>
+        <label class="form-check-label" for="checkDefault">
+          Log scale
+        </label>
+      </div>
+      <div class="form-check form-switch">
+        <input type="checkbox" [(ngModel)]="splitByTime" (ngModelChange)="onSplitChange()" class="form-check-input"
+          id="checkSplit" />
+        <label class="form-check-label" for="checkSplit"> Split by post-surgery time</label>
+      </div>
+      @if (recentGenes.length > 0) {
+      <hr />
+      <h3>Recent</h3>
+      <div class="row">
+        @for (gene of recentGenes; track gene) {
+        <span class="col">{{gene}}</span>
+        }
+      </div>
+      }
+    </div>
+  </div>
+  <div class="col-lg-6 col-md-12">
+    @if (loading) {
+    <div class="w-100 h-100 d-flex">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
         </div>
+      </div>
+    </div>
+    }
 
-        <!-- Gene Search -->
-        <div class="mb-6">
-          <h3 class="text-sm font-bold text-gray-800 mb-3 pt-3">Gene Search</h3>
-          <input
-            type="text"
-            [(ngModel)]="searchInput"
-            (keyup.enter)="loadExpression()"
-            placeholder="Enter gene symbol or Ensembl ID"
-            class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          
-          <button
-            type="button"
-            class="add-gene-btn w-full focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2"
-            (click)="loadExpression()"
-            [disabled]="loading || !searchInput"
-          >
-            {{ loading ? 'Adding...' : 'Add Gene' }}
-          </button>
+    @if (!loading && expressionData.length === 0) {
+    <!-- Empty State -->
+    <div class="w-100 h-100 d-flex">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="text-center">
+          <i class="fa fa-bar-chart"></i>
+          <h3 class="text-lg font-medium text-gray-600 mb-2">No Genes Added</h3>
+          <p class="text-sm text-gray-500">Select criteria and search for a gene to visualize expression data</p>
         </div>
+      </div>
+    </div>
+    }
 
-        <!-- Display Options -->
-        <div class="mb-8 pt-4 border-t border-gray-200">
-          <h3 class="text-sm font-bold text-gray-800 mb-2">Display Options</h3>
-          <div class="space-y-3">
-            <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="logScale" 
-                (ngModelChange)="refreshPlots()" 
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <span class="text-sm font-medium text-gray-700"> Log Scale</span>
-            </label>
+    <!-- Chart -->
+    @if (!loading && expressionData.length > 0) {
+    <div style="flex: 1; padding: 1rem;">
+      <apx-chart #chartObj [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis" [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+        [title]="chartOptions.title" [tooltip]="chartOptions.tooltip" [legend]="chartOptions.legend"></apx-chart>
+    </div>
+    }
+  </div>
+  <div class="col-lg-3 col-md-12 pt-2 position-relative">
+    <h3>Added Genes ({{ expressionData.length }})</h3>
+    @if (expressionData.length === 0) {
+    <span class="text-center text-muted">No genes added yet</span>
+    }
+    @if (expressionData.length > 0) {
+    <ul class="list-group list-group-flush" style="max-height: 85vh; overflow-y: auto;">
+      @for (data of expressionData; track data; let i = $index) {
+      <li class="list-group-item">
+        <div class="row">
+          <h4 class="mb-0">{{ data.geneSymbol || data.ensemblId }}</h4>
+          @if (data.geneSymbol !== data.ensemblId) {
+          <small class="text-muted">{{ data.ensemblId }}</small>
+          }
 
-            <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="splitByTime" 
-                (ngModelChange)="onSplitChange()"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <span class="text-sm font-medium text-gray-700"> Split by post-surgery time</span>
-            </label>
-          </div>
-        </div>
-        
-        <!-- Recent Searches -->
-        <div *ngIf="recentGenes.length > 0" class="pt-4 border-t">
-          <span class="text-sm text-gray-600 block mb-2">Recent:</span>
-          <div class="flex flex-wrap gap-1">
-            <span
-              *ngFor="let gene of recentGenes"
-              (click)="searchInput = gene"
-              class="inline-block px-2 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 text-xs"
-            >
-              {{ gene }}
+          <!-- Filter Criteria Tags -->
+          <div class="flex flex-wrap gap-1 mb-2">
+            <span *ngIf="data.filterCriteria.cellType !== 'All Cells'"
+              class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
+              {{ data.filterCriteria.cellType }}
+            </span>
+            <span *ngIf="data.filterCriteria.surgery !== 'All'"
+              class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
+              {{ data.filterCriteria.surgery }}
+            </span>
+            <span *ngIf="data.filterCriteria.natalStatus !== 'All'"
+              class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
+              {{ data.filterCriteria.natalStatus }}
             </span>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Middle Column: Chart -->
-    <div style="flex: 1; min-width: 0;">
-      <div style="height: 100%; display: flex; flex-direction: column;" class="bg-white shadow rounded">
-        
-        <!-- Loading State -->
-        <div *ngIf="loading" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-          <div class="text-center">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-            <p class="mt-2">Loading gene data...</p>
-          </div>
-        </div>
-        
-        <!-- Empty State -->
-        <div *ngIf="!loading && expressionData.length === 0" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-          <div class="text-center">
-            <i class="fas fa-bar-chart text-4xl text-gray-400 mb-4"></i>
-            <h3 class="text-lg font-medium text-gray-600 mb-2">No Genes Added</h3>
-            <p class="text-sm text-gray-500">Select criteria and search for a gene to visualize expression data</p>
-          </div>
-        </div>
-        
-        <!-- Chart -->
-        <div *ngIf="!loading && expressionData.length > 0" style="flex: 1; padding: 1rem;">
-          <apx-chart
-            #chartObj
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [xaxis]="chartOptions.xaxis"
-            [yaxis]="chartOptions.yaxis"
-            [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions"
-            [title]="chartOptions.title"
-            [tooltip]="chartOptions.tooltip"
-            [legend]="chartOptions.legend"
-          ></apx-chart>
-        </div>
-      </div>
-    </div>
+          <!-- Data Point Count -->
+          <span class="text-muted">Data Points</span>
+          <h4>{{ (data.rawData && data.rawData.length) || 'N/A' }}</h4>
 
-    <!-- Right Column: Gene List -->
-    <div style="width: 320px; flex-shrink: 0;">
-      <div style="height: 100%; display: flex; flex-direction: column;" class="bg-white shadow rounded">
-        <div class="p-4 border-b" style="flex-shrink: 0;">
-          <h2 class="text-xl font-semibold">Added Genes ({{ expressionData.length }})</h2>
+          <!-- Remove Button -->
+          <button type="button" class="btn btn-mcaredb" (click)="removeGene(i)" [disabled]="loading">
+            {{ loading ? 'Removing...' : 'Remove Gene' }}
+          </button>
         </div>
-        
-        <div style="flex: 1; overflow-y: auto;" class="p-4">
-          <div *ngIf="expressionData.length === 0" class="text-center text-gray-500 text-sm mt-8">
-            No genes added yet
-          </div>
-          
-          <div class="space-y-3" *ngIf="expressionData.length > 0">
-            <div *ngFor="let data of expressionData; let i = index" 
-                 class="p-3 bg-gray-50 rounded border">
-              
-              <!-- Gene Info -->
-              <div class="mb-3">
-                <div class="font-medium text-base mb-1">{{ data.geneSymbol || data.ensemblId }}</div>
-                <div class="text-xs text-gray-500 mb-2" *ngIf="data.geneSymbol !== data.ensemblId">
-                  {{ data.ensemblId }}
-                </div>
-                
-                <!-- Filter Criteria Tags -->
-                <div class="flex flex-wrap gap-1 mb-2">
-                  <span *ngIf="data.filterCriteria.cellType !== 'All Cells'" 
-                        class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                    {{ data.filterCriteria.cellType }}
-                  </span>
-                  <span *ngIf="data.filterCriteria.surgery !== 'All'" 
-                        class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
-                    {{ data.filterCriteria.surgery }}
-                  </span>
-                  <span *ngIf="data.filterCriteria.natalStatus !== 'All'" 
-                        class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
-                    {{ data.filterCriteria.natalStatus }}
-                  </span>
-                </div>
-                
-                <!-- Data Point Count -->
-                <div class="text-xs text-gray-500">
-                  Data points: {{ (data.rawData && data.rawData.length) || 'N/A' }}
-                </div>
-              </div>
-              
-              <!-- Remove Button -->
-              <button
-                type="button"
-                class="remove-gene-btn w-full focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2"
-                (click)="removeGene(i)"
-                [disabled]="loading" 
-              >
-                {{ loading ? 'Removing...' : 'Remove Gene' }}
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- How it works info -->
-        <div style="flex-shrink: 0;" class="p-3 bg-blue-50 border-t text-xs">
-          <p class="font-medium text-blue-800 mb-1">How it works:</p>
-          <ul class="text-blue-700 space-y-1">
-            <li>Each gene uses specific filter criteria</li>
-            <li>Compare genes across different conditions</li>
-            <li>Modify display options in left panel</li>
-          </ul>
-        </div>
-      </div>
+      </li>
+      }
+    </ul>
+    }
+    <div class="d-none d-lg-block bottom-0 position-absolute">
+      <p class="font-medium text-blue-800 mb-1">How it works:</p>
+      <ul class="text-blue-700 space-y-1">
+        <li>Each gene uses specific filter criteria</li>
+        <li>Compare genes across different conditions</li>
+        <li>Modify display options in left panel</li>
+      </ul>
+    </div>
+    <div class="d-block d-lg-none">
+      <p class="font-medium text-blue-800 mb-1">How it works:</p>
+      <ul class="text-blue-700 space-y-1">
+        <li>Each gene uses specific filter criteria</li>
+        <li>Compare genes across different conditions</li>
+        <li>Modify display options in left panel</li>
+      </ul>
     </div>
   </div>
 </div>

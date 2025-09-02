@@ -1,6 +1,25 @@
 # Version history
 
-The latest stable version is **2.2507.150.1**, compiled on 28 July 2025.
+The latest stable version is **2.2508.0.1**, compiled on 1 Aug 2025.
+
+## 2.2508.0.1 (main) - 1 Aug 2025
+
+### Fixed issues
+
+- Fixed an issue that the search grid will return empty results when selecting more than two cell types.
+
+- Fixed an issue that selecting PMID will not result in filtering data.
+
+- Fixed an issue that the tooltip will remain on the page when loading DEG results.
+
+- Fixed an issue that the search grid will always show miscellaneous files in the front rows.
+
+### Miscellaneous
+
+- We added `Reset` buttons for cell type, pmid and file type selection in Search and Download, as well as cell type selection in Pathway Enrichment. Now, clearing all selections will not result in a new data inquiry.
+
+- We changed the icon for light/dark mode switch on the navbar.
+
 
 ## 2.2507.150.1 (main) - 28 July 2025
 
