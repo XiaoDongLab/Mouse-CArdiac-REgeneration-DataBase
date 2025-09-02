@@ -31,7 +31,6 @@ export interface ChartOptions {
   colors?: string[];
 };
 
-// Updated interface to store gene-specific filter criteria
 interface GeneExpressionData {
   geneSymbol: string;
   ensemblId: string;
@@ -42,7 +41,6 @@ interface GeneExpressionData {
     surgery: string;
     natalStatus: string;
   };
-  sig_total?: string;
   rawData?: DiffExp[]; // Store raw data for reference
 }
 
@@ -59,11 +57,9 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   selectedCellType = 'All Cells';
   selectedSurgery = 'All';
-  selectedComparison = 'All';
   selectedNatalStatus = 'All';
   cellTypes: string[] = [];
   surgeries: string[] = ['All', 'MI', 'Sham'];
-  comparisons: string[] = ['All', 'P1vsP8'];
   natalStatuses: string[] = ['All', 'P1', 'P8', 'P2'];
   logScale = true;
   recentGenes: string[] = [];
@@ -77,7 +73,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       height: 800,
       type: 'boxPlot',
       toolbar: { show: true },
-      zoom: { enabled: false } // Disable zoom to avoid preventDefault warnings
+      zoom: { enabled: false }
     },
     dataLabels: { enabled: false },
     plotOptions: {
@@ -127,7 +123,6 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
         const data = w.config.series[seriesIndex].data[dataPointIndex];
         const fullLabel = w.config.xaxis.categories[dataPointIndex];
         
-        // Parse the label to extract gene name and condition
         // Format is: "GeneName (optional filter info) (ConditionName)"
         const lastParenIndex = fullLabel.lastIndexOf('(');
         const genePart = fullLabel.substring(0, lastParenIndex).trim();
@@ -497,13 +492,13 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       plotOptions: {
         ...this.chartOptions.plotOptions,
         bar: {
-          columnWidth: '50%' // Single series, wider is fine
+          columnWidth: '50%' 
         }
       },
       
       legend: {
         ...this.chartOptions.legend,
-        show: false // No legend needed
+        show: false 
       }
     };
 
@@ -533,16 +528,6 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     this.chartOptions = { ...this.chartOptions, ...newOptions };
   }
 
-  getMean(values: number[]): number {
-    if (!values || values.length === 0) return 0;
-    return values.reduce((a, b) => a + b, 0) / values.length;
-  }
-
-  refreshPlots() {
-    // Note: This doesn't refilter existing genes, just refreshes the chart
-    this.updateChart();
-  }
-
   removeGene(index: number) {
     this.expressionData.splice(index, 1);
     this.updateChart();
@@ -561,7 +546,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private fetchGeneData(genes: string[], useGeneralEndpoint: boolean = true): Observable<DiffExp[]> {
+  private fetchGeneData(genes: string[]): Observable<DiffExp[]> {
     return this.databaseService.getGeneDiffExp(genes).pipe(
       catchError(error => {
         console.error('Error fetching gene data:', error);
