@@ -21,9 +21,14 @@
       <!--CELL TYPE SELECT BOX-->
       <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
         <h4 translate="pathway.filterarea.celltype" class="mb-0"></h4>
-        <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cell_types = cell_types.slice(); prepareData()">
-          <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
-        </button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cell_types = []; onCellsChanged()">
+            <i class="fa fa-times"></i> {{'pathway.filterarea.deselectAll' | translate}}
+          </button>
+          <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cell_types = cell_types.slice(); prepareData()">
+            <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
+          </button>
+        </div>
       </div>
       <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" placeholder="Select Cell Type(s)"
         [(ngModel)]="selected_cell_types" [selectableGroup]="true" [selectableGroupAsModel]="false"
@@ -38,7 +43,7 @@
           </div>
         </ng-template>
       </ng-select>
-
+      <!-- FDR Filter -->
       <h4>{{'pathway.filterarea.fdrqval' | translate}}</h4>
       <div class="d-flex align-items-center justify-content-between gap-2">
         <input

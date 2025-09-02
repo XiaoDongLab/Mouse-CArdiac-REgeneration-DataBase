@@ -7,8 +7,8 @@
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
-          <tr>
-            <th>Term</th>
+         <tr>
+             <th>Term</th>
             <th>Definition</th>
           </tr>
         </thead>
@@ -23,7 +23,7 @@
           </tr>
           <tr>
             <td><strong>P8</strong></td>
-            <td>Postnatal day 7 (transitional stage in cardiac development)</td>
+            <td>Postnatal day 8 (transitional stage in cardiac development)</td>
           </tr>
           <tr>
             <td><strong>Sham</strong></td>
@@ -33,15 +33,83 @@
             <td><strong>MI</strong></td>
             <td>Myocardial infarction model (experimental heart injury)</td>
           </tr>
+          <tr>
+            <td><strong>PSD#</strong></td>
+            <td>Post-surgery Sequencing Date, ie how many days after the surgery were the hearts sequenced</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
+
+
+    <!-- Statistical Section -->
+  <section class="mb-5">
+    <h2>Statistical Terminology</h2>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+         <tr>
+             <th>Case</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>P1 vs P8</strong></td>
+            <td>Comparing expression profile between P1 individuals against P8 individuals (base case)</td>
+          </tr>
+          <tr>
+            <td><strong>MI vs Sham</strong></td>
+            <td>Comparing expression profile between MI individuals against Sham individuals (base case)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!--  Add: Definition of Comparisons (P1 vs P8 / MI vs Sham)    Also double check all markers below for newly added cell types -->
+  <!--  Also look for file with full list, I have CM subtypes but cant find all markers -->
+
   
   <!-- Cell Type Definitions -->
   <section>
     <h2>Cell Cluster Definitions</h2>
     <div class="accordion" id="cellTypeAccordion">
+      <!-- B Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#bCell"
+                  aria-expanded="false" aria-controls="bCell">
+            B Cell
+          </button>
+        </h3>
+        <div id="bCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Lymphocytes that produce antibodies and contribute to the immune response in the heart.</p>
+            <p><strong>Top marker Genes:</strong> Cd19, Ms4a1, Pax5</p>
+          </div>
+        </div>
+      </div>
+<!-- Cardiac Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#cardiacCell"
+                  aria-expanded="false" aria-controls="cardiacCell">
+            Cardiac Cell
+          </button>
+        </h3>
+        <div id="cardiacCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Specialized muscle cells (cardiomyocytes) responsible for heart contraction and electrical conduction.</p>
+            <p><strong>Top marker Genes:</strong> Tnnt2, Myh6, Actc1</p>
+          </div>
+        </div>
+      </div>
       <!-- Cardiomyocyte Subtypes -->
       <div class="accordion-item">
         <h3 class="accordion-header">
@@ -145,23 +213,6 @@
           </div>
         </div>
       </div>
-      <!-- Fibroblast (1-6) -->
-      <div class="accordion-item">
-        <h3 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" 
-                  data-bs-toggle="collapse" data-bs-target="#Fibroblast"
-                  aria-expanded="false" aria-controls="Fibroblast">
-            Fibroblast (1-6)
-          </button>
-        </h3>
-        <div id="Fibroblast" class="accordion-collapse collapse" 
-             data-bs-parent="#cellTypeAccordion">
-          <div class="accordion-body">
-            <p><strong>Description:</strong> Fibroblast clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.</p>
-            <p><strong>Marker Genes:</strong> Acta2, Atxn1, Bcl6b, Bgn, Ckap4, Col1a1, Col1a2, Dcn, Ddr2, Tnnt2</p>
-          </div>
-        </div>
-      </div>
       <!-- Endothelial Cells (1-6) -->
       <div class="accordion-item">
         <h3 class="accordion-header">
@@ -175,24 +226,7 @@
              data-bs-parent="#cellTypeAccordion">
           <div class="accordion-body">
             <p><strong>Description:</strong> Endothelial clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.</p>
-            <p><strong>Marker Genes:</strong> Acta2, Cd300lg, Cd34, Cdh5, Ednrb, Egfl7, Emcn, Epas1, Kdr, Pecam1</p>
-          </div>
-        </div>
-      </div>
-      <!-- Activated Fibroblast -->
-      <div class="accordion-item">
-        <h3 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" 
-                  data-bs-toggle="collapse" data-bs-target="#activatedFibroblast"
-                  aria-expanded="false" aria-controls="activatedFibroblast">
-            Activated Fibroblast
-          </button>
-        </h3>
-        <div id="activatedFibroblast" class="accordion-collapse collapse" 
-             data-bs-parent="#cellTypeAccordion">
-          <div class="accordion-body">
-            <p><strong>Description:</strong> Fibroblasts activated in response to cardiac injury.</p>
-            <p><strong>Marker Genes:</strong> Acta2, Ckap4, Postn</p>
+            <p><strong>Top marker Genes:</strong> Acta2, Cd300lg, Cd34, Cdh5, Ednrb, Egfl7, Emcn, Epas1, Kdr, Pecam1</p>
           </div>
         </div>
       </div>
@@ -209,7 +243,161 @@
              data-bs-parent="#cellTypeAccordion">
           <div class="accordion-body">
             <p><strong>Description:</strong> Multipotent progenitor cells derived from the epicardium that give rise to cardiac fibroblasts, smooth muscle cells, and coronary vasculature during development and repair. Characterized by embryonic transcription factors and collagen production.</p>
-            <p><strong>Marker Genes:</strong> Aldh1a2, Gata5, Tbx18, Tcf21, Wt1, ENSMUSG00000040254</p>
+            <p><strong>Top marker Genes:</strong> Aldh1a2, Gata5, Tbx18, Tcf21, Wt1, ENSMUSG00000040254</p>
+          </div>
+        </div>
+      </div>
+      <!-- Fibroblast (1-6) -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#Fibroblast"
+                  aria-expanded="false" aria-controls="Fibroblast">
+            Fibroblast (1-6)
+          </button>
+        </h3>
+        <div id="Fibroblast" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Fibroblast clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.</p>
+            <p><strong>Top marker Genes:</strong> Acta2, Atxn1, Bcl6b, Bgn, Ckap4, Col1a1, Col1a2, Dcn, Ddr2, Tnnt2</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activated Fibroblast -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#activatedFibroblast"
+                  aria-expanded="false" aria-controls="activatedFibroblast">
+            Activated Fibroblast
+          </button>
+        </h3>
+        <div id="activatedFibroblast" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Fibroblasts activated in response to cardiac injury.</p>
+            <p><strong>Top marker Genes:</strong> Acta2, Ckap4, Postn</p>
+          </div>
+        </div>
+      </div>
+<!-- Granulocyte -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#granulocyte"
+                  aria-expanded="false" aria-controls="granulocyte">
+            Granulocyte
+          </button>
+        </h3>
+        <div id="granulocyte" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Immune cells, including neutrophils, eosinophils, and basophils, involved in inflammatory responses in cardiac tissue.</p>
+            <p><strong>Top marker Genes:</strong> Elane, Csf3r, S100a9</p>
+          </div>
+        </div>
+      </div>
+<!-- Macrophage -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#macrophage"
+                  aria-expanded="false" aria-controls="macrophage">
+            Macrophage
+          </button>
+        </h3>
+        <div id="macrophage" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Immune cells that phagocytose debris and pathogens, contributing to inflammation and repair in the heart.</p>
+            <p><strong>Top marker Genes:</strong> Cd68, Adgre1, Csf1r</p>
+          </div>
+        </div>
+      </div>
+<!-- Mural Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#muralCell"
+                  aria-expanded="false" aria-controls="muralCell">
+            Mural Cell
+          </button>
+        </h3>
+        <div id="muralCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Pericytes and vascular smooth muscle cells that support blood vessel stability and function in the heart.</p>
+            <p><strong>Top marker Genes:</strong> Pdgfrb, Acta2, Myh11</p>
+          </div>
+        </div>
+      </div>
+<!-- Progenitor Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#progenitorCell"
+                  aria-expanded="false" aria-controls="progenitorCell">
+            Progenitor Cell
+          </button>
+        </h3>
+        <div id="progenitorCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Multipotent cells capable of differentiating into various cardiac cell types during development or repair.</p>
+            <p><strong>Top marker Genes:</strong> Isl1, Nkx2-5, Sca1</p>
+          </div>
+        </div>
+      </div>
+<!-- Red Blood Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#redBloodCell"
+                  aria-expanded="false" aria-controls="redBloodCell">
+            Red Blood Cell
+          </button>
+        </h3>
+        <div id="redBloodCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Erythrocytes responsible for oxygen transport in the bloodstream, critical for cardiac tissue oxygenation.</p>
+            <p><strong>Top marker Genes:</strong> Hba1, Hbb, Gypa</p>
+          </div>
+        </div>
+      </div>
+<!-- Sinoatrial Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#sinoatrialCell"
+                  aria-expanded="false" aria-controls="sinoatrialCell">
+            Sinoatrial Cell
+          </button>
+        </h3>
+        <div id="sinoatrialCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Specialized pacemaker cells in the sinoatrial node that initiate the heartbeat by generating electrical impulses.</p>
+            <p><strong>Top marker Genes:</strong> Hcn4, Shox2, Tbx3</p>
+          </div>
+        </div>
+      </div>
+<!-- T Cell -->
+      <div class="accordion-item">
+        <h3 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#tCell"
+                  aria-expanded="false" aria-controls="tCell">
+            T Cell
+          </button>
+        </h3>
+        <div id="tCell" class="accordion-collapse collapse" 
+             data-bs-parent="#cellTypeAccordion">
+          <div class="accordion-body">
+            <p><strong>Description:</strong> Lymphocytes involved in cell-mediated immunity, regulating immune responses in cardiac tissue.</p>
+            <p><strong>Top marker Genes:</strong> Cd3e, Cd4, Cd8a</p>
           </div>
         </div>
       </div>

@@ -78,7 +78,7 @@
         "pathway": "Pathway Enrichment",
         "download": "Search & Download",
         "documentation": "Documentation",
-        "expression": "Expression",
+        "expression": "Gene Expression",
         "settings": "Settings",
         "language": {
             "title": "Language"
@@ -122,7 +122,9 @@
             "sl-dn": "Slightly Downregulated",
             "sg-dn": "Significantly Downregulated",
             "no-ft": "Not have a significant fit",
-            "note1": "Numbers on the meta plot were hidden if the sample size is less than 2."
+            "note1": "Numbers on the meta plot were hidden if the sample size is less than 2.",
+            "reset": "Reset",
+            "deselectAll": "Deselect All"
         }
     },
     "genecard": {
@@ -168,7 +170,8 @@
             "kegg-d": "Kyoto Encyclopedia of Genes and Genomes (KEGG) looks at pathways through DEGs.",
             "fdrqval": "FDR Cutoff",
             "nes": "NES Cutoff",
-            "reset": "Reset"
+            "reset": "Reset",
+            "deselectAll": "Deselect All"
         },
         "body": {
             "select": "Select Cluster To See Details",

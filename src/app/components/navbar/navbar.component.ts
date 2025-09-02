@@ -45,16 +45,17 @@ export class NavbarComponent implements OnInit {
       },
       {
         id: 2,
+        text: 'navbar.expression',
+        icon: 'fa-chart-simple',
+        path: 'expression'
+      },
+      {
+        id: 3,
         text: 'navbar.pathway',
         icon: 'fa-magnifying-glass',
         path: 'go'
       },
-      {
-        id: 3,
-        text: 'navbar.expression',
-        icon: 'fa-download',
-        path: 'expression'
-      },
+      
       {
         id: 4,
         text: 'navbar.download',
@@ -65,7 +66,7 @@ export class NavbarComponent implements OnInit {
         id: 5,
         text: 'navbar.documentation',
         icon: 'fa-file',
-        path: 'documentation'  // Points to new documentation page
+        path: 'documentation'  
       },
        {
         id: 6,

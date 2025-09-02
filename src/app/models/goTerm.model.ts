@@ -7,8 +7,9 @@ export class GoTerm {
   cell_type: string;
   tissue: string;
   pmid: number;
+  color: string;
 
-  constructor(pathway: string, goid: string, nes: number, P_Value: number, coreenrichment: string, cell_type: string, tissue: string, pmid: number) {
+  constructor(pathway: string, goid: string, nes: number, P_Value: number, coreenrichment: string, cell_type: string, tissue: string, pmid: number, color: string) {
     this.pathway = pathway;
     this.goid = goid;
     this.nes = nes;
@@ -17,5 +18,6 @@ export class GoTerm {
     this.cell_type = cell_type;
     this.tissue = tissue;
     this.pmid = pmid;
+    this.color = color;
   }
 }

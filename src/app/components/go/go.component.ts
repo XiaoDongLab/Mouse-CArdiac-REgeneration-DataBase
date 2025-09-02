@@ -8,7 +8,7 @@ import { LociService } from 'src/app/services/loci.service';
 import { PathwayinfoService } from 'src/app/services/pathwayinfo.service';
 import { GiniScore } from 'src/app/models/giniScore.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
-import { min } from 'rxjs';
+import { min, firstValueFrom } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from '@ngx-translate/core';
 declare const bootstrap: any;
@@ -213,7 +213,7 @@ export class GoComponent implements OnInit {
             borderColor: '#FF4560', // example color for FDR line
             strokeDashArray: 10,
             label: {
-              text: `FDR cutoff: ${this.fdr_cutoff.toFixed(4)}`,
+              text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
               style: {
                 color: '#FF4560',
                 background: 'transparent',
@@ -227,7 +227,7 @@ export class GoComponent implements OnInit {
             borderColor: '#008FFB',
             strokeDashArray: 5,
             label: {
-              text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(2)}`,
+              text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
               style: {
                 color: '#008FFB',
                 background: 'transparent',
@@ -239,7 +239,7 @@ export class GoComponent implements OnInit {
             borderColor: '#14c71dff',
             strokeDashArray: 5,
             label: {
-              text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(2)}`,
+              text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
               style: {
                 color: '#14c71dff',
                 background: 'transparent',
@@ -281,6 +281,14 @@ export class GoComponent implements OnInit {
 
   ngOnInit(): void {
     this.prepareData();
+
+    if (this.go_terms.length > 0) {
+      const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
+      const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
+      this.go_terms.forEach(term => {
+        term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
+      });
+    }
     
     // Apply initial filtering
     this.nes_min = this.nes_min_bound;
@@ -361,18 +369,15 @@ export class GoComponent implements OnInit {
       return passMin && passMax && passFDR;
     });
 
-    
     console.log(`Filtered terms count: ${filteredTerms.length}/${this.go_terms.length}`);
     
     // Calculate min/max from filtered data
-    let min_nes = filteredTerms.length > 0 ? 
-      filteredTerms.reduce((prev, cur) => (prev.nes < cur.nes) ? prev : cur).nes : 0;
-    
-    let max_nes = filteredTerms.length > 0 ? 
-      filteredTerms.reduce((prev, cur) => (prev.nes > cur.nes) ? prev : cur).nes : 0;
+    let min_nes = filteredTerms.reduce((prev, cur) => (prev.nes < cur.nes) ? prev : cur).nes;
+    let max_nes = filteredTerms.reduce((prev, cur) => (prev.nes > cur.nes) ? prev : cur).nes;
 
-    min_nes = Math.floor(min_nes - 1);
-    max_nes = Math.ceil(max_nes + 1);
+    // Respect nes_min and nes_max filters for axis bounds
+    min_nes = this.nes_min !== null ? Math.floor(Math.min(this.nes_min, min_nes)) : Math.floor(min_nes - 1);
+    max_nes = this.nes_max !== null ? Math.ceil(Math.max(this.nes_max, max_nes)) : Math.ceil(max_nes + 1);
     
     console.log(`Calculated min_nes: ${min_nes}, max_nes: ${max_nes}`);
     
@@ -389,7 +394,7 @@ export class GoComponent implements OnInit {
     for (let i = 0; i < filteredTerms.length; i++) {
       let go_term = filteredTerms[i]; // Use filtered term
       
-      let color = this.getColorForValue(go_term.nes, min_nes, max_nes);
+      let color = go_term.color      
       let label = go_term.cell_type;
       
       if (label.includes("All")) {
@@ -408,7 +413,6 @@ export class GoComponent implements OnInit {
       go_data.push(formatted_data);
       this.filtered_go_terms = filteredTerms;
 
-      
       // Set core enrichment values
       let enrich_list = go_term.coreenrichment.split('/');
       if (Number(go_term.nes >= 0)) {
@@ -420,9 +424,11 @@ export class GoComponent implements OnInit {
 
     console.log(go_data)
 
+    let displayed_cluster_length = go_data.length
+
     //calculte gene prevalance
-    this.countOccurrences(this.upreg_enrich_list, 'UP')
-    this.countOccurrences(this.downreg_enrich_list, 'DOWN')
+    this.countOccurrences(this.upreg_enrich_list, 'UP', displayed_cluster_length)
+    this.countOccurrences(this.downreg_enrich_list, 'DOWN', displayed_cluster_length)
     max_p_val = Math.ceil(max_p_val + 1)
     let num_ticks = max_nes - min_nes
     this.go_chart_options.series = [{ data: go_data }];
@@ -529,7 +535,7 @@ export class GoComponent implements OnInit {
     this.prepareData();
   }
 
-  countOccurrences(gene_list: string[], direction: string): void {
+  countOccurrences(gene_list: string[], direction: string, displayed_cluster_length: number): void {
     this.geneConversionService.convertEnsemblListToGeneList(gene_list)
       .then((result: string[]) => {
         const counts: { [gene: string]: number } = {};
@@ -545,7 +551,7 @@ export class GoComponent implements OnInit {
         // Convert to array of objects
         const sortedCountsArray = sortedCounts.map(([gene, count]) => ({
           gene,
-          count: ((count / this.go_terms.length) * 100).toFixed(1) + '%'
+          count: ((count / displayed_cluster_length) * 100).toFixed(1) + '%'
         }));
         if (direction == 'UP') {
           this.upreg_gene_counts = sortedCountsArray;
@@ -633,79 +639,109 @@ export class GoComponent implements OnInit {
     return { color: `rgb(${r},${g},${b})` };
   }
 
-  prepareData() {
+  async prepareData() {
     this.loading = true;
-    this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0])
-    this.selected_cell_types = this.selected_cell_types.length == 0 ? this.cell_types : this.selected_cell_types;
+    this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0]);
+    this.selected_cell_types = this.selected_cell_types.length === 0 ? this.cell_types : this.selected_cell_types;
+
     if (this.pathway_groupby_go) {
-      this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
-        .subscribe({
-          next: (data) => {
-            this.selected_cell_types
-            this.go_terms = data;
-            console.log('Loaded go_terms:', this.go_terms);
+      try {
+        const data = await firstValueFrom(
+          this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
+        );
+        console.log('Raw GO terms data:', data);
+        // Map data to GoTerm class
+        this.go_terms = (data || []).map(item => new GoTerm(
+          String(item.pathway || this.selected_pathway || ''),
+          String(item.goid || ''),
+          Number(item.nes || 0),
+          Number(item.P_Value || 0),
+          String(item.coreenrichment || ''),
+          String(item.cell_type || ''),
+          String(item.tissue || this.selected_tissues.join(',') || ''),
+          Number(item.pmid || 0),
+          ''
+        ));
+        console.log('Mapped go_terms:', this.go_terms);
 
-            this.filtered_go_terms = []; // Reset filtered terms   maybe change below this
+        if (this.go_terms.length > 0) {
+          const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
+          const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
+          this.go_terms.forEach(term => {
+            term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
+            console.log(`Assigned color to ${term.cell_type}: ${term.color} for NES=${term.nes}`);
+          });
+        } else {
+          console.warn('No GO terms available to assign colors');
+        }
 
-            // Set initial slider range based on data
-            if (this.go_terms.length > 0) {
-              const minNES = Math.min(...this.go_terms.map(term => term.nes));
-              const maxNES = Math.max(...this.go_terms.map(term => term.nes));
-              
-              // Expand range by 10% on each side
-              this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
-              this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
-              
-              // Set initial bounds to full range
-              this.nes_min_bound = this.nes_slider_min;
-              this.nes_max_bound = this.nes_slider_max;
-              
-              // Initialize filters to full range
-              this.nes_min = this.nes_min_bound;
-              this.nes_max = this.nes_max_bound;
-            }
-            this.createDisplayData();
-            this.getPathDisplayData();
-            this.loading = false;
-          },
-          error: (e) => {
-            console.error(e);
-          },
-          complete: () => { }
-        });
+        this.filtered_go_terms = [];
+        if (this.go_terms.length > 0) {
+          const minNES = Math.min(...this.go_terms.map(term => term.nes));
+          const maxNES = Math.max(...this.go_terms.map(term => term.nes));
+          this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
+          this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
+          this.nes_min_bound = this.nes_slider_min;
+          this.nes_max_bound = this.nes_slider_max;
+          this.nes_min = this.nes_min_bound;
+          this.nes_max = this.nes_max_bound;
+        }
+        this.createDisplayData();
+        this.getPathDisplayData();
+        this.loading = false;
+      } catch (e) {
+        console.error('Error loading GO terms:', e);
+        this.loading = false;
+      }
     } else {
-      this.databaseService.getKEGGTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway_kegg, this.selectedComparisonType)
-        .subscribe({
-          next: (data) => {
-            this.go_terms = data;
-            this.filtered_go_terms = []; // Reset filtered terms
+      try {
+        const data = await firstValueFrom(
+          this.databaseService.getKEGGTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway_kegg, this.selectedComparisonType)
+        );
+        console.log('Raw KEGG terms data:', data);
+        // Map data to GoTerm class
+        this.go_terms = (data || []).map(item => new GoTerm(
+          String(item.pathway || this.selected_pathway_kegg || ''),
+          String(item.goid || ''),
+          Number(item.nes || 0),
+          Number(item.P_Value || 0),
+          String(item.coreenrichment || ''),
+          String(item.cell_type || ''),
+          String(item.tissue || this.selected_tissues.join(',') || ''),
+          Number(item.pmid || 0),
+          ''
+        ));
+        console.log('Mapped go_terms:', this.go_terms);
 
-            // Set initial slider range based on data
-            if (this.go_terms.length > 0) {
-              const minNES = Math.min(...this.go_terms.map(term => term.nes));
-              const maxNES = Math.max(...this.go_terms.map(term => term.nes));
-              
-              // Expand range by 10% on each side
-              this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
-              this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
-              
-              // Set initial bounds to full range
-              this.nes_min_bound = this.nes_slider_min;
-              this.nes_max_bound = this.nes_slider_max;
-              
-              // Initialize filters to full range
-              this.nes_min = this.nes_min_bound;
-              this.nes_max = this.nes_max_bound;
-            }
-            this.createDisplayData();
-            this.getPathDisplayData();
-            this.loading = false;
-          },
-          error: (e) => {
-            console.error(e);
-          },
-          complete: () => this.loading = false
-        });
+        if (this.go_terms.length > 0) {
+          const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
+          const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
+          this.go_terms.forEach(term => {
+            term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
+            console.log(`Assigned color to ${term.cell_type}: ${term.color} for NES=${term.nes}`);
+          });
+        } else {
+          console.warn('No KEGG terms available to assign colors');
+        }
+
+        this.filtered_go_terms = [];
+        if (this.go_terms.length > 0) {
+          const minNES = Math.min(...this.go_terms.map(term => term.nes));
+          const maxNES = Math.max(...this.go_terms.map(term => term.nes));
+          this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
+          this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
+          this.nes_min_bound = this.nes_slider_min;
+          this.nes_max_bound = this.nes_slider_max;
+          this.nes_min = this.nes_min_bound;
+          this.nes_max = this.nes_max_bound;
+        }
+        this.createDisplayData();
+        this.getPathDisplayData();
+        this.loading = false;
+      } catch (e) {
+        console.error('Error loading KEGG terms:', e);
+        this.loading = false;
+      }
     }
   }
 
@@ -741,7 +777,7 @@ export class GoComponent implements OnInit {
           borderColor: '#008FFB',
           strokeDashArray: 5,
           label: {
-            text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(2)}`,
+            text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
             style: {
               color: '#008FFB',
               background: 'transparent',
@@ -753,7 +789,7 @@ export class GoComponent implements OnInit {
           borderColor: '#14c71dff',
           strokeDashArray: 5,
           label: {
-            text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(2)}`,
+            text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
             style: {
               color: '#14c71dff',
               background: 'transparent',
@@ -767,7 +803,7 @@ export class GoComponent implements OnInit {
           borderColor: '#FF4560', // example color for FDR line
           strokeDashArray: 10,
           label: {
-            text: `FDR cutoff: ${this.fdr_cutoff.toFixed(4)}`,
+            text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
             style: {
               color: '#FF4560',
               background: 'transparent',
