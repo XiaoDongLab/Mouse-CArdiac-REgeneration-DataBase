@@ -127,6 +127,20 @@
             "deselectAll": "Deselect All"
         }
     },
+    "expression": {
+        "nodata": "No Data",
+        "addgene": "Add Gene",
+        "adddescription": "Select criteria and search for a gene to add with specific filter settings.",
+        "searchcriteria": "Search Criteria",
+        "celltype": "Cell Types",
+        "surgery": "Surgery",
+        "agegroup": "Age Group",
+        "genesearch": "Gene Search",
+        "search_placeholder": "Enter gene symbol or Ensembl ID",
+        "display_opt": "Display Options",
+        "logscale": "Log Scale",
+        "splitbysurgery": "Split by post-surgery time"
+    },
     "genecard": {
         "title": {
             "cluster": "Clusters Detected",
