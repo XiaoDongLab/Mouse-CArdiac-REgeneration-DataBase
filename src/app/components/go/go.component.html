@@ -6,7 +6,8 @@
   </div>
 </div>
 }
-<div class="row g-2">
+<div class="row d-flex g-2">
+  <h2 translate="navbar.pathway"></h2>
   <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4 translate="pathway.filterarea.comparison"></h4>
@@ -16,7 +17,7 @@
         <option [value]="item.value">{{item.text}}</option>
         }
       </select>
-      
+
       <hr />
       <!--CELL TYPE SELECT BOX-->
       <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
@@ -25,7 +26,8 @@
           <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cell_types = []; onCellsChanged()">
             <i class="fa fa-times"></i> {{'pathway.filterarea.deselectAll' | translate}}
           </button>
-          <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cell_types = cell_types.slice(); prepareData()">
+          <button class="btn btn-sm btn-link text-decoration-none"
+            (click)="selected_cell_types = cell_types.slice(); prepareData()">
             <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
           </button>
         </div>
@@ -47,14 +49,7 @@
       <!-- FDR Filter -->
       <h4>{{'pathway.filterarea.fdrqval' | translate}}</h4>
       <div class="d-flex align-items-center justify-content-between gap-2">
-        <input
-          tabindex="0"
-          type="range"
-          class="form-range"
-          min="0.01"
-          max="1"
-          step="0.01"
-          [(ngModel)]="fdr_cutoff"
+        <input tabindex="0" type="range" class="form-range" min="0.01" max="1" step="0.01" [(ngModel)]="fdr_cutoff"
           (change)="CutoffChanged()" />
         <span style="width: 4rem;text-align: right;">{{fdr_cutoff}}</span>
       </div>
@@ -62,32 +57,28 @@
 
       <!-- NES Filter -->
       <h4>{{'pathway.filterarea.nes' | translate}}</h4>
-      <div class="d-flex flex-column gap-2">
-        <div class="slider-container position-relative">
-          <!-- Track background -->
+      <div class="d-flex align-items-center justify-content-between gap-2">
+        <div class="flex-grow-1 slider-track">
+          <!-- Track background
           <div class="slider-track"></div>
-          
-          <!-- Active range highlight -->
-          <div class="slider-range" 
-              [style.left]="(nes_min_bound - nes_slider_min) / (nes_slider_max - nes_slider_min) * 100 + '%'"
-              [style.right]="(nes_slider_max - nes_max_bound) / (nes_slider_max - nes_slider_min) * 100 + '%'">
-          </div>
-          
+
+          Active range highlight
+          <div class="slider-range"
+            [style.left]="(nes_min_bound - nes_slider_min) / (nes_slider_max - nes_slider_min) * 100 + '%'"
+            [style.right]="(nes_slider_max - nes_max_bound) / (nes_slider_max - nes_slider_min) * 100 + '%'">
+          </div> -->
+
           <!-- Min thumb -->
-          <input type="range" class="form-range slider-thumb" 
-                [min]="nes_slider_min" [max]="nes_slider_max" step="0.1"
-                [(ngModel)]="nes_min_bound" (change)="nesMinChanged()" (change)="CutoffChanged()">
-          
+          <input type="range" class="form-range slider-thumb" [min]="nes_slider_min" [max]="nes_slider_max" step="0.1"
+            [(ngModel)]="nes_min_bound" (change)="nesMinChanged()" (change)="CutoffChanged()">
+
           <!-- Max thumb -->
-          <input type="range" class="form-range slider-thumb" 
-                [min]="nes_slider_min" [max]="nes_slider_max" step="0.1"
-                [(ngModel)]="nes_max_bound" (change)="nesMaxChanged()" (change)="CutoffChanged()" >
+          <input type="range" class="form-range slider-thumb" [min]="nes_slider_min" [max]="nes_slider_max" step="0.1"
+            [(ngModel)]="nes_max_bound" (change)="nesMaxChanged()" (change)="CutoffChanged()">
         </div>
-        
-        <div class="d-flex justify-content-between mt-2">
-          <span class="text-start">{{nes_min_bound}}</span>
-          <span class="text-end">{{nes_max_bound}}</span>
-        </div>
+        <span style="width: 4rem; text-align: right;" class="text-nowrap">
+          {{nes_min_bound}} | {{nes_max_bound}}
+        </span>
       </div>
       <hr />
 
@@ -166,61 +157,67 @@
     </div>
   </div>
   <div class="col-lg-6 col-md-12">
-    <apx-chart #chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!"
-      [xaxis]="go_chart_options.xaxis!" [yaxis]="go_chart_options.yaxis!" [markers]="go_chart_options.markers!"
-      [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!"
-      [theme]="go_chart_options.theme!">
-    </apx-chart>
-    @if (!term_selected&&!loading) {
-    <div class="mt-3">
-      <p class="text-center text-muted" translate="pathway.body.select"></p>
-    </div>
-    }
-    @if (term_selected) {
-    <div class="row g-2">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header text-center">
-            <h4 class="mb-0" translate="pathway.body.selected"></h4>
-          </div>
-          <div class="card-body position-relative">
-            <div class="row">
-              <div class="col-6">
-                <small class="text-muted" translate="pathway.body.cluster"></small>
-                <h5>{{selected_term.cell_type}}</h5>
-                <hr />
+    <div class="d-flex flex-column h-100 align-items-between">
+      <div class="flex-grow-1">
+        <apx-chart #chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!"
+          [xaxis]="go_chart_options.xaxis!" [yaxis]="go_chart_options.yaxis!" [markers]="go_chart_options.markers!"
+          [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!"
+          [theme]="go_chart_options.theme!">
+        </apx-chart>
+      </div>
+      <div class="flex-shrink-0">
+        @if (!term_selected&&!loading) {
+        <div class="mt-3">
+          <p class="text-center text-muted" translate="pathway.body.select"></p>
+        </div>
+        }
+        @if (term_selected) {
+        <div class="row g-2">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header text-center">
+                <h4 class="mb-0" translate="pathway.body.selected"></h4>
+              </div>
+              <div class="card-body position-relative">
                 <div class="row">
                   <div class="col-6">
-                    <small class="text-muted" translate="pathway.body.nes"></small>
-                    <h5>{{selected_term.nes}}</h5>
+                    <small class="text-muted" translate="pathway.body.cluster"></small>
+                    <h5>{{selected_term.cell_type}}</h5>
+                    <hr />
+                    <div class="row">
+                      <div class="col-6">
+                        <small class="text-muted" translate="pathway.body.nes"></small>
+                        <h5>{{selected_term.nes}}</h5>
+                      </div>
+                      <div class="col-6">
+                        <small class="text-muted" translate="pathway.body.pval"></small>
+                        <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">
+                          {{(selected_term.P_Value > 0.0001 ? selected_term.P_Value.toFixed(4) : "&lt;0.0001")}}</h5>
+                      </div>
+                    </div>
+                    <hr />
+                    <small class="text-muted">PMID</small>
+                    <h5><a tabindex="0"
+                        href="https://pubmed.ncbi.nlm.nih.gov/{{selected_term.pmid}}">{{selected_term.pmid}}</a></h5>
                   </div>
-                  <div class="col-6">
-                    <small class="text-muted" translate="pathway.body.pval"></small>
-                    <h5 [class]="selected_term.P_Value <= 0.05 ? 'text-success' : 'text-danger'">
-                      {{(selected_term.P_Value > 0.0001 ? selected_term.P_Value.toFixed(4) : "&lt;0.0001")}}</h5>
+                  <div class="position-absolute top-0 end-0 bottom-0
+                  overflow-auto  list-group list-group-flush" style="width: 50%;">
+                    <h6 class="text-center"><br />{{'pathway.body.enriched' | translate}}</h6>
+                    @for (item of selected_core_enrichment; track item) {
+                    <button tabindex="0" type="button" class="list-group-item list-group-item-action"
+                      (click)="geneRerout(item)">
+                      {{item}}
+                    </button>
+                    }
                   </div>
                 </div>
-                <hr />
-                <small class="text-muted">PMID</small>
-                <h5><a tabindex="0"
-                    href="https://pubmed.ncbi.nlm.nih.gov/{{selected_term.pmid}}">{{selected_term.pmid}}</a></h5>
-              </div>
-              <div class="position-absolute top-0 end-0 bottom-0
-                  overflow-auto  list-group list-group-flush" style="width: 50%;">
-                <h6 class="text-center"><br />{{'pathway.body.enriched' | translate}}</h6>
-                @for (item of selected_core_enrichment; track item) {
-                <button tabindex="0" type="button" class="list-group-item list-group-item-action"
-                  (click)="geneRerout(item)">
-                  {{item}}
-                </button>
-                }
               </div>
             </div>
           </div>
         </div>
+        }
       </div>
     </div>
-    }
     <!--<apx-chart [series]="hist_chart_options.series!" [chart]="hist_chart_options.chart!"
     [stroke]="hist_chart_options.stroke!" [yaxis]="hist_chart_options.yaxis!" [xaxis]="hist_chart_options.xaxis!"
     [dataLabels]="hist_chart_options.dataLabels!" [tooltip]="hist_chart_options.tooltip!"
@@ -236,44 +233,36 @@
   </div>-->
   </div>
 
-  <div class="col-lg-3 col-md-12 scroll-lg">
-    <div class="row g-2">
+  <div class="col-lg-3 col-md-12">
+    <div class="d-flex flex-column h-100 gap-2">
       @if (!loading) {
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="mb-0"><i class="fa fa-arrow-up"></i> {{'pathway.body.up' | translate}}</h4>
-          </div>
-          <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
-            @for (item of upreg_gene_counts; track item) {
-            <button class="list-group-item list-group-item-action gene-regulated d-flex justify-content-between"
-              type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
-              <span>{{ item.gene }}</span>
-              <span>{{ item.count }}</span>
-            </button>
-            }
-          </ul>
-          <!--<dx-list [dataSource]="selected_core_enrichment" (onItemClick)="geneRerout($event)" class="gene-list">
-        </dx-list>-->
+      <div class="card flex-fill" style="min-height: 0;">
+        <div class="card-header">
+          <h4 class="mb-0"><i class="fa fa-arrow-up"></i> {{'pathway.body.up' | translate}}</h4>
         </div>
+        <ul class="list-group list-group-flush overflow-y-auto" style="height: 35vh;">
+          @for (item of upreg_gene_counts; track item) {
+          <button class="list-group-item list-group-item-action gene-regulated d-flex justify-content-between"
+            type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
+            <span>{{ item.gene }}</span>
+            <span>{{ item.count }}</span>
+          </button>
+          }
+        </ul>
       </div>
-      }
-      @if (!loading) {
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="mb-0"><i class="fa fa-arrow-down"></i> {{'pathway.body.down' | translate}}</h4>
-          </div>
-          <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
-            @for (item of downreg_gene_counts; track item) {
-            <button class="list-group-item gene-regulated d-flex justify-content-between list-group-item-action"
-              type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
-              <span>{{ item.gene }}</span>
-              <span>{{ item.count }}</span>
-            </button>
-            }
-          </ul>
+      <div class="card flex-fill" style="min-height: 0;">
+        <div class="card-header">
+          <h4 class="mb-0"><i class="fa fa-arrow-down"></i> {{'pathway.body.down' | translate}}</h4>
         </div>
+        <ul class="list-group list-group-flush overflow-y-auto" style="height: 35vh;">
+          @for (item of downreg_gene_counts; track item) {
+          <button class="list-group-item gene-regulated d-flex justify-content-between list-group-item-action"
+            type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
+            <span>{{ item.gene }}</span>
+            <span>{{ item.count }}</span>
+          </button>
+          }
+        </ul>
       </div>
       }
     </div>
