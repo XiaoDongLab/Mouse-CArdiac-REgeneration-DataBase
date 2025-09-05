@@ -1,11 +1,12 @@
 <div class="row g-2">
-  <div class="col-lg-3 col-md-12">
+  <h2 translate="navbar.expression"></h2>
+  <div class="col-xl-3 col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
-      <h2 class="text-lg font-semibold mb-2">Add Gene</h2>
+      <h4 class="text-lg font-semibold mb-2">Add Gene</h4>
       <p class="text-sm text-gray-600 mb-3">Select criteria and search for a gene to add with specific filter settings.
       </p>
       <hr />
-      <h3>Search Criteria</h3>
+      <h4>Search Criteria</h4>
       <div class="d-flex flex-column gap-2">
         <div class="d-flex flex-row gap-3 align-items-center">
           <small class="text-muted text-nowrap">Cell Type</small>
@@ -33,7 +34,7 @@
         </div>
       </div>
       <hr />
-      <h3>Gene Search</h3>
+      <h4>Gene Search</h4>
       <input type="text" [(ngModel)]="searchInput" (keyup.enter)="loadExpression()"
         placeholder="Enter gene symbol or Ensembl ID" class="form-control" />
       <hr />
@@ -42,9 +43,9 @@
         {{ loading ? 'Adding...' : 'Add Gene' }}
       </button>
       <hr />
-      <h3>Display Options</h3>
+      <h4>Display Options</h4>
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" value="" id="checkDefault" checked disabled>
+        <input class="form-check-input" type="checkbox" value="" id="checkDefault" [(ngModel)]="logScale" (ngModelChange)="updateChart()">
         <label class="form-check-label" for="checkDefault">
           Log scale
         </label>
@@ -52,20 +53,30 @@
       <div class="form-check form-switch">
         <input type="checkbox" [(ngModel)]="splitByTime" (ngModelChange)="onSplitChange()" class="form-check-input"
           id="checkSplit" />
-        <label class="form-check-label" for="checkSplit"> Split by post-surgery time</label>
+        <label class="form-check-label" for="checkSplit" translate="expression.splitbysurgery"></label>
       </div>
+      @if (expressionData.length > 0) {
+      <h5>Columns</h5>
+      @for (column of xAxisCategories; track column; let i = $index) {
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" [id]="'column' + i" checked [(ngModel)]="xAxisColumns[i]"
+          (ngModelChange)="updateChart()" />
+        <label class="form-check-label" [for]="'column' + i">{{column}}</label>
+      </div>
+      }
+      }
       @if (recentGenes.length > 0) {
       <hr />
-      <h3>Recent</h3>
+      <h4>Recent</h4>
       <div class="row">
-        @for (gene of recentGenes; track gene) {
-        <span class="col">{{gene}}</span>
+        @for (gene of recentGenes.elements; track gene) {
+        <a href="javascript:void(0)" class="col text-decoration-none" (click)="loadExpression(gene)">{{gene}}</a>
         }
       </div>
       }
     </div>
   </div>
-  <div class="col-lg-6 col-md-12">
+  <div class="col-xl-7 col-lg-6 col-md-12">
     @if (loading) {
     <div class="w-100 h-100 d-flex">
       <div class="d-flex align-items-center justify-content-center w-100">
@@ -84,7 +95,7 @@
       <div class="d-flex align-items-center justify-content-center w-100">
         <div class="text-center">
           <i class="fa fa-bar-chart"></i>
-          <h3 class="text-lg font-medium text-gray-600 mb-2">No Genes Added</h3>
+          <h4 class="text-lg font-medium text-gray-600 mb-2">No Genes Added</h4>
           <p class="text-sm text-gray-500">Select criteria and search for a gene to visualize expression data</p>
         </div>
       </div>
@@ -96,69 +107,69 @@
     <div style="flex: 1; padding: 1rem;">
       <apx-chart #chartObj [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
         [yaxis]="chartOptions.yaxis" [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+        [fill]="chartOptions.fill!" [theme]="chartOptions.theme" [stroke]="chartOptions.stroke"
         [title]="chartOptions.title" [tooltip]="chartOptions.tooltip" [legend]="chartOptions.legend"></apx-chart>
     </div>
     }
   </div>
-  <div class="col-lg-3 col-md-12 pt-2 position-relative">
-    <h3>Added Genes ({{ expressionData.length }})</h3>
-    @if (expressionData.length === 0) {
-    <span class="text-center text-muted">No genes added yet</span>
-    }
-    @if (expressionData.length > 0) {
-    <ul class="list-group list-group-flush" style="max-height: 85vh; overflow-y: auto;">
-      @for (data of expressionData; track data; let i = $index) {
-      <li class="list-group-item">
-        <div class="row">
-          <h4 class="mb-0">{{ data.geneSymbol || data.ensemblId }}</h4>
-          @if (data.geneSymbol !== data.ensemblId) {
-          <small class="text-muted">{{ data.ensemblId }}</small>
+  <div class="col-xl-2 col-lg-3 col-md-12">
+    <div class="pt-2 position-relative h-100">
+      <div class="d-flex h-100 flex-column align-items-between">
+        <div class="flex-grow-1">
+          <h4>Added Genes ({{ expressionData.length }})</h4>
+          @if (expressionData.length === 0) {
+          <span class="text-center text-muted">No genes added yet</span>
           }
+          @if (expressionData.length > 0) {
+          <ul class="list-group list-group-flush" style="max-height: 65vh; overflow-y: auto;">
+            @for (data of expressionData; track data; let i = $index) {
+            <li class="list-group-item">
+              <div class="d-flex flex-column">
+                <div class="d-flex flex-row flex-nowrap align-items-center gap-2">
+                  <span class="badge" [style]="'background-color: ' + randomColors[i % randomColors.length]"
+                    style="width: 1rem; height: 1rem">&nbsp;</span>
+                  <h4 class="mb-0">{{ data.geneSymbol || data.ensemblId }} </h4>
+                </div>
+                @if (data.geneSymbol !== data.ensemblId) {
+                <small class="text-muted">{{ data.ensemblId }}</small>
+                }
 
-          <!-- Filter Criteria Tags -->
-          <div class="flex flex-wrap gap-1 mb-2">
-            <span *ngIf="data.filterCriteria.cellType !== 'All Cells'"
-              class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-              {{ data.filterCriteria.cellType }}
-            </span>
-            <span *ngIf="data.filterCriteria.surgery !== 'All'"
-              class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
-              {{ data.filterCriteria.surgery }}
-            </span>
-            <span *ngIf="data.filterCriteria.natalStatus !== 'All'"
-              class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
-              {{ data.filterCriteria.natalStatus }}
-            </span>
-          </div>
+                <!-- Filter Criteria Tags -->
+                <div class="d-flex flex-row gap-1">
+                  <span *ngIf="data.filterCriteria.cellType !== 'All Cells'" class="badge bg-primary">
+                    {{ data.filterCriteria.cellType }}
+                  </span>
+                  <span *ngIf="data.filterCriteria.surgery !== 'All'" class="badge bg-secondary">
+                    {{ data.filterCriteria.surgery }}
+                  </span>
+                  <span *ngIf="data.filterCriteria.natalStatus !== 'All'" class="badge bg-danger">
+                    {{ data.filterCriteria.natalStatus }}
+                  </span>
+                </div>
 
-          <!-- Data Point Count -->
-          <span class="text-muted">Data Points</span>
-          <h4>{{ (data.rawData && data.rawData.length) || 'N/A' }}</h4>
+                <!-- Data Point Count -->
+                <span class="text-muted">Data Points</span>
+                <h4>{{ (data.rawData && data.rawData.length) || 'N/A' }}</h4>
 
-          <!-- Remove Button -->
-          <button type="button" class="btn btn-mcaredb" (click)="removeGene(i)" [disabled]="loading">
-            {{ loading ? 'Removing...' : 'Remove Gene' }}
-          </button>
+                <!-- Remove Button -->
+                <button type="button" class="btn btn-mcaredb w-100" (click)="removeGene(i)" [disabled]="loading">
+                  {{ loading ? 'Removing...' : 'Remove Gene' }}
+                </button>
+              </div>
+            </li>
+            }
+          </ul>
+          }
         </div>
-      </li>
-      }
-    </ul>
-    }
-    <div class="d-none d-lg-block bottom-0 position-absolute">
-      <p class="font-medium text-blue-800 mb-1">How it works:</p>
-      <ul class="text-blue-700 space-y-1">
-        <li>Each gene uses specific filter criteria</li>
-        <li>Compare genes across different conditions</li>
-        <li>Modify display options in left panel</li>
-      </ul>
-    </div>
-    <div class="d-block d-lg-none">
-      <p class="font-medium text-blue-800 mb-1">How it works:</p>
-      <ul class="text-blue-700 space-y-1">
-        <li>Each gene uses specific filter criteria</li>
-        <li>Compare genes across different conditions</li>
-        <li>Modify display options in left panel</li>
-      </ul>
+        <div class="flex-shrink-0">
+          <p class="font-medium text-blue-800 mb-1">How it works:</p>
+          <ul class="text-blue-700 space-y-1">
+            <li>Each gene uses specific filter criteria</li>
+            <li>Compare genes across different conditions</li>
+            <li>Modify display options in left panel</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>

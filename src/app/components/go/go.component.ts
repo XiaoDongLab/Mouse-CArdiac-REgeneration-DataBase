@@ -145,7 +145,7 @@ export class GoComponent implements OnInit {
         data: [],
       }],
       chart: {
-        height: 400,
+        height: "auto",
         type: "scatter",
         events: {
           dataPointSelection: (e, chart, opts) => {
