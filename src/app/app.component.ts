@@ -21,8 +21,9 @@ export class AppComponent implements OnInit {
   @ViewChild(NavbarComponent, {static: false}) navbar!: NavbarComponent;
   constructor(private t: TranslateService) {
     this.t.addLangs(["en-us", "zh-cn", "zh-hk", "ja-jp"]);
-    const userLang = navigator.language.toLowerCase();
-    this.t.use(this.defLanguage === 'def' ? (this.t.langs.includes(userLang) ? userLang : 'en-us') : this.defLanguage);
+    // const userLang = navigator.language.toLowerCase();
+    // this.t.use(this.defLanguage === 'def' ? (this.t.langs.includes(userLang) ? userLang : 'en-us') : this.defLanguage);
+    this.t.use("en-us");
   }
 
   ngOnInit(): void {
@@ -69,8 +70,8 @@ export class AppComponent implements OnInit {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
   }
-  static Version = "2.2508.0.1";
-  static CompileDate = "20250801";
+  static Version = "2.2509.9.1";
+  static CompileDate = "20250908";
   static Branch = "main"
   title = 'Mouse Cardiac Regeneration Database';
 }

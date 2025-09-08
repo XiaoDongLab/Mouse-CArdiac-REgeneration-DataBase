@@ -89,7 +89,6 @@
               @if (item.marker) {
               <small class="text-muted" translate="documentation.cell_defs.marker"></small>
               <h6 class="fw-normal d-flex gap-2">
-                
                 @for (gene of translateService.instant(item.marker).split(","); track gene) {
                 <a href="javascript:void(0)" (click)="geneRerout(gene.trim())">{{gene.trim()}}</a>
                 }

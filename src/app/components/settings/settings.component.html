@@ -67,12 +67,16 @@
                     <span class="description text-muted" translate="settings.language-d"></span>
                 </div>
                 <div class="settings-option">
-                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" [(ngModel)]="defLanguage" aria-label="default language">
+                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" [(ngModel)]="defLanguage"
+                        aria-label="default language">
                         <option value="def">{{'settings.colors.sys-set' | translate}}</option>
-                        <option value="en-us">English</option>
+                        <!-- <option value="en-us">English</option>
                         <option value="zh-cn">简体中文</option>
                         <option value="zh-hk">繁体中文</option>
-                        <option value="ja-jp">日本語</option>
+                        <option value="ja-jp">日本語</option> -->
+                        @for (item of t.langs; track item) {
+                        <option [value]="item">{{ ('languages.' + item) | translate }}</option>
+                        }
                     </select>
                 </div>
             </div>

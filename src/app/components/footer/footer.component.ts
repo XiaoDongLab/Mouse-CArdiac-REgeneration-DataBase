@@ -14,7 +14,7 @@ export class FooterComponent implements OnInit {
   Version: string = "";
   CompileDate: string = "";
   constructor(public t: TranslateService) { 
-
+    
   }
 
   ngOnInit(): void {

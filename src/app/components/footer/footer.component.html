@@ -6,9 +6,11 @@
             <div class="me-5 d-lg-block">
                 <div class="row">
                     <p>Mouse Cardiac Regeneration Database</p>
-                    <small class="text-muted">© 2025 <a href="https://dong.umn.edu/" target="_blank" aria-label="The Dong Lab" tabindex="0">The Dong Lab</a>,
-                    <a tabindex="0" href="https://med.umn.edu/aging" target="_blank" aria-label="MIBAM">MIBAM</a>, University of Minnesota.
-                    {{'footer.copyright' | translate}}</small>
+                    <small class="text-muted">© 2025 <a href="https://dong.umn.edu/" target="_blank"
+                            aria-label="The Dong Lab" tabindex="0">The Dong Lab</a>,
+                        <a tabindex="0" href="https://med.umn.edu/aging" target="_blank" aria-label="MIBAM">MIBAM</a>,
+                        University of Minnesota.
+                        {{'footer.copyright' | translate}}</small>
                     <!--<div class="d-flex">
                         <small class="text-muted"><a href="javascript:void(0);" target="_blank"
                                 (click)="showToastControl('citationToast');">Citation</a></small>
@@ -25,7 +27,8 @@
                     href="https://github.com/AnthonyShea/MouseHeartDatabase" role="button" aria-label="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
-                <a tabindex="0" class="btn btn-link btn-floating text-body btn-lg" target="_blank" href="mailto:author@example.com" role="button" aria-label="Mail to the author">
+                <a tabindex="0" class="btn btn-link btn-floating text-body btn-lg" target="_blank"
+                    href="mailto:author@example.com" role="button" aria-label="Mail to the author">
                     <i class="fa fa-envelope"></i>
                 </a>
             </div>
@@ -101,34 +104,16 @@
         <div class="toast-body overflow-y-scroll d-flex flex-grow-1">
             <div class="d-flex w-100 flex-column">
                 <div class="row g-2">
+                    @for (item of t.langs; track item) {
                     <div class="col">
-                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'en-us'" [class.btn-mcaredb]="t.currentLang == 'en-us'" [class.active]="t.currentLang == 'en-us'" href="javascript:void(0)" (click)="switch('en-us')">
+                        <button class="btn w-100 h-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != item" [disabled]="item !== 'en-us'"
+                            [class.btn-mcaredb]="t.currentLang == item" [class.active]="t.currentLang == item" (click)="switch(item)">
                             <div class="card-body">
-                                <h5 class="mb-0">English</h5>
+                                <h5 class="mb-0">{{('languages.' + item) | translate}}</h5>
                             </div>
-                        </a>
+                        </button>
                     </div>
-                    <div class="col">
-                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'zh-cn'" [class.btn-mcaredb]="t.currentLang == 'zh-cn'" [class.active]="t.currentLang == 'zh-cn'" href="javascript:void(0)" (click)="switch('zh-cn')">
-                            <div class="card-body">
-                                <h5 class="mb-0">简体中文</h5>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'zh-hk'" [class.btn-mcaredb]="t.currentLang == 'zh-hk'" [class.active]="t.currentLang == 'zh-hk'" href="javascript:void(0)" (click)="switch('zh-hk')">
-                            <div class="card-body">
-                                <h5 class="mb-0">繁體中文</h5>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a class="btn w-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != 'ja-jp'" [class.btn-mcaredb]="t.currentLang == 'ja-jp'" [class.active]="t.currentLang == 'ja-jp'" href="javascript:void(0)" (click)="switch('ja-jp')">
-                            <div class="card-body">
-                                <h5 class="mb-0">日本語</h5>
-                            </div>
-                        </a>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

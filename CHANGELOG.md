@@ -1,6 +1,20 @@
 # Version history
 
-The latest stable version is **2.2508.0.1**, compiled on 1 Aug 2025.
+The latest stable version is **2.2509.9.1**, compiled on 8 Sep 2025.
+
+## 2.2509.9.1 (main) - 8 Sep 2025
+
+### New Features
+
+- **Gene Expression**: In this page you can view how genes expressed differently across conditions through a box plot. You can add multiple genes with separated conditions to compare, and you may be able to select which column(s) you want to show or hide.
+
+- **Documentation**: This page gives you a summary of the experimental, statistical and cellular terminology.
+
+### Miscellaneous
+
+- We add a NES cutoff selector in the Pathway Enrichment page. This will show a cutoff line in the central chart.
+  
+- We temporarily disabled multi language mode since the translation is still incomplete.
 
 ## 2.2508.0.1 (main) - 1 Aug 2025
 

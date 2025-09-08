@@ -415,5 +415,11 @@
             "def": "Lymphocytes involved in cell-mediated immunity, regulating immune responses in cardiac tissue.",
             "marker": "Cd3e, Cd4, Cd8a"
         }
+    },
+    "languages": {
+        "en-us": "English (United States)",
+        "zh-cn": "中文（简体）",
+        "zh-hk": "中文（繁体）",
+        "ja-jp": "日本語"
     }
 }

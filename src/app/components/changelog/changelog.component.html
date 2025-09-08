@@ -1,41 +1,32 @@
 <div class="row g-2">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 id="1-2506-50-0-25-june-2025">{{ Version }} </h2>
+            <h2>{{ Version }} </h2>
             <small class="text-muted">({{ Branch }}.{{ CompileDate }})</small>
         </div>
         <!--<p class="text-muted">This is a pre-release version.</p>-->
-        <h3 id="fixed-issues">Fixed issues</h3>
+        <h3 id="new-features">New Features</h3>
         <ul>
             <li>
-                <p>Fixed an issue that the search grid will return empty results when selecting more than two cell
-                    types.</p>
+                <p><strong>Gene Expression</strong>: In this page you can view how genes expressed differently across
+                    conditions through a box plot. You can add multiple genes with separated conditions to compare, and
+                    you may be able to select which column(s) you want to show or hide.</p>
             </li>
             <li>
-                <p>Fixed an issue that selecting PMID will not result in filtering data.</p>
-            </li>
-            <li>
-                <p>Fixed an issue that the tooltip will remain on the page when loading DEG results.</p>
-            </li>
-            <li>
-                <p>Fixed an issue that the search grid will always show miscellaneous files in the front rows.</p>
+                <p><strong>Documentation</strong>: This page gives you a summary of the experimental, statistical and
+                    cellular terminology.</p>
             </li>
         </ul>
         <h3 id="miscellaneous">Miscellaneous</h3>
         <ul>
             <li>
-                <p>We added <code>Reset</code> buttons for cell type, pmid and file type selection in Search and
-                    Download, as well as cell type selection in Pathway Enrichment. Now, clearing all selections will
-                    not result in a new data inquiry.</p>
+                <p>We add a NES cutoff selector in the Pathway Enrichment page. This will show a cutoff line in the
+                    central chart.</p>
             </li>
             <li>
-                <p>We changed the icon for light/dark mode switch on the navbar.</p>
+                <p>We temporarily disabled multi language mode since the translation is still incomplete.</p>
             </li>
         </ul>
-
-
-
-
         <p class="mb-0">See full version history on <a href="https://github.com/AnthonyShea/MouseHeartDatabase"
                 target="_blank">GitHub</a>.</p>
     </div>
