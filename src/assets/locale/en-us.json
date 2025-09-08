@@ -81,7 +81,8 @@
             "data": "Data Sources",
             "software": "Software & Frameworks"
         },
-        "citepopup": "Copied!"
+        "citepopup": "Copied!",
+        "detail_navigator": "For detailed cluster definitions and experimental terminology, see the"
     },
     "navbar": {
         "home": "Home",
@@ -278,6 +279,141 @@
             "select": "Selected File(s):",
             "total": "Total:",
             "d": "Downloading multiple or large files requires zipping in the backend side which may cause temporary slow down."
+        }
+    },
+    "documentation": {
+        "exp_term": "Experimental Terminology",
+        "term": "Term",
+        "def": "Definition",
+        "P1": {
+            "def": "Postnatal day 1 (neonatal mouse hearts)"
+        },
+        "P2": {
+            "def": "Postnatal day 2 (neonatal mouse hearts)"
+        },
+        "P8": {
+            "def": "Postnatal day 8 (transitional stage in cardiac development)"
+        },
+        "sham": {
+            "def": "Control surgery without myocardial infarction (MI) induction"
+        },
+        "mi": {
+            "def": "Myocardial infarction model (experimental heart injury)"
+        },
+        "psdx": {
+            "def": "Post-surgery Sequencing Date, ie how many days after the surgery were the hearts sequenced"
+        },
+        "stat_term": "Statistical Terminology",
+        "case": "Case",
+        "meaning": "Meaning",
+        "p1vsp8": {
+            "def": "Comparing expression profile between P1 individuals against P8 individuals (base case)"
+        },
+        "shamvsmi": {
+            "def": "Comparing expression profile between MI individuals against Sham individuals (base case)"
+        },
+        "cell_def": "Cell Cluster Definitions",
+        "cell_defs": {
+            "def": "Description",
+            "marker": "Top marker genes"
+        }
+    },
+    "celltypes": {
+        "bcell": {
+            "name": "B Cell",
+            "def": "Lymphocytes that produce antibodies and contribute to the immune response in the heart.",
+            "marker": "Cd19, Ms4a1, Pax5"
+        },
+        "cardiaccell": {
+            "name": "Cardiac Cell",
+            "def": "Specialized muscle cells (cardiomyocytes) responsible for heart contraction and electrical conduction.",
+            "marker": "Tnnt2, Myh6, Actc1"
+        },
+        "cardiomyocytes": {
+            "name": "Cardiomyocyte Subtypes (1-5)",
+            "def": "Specialized cardiomyocyte subtypes identified through single-nucleus RNA sequencing (Cui et al., Dev Cell, 2020). These populations exhibit distinct responses to cardiac injury and regeneration.",
+            "subs": {
+                "1": {
+                    "name": "Cardiomyocyte Subtype 1 (CM1)",
+                    "def": "The dominant cardiomyocyte population (50-75% of cells in P1/P8 hearts). Serves as the primary source for injury-responsive CM5 cells in non-regenerative hearts through transcriptional remodeling.",
+                    "marker": "Akap6, Ank2, Cacna1c, Camk2d, Cdh2, Celf2, Ctnna3, D830005E20Rik, Dip2c, Dmd"
+                },
+                "2": {
+                    "name": "Cardiomyocyte Subtype 2 (CM2)",
+                    "def": "Minor population (4-6%) expressing cell-cycle genes. Maintains consistent levels in both regenerative and non-regenerative hearts without injury-responsive proliferation changes.",
+                    "marker": "Atad2, Bard1, Blm, Brca1, Brip1, Cdca2, Cenpk, Cenpp, Cep128, Cep192"
+                },
+                "3": {
+                    "name": "Cardiomyocyte Subtype 3 (CM3)",
+                    "def": "Stable population (~14%) defined by dopaminergic metabolism gene expression (Ddc). Shows consistent presence across developmental stages without significant injury response changes.",
+                    "marker": "Akap6, Ank2, Cacna1c, Camk2d, Cdh2, Celf2, Ctnna3, D830005E20Rik, Dip2c, Dmd"
+                },
+                "4": {
+                    "name": "Cardiomyocyte Subtype 4 (CM4)",
+                    "def": "Regeneration-competent immature cardiomyocytes enriched in P1 hearts (>20%) but nearly absent in P8 hearts (&lt;4%). Characterized by embryonic gene expression (Tnni1, Myh7), glycolytic metabolism, and antioxidant activity. Shows dramatic cell-cycle entry post-injury (67% in G2/M phase at 3d post-MI) through NFYa-mediated proliferative programs.",
+                    "marker": "Actb, Actc1, Atp5a1, Atp5b, Atp5e, Atp5g1, Atp5g3, Atp5h, Atp5j, Atp5j2"
+                },
+                "5": {
+                    "name": "Cardiomyocyte Subtype 5 (CM5)",
+                    "def": "Injury-responsive population localized to infarct border zones. Dramatically induced in P8 hearts post-MI (3.5% → 13%). Expresses cytoskeletal regulators (Xirp2, Cd44) and shows pseudotime progression from CM1. Undergoes apoptosis and NFEL2L1-mediated hypertrophic remodeling in non-regenerative hearts.",
+                    "marker": "mt-Co1, Gm42418, mt-Cytb, mt-Nd4, mt-Atp6, mt-Nd1, mt-Co3, mt-Co2, AY036118, Myl2"
+                }
+            }
+        },
+        "endothelial": {
+            "name": "Endothelial Cells (1-6)",
+            "def": "Endothelial clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.",
+            "marker": "Acta2, Cd300lg, Cd34, Cdh5, Ednrb, Egfl7, Emcn, Epas1, Kdr, Pecam1"
+        },
+        "weepc": {
+            "name": "Well-established Epicardial Progenitor Cell",
+            "def": "Multipotent progenitor cells derived from the epicardium that give rise to cardiac fibroblasts, smooth muscle cells, and coronary vasculature during development and repair. Characterized by embryonic transcription factors and collagen production.",
+            "marker": "Aldh1a2, Gata5, Tbx18, Tcf21, Wt1, ENSMUSG00000040254"
+        },
+        "fibroblast": {
+            "name": "Fibroblast (1-6)",
+            "def": "Fibroblast clusters were identified and ranked by relative abundance, with Cluster 1 representing the most populous group.",
+            "marker": "Acta2, Atxn1, Bcl6b, Bgn, Ckap4, Col1a1, Col1a2, Dcn, Ddr2, Tnnt2"
+        },
+        "ac-fibroblast": {
+            "name": "Activated Fibroblast",
+            "def": "Fibroblasts activated in response to cardiac injury.",
+            "marker": "Acta2, Ckap4, Postn"
+        },
+        "granulocyte": {
+            "name": "Granulocyte",
+            "def": " Immune cells, including neutrophils, eosinophils, and basophils, involved in inflammatory responses in cardiac tissue.",
+            "marker": "Elane, Csf3r, S100a9"
+        },
+        "macrophage": {
+            "name": "Macrophage",
+            "def": "Immune cells that phagocytose debris and pathogens, contributing to inflammation and repair in the heart.",
+            "marker": "Cd68, Adgre1, Csf1r"
+        },
+        "mural": {
+            "name": "Mural Cell",
+            "def": "Pericytes and vascular smooth muscle cells that support blood vessel stability and function in the heart.",
+            "marker": "Pdgfrb, Acta2, Myh11"
+        },
+        "progenitor": {
+            "name": "Progenitor Cell",
+            "def": "Multipotent cells capable of differentiating into various cardiac cell types during development or repair.",
+            "marker": "Isl1, Nkx2-5, Sca1"
+        },
+        "rbc": {
+            "name": "Red Blood Cell",
+            "def": "Erythrocytes responsible for oxygen transport in the bloodstream, critical for cardiac tissue oxygenation.",
+            "marker": "Hba1, Hbb, Gypa"
+        },
+        "sinoatrial": {
+            "name": "Sinoatrial Cell",
+            "def": "Specialized pacemaker cells in the sinoatrial node that initiate the heartbeat by generating electrical impulses.",
+            "marker": "Hcn4, Shox2, Tbx3"
+        },
+        "tcell": {
+            "name": "T Cell",
+            "def": "Lymphocytes involved in cell-mediated immunity, regulating immune responses in cardiac tissue.",
+            "marker": "Cd3e, Cd4, Cd8a"
         }
     }
 }

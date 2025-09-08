@@ -142,3 +142,119 @@ export class DatabaseConstsService {
 
   constructor(private http: HttpClient) { }
 }
+
+export const CellTypes = [
+  /*
+   * defined as:
+   * name: string | translate, def: string | translate, marker: string | translate, subsets: Array<type>
+   */
+  {
+    name: 'celltypes.bcell.name',
+    def: 'celltypes.bcell.def',
+    marker: 'celltypes.bcell.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.cardiaccell.name',
+    def: 'celltypes.cardiaccell.def',
+    marker: 'celltypes.cardiaccell.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.cardiomyocytes.name',
+    def: 'celltypes.cardiomyocytes.def',
+    subsets: [
+      {
+        name: "celltypes.cardiomyocytes.subs.1.name",
+        def: "celltypes.cardiomyocytes.subs.1.def",
+        marker: "celltypes.cardiomyocytes.subs.1.marker",
+      },
+      {
+        name: "celltypes.cardiomyocytes.subs.2.name",
+        def: "celltypes.cardiomyocytes.subs.2.def",
+        marker: "celltypes.cardiomyocytes.subs.2.marker",
+      },
+      {
+        name: "celltypes.cardiomyocytes.subs.3.name",
+        def: "celltypes.cardiomyocytes.subs.3.def",
+        marker: "celltypes.cardiomyocytes.subs.3.marker",
+      },
+      {
+        name: "celltypes.cardiomyocytes.subs.4.name",
+        def: "celltypes.cardiomyocytes.subs.4.def",
+        marker: "celltypes.cardiomyocytes.subs.4.marker",
+      },
+      {
+        name: "celltypes.cardiomyocytes.subs.5.name",
+        def: "celltypes.cardiomyocytes.subs.5.def",
+        marker: "celltypes.cardiomyocytes.subs.5.marker",
+      },
+    ],
+  },
+  {
+    name: 'celltypes.endothelial.name',
+    def: 'celltypes.endothelial.def',
+    marker: 'celltypes.endothelial.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.weepc.name',
+    def: 'celltypes.weepc.def',
+    marker: 'celltypes.weepc.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.fibroblast.name',
+    def: 'celltypes.fibroblast.def',
+    marker: 'celltypes.fibroblast.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.ac-fibroblast.name',
+    def: 'celltypes.ac-fibroblast.def',
+    marker: 'celltypes.ac-fibroblast.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.granulocyte.name',
+    def: 'celltypes.granulocyte.def',
+    marker: 'celltypes.granulocyte.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.macrophage.name',
+    def: 'celltypes.macrophage.def',
+    marker: 'celltypes.macrophage.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.mural.name',
+    def: 'celltypes.mural.def',
+    marker: 'celltypes.mural.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.progenitor.name',
+    def: 'celltypes.progenitor.def',
+    marker: 'celltypes.progenitor.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.rbc.name',
+    def: 'celltypes.rbc.def',
+    marker: 'celltypes.rbc.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.sinoatrial.name',
+    def: 'celltypes.sinoatrial.def',
+    marker: 'celltypes.sinoatrial.marker',
+    subsets: [],
+  },
+  {
+    name: 'celltypes.tcell.name',
+    def: 'celltypes.tcell.def',
+    marker: 'celltypes.tcell.marker',
+    subsets: [],
+  },
+]
