@@ -141,6 +141,7 @@
     "expression": {
         "nodata": "No Data",
         "addgene": "Add Gene",
+        "adding": "Adding...",
         "adddescription": "Select criteria and search for a gene to add with specific filter settings.",
         "searchcriteria": "Search Criteria",
         "celltype": "Cell Types",
@@ -150,7 +151,30 @@
         "search_placeholder": "Enter gene symbol or Ensembl ID",
         "display_opt": "Display Options",
         "logscale": "Log Scale",
-        "splitbysurgery": "Split by post-surgery time"
+        "splitbysurgery": "Split by post-surgery time",
+        "display_columns": "Columns",
+        "recent": "Recent",
+        "addedgenes": "Added Genes",
+        "nogenesadded": "No genes added yet",
+        "datapoints": "Data Points",
+        "removegene": "Remove Gene",
+        "removing": "Removing...",
+        "description": {
+            "t1": "How it works",
+            "d1": "Each gene uses specific filter criteria",
+            "d2": "Compare genes across different conditions",
+            "d3": "Modify display options in left panel"
+        },
+        "centerpanel": {
+            "t1": "No Genes Added",
+            "d1": "Select criteria and search for a gene to visualize expression data"
+        },
+        "loading": "Loading...",
+        "popup": {
+            "invalid_gene": "Please enter a valid gene symbol or Ensembl ID",
+            "nodata": "No data found for the selected gene and conditions",
+            "failed": "Failed to load gene data. Please try again."
+        }
     },
     "genecard": {
         "title": {

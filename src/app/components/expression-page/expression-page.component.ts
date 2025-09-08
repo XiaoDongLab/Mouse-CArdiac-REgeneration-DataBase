@@ -335,7 +335,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
   async loadExpression(gene: string = this.searchInput.trim()) {
     if (!gene) {
-      alert('Please enter a valid gene symbol or Ensembl ID');
+      alert(this.translateService.instant("expression.popup.invalid_gene"));
       return;
     }
 
@@ -352,13 +352,13 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
       const filteredData = await this.convertAndProcessGene(gene, currentFilters);
       if (filteredData.length === 0) {
-        alert('No data found for the selected gene and conditions');
+        alert(this.translateService.instant("expression.popup.nodata"));
       } else {
         this.finishDataProcessing(filteredData, gene);
       }
     } catch (error) {
       console.error('Error loading expression:', error);
-      alert('Failed to load gene data. Please try again.');
+      alert(this.translateService.instant("expression.popup.failed"));
     } finally {
       this.loading = false;
       this.searchInput = ''; // Clear search input after adding
