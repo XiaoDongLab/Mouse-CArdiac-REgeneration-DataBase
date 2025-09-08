@@ -632,7 +632,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
                   let addLabel = `
                 <hr />
                 <div class="d-flex flex-row flex-nowrap gap-2 align-items-center">
-                  <span class="badge" style="background-color: ${colors[i]} !important; width: 1rem; height: 1rem">&nbsp;</span><h5 class="mb-0">${element.name}</h5></div>
+                  <span class="badge" style="background-color: ${colors[i]} !important; width: 1rem; height: 1rem; border-radius: 50%">&nbsp;</span><h5 class="mb-0">${element.name}</h5></div>
                 <span>${translatedLabel}</span>`;
 
                   label += addLabel;
@@ -640,7 +640,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
                   let addLabel = `
                 <hr />
                 <div class="d-flex flex-row flex-nowrap gap-2 align-items-center">
-                  <span class="badge" style="background-color: ${colors[i]} !important; width: 1rem; height: 1rem">&nbsp;</span><h5 class="mb-0">${element.name}</h5></div>
+                  <span class="badge" style="background-color: ${colors[i]} !important; width: 1rem; height: 1rem; border-radius: 50%">&nbsp;</span><h5 class="mb-0">${element.name}</h5></div>
                 <span>Max: <strong>${typeof max === 'number' ? max.toFixed(2) : max}</strong></span>
                 <span>Q3: <strong>${typeof q3 === 'number' ? q3.toFixed(2) : q3}</strong></span>
                 <span>Median: <strong>${typeof median === 'number' ? median.toFixed(2) : median}</strong></span>
@@ -745,10 +745,14 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
   private loadRecentGenes() {
     const saved = localStorage.getItem('recentGenes');
+    console.log(saved)
     if (saved) {
-      for (let item of JSON.parse(saved)) {
-        this.recentGenes.enqueue(item);
-      }
+      /* 
+       * localStorage can only store strings!!!
+       */
+      JSON.parse(saved).list.forEach((element: string) => {
+        this.recentGenes.enqueue(element);
+      });
       console.debug('[ExpressionPageComponent] loadRecentGenes: Loaded recent genes:', this.recentGenes);
     }
   }
@@ -795,7 +799,8 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
       // Apply cell type filter
       if (filters.cellType !== 'All Cells') {
-        filteredRows = filteredRows.filter(row => row.cell_type === filters.cellType);
+        // filteredRows = filteredRows.filter(row => row.cell_type === filters.cellType);
+        filteredRows = filteredRows.filter(row => row.cell_type?.includes(filters.cellType));
       }
 
       // Apply natal status filter
@@ -952,7 +957,8 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
             if (typeof d === 'object' && d !== null && 'x' in d && d.x === categories[i]) {
               return {
                 ...d,
-                y: [-1, -1, -1, -1, -1]  // 替换 y 数组
+                y: [-1, -1, -1, -1, -1]  // Replace empty sets. Do not remove!!!
+                // Apexcharts only accepts series with the SAME x-axis labels
               };
             }
             return d;

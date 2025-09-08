@@ -28,11 +28,22 @@
                 "d4": "Export network diagrams or table results"
             }
         },
+        "expression": {
+            "title": "Gene Expression",
+            "subtitle": "Compare gene expression levels across conditions through box plots",
+            "card": {
+                "t1": "How to use",
+                "d1": "Adjust criteria and enter gene symbol or Ensembl ID, then click \"Add gene\"",
+                "d2": "Boxplots will then be added to the chart. Hover the box to see detailed data including max/min, q1/q3 and medium values.",
+                "d3": "If you want to remove a gene, just click \"Remove Gene\" on the right sidebar.",
+                "d4": "Please use the left sidebar to show or hide the columns in the boxplot."
+            }
+        },
         "download": {
             "title": "Search and Download",
             "subtitle": "Download our Results from our Differential Gene Expression Analysis",
             "card": {
-                "t1": "Key Features",
+                "t1": "How to use",
                 "d1": "Modify any search criteria according to your need, then click \"Search\" button.",
                 "d2": "Select samples in the table and click \"Download Standardized Data\" to start your download.",
                 "d3": "All files were packed as zip format, as your browser may prevent downloading multiple files at the same time.",

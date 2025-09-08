@@ -127,7 +127,7 @@
               <div class="d-flex flex-column">
                 <div class="d-flex flex-row flex-nowrap align-items-center gap-2">
                   <span class="badge" [style]="'background-color: ' + randomColors[i % randomColors.length]"
-                    style="width: 1rem; height: 1rem">&nbsp;</span>
+                    style="width: 1rem; height: 1rem; border-radius: 50%">&nbsp;</span>
                   <h4 class="mb-0">{{ data.geneSymbol || data.ensemblId }} </h4>
                 </div>
                 @if (data.geneSymbol !== data.ensemblId) {
