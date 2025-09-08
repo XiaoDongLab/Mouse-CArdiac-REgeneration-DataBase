@@ -24,12 +24,12 @@
     </div>
     <div class="col-12">
       <h3><span translate="home.cite"></span>
-        <a tabindex="0" class="text-mcaredb text-decoration-none" (click)="copyCitation()" role="button"
-          data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Copied!" aria-label="Cite this website">
+        <a tabindex="0" #popoverBtn class="text-mcaredb text-decoration-none" (click)="copyCitation()" role="button"
+          data-bs-toggle="popover" data-bs-trigger="focus" [attr.data-bs-content]="copiedText" aria-label="Cite this website">
           <i class="fa fa-copy"></i>
         </a>
       </h3>
-      <p>Abcd, E., 2025, https://mcaredb.org/</p>
+      <p>{{AppCitation}}</p>
     </div>
     <!-- Database Features new-->
     <div class="col-12">

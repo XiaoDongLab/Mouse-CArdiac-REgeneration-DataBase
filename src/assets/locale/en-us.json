@@ -4,6 +4,7 @@
         "research-focus1": "Neonatal (P1 - P6) vs. Postnatal (P7+) Heart Regeneration Capacity:",
         "research-focus2": "Uncovering the molecular drivers of cardiomyocyte proliferation decline",
         "cite": "Cite this website ",
+        "citepopup": "Copied!",
         "userguide": "User Guide",
         "genomebrowser": "Genome Browser",
         "gb-description": "View how Genes differ in expression levels accross Age, Cell Groups and Experimental Conditions",
@@ -81,7 +82,6 @@
             "data": "Data Sources",
             "software": "Software & Frameworks"
         },
-        "citepopup": "Copied!",
         "detail_navigator": "For detailed cluster definitions and experimental terminology, see the"
     },
     "navbar": {
@@ -302,7 +302,7 @@
             "def": "Myocardial infarction model (experimental heart injury)"
         },
         "psdx": {
-            "def": "Post-surgery Sequencing Date, ie how many days after the surgery were the hearts sequenced"
+            "def": "Post-surgery Sequencing Date, i.e. how many days after the surgery were the hearts sequenced"
         },
         "stat_term": "Statistical Terminology",
         "case": "Case",

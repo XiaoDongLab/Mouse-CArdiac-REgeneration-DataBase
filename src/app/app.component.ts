@@ -75,3 +75,8 @@ export class AppComponent implements OnInit {
   static Branch = "main"
   title = 'Mouse Cardiac Regeneration Database';
 }
+
+export const AppVersion = "2.2509.9.1";
+export const AppCompileDate = "20250908";
+export const AppBranch = "main";
+export const AppCitation = "Abcd, E., 2025, https://mcaredb.org/";
