@@ -413,7 +413,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       });
 
       if (this.splitByTime) {
-        
+
         // Show separate PSD1 and PSD3 conditions
         return availableConditions.filter(condition => {
           return condition.includes('_PSD1') || condition.includes('_PSD3');
@@ -933,6 +933,11 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
   }
 
+  removeAllGenes() {
+    this.expressionData = [];
+    this.updateChart();
+  }
+
   getRandomColor(): string {
     // let color = Math.floor(Math.random() * 16777216).toString(16);
     // color = '#000000'.slice(0, -color.length) + color;
@@ -969,7 +974,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.chartOptions = {...this.chartOptions, series: series}
+    this.chartOptions = { ...this.chartOptions, series: series }
   }
 }
 

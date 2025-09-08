@@ -175,7 +175,8 @@
             "invalid_gene": "Please enter a valid gene symbol or Ensembl ID",
             "nodata": "No data found for the selected gene and conditions",
             "failed": "Failed to load gene data. Please try again."
-        }
+        },
+        "removeall": "Remove All Genes"
     },
     "genecard": {
         "title": {
