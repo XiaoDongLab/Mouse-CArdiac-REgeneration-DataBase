@@ -570,7 +570,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     // console.log(flatCategories)
 
     const conditionDisplayNames = this.conditionDisplayNames;
-    this.randomColors.push(this.getRandomColor());
+    ColorGenerator.getRandomColor(100, this.randomColors, this.getColorTheme());
     this.randomColorsBottom = [...this.randomColors].map(color => this.tweakRgbColor(color));
     let colors = this.randomColors;
     console.log(this.randomColors);
@@ -938,16 +938,24 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     this.updateChart();
   }
 
-  getRandomColor(): string {
-    // let color = Math.floor(Math.random() * 16777216).toString(16);
-    // color = '#000000'.slice(0, -color.length) + color;
-    // return color;
-    let color = "rgb(";
-    for (var i = 0; i < 3; i++) {
-      color += Math.floor(Math.random() * 255);
-      color += ","
+  
+
+  min(a: number, b: number) {
+    return a < b ? a : b;
+  }
+
+  max(a: number, b: number) {
+    return a > b ? a : b;
+  }
+
+  stringToRgb(rgbStr: string): number[] {
+    const m = rgbStr.match(/rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/);
+    if (!m) {
+      console.warn('颜色格式错误，必须是 rgb(r, g, b)');
+      return [-1, -1, -1];
     }
-    return color.slice(0, -1) + ")"
+    let [_, r, g, b] = m;
+    return [parseInt(r), parseInt(g), parseInt(b)];
   }
 
   removeColumns(): void {
@@ -992,5 +1000,64 @@ export class Queue<T> {
 
   get elements() {
     return this.list
+  }
+}
+
+export type RGB = [number, number, number];
+
+export class ColorGenerator {
+
+  static stringToRgb(colorStr: string): RGB {
+    // 假设colorStr是形如 "#RRGGBB"
+    const r = parseInt(colorStr.slice(1, 3), 16);
+    const g = parseInt(colorStr.slice(3, 5), 16);
+    const b = parseInt(colorStr.slice(5, 7), 16);
+    return [r, g, b];
+  }
+
+  static rgbToString(rgb: RGB): string {
+    return `#${rgb[0].toString(16).padStart(2, '0')}${rgb[1].toString(16).padStart(2, '0')}${rgb[2].toString(16).padStart(2, '0')}`;
+  }
+
+  // 计算两个颜色的欧式距离
+  static colorDistance(c1: RGB, c2: RGB): number {
+    return Math.sqrt(
+      (c1[0] - c2[0]) ** 2 +
+      (c1[1] - c2[1]) ** 2 +
+      (c1[2] - c2[2]) ** 2
+    );
+  }
+
+  static getRandomColor(minDistance = 100, randomColors: string[], isDark: boolean): string {
+    const existedColors = randomColors.map(item => ColorGenerator.stringToRgb(item));
+    let newColor: RGB;
+    let tries = 0;
+    do {
+      newColor = [
+        Math.floor(Math.random() * 256),
+        Math.floor(Math.random() * 256),
+        Math.floor(Math.random() * 256),
+      ];
+      tries++;
+
+      // 颜色与已有颜色距离都要大于minDistance
+    } while (
+      existedColors.some(c => this.colorDistance(c, newColor) < minDistance) &&
+      tries < 1000 && !this.checkColorThemeValid(isDark, newColor)
+    );
+
+    const newColorStr = this.rgbToString(newColor);
+    randomColors.push(newColorStr);
+    return newColorStr;
+  }
+
+  static checkColorThemeValid(isDark: boolean, newColor: RGB) {
+    return isDark ? (
+      newColor.reduce((sum, val) => {
+        return sum + val
+      }, 0) >= 328
+    ) : newColor.reduce((sum, val) => {
+      return sum + val
+    }, 0) < 328
   }
 }
