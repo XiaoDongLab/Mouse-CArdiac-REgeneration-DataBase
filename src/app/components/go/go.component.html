@@ -1,11 +1,10 @@
-@if (loading) {
+<!--@if (loading) {
 <div class="loading-overlay" id="loadingOverlay">
-  <!--<div class="loading-message">Loading...</div>-->
   <div class="spinner-blurred">
     <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
   </div>
 </div>
-}
+}-->
 <div class="row d-flex g-2">
   <h2 translate="navbar.pathway"></h2>
   <div class="col-lg-3 col-md-12">
@@ -157,6 +156,18 @@
     </div>
   </div>
   <div class="col-lg-6 col-md-12">
+    @if (loading) {
+    <div class="w-100 h-100 d-flex">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden" translate="expression.loading"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    @if (!loading) {
     <div class="d-flex flex-column h-100 align-items-between">
       <div class="flex-grow-1">
         <apx-chart #chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!"
@@ -218,35 +229,32 @@
         }
       </div>
     </div>
-    <!--<apx-chart [series]="hist_chart_options.series!" [chart]="hist_chart_options.chart!"
-    [stroke]="hist_chart_options.stroke!" [yaxis]="hist_chart_options.yaxis!" [xaxis]="hist_chart_options.xaxis!"
-    [dataLabels]="hist_chart_options.dataLabels!" [tooltip]="hist_chart_options.tooltip!"
-    [annotations]="hist_chart_options.annotations!" [colors]="hist_chart_options.colors!"
-  style="margin-top: 10px;"></apx-chart>
-  <div *ngIf="pathway_info != '' && pathway_info != null" class="card mt-3">
-    <div class="card-header">
-      <h5 class="text-center">{{pathway_info.name}}</h5>
-    </div>
-    <div class="card-body">
-      <p>{{pathway_info.definition.text}}</p>
-    </div>
-  </div>-->
+    }
   </div>
 
   <div class="col-lg-3 col-md-12">
     <div class="d-flex flex-column h-100 gap-2">
-      @if (!loading) {
       <div class="card flex-fill" style="min-height: 0;">
         <div class="card-header">
           <h4 class="mb-0"><i class="fa fa-arrow-up"></i> {{'pathway.body.up' | translate}}</h4>
         </div>
         <ul class="list-group list-group-flush overflow-y-auto" style="height: 35vh;">
+          @if (loading) {
+          @for (n of [].constructor(20); track n) {
+          <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">
+            <span class="placeholder col-8"></span>
+            <span class="placeholder col-2"></span>
+          </li>
+          }
+          }
+          @if (!loading) {
           @for (item of upreg_gene_counts; track item) {
           <button class="list-group-item list-group-item-action gene-regulated d-flex justify-content-between"
             type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
             <span>{{ item.gene }}</span>
             <span>{{ item.count }}</span>
           </button>
+          }
           }
         </ul>
       </div>
@@ -255,6 +263,15 @@
           <h4 class="mb-0"><i class="fa fa-arrow-down"></i> {{'pathway.body.down' | translate}}</h4>
         </div>
         <ul class="list-group list-group-flush overflow-y-auto" style="height: 35vh;">
+          @if (loading) {
+          @for (n of [].constructor(20); track n) {
+          <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">
+            <span class="placeholder col-8"></span>
+            <span class="placeholder col-2"></span>
+          </li>
+          }
+          }
+          @if (!loading) {
           @for (item of downreg_gene_counts; track item) {
           <button class="list-group-item gene-regulated d-flex justify-content-between list-group-item-action"
             type="button" (click)="geneRerout(item.gene)" [ngStyle]="getColorStyle(item, 'DOWN')">
@@ -262,9 +279,9 @@
             <span>{{ item.count }}</span>
           </button>
           }
+          }
         </ul>
       </div>
-      }
     </div>
   </div>
 </div>
