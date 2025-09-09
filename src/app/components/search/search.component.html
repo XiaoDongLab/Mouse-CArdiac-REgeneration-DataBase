@@ -1,11 +1,10 @@
-@if (!query_completed) {
+<!--@if (!query_completed) {
 <div class="loading-overlay" id="loadingOverlay">
-  <!--<div class="loading-message">Loading...</div>-->
   <div class="spinner-blurred">
     <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status"></div>
   </div>
 </div>
-}
+}-->
 <div class="row g-2">
   <h2 translate="navbar.download"></h2>
   <div class="col-lg-3 col-md-12">
@@ -85,50 +84,6 @@
       <textarea class="form-control" placeholder="--comparison=shamvsmi&#10;--group=psd3"
         (input)="commandChanged($event)"></textarea>
       <hr />
-      <!--<h4>Category</h4>
-      <div class="row g-1">
-        <p class="col-12 text-muted"><small>Highlight these boxes to select categories.</small></p>
-        <div class="col-12">
-          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck1" autocomplete="off"
-            value="neonetal" [(ngModel)]="this.neonatal_selected">
-          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck1">
-            <div class="d-flex align-items-center justify-content-left">
-              <i class="fa fa-flask"></i>
-              <div class="category-checkbox">
-                <h6>Neonatal (P1 -P6)</h6>
-                <small>Complete cardiac regeneration capacity</small>
-              </div>
-            </div>
-          </label>
-        </div>
-        <div class="col-12">
-          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck2" autocomplete="off"
-            value="postnatal" [(ngModel)]="this.postnatal_selected">
-          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck2">
-            <div class="d-flex align-items-center justify-content-left">
-              <i class="fa fa-flask"></i>
-              <div class="category-checkbox">
-                <h6>Postnatal (P7+)</h6>
-                <small>Regenerative potential significantly reduced</small>
-              </div>
-            </div>
-          </label>
-        </div>
-        <div class="col-12">
-          <input type="checkbox" class="btn-check" (change)="criteriaChanged();" id="btncheck3" autocomplete="off"
-            value="others" [(ngModel)]="this.others_selected">
-          <label class="btn btn-outline-mcaredb h-100 text-start" style="width: 100%; flex: 1;" for="btncheck3">
-            <div class="d-flex align-items-center justify-content-left">
-              <i class="fa fa-info-circle"></i>
-              <div class="category-checkbox">
-                <h6>Others (NA)</h6>
-                <small>General information about this experiment</small>
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
-      <hr />-->
       <div class="row g-1">
         <button tabindex="0" id="downloadButton" [disabled]="selectedRowKeys.length == 0" class="col-12 btn btn-mcaredb"
           icon="download" (click)="downloadWrapper()">
@@ -138,6 +93,21 @@
     </div>
   </div>
   <div class="col-lg-9 col-md-12">
+    @if (!query_completed) {
+    <h5 class="placeholder-glow">
+      <span class="placeholder col-8"></span>
+    </h5>
+    <p class="placeholder-glow">
+      <span class="placeholder col-12"></span>
+    </p>
+    @for (n of [].constructor(20); track n;) {
+    <p class="card-text placeholder-glow">
+      @for (n of [].constructor(getRandom(1, 5)); track n) {
+        <span [class]="'placeholder col-' + getRandom(1, 12)"></span>
+      }
+    </p>
+    }
+    }
     @if (query_completed) {
     <h5>
       {{'download.body.select' | translate}} {{selectedRowKeys.length}}, {{'download.body.total' | translate}}

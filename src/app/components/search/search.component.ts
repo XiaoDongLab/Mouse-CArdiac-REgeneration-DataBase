@@ -446,195 +446,11 @@ export class SearchComponent implements OnInit {
     this.databaseService.staticDownload(file_names)
   }
 
-  dowloadRawData(id: number): Promise<DownloadData> {
-    return new Promise((resolve, reject) => {
-      this.databaseService.getRawData(id)
-        .subscribe({
-          next: (data) => {
-            const csvData = data;
-            const filename = 'Data_' + id + '.csv';
-            const blob = new Blob([csvData], { type: 'text/csv' });
-            resolve({ blob, filename });
-          },
-          error: (e) => {
-            console.error(e);
-            reject(e);
-          }
-        });
-    });
-  }
-
 
   /* NEW STUFF, QUESTIONABLE */
 
   onItemSelected($event: any) {
     this.displayed_map = $event.itemData.text;
-  }
-
-  makeDictionaries() {
-    let temp_tissue_dict: any = {};
-    let temp_sex_dict: any = {};
-    let temp_age_dict: any = { '0-9': 0, '10-19': 0, '20-29': 0, '30-49': 0, '50-64': 0, '65-99': 0, '100+': 0, }
-    let temp_age_dict_new: any = { 'Neonatal': 0, 'Postnatal': 0 };
-    let temp_health_dict: any = { 'Healthy': 0, 'Cancer': 0, 'Other': 0, 'Unkown': 0 }
-    let cell_count = 0;
-
-    for (let i = 0; i < this.display.length; i++) {
-      let sample = this.display[i];
-      let age = this.getAge(sample.age);
-      let age_range = age <= 58 ? 'Neonatal' : 'Postnatal';
-
-
-      //Get Age information to always be displayed
-      let age_group = this.getAgeGroup(age);
-      temp_age_dict[age_group] = temp_age_dict[age_group] + 1;
-
-      let age_group_new = this.getAgeGroupNew(age);
-      temp_age_dict_new[age_group_new] = temp_age_dict_new[age_group_new] + 1;
-
-      if (age < this.min_age || age > this.max_age) {
-        continue;
-      }
-
-      //get tissue info
-      let tissue = sample.tissue.includes('blood') ? 'blood' : sample.tissue;
-      tissue = tissue.toLowerCase()
-
-      //tissue = this.selected_tissues.includes(tissue) ? tissue : 'other';
-      //get sex info
-      let sex = sample.sex
-      //get health info
-      let disease = sample.disease_status
-      if (disease == null) {
-        disease = 'Unkown'
-      }
-      else {
-        if (this.containsAnyValue(disease, ['healthy', 'normal', 'NA', 'Normal'])) {
-          disease = 'Healthy'
-        }
-        else if (this.containsAnyValue(disease, ['cancer', 'carcinoma', 'Cancer', 'melanoma'])) {
-          disease = 'Cancer'
-        }
-        else {
-          disease = 'Other'
-        }
-      }
-      //set dict values
-      temp_tissue_dict[tissue] = temp_tissue_dict[tissue] ? temp_tissue_dict[tissue] + 1 : 1;
-      temp_sex_dict[sex] = temp_sex_dict[sex] ? temp_sex_dict[sex] + 1 : 1;
-      cell_count = cell_count + Number(sample.num_cells);
-      temp_health_dict[disease] = temp_health_dict[disease] ? temp_health_dict[disease] + 1 : 1;
-    }
-
-    temp_tissue_dict = Object.entries(temp_tissue_dict);
-    temp_tissue_dict = temp_tissue_dict.map(([key, value]: [string, any]) => [key.charAt(0).toUpperCase() + key.slice(1), value]);
-    temp_tissue_dict.sort((a: [string, number], b: [string, number]) => b[1] - a[1]);
-    temp_tissue_dict = Object.fromEntries(temp_tissue_dict);
-
-    this.tissue_dict = temp_tissue_dict;
-    this.sex_dict = temp_sex_dict;
-    this.age_dict = temp_age_dict;
-    this.age_dict_new = temp_age_dict_new;
-    this.health_dict = temp_health_dict;
-    this.cell_total = cell_count;
-  }
-  makeDonutChart(input_dict: any) {
-    let chart: Partial<DonutChartOptions> = {
-      series: Object.values(input_dict).map(Number),
-      chart: {
-        type: "donut",
-        height: '425',
-      },
-      legend: {
-        show: false
-      },
-      labels: Object.keys(input_dict),
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: "bottom"
-            }
-          }
-        }
-      ],
-      data_labels: {
-        formatter: function (val, opts) {
-          return opts.w.config.labels[opts.seriesIndex]
-        },
-        style: {
-          fontSize: '16px'
-        }
-      },
-      options: {
-        pie: {
-          donut: {
-            labels: {
-              show: true,
-              total: {
-                show: true,
-                label: "Total Samples",
-                fontSize: '30px',
-                fontWeight: 700,
-                color: '#E85A4F'
-              },
-              value: {
-                fontFamily: 'RobotoCondensed-Bold',
-                fontSize: '50px',
-                color: '#8E8D8A',
-                fontWeight: 600,
-                offsetY: 25
-              }
-            }
-          }
-        }
-      },
-      theme: {
-        monochrome: {
-          enabled: true,
-          color: '#E85A4F',
-          shadeTo: 'dark',
-          shadeIntensity: 0.55
-        }
-      },
-      stroke: {
-        width: 2,
-        colors: ['#E0DCCC']
-      }
-    };
-    return (chart)
-  }
-
-
-
-  getAgeGroup(age: number) {
-    if (age < 10) {
-      return ('0-9')
-    }
-    else if (age < 20) {
-      return ('10-19')
-    }
-    else if (age < 30) {
-      return ('20-29')
-    }
-    else if (age < 50) {
-      return ('30-49')
-    }
-    else if (age < 65) {
-      return ('50-64')
-    }
-    else if (age < 100) {
-      return ('65-99')
-    }
-    return ('100+')
-  }
-
-  getAgeGroupNew(age: number) {
-    return age <= 58 ? 'Neonatal' : 'Postnatal';
   }
 
   formatRow($event: any) {
@@ -704,6 +520,10 @@ export class SearchComponent implements OnInit {
       ret_age = Number(age)
     }
     return (ret_age)
+  }
+
+  getRandom(min: number, max: number) {
+    return Math.floor((max - min) * Math.random() + min)
   }
 
   commandChanged($event: any) {
