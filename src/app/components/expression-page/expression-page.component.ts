@@ -1,5 +1,5 @@
 import { DiffExp } from 'src/app/models/diffExp.model';
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, Type } from '@angular/core';
 import { DatabaseService } from 'src/app/services/database.service';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
 import { GeneConversionService } from 'src/app/services/name-converter.service';
@@ -70,7 +70,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
   logScale = true;
   colorPreference: number = localStorage["colorPreference"] ?? 0;
   // recentGenes: string[] = [];
-  recentGenes: Queue<string> = new Queue<string>();
+  recentGenes: Queue<Search> = new Queue<Search>();
   private subscriptions: Subscription[] = [];
   splitByTime: boolean = true;
   @ViewChild('chartObj') chart!: ChartComponent; // Reference to the apx-chart component
@@ -333,7 +333,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  async loadExpression(gene: string = this.searchInput.trim()) {
+  async loadExpression(gene: string = this.searchInput.trim(), surgery = this.selectedSurgery, age = this.selectedNatalStatus, celltype = this.selectedCellType) {
     if (!gene) {
       alert(this.translateService.instant("expression.popup.invalid_gene"));
       return;
@@ -344,9 +344,9 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     try {
       // Store current filter state for this specific gene
       const currentFilters = {
-        cellType: this.selectedCellType,
-        surgery: this.selectedSurgery,
-        natalStatus: this.selectedNatalStatus
+        cellType: celltype,
+        surgery: surgery,
+        natalStatus: age
       };
 
 
@@ -380,13 +380,21 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
         this.expressionData.push(item);
       }
     })
-    this.updateRecentGenes(gene);
+    this.updateRecentGenes(gene, this.selectedCellType, this.selectedSurgery, this.selectedNatalStatus);
     this.updateChart();
   }
 
-  private updateRecentGenes(gene: string) {
-    if (!this.recentGenes.elements.includes(gene) && gene) {
-      this.recentGenes.enqueue(gene);
+  private updateRecentGenes(gene: string, celltype: string, surgery: string, age: string) {
+    if (!this.recentGenes.elements.reduce((itr, val) => {
+      return itr || val.name == `${gene} (${celltype}, ${surgery}, ${age})`
+    }, false) && gene) {
+      this.recentGenes.enqueue({
+        gene: gene,
+        age: age,
+        surgery: surgery,
+        celltype: celltype,
+        name: `${gene} (${celltype}, ${surgery}, ${age})`
+      });
     }
     if (this.recentGenes.length > 5) {
       this.recentGenes.dequeue();
@@ -750,8 +758,8 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       /* 
        * localStorage can only store strings!!!
        */
-      JSON.parse(saved).list.forEach((element: string) => {
-        this.recentGenes.enqueue(element);
+      JSON.parse(saved).list.forEach((element: Search) => {
+        this.recentGenes.enqueue(element)
       });
       console.debug('[ExpressionPageComponent] loadRecentGenes: Loaded recent genes:', this.recentGenes);
     }
@@ -938,7 +946,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     this.updateChart();
   }
 
-  
+
 
   min(a: number, b: number) {
     return a < b ? a : b;
@@ -1050,14 +1058,41 @@ export class ColorGenerator {
     randomColors.push(newColorStr);
     return newColorStr;
   }
+  
+  static getLuminance(color: RGB): number {
+    let [r, g, b] = color;
+    const srgb = [r, g, b].map(v => {
+      v /= 255;
+      return v <= 0.03928
+        ? v / 12.92
+        : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
 
-  static checkColorThemeValid(isDark: boolean, newColor: RGB) {
-    return isDark ? (
-      newColor.reduce((sum, val) => {
-        return sum + val
-      }, 0) >= 328
-    ) : newColor.reduce((sum, val) => {
-      return sum + val
-    }, 0) < 328
+    // Luminance formula
+    return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
   }
+
+  static getContrastRatio(lum1: number, lum2: number): number {
+    const [bright, dark] = lum1 > lum2 ? [lum1, lum2] : [lum2, lum1];
+    return (bright + 0.05) / (dark + 0.05);
+  }
+
+  static checkColorThemeValid(isDark: boolean, newColor: [number, number, number]) {
+    const bgColor: RGB = isDark ? [0, 0, 0] : [255, 255, 255];
+    const newLum = ColorGenerator.getLuminance(newColor);
+    const bgLum = ColorGenerator.getLuminance(bgColor);
+    const contrast = ColorGenerator.getContrastRatio(newLum, bgLum);
+
+    return contrast >= 4.5;
+  }
+
+
+}
+
+export type Search = {
+  gene: string,
+  celltype: string,
+  age: string,
+  surgery: string,
+  name?: string
 }

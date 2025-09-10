@@ -68,7 +68,7 @@
       <h4 translate="expression.recent"></h4>
       <div class="row">
         @for (gene of recentGenes.elements; track gene) {
-        <a href="javascript:void(0)" class="col text-decoration-none" (click)="loadExpression(gene)">{{gene}}</a>
+        <a href="javascript:void(0)" class="col-12 text-decoration-none" (click)="loadExpression(gene.gene, gene.surgery, gene.age, gene.celltype)">{{gene.name ?? gene.gene}}</a>
         }
       </div>
       }
