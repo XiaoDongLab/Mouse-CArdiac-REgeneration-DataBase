@@ -37,7 +37,8 @@
                 "d1": "Adjust criteria and enter gene symbol or Ensembl ID, then click \"Add gene\"",
                 "d2": "Boxplots will then be added to the chart. Hover the box to see detailed data including max/min, q1/q3 and medium values.",
                 "d3": "If you want to remove a gene, just click \"Remove Gene\" on the right sidebar.",
-                "d4": "Please use the left sidebar to show or hide the columns in the boxplot."
+                "d4": "Please use the left sidebar to show or hide the columns in the boxplot.",
+                "d5": "Store and retrieve your search criteria at any time."
             }
         },
         "download": {
