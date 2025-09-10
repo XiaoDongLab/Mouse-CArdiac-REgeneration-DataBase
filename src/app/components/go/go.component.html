@@ -143,16 +143,6 @@
           <small translate="pathway.filterarea.kegg-d"></small>
         </div>
       </label>
-      <!--<h6 class="mt-2">Search mode</h6>
-      <select class="form-select" aria-label="Default select example" [(ngModel)]="selected_search_mode">
-        @for (item of search_modes; track item) {
-        <option [value]="item.value">{{item.text}}</option>
-        }
-      </select>
-      <hr />
-      <button (click)="getNewData()" class="btn btn-mcaredb w-100">
-        <i class="fa fa-magnifying-glass"></i> GO Results
-      </button>-->
     </div>
   </div>
   <div class="col-lg-6 col-md-12">
@@ -242,8 +232,8 @@
           @if (loading) {
           @for (n of [].constructor(20); track n) {
           <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">
-            <span class="placeholder col-8"></span>
-            <span class="placeholder col-2"></span>
+            <span [class]="'placeholder col-' + getRandom(5, 8)"></span>
+            <span [class]="'placeholder col-' + getRandom(1, 3)"></span>
           </li>
           }
           }
@@ -266,8 +256,8 @@
           @if (loading) {
           @for (n of [].constructor(20); track n) {
           <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">
-            <span class="placeholder col-8"></span>
-            <span class="placeholder col-2"></span>
+            <span [class]="'placeholder col-' + getRandom(5, 8)"></span>
+            <span [class]="'placeholder col-' + getRandom(1, 3)"></span>
           </li>
           }
           }

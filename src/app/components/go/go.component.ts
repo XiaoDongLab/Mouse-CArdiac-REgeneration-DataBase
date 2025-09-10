@@ -813,6 +813,10 @@ export class GoComponent implements OnInit {
       ]
     }
   }
+
+  getRandom(min: number, max: number) {
+    return Math.floor((max - min) * Math.random() + min)
+  }
   
   // Method to reset annotations
   resetAnnotations() {
