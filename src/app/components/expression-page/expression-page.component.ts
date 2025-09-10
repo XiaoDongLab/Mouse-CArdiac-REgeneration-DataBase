@@ -459,8 +459,8 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       return filterText ? `${data.geneSymbol || data.ensemblId} (${filterText})` : data.geneSymbol || data.ensemblId;
     });
 
-    // console.log('Expression data available:', this.expressionData);
-    // console.log('Split by time:', this.splitByTime);
+    console.log('Expression data available:', this.expressionData);
+    console.log('Split by time:', this.splitByTime);
 
     // Create flat series (one series, many data points)
     // const series: ApexAxisChartSeries = [{
@@ -524,7 +524,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
           : values;
         const boxStats = this.calculateBoxPlotStats(transformedValues);
 
-        // console.log(`Box stats for ${geneName} (${condition}):`, boxStats);
+        console.log(`Box stats for ${geneName} (${condition}):`, boxStats);
 
         return {
           x: this.conditionDisplayNames[condition] || condition, // 横轴只保留 condition 名字
@@ -579,10 +579,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
     const conditionDisplayNames = this.conditionDisplayNames;
     ColorGenerator.getRandomColor(100, this.randomColors, this.getColorTheme());
-    this.randomColorsBottom = [...this.randomColors].map(color => this.tweakRgbColor(color));
     let colors = this.randomColors;
-    console.log(this.randomColors);
-    console.log(this.randomColorsBottom)
     const translatedLabel = this.translateService.instant("expression.nodata");
     // Define new options for update
     const logScale = this.logScale;
@@ -884,7 +881,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       });
 
       // Log the conditions data for debugging
-      // console.log(`[processGeneData] ${geneSymbol} conditions data:`, conditionsData);
+      console.log(`[processGeneData] ${geneSymbol} conditions data:`, conditionsData);
 
       // Only include genes with non-empty conditions
       if (Object.values(conditionsData).some(values => values.length > 0)) {
@@ -902,6 +899,11 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     }
 
     return processedGenes;
+  }
+
+  clearRecentGenes() {
+    this.recentGenes.clear();
+    localStorage['recentGenes'] = [];
   }
 
   private async convertAndProcessGene(searchInput: string, filters: any): Promise<GeneExpressionData[]> {
@@ -925,8 +927,8 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     // Fetch ALL data for this gene (don't filter at database level)
     const data = await this.fetchGeneData([dbGeneId]).toPromise();
 
-    // console.log('Raw data from database:', data);
-    // console.log('Number of rows fetched:', data?.length);
+    console.log('Raw data from database:', data);
+    console.log('Number of rows fetched:', data?.length);
 
     // Process and filter data
     const filteredData = await this.processGeneData(data || [], filters);
@@ -1008,6 +1010,10 @@ export class Queue<T> {
 
   get elements() {
     return this.list
+  }
+
+  clear() {
+    this.list = [];
   }
 }
 
