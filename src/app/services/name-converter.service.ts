@@ -53,7 +53,8 @@ export class GeneConversionService {
       ).subscribe(() => {
         if (Object.values(this.ensembleToGeneMapping).map(item => item.toLowerCase()).includes(gene.toLowerCase())) {
           resolve(Object.keys(this.ensembleToGeneMapping).find(key => this.ensembleToGeneMapping[key].toLowerCase() === gene.toLowerCase()) ?? '');
-        } else {
+        }
+        else {
           reject('Gene not found');
         }
       });

@@ -917,9 +917,14 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
     // Convert gene symbol to Ensembl ID if needed
     if (!input.startsWith('ENSMUSG')) {
-      const ensemblId = await this.geneConversionService.convertGeneToEnsemble(input);
-      if (ensemblId) {
-        queryId = ensemblId;
+      try {
+        let ensembl_id = parseInt(searchInput);
+        queryId = 'ENSMUSG' + ('00000000000' + ensembl_id).slice(-11)
+      } catch {
+        const ensemblId = await this.geneConversionService.convertGeneToEnsemble(input);
+        if (ensemblId) {
+          queryId = ensemblId;
+        }
       }
     }
 
@@ -1069,7 +1074,7 @@ export class ColorGenerator {
     randomColors.push(newColorStr);
     return newColorStr;
   }
-  
+
   static getLuminance(color: RGB): number {
     let [r, g, b] = color;
     const srgb = [r, g, b].map(v => {
