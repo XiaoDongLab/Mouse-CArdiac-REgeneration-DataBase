@@ -25,7 +25,7 @@
       "DOM.Iterable"
     ],
     "types": [
-      "node"
+      "@angular/localize"
     ],
     "useDefineForClassFields": false
   },

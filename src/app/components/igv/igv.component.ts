@@ -17,7 +17,6 @@ import GeneList from '../../../assets/geneDict.json'
 import { setInterval, clearInterval } from 'timers';
 import { GeneConversionService } from 'src/app/services/name-converter.service';
 import { Router } from '@angular/router';
-declare const bootstrap: any;
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -48,10 +47,10 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   //IGV Variables
   browser: any;
   display_tab: string = 'Explore';
-  genes_interested: string[];
+  genes_interested: string[] = ['ENSMUSG00000001517', 'ENSMUSG00000070348', 'ENSMUSG00000000184', 'ENSMUSG00000002068', 'ENSMUSG00000028212', 'ENSMUSG00000037169', 'ENSMUSG00000062991', 'ENSMUSG00000060275', 'ENSMUSG00000041014', 'ENSMUSG00000032311', 'ENSMUSG00000062312', 'ENSMUSG00000018166', 'ENSMUSG00000062209', 'ENSMUSG00000021765', 'ENSMUSG00000053110', 'ENSMUSG00000050966', 'ENSMUSG00000040021', 'ENSMUSG00000021959', 'ENSMUSG00000092341', 'ENSMUSG00000020160', 'ENSMUSG00000027210', 'ENSMUSG00000006932', 'ENSMUSG00000030867', 'ENSMUSG00000027699', 'ENSMUSG00000049604'];
   deg_sorted_list: Map<String, number>;
   load_progress: number;
-  gene_interested: Gene[] = [];
+  gene_interested: Gene[];
   prevGene: string = "";
   nextGene: string = "";
   genesEntered: string = '';
@@ -114,13 +113,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     this.load_progress = 0;
     this.pmid_tissue_dist = databaseConstService.getDePmidTissueDict();
     this.tissue_types = Object.keys(this.pmid_tissue_dist)
-    this.genes_interested = ['ENSMUSG00000001517', 'ENSMUSG00000070348', 'ENSMUSG00000000184', 'ENSMUSG00000002068', 'ENSMUSG00000028212', 'ENSMUSG00000037169', 'ENSMUSG00000062991', 'ENSMUSG00000060275', 'ENSMUSG00000041014', 'ENSMUSG00000032311', 'ENSMUSG00000062312', 'ENSMUSG00000018166', 'ENSMUSG00000062209', 'ENSMUSG00000021765', 'ENSMUSG00000053110', 'ENSMUSG00000050966', 'ENSMUSG00000040021', 'ENSMUSG00000021959', 'ENSMUSG00000092341', 'ENSMUSG00000020160', 'ENSMUSG00000027210', 'ENSMUSG00000006932', 'ENSMUSG00000030867', 'ENSMUSG00000027699', 'ENSMUSG00000049604'];
-    this.genes_interested.forEach(item => {
-      this.nameConverterService.convertEnsembleToGene(item).then(result => {
-        let gene = { name: result, stableId: item, reference: ' ' };
-        this.gene_interested.push(gene);
-      })
-    })
     this.selected_tissues = this.tissue_types;
     this.deg_sorted_list = new Map<String, number>();
     this.databaseService.getIndices().subscribe({
@@ -305,7 +297,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       // Convert the remaining string to a number
       return parseInt(strippedString, 10);
     });
-    
+
     this.databaseService.getGeneDiffExpGeneral(convertedList)
       .subscribe({
         next: (data) => {
@@ -371,12 +363,6 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     window.clearInterval(this.fakeInterval)
     this.load_progress = 0;
     this.fakeProgress(convertedList.length);
-
-    setTimeout(() => {
-
-      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
-    }, 100);
     this.databaseService.getGeneDiffExp(convertedList)
       .subscribe({
         next: (data) => {
@@ -409,8 +395,19 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     igv.removeAllBrowsers()
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.selected_cells = this.cell_types;
+    this.gene_interested = await Promise.all(
+      this.genes_interested.map(async item => {
+        const result = await this.nameConverterService.convertEnsembleToGene(item);
+        return {
+          name: result,
+          stableId: item,
+          reference: ' '
+        } as Gene;
+      })
+    );
+    console.log(this.gene_interested)
   }
 
   convertDiffExpData(gene_list: any[]) {

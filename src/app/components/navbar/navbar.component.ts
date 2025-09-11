@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
   tabs: any[];
   selected_path: string = '';
   navHeight = 0;
+  navbarExpanded = false;
   private destroy$ = new Subject<void>();
 
   @ViewChild('customTabTemplate', { static: true }) customTabTemplate: TemplateRef<any>;

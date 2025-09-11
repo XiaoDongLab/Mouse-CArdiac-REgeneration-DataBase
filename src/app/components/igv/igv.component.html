@@ -10,114 +10,110 @@
 <div class="row g-2">
   <h2 translate="navbar.genome"></h2>
   <div class="col-12 maps">
-    <ul class="navbar-nav" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a tabindex="0" class="nav-link active" id="explore-tab" data-bs-toggle="pill" type="button" role="tab"
-          data-bs-target="#explore" aria-controls="explore" aria-selected="true" translate="igv.mininav.explore-chromosome"></a>
+    <ul ngbNav #nav="ngbNav" class="nav-tabs justify-content-center">
+      <li ngbNavItem>
+        <button ngbNavLink translate="igv.mininav.explore-chromosome"></button>
+        <ng-template ngbNavContent>
+          <div class="d-flex justify-content-center">
+            <button tabindex="0" role="button" [disabled]="!browser || (genes.length != 0) && (load_progress < 100)"
+              color="accent" (click)="getInRangeGenes()" class="btn btn-mcaredb mb-1">
+              <i class="fa fa-arrow-up"></i> {{ 'igv.page.p1.btn-get' | translate}}
+            </button>
+          </div>
+        </ng-template>
       </li>
-      <li class="nav-item" role="presentation">
-        <a tabindex="0" class="nav-link" id="interest-tab" data-bs-toggle="pill" type="button" role="tab" data-bs-target="#interest" aria-controls="interest" aria-selected="false" translate="igv.mininav.core-genes"></a>
+      <li ngbNavItem>
+        <button ngbNavLink translate="igv.mininav.core-genes"></button>
+        <ng-template ngbNavContent>
+          <div class="row g-2">
+            <div ngbAccordion>
+              <div ngbAccordionItem>
+                <h2 ngbAccordionHeader>
+                  <button ngbAccordionButton>
+                    <div class="row">
+                      <div class="col-12">
+                        <h4>List of genes interested</h4>
+                        <span class="text-muted">Click link to navigate to locus</span>
+                      </div>
+                    </div>
+                  </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                  <div ngbAccordionBody>
+                    <div class="row g-2">
+                      @if (gene_interested.length > 0) {
+                      <div>
+                        @for (item of gene_interested; track item; let i = $index) {
+                        <a tabindex="0" class="col-4 text-decoration-none fs-5" (click)="browser.search(item.name)"
+                          href="javascript:void(0)">
+                          {{item.name}}
+                        </a>
+                        }
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center gap-1">
+              <button tabindex="0" [disabled]="!this.browser || load_progress == 0"
+                class="btn btn-link text-decoration-none" (click)="moveGenes(this.grouped_genes, 'left')">
+                <i class="fa fa-chevron-left">
+                </i>
+                {{prevGene}}
+              </button>
+              <button tabindex="0" [disabled]="!this.browser || (genes.length != 0) && (load_progress < 100)"
+                class="btn btn-mcaredb" (click)="getDiffExpGenesInterest()">
+                <i class="fa fa-magnifying-glass">
+                </i>
+                {{ 'igv.page.p2.btn-get' | translate }}
+              </button>
+              <button tabindex="0" [disabled]="!this.browser || load_progress == 0"
+                class="btn btn-link text-decoration-none" (click)="moveGenes(this.grouped_genes, 'right')">
+                {{nextGene}}
+                <i class="fa fa-chevron-right">
+                </i>
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </li>
-      <li class="nav-item" role="presentation">
-        <a tabindex="0" class="nav-link" id="manual-tab" data-bs-toggle="pill" type="button" role="tab"
-          data-bs-target="#manual" translate="igv.mininav.search-genes"></a>
+      <li ngbNavItem>
+        <button ngbNavLink translate="igv.mininav.search-genes"></button>
+        <ng-template ngbNavContent>
+          <div class="row g-2">
+            <textarea tabindex="0" class="form-control"
+              placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5, ENSMUSG00000001517, 21944, ..."
+              [(ngModel)]="genesEntered"></textarea>
+            <div class="d-flex justify-content-center gap-1">
+              <button tabindex="0" [disabled]="!this.browser || load_progress == 0"
+                class="btn btn-link text-decoration-none" (click)="moveGenes(this.grouped_genes, 'left')">
+                <i class="fa fa-chevron-left">
+                </i>
+                {{prevGene}}
+              </button>
+              <button tabindex="0"
+                [disabled]="!this.browser || genesEntered.length == 0 || (genes.length != 0) && (load_progress < 100)"
+                class="btn btn-mcaredb" (click)="getDiffExpGenesEntered()">
+                <i class="fa fa-magnifying-glass">
+                </i>
+                {{ 'igv.page.p3.btn-get' | translate}}
+              </button>
+              <button tabindex="0" [disabled]="!this.browser || load_progress == 0"
+                class="btn btn-link text-decoration-none" (click)="moveGenes(this.grouped_genes, 'right')">
+                {{nextGene}}
+                <i class="fa fa-chevron-right">
+                </i>
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </li>
     </ul>
   </div>
   <div #igvdiv class="igv" part="igv"></div>
-  <!-- Content area -->
-  <div class="col-12">
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="explore" role="tabpanel" aria-labelledby="explore-tab" tabindex="0">
-        <div class="d-flex justify-content-center">
-          <button tabindex="0" role="button" [disabled]="!browser || (genes.length != 0) && (load_progress < 100)" color="accent"
-            (click)="getInRangeGenes()" class="btn btn-mcaredb mb-1">
-            <i class="fa fa-arrow-up"></i> {{ 'igv.page.p1.btn-get' | translate}}
-          </button>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="interest" role="tabpanel" aria-labelledby="interest-tab" tabindex="0">
-        <div class="row g-2">
-          <div class="accordion" id="geneInterestedAccordion">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button tabindex="0" class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#geneInterested" aria-expanded="true" aria-controls="geneInterested">
-                  <div class="row">
-                    <div class="col-12">
-                      <h4>List of genes interested</h4>
-                      <span class="text-muted">Click link to navigate to locus</span>
-                    </div>
-                  </div>
-                </button>
-              </h2>
-              <div id="geneInterested" class="accordion-collapse collapse" data-bs-parent="#geneInterestedAccordion">
-                <div class="accordion-body">
-                  <div class="row g-2">
-                    @for (item of gene_interested; track item; let i = $index) {
-                    <a tabindex="0" class="col text-decoration-none" (click)="browser.search(item.name)" href="javascript:void(0)">
-                      <h5 class="mb-0">{{item.name}}</h5>
-                      <small class="text-muted">{{item.stableId ?? ''}}</small>
-                    </a>
-                    }
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-center gap-1">
-            <button tabindex="0" [disabled]="!this.browser || load_progress == 0" class="btn btn-link text-decoration-none"
-              (click)="moveGenes(this.grouped_genes, 'left')">
-              <i class="fa fa-chevron-left">
-              </i>
-              {{prevGene}}
-            </button>
-            <button tabindex="0" [disabled]="!this.browser || (genes.length != 0) && (load_progress < 100)" class="btn btn-mcaredb"
-              (click)="getDiffExpGenesInterest()">
-              <i class="fa fa-magnifying-glass">
-              </i>
-              {{ 'igv.page.p2.btn-get' | translate }}
-            </button>
-            <button tabindex="0" [disabled]="!this.browser || load_progress == 0" class="btn btn-link text-decoration-none"
-              (click)="moveGenes(this.grouped_genes, 'right')">
-              {{nextGene}}
-              <i class="fa fa-chevron-right">
-              </i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="manual" role="tabpanel" aria-labelledby="manual-tab" tabindex="0">
-        <div class="row g-2">
-          <textarea tabindex="0" class="form-control"
-            placeholder="Enter gene symbols or Ensembl IDs separated by commas: Myh6, Gata6, Tbx5, ENSMUSG00000001517, 21944, ..."
-            [(ngModel)]="genesEntered"></textarea>
-          <div class="d-flex justify-content-center gap-1">
-            <button tabindex="0" [disabled]="!this.browser || load_progress == 0" class="btn btn-link text-decoration-none"
-              (click)="moveGenes(this.grouped_genes, 'left')">
-              <i class="fa fa-chevron-left">
-              </i>
-              {{prevGene}}
-            </button>
-            <button tabindex="0"
-              [disabled]="!this.browser || genesEntered.length == 0 || (genes.length != 0) && (load_progress < 100)"
-              class="btn btn-mcaredb" (click)="getDiffExpGenesEntered()">
-              <i class="fa fa-magnifying-glass">
-              </i>
-              {{ 'igv.page.p3.btn-get' | translate}}
-            </button>
-            <button tabindex="0" [disabled]="!this.browser || load_progress == 0" class="btn btn-link text-decoration-none"
-              (click)="moveGenes(this.grouped_genes, 'right')">
-              {{nextGene}}
-              <i class="fa fa-chevron-right">
-              </i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div [ngbNavOutlet]="nav"></div>
   @if (this.genes.length > 0) {
   <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
@@ -126,9 +122,10 @@
           placeholder="Select Cell Type(s)" (onValueChanged)="onCellChanged($event)" [showClearButton]="true"
           [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
         paginate='true'></dx-tag-box>-->
-      <ng-select tabindex="0" [items]="cell_types" [searchable]="true" [clearable]="true" (onValueChanged)="onCellChanged($event)"
-        placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells" [selectableGroup]="true"
-        [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false" [multiple]="true">
+      <ng-select tabindex="0" [items]="cell_types" [searchable]="true" [clearable]="true"
+        (onValueChanged)="onCellChanged($event)" placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells"
+        [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false"
+        [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
             <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"
@@ -153,12 +150,28 @@
       <hr />
       <h4 translate="igv.filterarea.legend"></h4>
       <div class="color-legend">
-        <h6 tabindex="0" class="sg-up" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and Log2FC &gt; 0.58"><i class="fa fa-angles-up"></i>{{'igv.filterarea.sg-up' | translate}}</h6>
-        <h6 tabindex="0" class="sl-up" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Slightly Upregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and 0.58 &ge; Log2FC &gt; 0.25"><i class="fa fa-chevron-up"></i>{{'igv.filterarea.sl-up' | translate}}</h6>
-        <h6 tabindex="0" class="no-cg" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="No Change" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and 0.25 &ge; Log2FC &ge; -0.25"><i class="fa fa-grip-lines"></i>{{'igv.filterarea.no-cg' | translate}}</h6>
-        <h6 tabindex="0" class="sl-dn" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Slightly Downregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and -0.25 &gt; Log2FC &ge; -0.58"><i class="fa fa-chevron-down"></i>{{'igv.filterarea.sl-dn' | translate}}</h6>
-        <h6 tabindex="0" class="sg-dn" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Significantly Downregulated" data-bs-content="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and -0.58 &gt; Log2FC"><i class="fa fa-angles-down"></i>{{'igv.filterarea.sg-dn' | translate}}</h6>
-        <h6 tabindex="0" class="no-ft" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Not have a significant fit" data-bs-content="p &gt; 0.05 (equivalent to -log10P-val &lt; 1.30103)"><i class="fa fa-xmark"></i>{{'igv.filterarea.no-ft' | translate}}</h6>
+        <h6 tabindex="0" class="sg-up" tabindex="0" popoverTitle="Significantly Upregulated"
+          ngbPopover="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and Log2FC &gt; 0.58"><i
+            class="fa fa-angles-up"></i>{{'igv.filterarea.sg-up' | translate}}</h6>
+        <h6 tabindex="0" class="sl-up" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
+          popoverTitle="Slightly Upregulated"
+          ngbPopover="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and 0.58 &ge; Log2FC &gt; 0.25"><i
+            class="fa fa-chevron-up"></i>{{'igv.filterarea.sl-up' | translate}}</h6>
+        <h6 tabindex="0" class="no-cg" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
+          popoverTitle="No Change"
+          ngbPopover="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and 0.25 &ge; Log2FC &ge; -0.25"><i
+            class="fa fa-grip-lines"></i>{{'igv.filterarea.no-cg' | translate}}</h6>
+        <h6 tabindex="0" class="sl-dn" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
+          popoverTitle="Slightly Downregulated"
+          ngbPopover="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and -0.25 &gt; Log2FC &ge; -0.58"><i
+            class="fa fa-chevron-down"></i>{{'igv.filterarea.sl-dn' | translate}}</h6>
+        <h6 tabindex="0" class="sg-dn" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
+          popoverTitle="Significantly Downregulated"
+          ngbPopover="p &le; 0.05 (equivalent to -log10P-val &ge; 1.30103) and -0.58 &gt; Log2FC"><i
+            class="fa fa-angles-down"></i>{{'igv.filterarea.sg-dn' | translate}}</h6>
+        <h6 tabindex="0" class="no-ft" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
+          popoverTitle="Not have a significant fit" ngbPopover="p &gt; 0.05 (equivalent to -log10P-val &lt; 1.30103)"><i
+            class="fa fa-xmark"></i>{{'igv.filterarea.no-ft' | translate}}</h6>
       </div>
       <hr />
       <small class="text-muted">{{'igv.filterarea.note1' | translate}}</small>
@@ -168,11 +181,22 @@
 
   @if (this.genes.length > 0) {
   <div class="col-lg-9 col-md-12 mt-2" [class.searching]="loading">
-    <div class="accordion" id="accordionExample">
+    <div ngbAccordion>
       @for (gene_list of this.grouped_genes; track gene_list) {
       @if (gene_list[0]) {
-      <div class="accordion-item" app-gene-card [gene_list]="gene_list" [indices]="selected_indices"
-        [completely_loaded]="completely_loaded">
+      <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton>
+            <app-gene-card [gene_list]="gene_list" [indices]="selected_indices"
+              [completely_loaded]="completely_loaded"></app-gene-card>
+          </button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <app-gene-card-detail [gene_list]="gene_list" [indices]="selected_indices"
+              [completely_loaded]="completely_loaded"></app-gene-card-detail>
+          </div>
+        </div>
       </div>
       }
       }

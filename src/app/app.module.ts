@@ -14,7 +14,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgvComponent } from './components/igv/igv.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { GeneCardComponent } from './components/gene-card/gene-card.component';
-import { MapsComponent } from './components/maps/maps.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { GoComponent } from './components/go/go.component';
 import { LoginComponent } from './components/login/login.component';
@@ -27,6 +26,8 @@ import { AllCommunityModule } from 'ag-grid-community';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DocumentationPageComponent } from './components/documentation-page/documentation-page.component';
 import { ExpressionPageComponent } from './components/expression-page/expression-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GeneCardDetailComponent } from "./components/gene-card-detail/gene-card-detail.component";
 
 @NgModule({
     declarations: [
@@ -36,7 +37,6 @@ import { ExpressionPageComponent } from './components/expression-page/expression
         HomeComponent,
         IgvComponent,
         GeneCardComponent,
-        MapsComponent,
         NavbarComponent,
         GoComponent,
         LoginComponent,
@@ -46,27 +46,31 @@ import { ExpressionPageComponent } from './components/expression-page/expression
         DocumentationPageComponent,
         ExpressionPageComponent
     ],
-    bootstrap: [AppComponent], imports: [
-        BrowserModule,
-        CommonModule,
-        AgGridModule,
-        TranslateModule.forRoot({
-            defaultLanguage: 'en-us',
-            loader: {
-                provide: TranslateLoader,
-                useFactory: httpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        AppRoutingModule,
-        HttpClientModule,
-        NgLabelTemplateDirective,
-        NgOptionTemplateDirective,
-        NgSelectComponent,
-        BrowserAnimationsModule,
-        NgApexchartsModule,
-        FormsModule,
-        ReactiveFormsModule], providers: [
+    bootstrap: [AppComponent], 
+    imports: [
+    BrowserModule,
+    CommonModule,
+    AgGridModule,
+    TranslateModule.forRoot({
+        defaultLanguage: 'en-us',
+        loader: {
+            provide: TranslateLoader,
+            useFactory: httpLoaderFactory,
+            deps: [HttpClient]
+        }
+    }),
+    AppRoutingModule,
+    HttpClientModule,
+    NgLabelTemplateDirective,
+    NgOptionTemplateDirective,
+    NgSelectComponent,
+    NgbModule,
+    BrowserAnimationsModule,
+    NgApexchartsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    GeneCardDetailComponent
+], providers: [
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
             provideHttpClient(withInterceptorsFromDi())
         ]

@@ -8,7 +8,7 @@ import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppCitation } from 'src/app/app.component';
-declare const bootstrap: any;
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function httpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/locale/', '.json');
@@ -46,16 +46,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.t.get('home.citepopup').subscribe((translated) => {
-      this.popoverInstance = new bootstrap.Popover(this.popoverBtn.nativeElement, {
-        content: translated,
-        trigger: 'focus',
-        placement: 'top',
-      });
-    }); // Have to use this since translation process is async
-    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-    console.log(popoverList)
+    
   }
 
   ngOnInit(): void {

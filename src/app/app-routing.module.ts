@@ -47,7 +47,6 @@ export const routingComponents = [
   SearchComponent,
   GoComponent,
   IgvComponent,
-  MapsComponent,
   SettingsComponent,
   LoginComponent,
   DocumentationPageComponent, // Add new component
