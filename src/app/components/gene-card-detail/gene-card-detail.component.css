@@ -1,0 +1,408 @@
+.outer-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: flex-start;
+    /* Align items at the top */
+}
+
+.meta-charts-row {
+    padding-top: 50px;
+}
+
+.graphs-container {
+    flex: 1;
+    /* Take up all available space on the left */
+}
+
+.floating-label {
+    position: absolute;
+    left: 130px;
+    /* adjust horizontal position */
+    top: 40%;
+    /* adjust vertical position */
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* optional background */
+    padding: 5px;
+    z-index: 1000;
+}
+
+.floating-label2 {
+    position: absolute;
+    left: 130px;
+    /* adjust horizontal position */
+    top: 80%;
+    /* adjust vertical position */
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* optional background */
+    padding: 5px;
+    z-index: 1000;
+}
+
+.apexcharts-canvas,
+apx-chart>div {
+    min-height: 0px !important;
+}
+
+.floating-label3 {
+    position: absolute;
+    left: 450px;
+    /* adjust horizontal position */
+    top: 10%;
+    /* adjust vertical position */
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* optional background */
+    padding: 5px;
+    z-index: 1000;
+}
+
+.floating-label4 {
+    position: absolute;
+    left: 850px;
+    /* adjust horizontal position */
+    top: 10%;
+    /* adjust vertical position */
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* optional background */
+    padding: 5px;
+    z-index: 1000;
+}
+
+.maps-container {
+    width: 400px;
+    /* Fixed width for maps area; adjust as needed */
+    min-height: 350px;
+    /* Ensure enough vertical space */
+    margin-left: 20px;
+    /* Space between graphs and maps */
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    /* Center this column vertically relative to the outer container */
+    margin-top: 150px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+}
+
+.flex-child1 {
+    flex: 1 1 50%;
+    /* Each chart takes up 50% of its row */
+    height: auto;
+    min-width: 0;
+    /* Allow the child to shrink properly */
+}
+
+.charts-group {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    min-width: 300px;
+}
+
+.chart-label {
+    margin-bottom: 0.25rem;
+    font-weight: var(--bs-body-font-weight);
+    font-size: var(--bs-body-font-size)
+}
+
+apx-chart {
+    display: block;
+    width: 100%;
+    height: 2rem;
+    /* Chart height */
+}
+
+.col-lg-6.col-md-12 apx-chart {
+    height: 300px;
+}
+
+.title {
+    text-align: center;
+}
+
+.test-container {
+    flex: 1;
+}
+
+.test {
+    flex: 1 1 auto;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+}
+
+.gene-title {
+    flex: 1 1 auto;
+    text-align: left;
+}
+
+.gene-info {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.scaled {
+    border-top: var(--bs-border-width) solid var(--bs-border-color-translucent);
+}
+
+/* Accordion adjustments */
+.dx-accordion-item-opened {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.dx-accordion-item-title {
+    padding: 0px !important;
+}
+
+.dx-state-focused.dx-accordion-item,
+.dx-state-focused.dx-item-selected.dx-accordion-item-opened {
+    border: 0px !important;
+}
+
+.dx-accordion {
+    background-color: transparent;
+}
+
+.dx-accordion-item {
+    border: none !important;
+}
+
+.dx-accordion-item-body {
+    padding: .5rem 0;
+}
+
+.dx-accordion-item-body {
+    height: auto !important;
+    /* min-height: 1000px;  /* Adjust as needed for your charts */
+    overflow: visible !important;
+}
+
+/* Optional: Extra spacing between chart rows */
+#chart-additional {
+    margin-top: 400px;
+}
+
+.apexcharts-text tspan {
+    color: var(--bs-primary)
+}
+
+:root,
+[data-bs-theme="light"] {
+    --bs-canvas-filter: none;
+}
+
+[data-bs-theme="dark"] {
+    --bs-canvas-filter: invert(1) hue-rotate(180deg);
+}
+
+canvas,
+.apexcharts-svg {
+    filter: var(--bs-canvas-filter);
+}
+
+::ng-deep .apexcharts-tooltip {
+    background-color: rgba(var(--bs-body-bg-rgb), .1) !important;
+    color: var(--bs-body-color) !important;
+    backdrop-filter: blur(100px) !important;
+    -webkit-backdrop-filter: blur(100px) !important;
+}
+
+::ng-deep .btn-macclose {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #dc3545;
+    --bs-btn-border-color: #dc3545;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #bb2d3b;
+    --bs-btn-hover-border-color: #b02a37;
+    --bs-btn-focus-shadow-rgb: 225, 83, 97;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #b02a37;
+    --bs-btn-active-border-color: #a52834;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #dc3545;
+    --bs-btn-disabled-border-color: #dc3545;
+    width: .875rem;
+    height: .875rem;
+    background-color: var(--bs-btn-bg);
+    border: var(--bs-border-width) solid var(--bs-btn-border-color);
+    border-radius: 50%;
+    transition: .1s ease-in-out;
+    cursor: pointer;
+}
+
+::ng-deep .btn-macclose:hover {
+    background-color: var(--bs-btn-hover-bg);
+}
+
+::ng-deep .btn-macclose:focus,
+.btn-macclose:active {
+    background-color: var(--bs-btn-active-bg);
+}
+
+.toast.bg-blurred {
+    background-color: var(--bs-body-bg);
+    z-index: 999
+}
+
+.toast.full-screen {
+    min-width: 90%;
+    max-width: 700px;
+    max-height: 90%;
+    overflow-y: scroll;
+}
+
+@media (min-width: 576px) {
+    .toast.full-screen {
+        min-width: 80%;
+    }
+}
+
+@media (min-width: 768px) {
+    .toast.full-screen {
+        min-width: 70%;
+    }
+}
+
+@media (min-width: 992px) {
+    .toast.full-screen {
+        min-width: 60%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .toast.full-screen {
+        min-width: 50%;
+    }
+}
+
+.toast.bg-blurred .toast-header {
+    background-color: var(--bs-body-bg);
+}
+
+.shadow {
+    background-color: rgba(var(--bs-body-bg-rgb), .1);
+    -webkit-backdrop-filter: blur(100px);
+    backdrop-filter: blur(100px);
+    z-index: 1;
+    transition: .1s ease-in-out;
+}
+
+.maps .nav-link.active::after {
+    display: flex;
+    position: absolute;
+    bottom: calc(0px - var(--bs-border-width));
+    height: .25rem;
+    content: ' ';
+    background-color: var(--bs-pink);
+    width: 1rem;
+    border-radius: .125rem;
+    transition: .1s ease-in-out;
+}
+
+.maps .nav-link.active:active::after {
+    display: flex;
+    position: absolute;
+    bottom: calc(0px - var(--bs-border-width));
+    height: .25rem;
+    content: ' ';
+    background-color: var(--bs-pink);
+    width: .75rem;
+    border-radius: .125rem;
+}
+
+.maps .nav-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-left: .5rem;
+    cursor: pointer;
+    text-align: center;
+    padding-right: .5rem;
+    border: var(--bs-border-width) solid transparent;
+    border-radius: var(--bs-border-radius);
+}
+
+.maps .nav-link.active {
+    border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+    background: rgba(var(--bs-pink-rgb), .2);
+    border-radius: var(--bs-border-radius);
+    box-shadow: var(--bs-box-shadow);
+}
+
+.maps.navbar-nav {
+    flex-direction: row !important;
+    gap: .5rem;
+    justify-content: center;
+}
+
+.progress-stacked,
+.progress {
+    height: 1.5rem;
+}
+
+/*::ng-deep [data-bs-theme=dark] .gene-card .progress-stacked {
+    filter: invert(1) hue-rotate(180deg);
+}*/
+
+/* This removes the auxiliary marker in apexcharts, which should only exist in a one-datapoint scatter plot. */
+/*::ng-deep .apexcharts-series-markers-wrap>g[class=""] {
+    opacity: 0 !important;
+}
+*/
+
+/* This removes the auxiliary marker in apexcharts, which should only exist in a one-datapoint scatter plot. */
+::ng-deep .apexcharts-series-markers-wrap path[default-marker-size=1.5] {
+    opacity: 0 !important;
+}
+
+::ng-deep .apexcharts-menu-icon {
+    padding: .25rem;
+    line-height: 1;
+    color: var(--bs-body-color);
+    width: unset !important;
+    height: unset !important;
+    border-radius: var(--bs-border-radius-sm);
+    transition: .15s ease-in-out;
+}
+
+::ng-deep .apexcharts-menu-icon:hover {
+    background-color: rgba(var(--bs-body-color-rgb), .1);
+    color: var(--bs-body-color);
+}
+
+::ng-deep .apexcharts-menu-icon:active {
+    background-color: rgba(var(--bs-body-color-rgb), .2);
+    color: var(--bs-body-color);
+}
+
+::ng-deep .apexcharts-menu-icon > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: var(--bs-body-color);
+    color: var(--bs-body-color);
+}
