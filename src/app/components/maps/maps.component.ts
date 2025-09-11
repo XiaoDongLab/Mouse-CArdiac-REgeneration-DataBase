@@ -5,6 +5,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations } from "ng-apexcharts";
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { PubmedService } from 'src/app/services/pubmed.service';
+import { TranslateDirective, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // var ncbi = require('node-ncbi');
 
 export type ChartOptions = {
@@ -24,7 +28,8 @@ export type ChartOptions = {
   selector: 'app-maps',
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css'],
-  standalone: false
+  imports: [TranslatePipe, RouterOutlet, RouterModule, CommonModule, NgbModule, TranslateModule, TranslateDirective],
+  standalone: true
 })
 export class MapsComponent implements OnInit {
   @Input() selected_info!: { pmid: number, cell_type: string, gene: string, cell_type2: string, cell_type3: string, slope: number, pvalue: number, intercept: number, lfc: number, g_id: number, PSD: number, Surgery: string };

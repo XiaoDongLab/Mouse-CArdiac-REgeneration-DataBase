@@ -73,7 +73,7 @@
           </div>
           <div class="col-12">
             <span translate="maps.body.change"></span>
-            <h4 [ngClass]="{'text-danger': decade_change < 0, 'text-success': decade_change >= 0}">
+            <h4 [class]="{'text-danger': decade_change < 0, 'text-success': decade_change >= 0}">
               @if (decade_change < 0) { <span>
                 <i class="fa fa-arrow-down"></i>
                 </span>
