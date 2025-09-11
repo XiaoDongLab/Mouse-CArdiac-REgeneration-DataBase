@@ -416,7 +416,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     const getConditionsForGene = (geneData: any) => {
       availableConditions = Object.keys(geneData.conditions).filter(condition => {
         const values = geneData.conditions[condition];
-        return values && values.length > 0;
+        return values;
         // return values;
       });
 
@@ -509,7 +509,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
       // 针对当前基因拿 conditions
       const geneConditions = getConditionsForGene(data);
-      // console.log(`Conditions for ${geneName}:`, geneConditions);
+      console.log(`Conditions for ${geneName}:`, geneConditions);
 
       const points = geneConditions.map(condition => {
         let values;
@@ -829,12 +829,17 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
       const possibleConditions = [];
       const natalStatuses = filters.natalStatus === 'All' ? ['P1', 'P2', 'P8'] : [filters.natalStatus];
       const surgeries = filters.surgery === 'All' ? ['MI', 'Sham'] : [filters.surgery];
-      const psds = this.splitByTime ? ['PSD1', 'PSD3'] : ['PSD1'];
+      // const psds = this.splitByTime ? ['PSD1', 'PSD3'] : ['PSD1'];
+      // Remove this part because when you add the series with split by time off,
+      // you will get incomplete data when you switch back to split by time on.
+      const psds = ['PSD1', 'PSD3'];
 
       for (const natal of natalStatuses) {
         for (const surgery of surgeries) {
           for (const psd of psds) {
-            possibleConditions.push(`${natal}_${surgery}_${psd}`);
+            if (!(natal === 'P2' && psd === 'PSD1')) {
+              possibleConditions.push(`${natal}_${surgery}_${psd}`);
+            }
           }
         }
       }
@@ -847,7 +852,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
       // Process filtered rows - using the Exp, Age, natal_status, and PSD columns
       filteredRows.forEach(row => {
-        if (row.Exp && row.Age && row.natal_status && row.PSD !== undefined) {
+        if (/* row.Exp && row.Age && row.natal_status && row.PSD !== undefined*/ true) {
           try {
             // Split comma-separated values
             const expValues = row.Exp.split(',').map(v => parseFloat(v.trim()));

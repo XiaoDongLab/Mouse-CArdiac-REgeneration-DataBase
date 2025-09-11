@@ -49,7 +49,7 @@
         <label class="form-check-label" for="checkDefault" translate="expression.logscale"></label>
       </div>
       <div class="form-check form-switch">
-        <input type="checkbox" [(ngModel)]="splitByTime" (ngModelChange)="onSplitChange()" class="form-check-input"
+        <input type="checkbox" [(ngModel)]="splitByTime" [disabled]="loading" (ngModelChange)="onSplitChange()" class="form-check-input"
           id="checkSplit" />
         <label class="form-check-label" for="checkSplit" translate="expression.splitbysurgery"></label>
       </div>
@@ -57,7 +57,7 @@
       <h5 translate="expression.display_columns"></h5>
       @for (column of xAxisCategories; track column; let i = $index) {
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" [id]="'column' + i" checked [(ngModel)]="xAxisColumns[i]"
+        <input class="form-check-input" [disabled]="loading" type="checkbox" [id]="'column' + i" checked [(ngModel)]="xAxisColumns[i]"
           (ngModelChange)="updateChart()" />
         <label class="form-check-label" [for]="'column' + i">{{column}}</label>
       </div>
