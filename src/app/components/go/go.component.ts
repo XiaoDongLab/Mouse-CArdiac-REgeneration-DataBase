@@ -34,7 +34,7 @@ export type ChartOptions = {
   selector: 'app-go',
   templateUrl: './go.component.html',
   styleUrls: ['./go.component.css'],
-  standalone: false
+  standalone: false,
 })
 export class GoComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
