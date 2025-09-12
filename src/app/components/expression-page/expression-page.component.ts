@@ -917,16 +917,18 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
     // Convert gene symbol to Ensembl ID if needed
     if (!input.startsWith('ENSMUSG')) {
-      try {
-        let ensembl_id = parseInt(searchInput);
-        queryId = 'ENSMUSG' + ('00000000000' + ensembl_id).slice(-11)
-      } catch {
+      let ensembl_id = parseInt(searchInput);
+      if (Number.isNaN(ensembl_id)) {
         const ensemblId = await this.geneConversionService.convertGeneToEnsemble(input);
         if (ensemblId) {
           queryId = ensemblId;
         }
+      } else {
+        queryId = 'ENSMUSG' + ('00000000000' + ensembl_id).slice(-11)
       }
     }
+
+    console.log(queryId)
 
     // Format for database query
     const dbGeneId = queryId.startsWith('ENSMUSG')
