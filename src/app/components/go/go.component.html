@@ -91,9 +91,10 @@
             <i class="fa fa-map"></i> {{'pathway.filterarea.diagram' | translate}}
           </a>
           <a tabindex="0" id="go_pathway_btn" data-bs-trigger="focus" title="Pathway information"
-            class="btn btn-sm btn-link text-decoration-none" role="button" data-bs-toggle="popover"
-            [attr.data-bs-title]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
-            [attr.data-bs-content]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i
+            class="btn btn-sm btn-link text-decoration-none" role="button"
+            [popoverTitle]="pathway_groupby_go ? pathway_info?.name : go_terms[0].pathway"
+            placement="right"
+            [ngbPopover]="pathway_groupby_go ? pathway_info?.definition.text : pathway_info"><i
               class="fa fa-info-circle"></i> {{'pathway.filterarea.info' | translate}}
           </a>
         </div>

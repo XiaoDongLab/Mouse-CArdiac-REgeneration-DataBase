@@ -11,7 +11,6 @@ import { DatabaseConstsService } from 'src/app/services/database-consts.service'
 import { min, firstValueFrom } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from '@ngx-translate/core';
-declare const bootstrap: any;
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -589,9 +588,6 @@ export class GoComponent implements OnInit {
         next: (data) => {
           this.pathway_info = data.results[0]
           this.pathway_info.name = this.pathway_info.name.replace(/\b\w/g, (char: string) => char.toUpperCase());
-          setTimeout(() => {
-            const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
-          }, 100)
         },
         complete: () => {
         }
@@ -600,9 +596,6 @@ export class GoComponent implements OnInit {
       console.log(this.kegg_pathway_info)
       this.pathway_info = this.kegg_pathway_info[this.go_terms[0].pathway];
       console.log(this.pathway_info)
-      setTimeout(() => {
-        const pathway_popover = new bootstrap.Popover(document.getElementById("go_pathway_btn"));
-      }, 100)
     }
   }
 

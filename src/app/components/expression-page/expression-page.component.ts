@@ -78,7 +78,8 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
   randomColorsBottom: string[] = []; // Lower quartile
   originSeries: ApexAxisChartSeries;
   xAxisColumns: boolean[] = [true, true, true, true, true, true, true, true, true, true]
-  xAxisCategories: string[] = this.splitByTime ? ['P1_MI_PSD1', 'P1_MI_PSD3', 'P1_Sham_PSD1', 'P1_Sham_PSD3', 'P2_MI_PSD3', 'P2_Sham_PSD3', 'P8_MI_PSD1', 'P8_MI_PSD3', 'P8_Sham_PSD1', 'P8_Sham_PSD3'] : ['P1_MI', 'P1_Sham', 'P2_MI', 'P2_Sham', 'P8_MI', 'P8_Sham']
+  xAxisCategories: string[] = this.splitByTime ? ['P1_MI_PSD1', 'P1_MI_PSD3', 'P1_Sham_PSD1', 'P1_Sham_PSD3', 'P2_MI_PSD3', 'P2_Sham_PSD3', 'P8_MI_PSD1', 'P8_MI_PSD3', 'P8_Sham_PSD1', 'P8_Sham_PSD3'] : ['P1_MI', 'P1_Sham', 'P2_MI', 'P2_Sham', 'P8_MI', 'P8_Sham'];
+  selectableGenes: string[] = []
   chartOptions: ChartOptions = {
     series: [],
     chart: {
@@ -289,11 +290,17 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     private databaseConstService: DatabaseConstsService,
     private geneConversionService: GeneConversionService,
     private cdr: ChangeDetectorRef, // Add ChangeDetectorRef
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public nameConverter: GeneConversionService
   ) { }
 
   ngOnInit() {
     this.cellTypes = this.databaseConstService.getDECellTypes();
+    this.nameConverter.getAllGenes().then(value => {
+      this.selectableGenes = value;
+
+    console.log(this.selectableGenes)
+    })
     this.loadCellTypes();
     this.loadRecentGenes();
   }
@@ -1005,6 +1012,18 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     });
 
     this.chartOptions = { ...this.chartOptions, series: series }
+  }
+
+  keyEnterChanged() {
+    let input = this.searchInput.trim();
+    console.log(input)
+    if (input.length > 0) {
+      const input = this.searchInput.trim();
+      
+      this.nameConverter.getGenes(input).then(value => {
+        this.selectableGenes = value
+      })
+    }
   }
 }
 

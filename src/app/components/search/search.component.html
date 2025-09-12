@@ -73,11 +73,12 @@
       <hr />
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h4 class="mb-0" translate="download.filterarea.advanced"></h4>
-        <a tabindex="0" data-bs-trigger="focus" class="btn btn-sm btn-link btn-floating text-decoration-none"
-          role="button" data-bs-toggle="popover" data-bs-title="Command Center" data-bs-content="Use --[option]=&lt;value&gt; for your customized search.
+        <a tabindex="0" class="btn btn-sm btn-link btn-floating text-decoration-none"
+          role="button" popoverTitle="Command Center" ngbPopover="Use --[option]=&lt;value&gt; for your customized search.
           Use - to replace spaces. Use comma or spaces to split your commands.
           For example:
-          --cell-type=cardiomyocyte-2, --pmid=34489413">
+          --cell-type=cardiomyocyte-2, --pmid=34489413"
+          placement="right">
           <i class="fa fa-info-circle"></i> {{ 'pathway.filterarea.info' | translate }}
         </a>
       </div>

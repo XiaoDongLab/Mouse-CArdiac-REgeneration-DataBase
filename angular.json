@@ -31,11 +31,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
               "src/css/bootstrap.css",
               "node_modules/apexcharts/dist/apexcharts.css",
               "src/fontawesome-free-6.7.2-web/css/all.min.css",
-              "node_modules/@ng-select/ng-select/themes/ant.design.theme.css"
+              "node_modules/@ng-select/ng-select/themes/ant.design.theme.css",
+              "src/styles.css"
             ],
             "scripts": [
               "src/fontawesome-free-6.7.2-web/js/all.min.js"

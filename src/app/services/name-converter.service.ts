@@ -19,6 +19,35 @@ export class GeneConversionService {
     });
   }
 
+  async getGenes(keyword: string): Promise<string[]> {
+    return new Promise<string[]>((resolve, reject) => {
+      this.mappingsLoaded$.pipe(
+        filter(loaded => loaded)
+      ).subscribe(() => {
+        let results = Object.keys(this.ensembleToGeneMapping).filter(key => key.includes(keyword))
+        if (results.length > 0) {
+          resolve(results);
+        } else {
+          reject('No values found')
+        }
+      });
+    });
+  }
+
+  async getAllGenes(): Promise<string[]> {
+    return new Promise<string[]>((resolve, reject) => {
+      this.mappingsLoaded$.pipe(
+        filter(loaded => loaded)
+      ).subscribe(() => {
+        let array = Object.keys(this.ensembleToGeneMapping).map(key => {
+          return (this.ensembleToGeneMapping[key] == '') ? key : this.ensembleToGeneMapping[key]
+        });
+        array.shift() // remove the description item
+        resolve(array)
+      })
+    })
+  }
+
   private async loadMappings(): Promise<{ [key: string]: string }> {
     try {
       const mapping = await this.http.get<{ [key: string]: string }>('/assets/geneDict.json').toPromise();
