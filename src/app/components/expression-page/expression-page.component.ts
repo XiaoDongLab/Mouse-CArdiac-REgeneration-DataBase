@@ -58,7 +58,7 @@ interface GeneExpressionData {
 })
 
 export class ExpressionPageComponent implements OnInit, OnDestroy {
-  searchInput = '';
+  searchInput = 'Malat1';
   expressionData: GeneExpressionData[] = [];
   loading: boolean = false;
   selectedCellType = 'All Cells';

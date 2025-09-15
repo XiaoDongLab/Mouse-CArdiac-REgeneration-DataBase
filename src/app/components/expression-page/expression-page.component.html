@@ -35,8 +35,8 @@
       <hr />
       <h4 translate="expression.genesearch"></h4>
       <ng-select [searchable]="true" [items]="selectableGenes" [clearable]="true" [closeOnSelect]="true" [multiple]="false" class="flex-grow-1" style="min-width: 0px !important;" [placeholder]="'expression.search_placeholder' | translate" [(ngModel)]="searchInput" (keyup.enter)="loadExpression()" [virtualScroll]="true"></ng-select>
-      <input type="text" [(ngModel)]="searchInput" (keyup.enter)="loadExpression()"
-        [placeholder]="'expression.search_placeholder' | translate" class="form-control" />
+      <!--<input type="text" [(ngModel)]="searchInput" (keyup.enter)="loadExpression()"
+        [placeholder]="'expression.search_placeholder' | translate" class="form-control" />-->
       <hr />
       <button type="button" class="btn btn-mcaredb w-100" (click)="loadExpression()"
         [disabled]="loading || !searchInput">
