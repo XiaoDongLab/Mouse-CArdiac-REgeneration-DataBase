@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class PubmedService {
 
-  private apiUrl = "https://tests.autos:3305/api/pubmed/";
+  private apiUrl = "https://api.mcaredb.org:3305/pubmed/";
 
   constructor(private http: HttpClient) { }
 
