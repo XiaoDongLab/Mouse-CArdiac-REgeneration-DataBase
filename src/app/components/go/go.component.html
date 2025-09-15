@@ -229,7 +229,7 @@
         <div class="card-header">
           <h4 class="mb-0"><i class="fa fa-arrow-up"></i> {{'pathway.body.up' | translate}}</h4>
         </div>
-        <ul class="list-group list-group-flush overflow-y-auto" style="height: 35vh;">
+        <ul class="list-group list-group-flush overflow-y-auto d-flex flex-fill" style="height: 35vh;">
           @if (loading) {
           @for (n of [].constructor(20); track n) {
           <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">
@@ -253,7 +253,7 @@
         <div class="card-header">
           <h4 class="mb-0"><i class="fa fa-arrow-down"></i> {{'pathway.body.down' | translate}}</h4>
         </div>
-        <ul class="list-group list-group-flush overflow-y-auto" style="height: 35vh;">
+        <ul class="list-group list-group-flush overflow-y-auto d-flex flex-fill" style="height: 35vh;">
           @if (loading) {
           @for (n of [].constructor(20); track n) {
           <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">

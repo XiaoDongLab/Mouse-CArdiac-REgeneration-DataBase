@@ -279,21 +279,63 @@ export class GoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.prepareData();
+    this.prepareData().then(() => {
 
-    if (this.go_terms.length > 0) {
-      const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
-      const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
-      this.go_terms.forEach(term => {
-        term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
-      });
+      if (this.go_terms.length > 0) {
+        const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
+        const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
+        this.go_terms.forEach(term => {
+          term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
+        });
+      }
+
+      // Apply initial filtering
+      this.nes_min = this.nes_min_bound;
+      this.nes_max = this.nes_max_bound;
+      this.nesFilterChanged();
+      this.go_chart_options.annotations = {
+      xaxis: [
+        {
+          x: this.nes_min ?? this.nes_min_bound,
+          borderColor: '#008FFB',
+          strokeDashArray: 5,
+          label: {
+            text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
+            style: {
+              color: '#008FFB',
+              background: 'transparent',
+            },
+          },
+        },
+        {
+          x: this.nes_max ?? this.nes_max_bound,
+          borderColor: '#14c71dff',
+          strokeDashArray: 5,
+          label: {
+            text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
+            style: {
+              color: '#14c71dff',
+              background: 'transparent',
+            },
+          },
+        },
+      ],
+      yaxis: [
+        {
+          y: 0 - Math.log10(this.fdr_cutoff),
+          borderColor: '#FF4560', // example color for FDR line
+          strokeDashArray: 10,
+          label: {
+            text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
+            style: {
+              color: '#FF4560',
+              background: 'transparent',
+            },
+          },
+        }
+      ]
     }
-    
-    // Apply initial filtering
-    this.nes_min = this.nes_min_bound;
-    this.nes_max = this.nes_max_bound;
-    this.nesFilterChanged();
-
+    });
   }
 
 
@@ -302,15 +344,15 @@ export class GoComponent implements OnInit {
     if (this.nes_min_bound > this.nes_max_bound) {
       this.nes_min_bound = this.nes_max_bound;
     }
-    
+
     // Save to localStorage
     localStorage["nes_min_bound"] = this.nes_min_bound;
-    
+
     // Apply filtering - use actual values, not null
     this.nes_min = this.nes_min_bound;
-    
+
     console.log(`Min changed: ${this.nes_min_bound}`);
-    
+
     // Recreate the chart data
     this.createDisplayData();
   }
@@ -319,15 +361,15 @@ export class GoComponent implements OnInit {
     if (this.nes_max_bound < this.nes_min_bound) {
       this.nes_max_bound = this.nes_min_bound;
     }
-    
+
     // Save to localStorage
     localStorage["nes_max_bound"] = this.nes_max_bound;
-    
+
     // Apply filtering - use actual values, not null
     this.nes_max = this.nes_max_bound;
-    
+
     console.log(`Max changed: ${this.nes_max_bound}`);
-    
+
     // Recreate the chart data
     this.createDisplayData();
   }
@@ -337,11 +379,11 @@ export class GoComponent implements OnInit {
     // Save to localStorage
     localStorage["nes_min_bound"] = this.nes_min_bound;
     localStorage["nes_max_bound"] = this.nes_max_bound;
-    
+
     // Apply filtering
     this.nes_min = this.nes_min_bound === this.nes_slider_min ? null : this.nes_min_bound;
     this.nes_max = this.nes_max_bound === this.nes_slider_max ? null : this.nes_max_bound;
-    
+
     // Recreate the chart data
     this.createDisplayData();
   }
@@ -355,7 +397,7 @@ export class GoComponent implements OnInit {
 
     let filteredTerms = this.go_terms.filter(term => {
       const nes = term.nes;
-    
+
       const fdr = term.P_Value; // Or term.FDR if that's how your data names it
       const passMin = this.nes_min === null ? true : nes >= this.nes_min;
       const passMax = this.nes_max === null ? true : nes <= this.nes_max;
@@ -369,7 +411,7 @@ export class GoComponent implements OnInit {
     });
 
     console.log(`Filtered terms count: ${filteredTerms.length}/${this.go_terms.length}`);
-    
+
     // Calculate min/max from filtered data
     let min_nes = filteredTerms.reduce((prev, cur) => (prev.nes < cur.nes) ? prev : cur).nes;
     let max_nes = filteredTerms.reduce((prev, cur) => (prev.nes > cur.nes) ? prev : cur).nes;
@@ -377,9 +419,9 @@ export class GoComponent implements OnInit {
     // Respect nes_min and nes_max filters for axis bounds
     min_nes = this.nes_min !== null ? Math.floor(Math.min(this.nes_min, min_nes)) : Math.floor(min_nes - 1);
     max_nes = this.nes_max !== null ? Math.ceil(Math.max(this.nes_max, max_nes)) : Math.ceil(max_nes + 1);
-    
+
     console.log(`Calculated min_nes: ${min_nes}, max_nes: ${max_nes}`);
-    
+
     // NOW USE FILTERED TERMS FOR THE REST OF THE FUNCTION
     this.upreg_enrich_list = [];
     this.downreg_enrich_list = [];
@@ -388,18 +430,18 @@ export class GoComponent implements OnInit {
     let max_p_val = -Math.log10(Number(this.go_terms.reduce((prev, cur) => {
       return (prev && prev.P_Value < cur.P_Value) ? prev : cur;
     }).P_Value));
-    
+
     // Loop through FILTERED TERMS, not this.go_terms
     for (let i = 0; i < filteredTerms.length; i++) {
       let go_term = filteredTerms[i]; // Use filtered term
-      
-      let color = go_term.color      
+
+      let color = go_term.color
       let label = go_term.cell_type;
-      
+
       if (label.includes("All")) {
         color = color.replace("rgb", "rgba").replace(")", ",.5)");
       }
-      
+
       // Convert adjusted p-value to -log10(p-value)
       let pval_transformed = 0 - Math.log10(Number(go_term.P_Value));
       let formatted_data = {
@@ -408,7 +450,7 @@ export class GoComponent implements OnInit {
         fillColor: color,
         label: label
       };
-      
+
       go_data.push(formatted_data);
       this.filtered_go_terms = filteredTerms;
 
@@ -810,7 +852,7 @@ export class GoComponent implements OnInit {
   getRandom(min: number, max: number) {
     return Math.floor((max - min) * Math.random() + min)
   }
-  
+
   // Method to reset annotations
   resetAnnotations() {
     this.go_chart_options.annotations = {
