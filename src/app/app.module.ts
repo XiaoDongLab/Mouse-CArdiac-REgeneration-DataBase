@@ -28,6 +28,7 @@ import { DocumentationPageComponent } from './components/documentation-page/docu
 import { ExpressionPageComponent } from './components/expression-page/expression-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GeneCardDetailComponent } from "./components/gene-card-detail/gene-card-detail.component";
+import '@angular/localize/init';
 
 @NgModule({
     declarations: [

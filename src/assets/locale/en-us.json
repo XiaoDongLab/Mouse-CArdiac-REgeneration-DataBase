@@ -138,7 +138,8 @@
             "note1": "Numbers on the meta plot were hidden if the sample size is less than 2.",
             "reset": "Reset",
             "deselectAll": "Deselect All"
-        }
+        },
+        "list": "List of genes interested"
     },
     "expression": {
         "nodata": "No Data",
