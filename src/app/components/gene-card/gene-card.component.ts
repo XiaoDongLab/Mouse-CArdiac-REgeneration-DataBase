@@ -79,7 +79,8 @@ export class GeneCardComponent implements OnInit {
   lfc_sig_cutoff = 0.58
   lfc_minor_sig_cutoff = 0.25
   display = 'ShamMI';
-  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
+  // fdr_cutoff: number = 0 - Math.Log10(parseFloat(localStorage["fdrCutoff"])) ?? 0.05;
+  fdr_cutoff = 0.05;
   colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
 
   tooltipList: any[];

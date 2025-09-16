@@ -111,10 +111,15 @@ export class NavbarComponent implements OnInit {
     document.getElementById("shadow-bg")!.style.display = "none";
   }
 
-  selectTab(index: number) {
+  selectTab(index: number, isDesktopMode: boolean = false) {
     const selectedTab = this.tabs[index];
     this.title.setTitle(this.t.instant(selectedTab.text) + " - MCareDB"); 
     this.router.navigate([selectedTab.path]);
+    this.navbarExpanded = !isDesktopMode
+  }
+
+  testExpansion() {
+    console.log(this.navbarExpanded)
   }
 
   updateSelectedTab() {

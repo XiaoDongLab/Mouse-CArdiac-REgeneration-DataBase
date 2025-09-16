@@ -10,27 +10,45 @@ selectionMode="single"
 <nav class="navbar sticky-top navbar-expand-lg bg-blurred" #navbarTop>
   <div class="container d-block">
     <!--<a class="navbar-brand" href="javascript:void(0)" (click)="selectTab(0)">MCareDB</a>-->
-    <button class="navbar-toggler" type="button" (click)="navbarExpanded = !navbarExpanded"
-      [attr.aria-expanded]="!navbarExpanded">
+    <button class="navbar-toggler" type="button" (click)="navbarExpanded = !navbarExpanded; testExpansion()"
+      [attr.aria-expanded]="navbarExpanded">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="overflow-x-auto" #collapse="ngbCollapse" [ngbCollapse]="navbarExpanded" id="navbarSupportedContent">
+    <div class="d-none d-lg-block overflow-x-auto">
       <ul class="navbar-nav justify-content-center w-100">
         @for (tab of tabs; track tab; let i = $index) {
         <li class="nav-item">
           <a tabindex="0" class="nav-link text-nowrap" [class.active]="selected_path === tab.path"
-            (click)="selectTab(i)" [style.color]="tab.color" href="javascript:void(0);" [ariaLabel]="tab.text">
+            (click)="selectTab(i, false);" [style.color]="tab.color" href="javascript:void(0);" [ariaLabel]="tab.text">
             <i class="fa {{tab.icon}}"></i>
             {{ tab.text | translate }}
           </a>
         </li>
         }
-
         <div class="d-flex align-items-center gap-2">
           <a tabindex="0" class="btn btn-link text-decoration-none text-body navbar-btn"
             (click)="showToastControl('languageToast')" aria-label="Language"><i class="fa fa-language"></i></a>
         </div>
       </ul>
+    </div>
+    <div #collapse="ngbCollapse" [ngbCollapse]="navbarExpanded">
+      <div class="d-block d-lg-none overflow-x-auto">
+        <ul class="navbar-nav justify-content-center w-100">
+          @for (tab of tabs; track tab; let i = $index) {
+          <li class="nav-item">
+            <a tabindex="0" class="nav-link text-nowrap" [class.active]="selected_path === tab.path"
+              (click)="selectTab(i)" [style.color]="tab.color" href="javascript:void(0);" [ariaLabel]="tab.text">
+              <i class="fa {{tab.icon}}"></i>
+              {{ tab.text | translate }}
+            </a>
+          </li>
+          }
+          <div class="d-flex align-items-center gap-2">
+            <a tabindex="0" class="btn btn-link text-decoration-none text-body navbar-btn"
+              (click)="showToastControl('languageToast')" aria-label="Language"><i class="fa fa-language"></i></a>
+          </div>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

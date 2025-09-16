@@ -84,14 +84,13 @@
             <div class="row">
               <small class="text-muted" translate="documentation.cell_defs.def"></small>
               <h6 class="fw-normal">{{item.def | translate}}</h6>
-              @if (item.marker) {
               <small class="text-muted" translate="documentation.cell_defs.marker"></small>
-              <h6 class="fw-normal d-flex gap-2">
-                @for (gene of translateService.instant(item.marker).split(","); track gene) {
-                <a href="javascript:void(0)" (click)="geneRerout(gene.trim())">{{gene.trim()}}</a>
+              <h6 class="fw-normal d-flex gap-2 flex-wrap">
+                @for (gene of translateService.instant(item.marker || 'Undefined').split(","); track gene) {
+                <a href="javascript:void(0)" class="text-decoration-none"
+                  (click)="geneRerout(gene?.trim())">{{gene?.trim()}}</a>
                 }
               </h6>
-              }
               @if (item.subsets.length > 0) {
               <ul class="list-group list-group-flush">
                 @for (subitem of item.subsets; track subitem; let j = $index) {
@@ -101,7 +100,12 @@
                     <small class="text-muted" translate="documentation.cell_defs.def"></small>
                     <h6 class="fw-normal">{{subitem.def | translate}}</h6>
                     <small class="text-muted" translate="documentation.cell_defs.marker"></small>
-                    <h6 class="fw-normal">{{subitem.marker | translate}}</h6>
+                    <h6 class="fw-normal d-flex gap-2 flex-wrap">
+                      @for (gene of translateService.instant(subitem.marker || 'Undefined').split(","); track gene) {
+                      <a href="javascript:void(0)" class="text-decoration-none"
+                        (click)="geneRerout(gene?.trim())">{{gene?.trim()}}</a>
+                      }
+                    </h6>
                   </div>
                 </li>
                 }
