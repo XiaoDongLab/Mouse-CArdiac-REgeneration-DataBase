@@ -30,27 +30,18 @@
               <div ngbAccordionItem>
                 <h2 ngbAccordionHeader>
                   <button ngbAccordionButton>
-                    <div class="row">
-                      <div class="col-12">
-                        <h4>List of genes interested</h4>
-                        <span class="text-muted">Click link to navigate to locus</span>
-                      </div>
-                    </div>
+                    <h3 class="mb-0" translate="igv.list"></h3>
                   </button>
                 </h2>
                 <div ngbAccordionCollapse>
                   <div ngbAccordionBody>
-                    <div class="row g-2">
-                      @if (gene_interested.length > 0) {
-                      <div>
-                        @for (item of gene_interested; track item; let i = $index) {
-                        <a tabindex="0" class="col-4 text-decoration-none fs-5" (click)="browser.search(item.name)"
-                          href="javascript:void(0)">
-                          {{item.name}}
-                        </a>
-                        }
-                      </div>
-                      }
+                    <div class="row">
+                    @for (item of gene_interested; track item; let i = $index) {
+                    <a tabindex="0" class="col-4 text-decoration-none fs-5" (click)="browser.search(item.name)"
+                      href="javascript:void(0)">
+                      {{item?.name}}
+                    </a>
+                    }
                     </div>
                   </div>
                 </div>

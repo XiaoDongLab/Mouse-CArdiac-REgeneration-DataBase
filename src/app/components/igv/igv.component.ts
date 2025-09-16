@@ -55,6 +55,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   nextGene: string = "";
   genesEntered: string = '';
   genes_index: number = 0;
+  show: boolean = false;
   trackUrl = 'https://www.encodeproject.org/files/ENCFF092EKO/@@download/ENCFF092EKO.bigWig';
   options = {
     genome: "mm10",
