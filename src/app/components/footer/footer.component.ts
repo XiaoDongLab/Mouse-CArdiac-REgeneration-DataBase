@@ -1,29 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import bootstrap from 'src/js/bootstrap.min.js'
-import { AppComponent } from 'src/app/app.component';
+import { AppCompileDate, AppComponent, AppVersion } from 'src/app/app.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-footer',
-    templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.css'],
-    standalone: false
+  selector: 'app-footer',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.css'],
+  standalone: false
 })
 export class FooterComponent implements OnInit {
 
   Version: string = "";
   CompileDate: string = "";
-  constructor(public t: TranslateService) { 
-    
+  constructor(public t: TranslateService) {
+
   }
 
   ngOnInit(): void {
     // document.getElementById("shadow-bg")!.style.display = "none";
-    this.Version = AppComponent.Version;
-    this.CompileDate = AppComponent.CompileDate;
+    this.Version = AppVersion;
+    this.CompileDate = AppCompileDate;
     console.log(this.t.currentLang)
   }
-  
+
   CiteClick(): void {
     window.prompt('Citation', 'Abcd, E., 2025, https://mcaredb.org/');
   }

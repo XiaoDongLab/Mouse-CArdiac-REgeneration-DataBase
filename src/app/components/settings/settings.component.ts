@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AppComponent } from 'src/app/app.component';
+import { AppBranch, AppCompileDate, AppComponent, AppVersion } from 'src/app/app.component';
 
 @Component({
   selector: 'app-settings',
@@ -23,9 +23,9 @@ export class SettingsComponent implements OnInit {
   constructor(public t: TranslateService) { }
 
   ngOnInit(): void {
-    this.Version = AppComponent.Version;
-    this.CompileDate = AppComponent.CompileDate;
-    this.Branch = AppComponent.Branch;
+    this.Version = AppVersion;
+    this.CompileDate = AppCompileDate;
+    this.Branch = AppBranch;
     document.getElementById("shadow-bg")!.style.display = "none";
     this.setColorTheme();
     this.setContrast();

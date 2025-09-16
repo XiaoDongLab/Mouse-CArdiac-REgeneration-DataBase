@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppComponent } from 'src/app/app.component';
+import { AppBranch, AppCompileDate, AppComponent, AppVersion } from 'src/app/app.component';
 
 @Component({
     selector: 'app-changelog',
@@ -16,9 +16,9 @@ export class ChangelogComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.Version = AppComponent.Version;
-    this.CompileDate = AppComponent.CompileDate;
-    this.Branch = AppComponent.Branch;
+    this.Version = AppVersion;
+    this.CompileDate = AppCompileDate;
+    this.Branch = AppBranch;
   }
 
 }
