@@ -1,6 +1,14 @@
 # Version history
 
-The latest stable version is **2.2509.9.1**, compiled on 8 Sep 2025.
+The latest stable version is **2.2509.42.1**, compiled on 16 Sep 2025.
+
+## 2.2509.42.1 (main) - 8 Sep 2025
+
+### Miscellaneous
+
+- We migrated bootstrap to ng-bootstrap to utilize max capability. Some issues of ng-bootstrap is still fixing. 
+  
+- We changed the main font to `Rubik`. Several other design languages are updated.
 
 ## 2.2509.9.1 (main) - 8 Sep 2025
 

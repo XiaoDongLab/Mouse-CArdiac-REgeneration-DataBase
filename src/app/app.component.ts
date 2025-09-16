@@ -70,13 +70,10 @@ export class AppComponent implements OnInit {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
   }
-  static Version = "2.2509.9.1";
-  static CompileDate = "20250908";
-  static Branch = "main"
   title = 'Mouse Cardiac Regeneration Database';
 }
 
-export const AppVersion = "2.2509.9.1";
-export const AppCompileDate = "20250908";
+export const AppVersion = "2.2509.42.1";
+export const AppCompileDate = "20250916";
 export const AppBranch = "main";
 export const AppCitation = "Abcd, E., 2025, https://mcaredb.org/";
