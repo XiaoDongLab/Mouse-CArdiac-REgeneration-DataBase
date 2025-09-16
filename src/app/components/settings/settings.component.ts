@@ -17,7 +17,7 @@ export class SettingsComponent implements OnInit {
   fontSize: number = localStorage["fontSize"] ?? 0;
   highContrast: number = localStorage["highContrast"] ?? 1;
   showNonsigCluster: boolean = JSON.parse(localStorage["showNogSigCluster"] ?? false);
-  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 0.05;
+  fdr_cutoff: number = localStorage["fdrCutoff"] ?? 1;
   useYAxisType: number = localStorage["useYAxisType"] ?? 0; // 0 -> -lgP-val; 1 -> P-val;
   defLanguage: string = localStorage["defLanguage"] ?? 'def';
   constructor(public t: TranslateService) { }

@@ -66,7 +66,7 @@
                     <span class="description text-muted" translate="settings.language-d"></span>
                 </div>
                 <div class="settings-option">
-                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" [(ngModel)]="defLanguage"
+                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" disabled [(ngModel)]="defLanguage"
                         aria-label="default language">
                         <option value="def">{{'settings.colors.sys-set' | translate}}</option>
                         <!-- <option value="en-us">English</option>
@@ -117,7 +117,7 @@
                     <span class="description text-muted" translate="settings.fdrqval-d"></span>
                 </div>
                 <div class="settings-option">
-                    <input tabindex="0" type="range" class="form-range" min="0.001" max="0.1" step="0.001"
+                    <input tabindex="0" type="range" class="form-range" min="0.001" max="1.0" step="0.001"
                         [(ngModel)]="fdr_cutoff" (change)="fdrCutoffChanged()" />
                     <span class="font-size-display">{{fdr_cutoff}}</span>
                 </div>
