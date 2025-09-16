@@ -67,7 +67,7 @@ export class GoComponent implements OnInit {
   pathways: any;
   kegg_pathway_info: any;
   kegg_pathways: any;
-  fdr_cutoff: number = 1;
+  fdr_cutoff: number = parseFloat(localStorage["fdrCutoff"]) ?? 1;
 
 
 
@@ -291,50 +291,52 @@ export class GoComponent implements OnInit {
 
       // Apply initial filtering
       this.nes_min = this.nes_min_bound;
+      console.log("NES min:", this.nes_min);
       this.nes_max = this.nes_max_bound;
-      this.nesFilterChanged();
-      this.go_chart_options.annotations = {
-      xaxis: [
-        {
-          x: this.nes_min ?? this.nes_min_bound,
-          borderColor: '#008FFB',
-          strokeDashArray: 5,
-          label: {
-            text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
-            style: {
-              color: '#008FFB',
-              background: 'transparent',
+      this.nesFilterChanged().then(() => {
+        this.go_chart_options.annotations = {
+          xaxis: [
+            {
+              x: this.nes_min ?? this.nes_min_bound,
+              borderColor: '#008FFB',
+              strokeDashArray: 5,
+              label: {
+                text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
+                style: {
+                  color: '#008FFB',
+                  background: 'transparent',
+                },
+              },
             },
-          },
-        },
-        {
-          x: this.nes_max ?? this.nes_max_bound,
-          borderColor: '#14c71dff',
-          strokeDashArray: 5,
-          label: {
-            text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
-            style: {
-              color: '#14c71dff',
-              background: 'transparent',
+            {
+              x: this.nes_max ?? this.nes_max_bound,
+              borderColor: '#14c71dff',
+              strokeDashArray: 5,
+              label: {
+                text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
+                style: {
+                  color: '#14c71dff',
+                  background: 'transparent',
+                },
+              },
             },
-          },
-        },
-      ],
-      yaxis: [
-        {
-          y: 0 - Math.log10(this.fdr_cutoff),
-          borderColor: '#FF4560', // example color for FDR line
-          strokeDashArray: 10,
-          label: {
-            text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
-            style: {
-              color: '#FF4560',
-              background: 'transparent',
-            },
-          },
+          ],
+          yaxis: [
+            {
+              y: 0 - Math.log10(this.fdr_cutoff),
+              borderColor: '#FF4560', // example color for FDR line
+              strokeDashArray: 10,
+              label: {
+                text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
+                style: {
+                  color: '#FF4560',
+                  background: 'transparent',
+                },
+              },
+            }
+          ]
         }
-      ]
-    }
+      });
     });
   }
 
@@ -375,7 +377,7 @@ export class GoComponent implements OnInit {
   }
 
 
-  nesFilterChanged(): void {
+  async nesFilterChanged(): Promise<void> {
     // Save to localStorage
     localStorage["nes_min_bound"] = this.nes_min_bound;
     localStorage["nes_max_bound"] = this.nes_max_bound;
@@ -385,11 +387,11 @@ export class GoComponent implements OnInit {
     this.nes_max = this.nes_max_bound === this.nes_slider_max ? null : this.nes_max_bound;
 
     // Recreate the chart data
-    this.createDisplayData();
+    await this.createDisplayData();
   }
 
 
-  createDisplayData() {
+  async createDisplayData() {
     console.log('Starting createDisplayData');
     console.log(`NES Filter: min=${this.nes_min}, max=${this.nes_max}`);
     console.log(`NES Slider Bounds: min_bound=${this.nes_min_bound}, max_bound=${this.nes_max_bound}`);
@@ -794,12 +796,98 @@ export class GoComponent implements OnInit {
 
   onCellsChanged() {
     if (this.selected_cell_types.length > 0) {
-      this.prepareData();
+      this.prepareData().then(() => {
+        this.go_chart_options.annotations = {
+          xaxis: [
+            {
+              x: this.nes_min ?? this.nes_min_bound,
+              borderColor: '#008FFB',
+              strokeDashArray: 5,
+              label: {
+                text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
+                style: {
+                  color: '#008FFB',
+                  background: 'transparent',
+                },
+              },
+            },
+            {
+              x: this.nes_max ?? this.nes_max_bound,
+              borderColor: '#14c71dff',
+              strokeDashArray: 5,
+              label: {
+                text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
+                style: {
+                  color: '#14c71dff',
+                  background: 'transparent',
+                },
+              },
+            },
+          ],
+          yaxis: [
+            {
+              y: 0 - Math.log10(this.fdr_cutoff),
+              borderColor: '#FF4560', // example color for FDR line
+              strokeDashArray: 10,
+              label: {
+                text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
+                style: {
+                  color: '#FF4560',
+                  background: 'transparent',
+                },
+              },
+            }
+          ]
+        }
+      });
     }
     this.resetAnnotations()
   }
   onPathwayChange() {
-    this.prepareData();
+    this.prepareData().then(() => {
+      this.go_chart_options.annotations = {
+        xaxis: [
+          {
+            x: this.nes_min ?? this.nes_min_bound,
+            borderColor: '#008FFB',
+            strokeDashArray: 5,
+            label: {
+              text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
+              style: {
+                color: '#008FFB',
+                background: 'transparent',
+              },
+            },
+          },
+          {
+            x: this.nes_max ?? this.nes_max_bound,
+            borderColor: '#14c71dff',
+            strokeDashArray: 5,
+            label: {
+              text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
+              style: {
+                color: '#14c71dff',
+                background: 'transparent',
+              },
+            },
+          },
+        ],
+        yaxis: [
+          {
+            y: 0 - Math.log10(this.fdr_cutoff),
+            borderColor: '#FF4560', // example color for FDR line
+            strokeDashArray: 10,
+            label: {
+              text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
+              style: {
+                color: '#FF4560',
+                background: 'transparent',
+              },
+            },
+          }
+        ]
+      }
+    });
     this.resetAnnotations();
   }
 
