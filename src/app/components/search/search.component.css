@@ -338,7 +338,7 @@
     --ag-card-shadow: var(--ag-inherited-card-shadow, 0 1px 4px 1px #00000018);
     --ag-cell-editing-border: var(--ag-inherited-cell-editing-border, solid 1px var(--ag-accent-color));
     --ag-cell-editing-shadow: var(--ag-inherited-cell-editing-shadow, var(--ag-card-shadow));
-    --ag-cell-font-family: var(var(--bs-body-font-family), var(--ag-font-family));
+    --ag-cell-font-family: var(--bs-body-font-family, var(--ag-font-family));
     --ag-cell-horizontal-padding: var(--ag-inherited-cell-horizontal-padding, calc(var(--ag-spacing) * 2 * var(--ag-cell-horizontal-padding-scale)));
     --ag-cell-horizontal-padding-scale: var(--ag-inherited-cell-horizontal-padding-scale, 1);
     --ag-cell-text-color: var(--bs-body-color);
