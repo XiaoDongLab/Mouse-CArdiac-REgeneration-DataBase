@@ -67,7 +67,7 @@ export class GoComponent implements OnInit {
   pathways: any;
   kegg_pathway_info: any;
   kegg_pathways: any;
-  fdr_cutoff: number = parseFloat(localStorage["fdrCutoff"]) ?? 1;
+  fdr_cutoff: number = isNaN(parseFloat(localStorage["fdrCutoff"])) ? 1 : parseFloat(localStorage["fdrCutoff"]);
 
 
 
