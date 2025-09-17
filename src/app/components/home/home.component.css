@@ -93,3 +93,7 @@
 .mcaredb-title > b {
   color: #9a5af9;
 }
+
+.accordion-body > .picsum-img-wrapper {
+  display: none; /* Some issues with the ngbAccordion, do not remove*/
+}
