@@ -600,7 +600,7 @@ export class GeneCardDetailComponent {
           }
         },
         title: {
-          text: 'P1 - PSD1',
+          text: 'P1 + P2 - PSD1',
           align: "center",
 
         },
@@ -708,7 +708,7 @@ export class GeneCardDetailComponent {
           }
         },
         title: {
-          text: 'P1 - PSD3',
+          text: 'P1 + P2 - PSD3',
           align: "center",
 
         },
