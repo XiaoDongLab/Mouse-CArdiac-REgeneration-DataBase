@@ -207,11 +207,11 @@ export class MapsComponent implements OnInit {
       this.year = doc.querySelector('time.citation-year')?.textContent
         ?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
     }); */
-    this.pubmedService.getPubmedJson(this.selected_info.pmid).subscribe(pubmed => {
+    this.pubmedService.getPubmedJson(this.selected_info.pmid.toString().replace("34489413", "32220304")).subscribe(pubmed => {
       this.title = pubmed.title;
       this.author = pubmed.first_author;
       this.year = pubmed.publish_year.toString();
-    });
+    }); // Didn't change database, so only modify frontend. GEO shows this serie is also cited by #34489413.
 
     this.getClusterImages()
     // this.getLinRegGraphData()

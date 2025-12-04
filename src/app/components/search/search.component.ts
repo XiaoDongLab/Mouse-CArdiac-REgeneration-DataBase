@@ -154,7 +154,7 @@ export class SearchComponent implements OnInit {
     this.species = [...this.selected_species];
     this.selected_age = [0, 110];
     this.selected_age_type = ['neonatal', 'postnatal'];
-    this.pmids = ["34489413", "33296652", "38510108"];
+    this.pmids = ["32220304", "33296652", "38510108"];
     this.selected_pmid = [...this.pmids];
     this.selected_health = ['All'];
     this.neonatal_selected = true;
@@ -240,10 +240,14 @@ export class SearchComponent implements OnInit {
 
     let pmid_selected = this.pmid == '' ? 'undefined' : this.pmid;
     console.log(this.formatForDB(this.selected_cells))
-    this.databaseService.getSamplesTest(this.selected_species, backend_tissue_select, this.formatForDB(this.selected_cells), this.selected_age, backend_health_select, this.selected_pmid)
+    this.databaseService.getSamplesTest(this.selected_species, backend_tissue_select, this.formatForDB(this.selected_cells), this.selected_age, backend_health_select, this.selected_pmid.map(x => (x == '32220304' ? '34489413' : x)))
       .subscribe({
         next: (data) => {
-          // console.log(data);
+          data = data.map(el =>
+            el.study_id === 34489413
+              ? { ...el, study_id: 32220304 }
+              : el
+          );
 
           this.DISPLAY_DATA = data;
           this.display = data;
@@ -435,7 +439,7 @@ export class SearchComponent implements OnInit {
     document.getElementById("downloadButton")?.setAttribute("disabled", "true");
     // alert('Download Started');
     this.selected_download_method = 'Download Standardized Data';
-    let selected_ids = this.gridApi.getSelectedRows().map(row => row.study_id + '/' + row.platform)
+    let selected_ids = this.gridApi.getSelectedRows().map(row => row.study_id.toString().replace("32220304", "34489413") + '/' + row.platform)
     if (this.selected_download_method == 'Download Standardized Data' && selected_ids.length > 0) {
       this.downloadStandaradizedData(selected_ids)
     }

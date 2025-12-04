@@ -200,7 +200,7 @@
                     <hr />
                     <small class="text-muted">PMID</small>
                     <h5><a tabindex="0"
-                        href="https://pubmed.ncbi.nlm.nih.gov/{{selected_term.pmid}}" target="_blank">{{selected_term.pmid}}</a></h5>
+                        [href]="'https://pubmed.ncbi.nlm.nih.gov/' + selected_term.pmid.toString().replace('34489413', '32220304')" target="_blank">{{selected_term.pmid.toString().replace("34489413", "32220304")}}</a></h5>
                   </div>
                   <div class="position-absolute top-0 end-0 bottom-0
                   overflow-auto  list-group list-group-flush" style="width: 50%;">
