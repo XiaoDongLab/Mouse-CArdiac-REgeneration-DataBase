@@ -1,6 +1,12 @@
 # Version history
 
-The latest stable version is **2.2509.42.1**, compiled on 16 Sep 2025.
+The latest stable version is **2.2512.01.1**, compiled on 04 December 2025.
+
+## 2.2512.01.1 (main) - 4 Dec 2025
+
+### Miscellaneous
+
+- Changed PMID #34489413 to #32220304.
 
 ## 2.2509.42.1 (main) - 8 Sep 2025
 

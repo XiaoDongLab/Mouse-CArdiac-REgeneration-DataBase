@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
   title = 'Mouse Cardiac Regeneration Database';
 }
 
-export const AppVersion = "2.2509.42.1";
-export const AppCompileDate = "20250916";
+export const AppVersion = "2.2512.01.1";
+export const AppCompileDate = "20251204";
 export const AppBranch = "main";
 export const AppCitation = "Abcd, E., 2025, https://mcaredb.org/";
