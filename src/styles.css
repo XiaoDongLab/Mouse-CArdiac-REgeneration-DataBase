@@ -219,3 +219,6 @@
     background-color: transparent !important;
 }
 
+.nav-tabs {
+    gap: .5rem !important
+}

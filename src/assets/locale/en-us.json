@@ -320,7 +320,7 @@
         "cell_defs": {
             "def": "Description",
             "marker": "Top marker genes",
-            "description": "Cluster definition is based on two files which you could download: "
+            "description": "Cluster definition is based on a marker list which you could download: "
         }
     },
     "celltypes": {
