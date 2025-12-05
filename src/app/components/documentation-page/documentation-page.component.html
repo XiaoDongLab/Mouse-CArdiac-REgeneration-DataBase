@@ -71,6 +71,12 @@
   <!-- Cell Type Definitions -->
   <section>
     <h4 translate="documentation.cell_def"></h4>
+    <p>
+      <span translate="documentation.cell_defs.description"></span>
+      <a href="../../../assets/CM_Cell_State_Markers.csv" target="_blank">CM_Cell_State_Markers.csv</a>
+      and
+      <a href="../../../assets/mouseHeartCellMarkers.csv" target="_blank">mouseHeartCellMarkers.csv</a>
+    </p>
     <div ngbAccordion>
       @for (item of cellTypes; track item; let i = $index) {
       <div ngbAccordionItem>
@@ -88,7 +94,7 @@
               <h6 class="fw-normal d-flex gap-2 flex-wrap">
                 @for (gene of translateService.instant(item.marker || 'Undefined').split(","); track gene) {
                 <a href="javascript:void(0)" class="text-decoration-none"
-                  (click)="geneRerout(gene?.trim())">{{gene?.trim()}}</a>
+                  (click)="gene == 'Undefined' ? '' : geneRerout(gene?.trim())">{{gene?.trim()}}</a>
                 }
               </h6>
               @if (item.subsets.length > 0) {
@@ -103,7 +109,7 @@
                     <h6 class="fw-normal d-flex gap-2 flex-wrap">
                       @for (gene of translateService.instant(subitem.marker || 'Undefined').split(","); track gene) {
                       <a href="javascript:void(0)" class="text-decoration-none"
-                        (click)="geneRerout(gene?.trim())">{{gene?.trim()}}</a>
+                        (click)="gene == 'Undefined' ? '' : geneRerout(gene?.trim())">{{gene?.trim()}}</a>
                       }
                     </h6>
                   </div>

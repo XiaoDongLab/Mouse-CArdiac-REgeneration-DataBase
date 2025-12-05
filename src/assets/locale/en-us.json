@@ -319,7 +319,8 @@
         "cell_def": "Cell Cluster Definitions",
         "cell_defs": {
             "def": "Description",
-            "marker": "Top marker genes"
+            "marker": "Top marker genes",
+            "description": "Cluster definition is based on two files which you could download: "
         }
     },
     "celltypes": {
