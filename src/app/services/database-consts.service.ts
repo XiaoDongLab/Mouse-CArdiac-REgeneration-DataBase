@@ -153,6 +153,7 @@ export const CellTypes = [
     def: 'celltypes.bcell.def',
     marker: 'celltypes.bcell.marker',
     subsets: [],
+    doc: ''
   },
   {
     name: 'celltypes.cardiaccell.name',
