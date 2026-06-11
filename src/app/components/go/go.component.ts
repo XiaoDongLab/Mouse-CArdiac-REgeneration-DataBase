@@ -549,8 +549,10 @@ export class GoComponent implements OnInit {
   }
 
   getColorTheme(): boolean {
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
+    // Light is the default; only an explicit dark preference (2) is dark.
+    // The OS prefers-color-scheme is intentionally ignored so chart axes match
+    // the site theme (which defaults to light) rather than the OS setting.
+    return this.colorPreference == 2;
   }
 
   getGeneSymbols(selected_term: GoTerm): void {

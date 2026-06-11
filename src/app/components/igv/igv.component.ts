@@ -57,8 +57,34 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   genes_index: number = 0;
   show: boolean = false;
   trackUrl = 'https://www.encodeproject.org/files/ENCFF092EKO/@@download/ENCFF092EKO.bigWig';
-  options = {
-    genome: "mm10",
+  // mm10 defined inline instead of via genome id. IGV resolves a string genome
+  // id ("mm10") against a remote registry (igv.org/genomes/genomes.json), which
+  // is no longer CORS-accessible from the browser, causing "Unknown genome id:
+  // mm10". An inline reference object bypasses that registry entirely. The data
+  // URLs below are CORS-enabled (igv.org for sequence, UCSC for cytobands).
+  static readonly MM10_REFERENCE = {
+    id: 'mm10',
+    name: 'Mouse (GRCm38/mm10)',
+    fastaURL: 'https://igv.org/genomes/data/mm10/mm10.fa',
+    indexURL: 'https://igv.org/genomes/data/mm10/mm10.fa.fai',
+    cytobandURL: 'https://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/cytoBand.txt.gz',
+    // Genome-level annotation track (gene bodies). When mm10 was resolved via the
+    // remote registry, IGV supplied this RefSeq track automatically; the inline
+    // reference must declare it explicitly, otherwise no gene track is shown.
+    tracks: [
+      {
+        name: 'RefSeq Curated',
+        format: 'refgene',
+        url: 'https://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/ncbiRefSeqCurated.txt.gz',
+        indexed: false,
+        color: 'rgb(12,12,120)',
+        order: 1000000,
+        removable: false,
+      },
+    ],
+  };
+  options: any = {
+    reference: IgvComponent.MM10_REFERENCE,
     locus: 'chr8:14000000-15000000',
     tracks: [
       {
@@ -178,7 +204,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
 
     if (loci != null) {
       this.options = {
-        genome: "mm10",
+        reference: IgvComponent.MM10_REFERENCE,
         locus: loci,
         tracks: [
           {

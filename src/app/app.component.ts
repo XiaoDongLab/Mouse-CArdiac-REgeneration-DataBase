@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit {
 
-  colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
+  colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 1;
   fontSize: number = localStorage["fontSize"] ? localStorage["fontSize"] : 0;
   highContrast: number = localStorage["highContrast"] ? localStorage["highContrast"] : 1;
   defLanguage: string = localStorage["defLanguage"] ?? 'def';
@@ -60,15 +60,16 @@ export class AppComponent implements OnInit {
   }
 
   setColorTheme(): void {
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (prefersDark && this.colorPreference == 0 || this.colorPreference == 2) {
+    // Light is the default. Only an explicit dark preference (2) yields dark;
+    // the OS prefers-color-scheme is intentionally ignored (the "system" option
+    // was removed from settings because it caused coloring issues).
+    if (this.colorPreference == 2) {
       document.documentElement.setAttribute("data-bs-theme", "dark");
     } else document.documentElement.setAttribute("data-bs-theme", "light");
   }
 
   getColorTheme(): boolean {
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return (prefersDark && this.colorPreference == 0 || this.colorPreference == 2);
+    return this.colorPreference == 2;
   }
   title = 'Mouse Cardiac Regeneration Database';
 }
