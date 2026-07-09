@@ -75,7 +75,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       {
         name: 'RefSeq Curated',
         format: 'refgene',
-        url: 'https://hgdownload.soe.ucsc.edu/goldenPath/mm10/database/ncbiRefSeqCurated.txt.gz',
+        url: 'https://api.mcaredb.org:3305/downloads/ncbiRefSeqCurated.txt.gz',
         indexed: false,
         color: 'rgb(12,12,120)',
         order: 1000000,
@@ -92,7 +92,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         type: 'wig',
         format: 'bigWig',
         // url: this.trackUrl,
-        url: 'https://www.encodeproject.org/files/ENCFF657GDL/@@download/ENCFF657GDL.bigWig',
+        url: 'https://api.mcaredb.org:3305/downloads/ENCFF657GDL.bigWig',
         color: '#0078d7',
         autoscaleGroup: 'hist'
       }, // Add methylation marks
@@ -101,7 +101,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         type: 'wig',
         format: 'bigWig',
         // url: this.trackUrl,
-        url: 'https://www.encodeproject.org/files/ENCFF980ZXR/@@download/ENCFF980ZXR.bigWig',
+        url: 'https://api.mcaredb.org:3305/downloads/ENCFF980ZXR.bigWig',
         color: '#6650e9',
         autoscaleGroup: 'meth'
       }
