@@ -52,15 +52,15 @@ export class NavbarComponent implements OnInit {
       },
       {
         id: 3,
-        text: 'navbar.pathway',
-        icon: 'fa-magnifying-glass',
-        path: 'go'
-      },
-      {
-        id: 4,
         text: 'navbar.spatial',
         icon: 'fa-diagram-project',
         path: 'spatial'
+      },
+      {
+        id: 4,
+        text: 'navbar.pathway',
+        icon: 'fa-magnifying-glass',
+        path: 'go'
       },
       {
         id: 5,
@@ -174,5 +174,4 @@ export class NavbarComponent implements OnInit {
     changelogToast!.style.display = "none";
   }
 }
-
 
