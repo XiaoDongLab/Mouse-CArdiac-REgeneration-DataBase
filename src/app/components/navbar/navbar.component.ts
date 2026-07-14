@@ -56,21 +56,26 @@ export class NavbarComponent implements OnInit {
         icon: 'fa-magnifying-glass',
         path: 'go'
       },
-      
       {
         id: 4,
+        text: 'navbar.spatial',
+        icon: 'fa-diagram-project',
+        path: 'spatial'
+      },
+      {
+        id: 5,
         text: 'navbar.download',
         icon: 'fa-download',
         path: 'search'
       },
       {
-        id: 5,
+        id: 6,
         text: 'navbar.documentation',
         icon: 'fa-file',
         path: 'documentation'  
       },
        {
-        id: 6,
+        id: 7,
         text: 'navbar.settings',
         icon: 'fa-gear',
         path: 'settings'
@@ -103,10 +108,10 @@ export class NavbarComponent implements OnInit {
     this.router.events.pipe(
       filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.selected_path = event.urlAfterRedirects.split('/')[1];
+      this.selected_path = event.urlAfterRedirects.split('/')[1].split('?')[0];
       this.updateSelectedTab();
     });
-    this.selected_path = this.router.url.split('/')[1];
+    this.selected_path = this.router.url.split('/')[1].split('?')[0];
     this.updateSelectedTab();
     document.getElementById("shadow-bg")!.style.display = "none";
   }

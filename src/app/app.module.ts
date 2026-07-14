@@ -29,6 +29,7 @@ import { ExpressionPageComponent } from './components/expression-page/expression
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GeneCardDetailComponent } from "./components/gene-card-detail/gene-card-detail.component";
 import '@angular/localize/init';
+import { SpatialComponent } from './components/spatial/spatial.component';
 
 @NgModule({
     declarations: [
@@ -44,6 +45,7 @@ import '@angular/localize/init';
         ChangelogComponent,
         FooterComponent,
         SettingsComponent,
+        SpatialComponent,
         DocumentationPageComponent,
         ExpressionPageComponent
     ],

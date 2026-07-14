@@ -11,6 +11,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { SettingsComponent } from './components/settings/settings.component';
 import { DocumentationPageComponent } from './components/documentation-page/documentation-page.component'; // Correct import
 import { ExpressionPageComponent } from './components/expression-page/expression-page.component'; // Correct import
+import { SpatialComponent } from './components/spatial/spatial.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,7 @@ const routes: Routes = [
   { path: 'igv', component: IgvComponent, canActivate: [AuthGuard] },
   { path: 'maps', component: MapsComponent, canActivate: [AuthGuard] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
-
+  { path: 'spatial', component: SpatialComponent, canActivate: [AuthGuard]},
   { path: 'documentation', component: DocumentationPageComponent, canActivate: [AuthGuard] },
   { path: 'expression', component: ExpressionPageComponent, data: { title: 'Gene Expression Visualization' } },
 

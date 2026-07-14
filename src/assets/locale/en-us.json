@@ -93,6 +93,7 @@
         "documentation": "Documentation",
         "expression": "Gene Expression",
         "settings": "Settings",
+        "spatial": "Spatial",
         "language": {
             "title": "Language"
         }
@@ -197,7 +198,8 @@
     },
     "maps": {
         "navbar": {
-            "metainfo": "Meta Info"
+            "metainfo": "Meta Info",
+            "spatial": "Spatial"
         },
         "body": {
             "no-tsne": "TSNE not available for this study",

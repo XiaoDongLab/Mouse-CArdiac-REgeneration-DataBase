@@ -7,7 +7,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { PubmedService } from 'src/app/services/pubmed.service';
 import { TranslateDirective, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // var ncbi = require('node-ncbi');
 
@@ -53,7 +53,7 @@ export class MapsComponent implements OnInit {
   maps = [{ text: "UMAP" }, { text: "TSNE" }, { text: "Model Visualization" }, { text: "Meta Info" }];
   display = 'UMAP';
 
-  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer, private http: HttpClient, private pubmedService: PubmedService) { }
+  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer, private http: HttpClient, private pubmedService: PubmedService, private router: Router) { }
 
   ngOnInit(): void {
     this.getClusterImages()
@@ -232,6 +232,10 @@ export class MapsComponent implements OnInit {
     //this.decade_change = Number((this.selected_info.lfc *1).toFixed(4))
     this.decade_change = Number(((Math.pow(2, this.selected_info.lfc) - 1) * 100).toFixed(4));
 
+  }
+
+  onClickSpatial() {
+    this.router.navigate(['/spatial'], { queryParams: { en_id: this.en_id } });
   }
 
 }
