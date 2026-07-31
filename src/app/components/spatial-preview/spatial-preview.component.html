@@ -1,0 +1,83 @@
+<section class="spatial-preview" aria-live="polite">
+  <header class="preview-toolbar">
+    <div class="preview-context">
+      <span class="condition-badge" [class.mi]="surgery === 'MI'">{{ surgery }}</span>
+      <strong>{{ timepoint }}</strong>
+      @if (sample) {
+        <small>{{ sample.accession }}</small>
+      }
+    </div>
+    <div class="preview-actions" role="group" aria-label="Spatial zoom controls">
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomOut()"
+        [disabled]="zoom <= 75" aria-label="Zoom out" title="Zoom out">
+        <i class="fa fa-minus" aria-hidden="true"></i>
+      </button>
+      <span class="zoom-value">{{ zoom }}%</span>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomIn()"
+        [disabled]="zoom >= 250" aria-label="Zoom in" title="Zoom in">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="resetViewer()"
+        aria-label="Reset spatial view" title="Reset spatial view">
+        <i class="fa fa-rotate-left" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="preview-message" role="status">
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <span>{{ 'spatial.loading_layer' | translate }}</span>
+    </div>
+  }
+
+  @if (loadError) {
+    <div class="preview-message text-danger" role="alert">
+      <span>{{ 'spatial.layer_error' | translate }}</span>
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadLayers()">
+        {{ 'spatial.retry' | translate }}
+      </button>
+    </div>
+  }
+
+  @if (!loading && !loadError && sample) {
+    <div class="preview-grid">
+      @for (panel of panels; track panel.type) {
+        <section class="preview-panel" [attr.aria-label]="panel.feature">
+          <div class="panel-heading">
+            <span class="feature-dot" [class.cell-type]="panel.type === 'cellType'"></span>
+            <div>
+              <small>{{ panel.type === 'gene' ? ('spatial.controls.gene_expression' | translate) : ('spatial.controls.cell_proportion' | translate) }}</small>
+              <strong>{{ panel.feature }}</strong>
+            </div>
+          </div>
+
+          <div class="preview-viewport" [class.can-pan]="zoom > 100" [class.is-panning]="isPanning"
+            [style.aspect-ratio]="sample.imageWidth + ' / ' + sample.imageHeight"
+            (pointerdown)="beginPan($event)" (pointermove)="movePan($event)"
+            (pointerup)="endPan($event)" (pointercancel)="endPan($event)" (dblclick)="resetViewer()">
+            <div class="preview-tissue" [class.is-panning]="isPanning" [style.transform]="tissueTransform()">
+              <img [src]="sample.imageUrl" draggable="false" [alt]="'spatial.viewer.heart_alt' | translate" />
+              <div class="preview-spots">
+                @for (spot of panel.layer.spots; track trackSpot($index, spot)) {
+                  <button type="button" class="preview-spot" [class.selected]="isSelected(spot)"
+                    [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
+                    [style.background-color]="spotColor(spot, panel)"
+                    [attr.aria-label]="spot.barcode + ': ' + formatValue(spot.value)"
+                    [title]="spot.barcode + ' · ' + formatValue(spot.value)"
+                    (click)="selectSpot(spot)"></button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="preview-legend">
+            <span>0</span>
+            <i [class.cell-type]="panel.type === 'cellType'"></i>
+            <span>{{ formatValue(maximum(panel)) }}</span>
+          </div>
+        </section>
+      }
+    </div>
+  }
+</section>

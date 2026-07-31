@@ -1,0 +1,225 @@
+:host {
+  --preview-gene: #bb2d74;
+  --preview-cell: #0d9488;
+  display: block;
+  width: 100%;
+}
+
+.spatial-preview {
+  overflow: hidden;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+}
+
+.preview-toolbar {
+  min-height: 48px;
+  padding: .45rem .65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+  background: rgba(var(--bs-tertiary-bg-rgb), .55);
+}
+
+.preview-context,
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.preview-context small {
+  color: var(--bs-secondary-color);
+}
+
+.condition-badge {
+  min-width: 40px;
+  padding: .15rem .4rem;
+  border-radius: var(--bs-border-radius-pill);
+  color: #1f6e52;
+  background: #dff5ec;
+  font-size: .68rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.condition-badge.mi {
+  color: #9b224d;
+  background: #fde4ed;
+}
+
+.preview-actions .btn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+
+.zoom-value {
+  min-width: 42px;
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--bs-border-color);
+}
+
+.preview-panel {
+  min-width: 0;
+  background: var(--bs-body-bg);
+}
+
+.panel-heading {
+  min-height: 50px;
+  padding: .45rem .65rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.panel-heading > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.panel-heading small {
+  color: var(--bs-secondary-color);
+  font-size: .68rem;
+}
+
+.panel-heading strong {
+  overflow: hidden;
+  font-size: .85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feature-dot {
+  width: .65rem;
+  height: .65rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--preview-gene);
+  box-shadow: 0 0 0 .2rem rgba(187, 45, 116, .12);
+}
+
+.feature-dot.cell-type {
+  background: var(--preview-cell);
+  box-shadow: 0 0 0 .2rem rgba(13, 148, 136, .12);
+}
+
+.preview-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #f5f0f2;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.preview-viewport.can-pan {
+  cursor: grab;
+}
+
+.preview-viewport.is-panning {
+  cursor: grabbing;
+}
+
+.preview-tissue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  transition: transform .16s ease;
+  will-change: transform;
+}
+
+.preview-tissue.is-panning {
+  transition: none;
+}
+
+.preview-tissue img,
+.preview-spots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-tissue img {
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.preview-spot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: .5px solid rgba(255, 255, 255, .65);
+  border-radius: 50%;
+  box-shadow: 0 1px 1px rgba(61, 20, 42, .2);
+}
+
+.preview-spot:hover,
+.preview-spot:focus-visible,
+.preview-spot.selected {
+  z-index: 2;
+  transform: translate(-50%, -50%) scale(1.6);
+  outline: 2px solid var(--bs-body-bg);
+  box-shadow: 0 0 0 3px #262126;
+}
+
+.preview-legend {
+  padding: .45rem .65rem .55rem;
+  display: grid;
+  grid-template-columns: auto minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: .4rem;
+  color: var(--bs-secondary-color);
+  font-size: .68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.preview-legend i {
+  height: 7px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, hsl(331 58% 93%) 0%, hsl(331 82% 40%) 100%);
+}
+
+.preview-legend i.cell-type {
+  background: linear-gradient(90deg, hsl(174 48% 92%) 0%, hsl(174 78% 37%) 100%);
+}
+
+.preview-message {
+  min-height: 280px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+}
+
+@media (max-width: 767.98px) {
+  .preview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .preview-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

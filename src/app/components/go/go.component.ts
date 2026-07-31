@@ -80,6 +80,15 @@ export class GoComponent implements OnInit {
   nes_slider_min: number = -10;    // Min possible value for slider
   nes_slider_max: number = 10;     // Max possible value for slider
 
+  // Cutoff colours. Used both for the annotation lines drawn on the plot and,
+  // via a --thumb-color style binding in the template, for the matching slider
+  // thumbs - so the two can never drift apart.
+  // Softened ~25% toward white from the original #008FFB / #14c71d / #FF4560
+  // so the cutoff lines sit behind the data rather than competing with it.
+  readonly NES_MIN_COLOR = '#40ABFC';
+  readonly NES_MAX_COLOR = '#4FD555';
+  readonly FDR_COLOR = '#FF7388';
+
 
   search_modes = [
     { text: 'Name Contains', value: 'contains' },
@@ -209,12 +218,12 @@ export class GoComponent implements OnInit {
         yaxis: [
           {
             y: 0 - Math.log10(this.fdr_cutoff),
-            borderColor: '#FF4560', // example color for FDR line
+            borderColor: this.FDR_COLOR, // example color for FDR line
             strokeDashArray: 10,
             label: {
               text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
               style: {
-                color: '#FF4560',
+                color: this.FDR_COLOR,
                 background: 'transparent',
               },
             },
@@ -223,24 +232,24 @@ export class GoComponent implements OnInit {
         xaxis: [
           {
             x: -5,
-            borderColor: '#008FFB',
+            borderColor: this.NES_MIN_COLOR,
             strokeDashArray: 5,
             label: {
               text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
               style: {
-                color: '#008FFB',
+                color: this.NES_MIN_COLOR,
                 background: 'transparent',
               },
             },
           },
           {
             x: 5,
-            borderColor: '#14c71dff',
+            borderColor: this.NES_MAX_COLOR,
             strokeDashArray: 5,
             label: {
               text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
               style: {
-                color: '#14c71dff',
+                color: this.NES_MAX_COLOR,
                 background: 'transparent',
               },
             },
@@ -298,24 +307,24 @@ export class GoComponent implements OnInit {
           xaxis: [
             {
               x: this.nes_min ?? this.nes_min_bound,
-              borderColor: '#008FFB',
+              borderColor: this.NES_MIN_COLOR,
               strokeDashArray: 5,
               label: {
                 text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
                 style: {
-                  color: '#008FFB',
+                  color: this.NES_MIN_COLOR,
                   background: 'transparent',
                 },
               },
             },
             {
               x: this.nes_max ?? this.nes_max_bound,
-              borderColor: '#14c71dff',
+              borderColor: this.NES_MAX_COLOR,
               strokeDashArray: 5,
               label: {
                 text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
                 style: {
-                  color: '#14c71dff',
+                  color: this.NES_MAX_COLOR,
                   background: 'transparent',
                 },
               },
@@ -324,12 +333,12 @@ export class GoComponent implements OnInit {
           yaxis: [
             {
               y: 0 - Math.log10(this.fdr_cutoff),
-              borderColor: '#FF4560', // example color for FDR line
+              borderColor: this.FDR_COLOR, // example color for FDR line
               strokeDashArray: 10,
               label: {
                 text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
                 style: {
-                  color: '#FF4560',
+                  color: this.FDR_COLOR,
                   background: 'transparent',
                 },
               },
@@ -340,6 +349,33 @@ export class GoComponent implements OnInit {
     });
   }
 
+
+  /** Terms were returned for this selection, but the cutoffs excluded them all. */
+  get allTermsFilteredOut(): boolean {
+    return !this.loading && this.go_terms.length > 0 && this.filtered_go_terms.length === 0;
+  }
+
+  /** The selection itself returned no enrichment results. */
+  get noTermsForSelection(): boolean {
+    return !this.loading && this.go_terms.length === 0;
+  }
+
+  /** Clear the FDR and NES cutoffs without touching the cell-type selection. */
+  async resetCutoffs(): Promise<void> {
+    this.fdr_cutoff = 1;
+    localStorage["fdrCutoff"] = this.fdr_cutoff;
+
+    this.nes_min_bound = this.nes_slider_min;
+    this.nes_max_bound = this.nes_slider_max;
+    localStorage["nes_min_bound"] = this.nes_min_bound;
+    localStorage["nes_max_bound"] = this.nes_max_bound;
+
+    // Both thumbs are back at their extremes, so drop the NES filters entirely.
+    this.nes_min = null;
+    this.nes_max = null;
+
+    await this.CutoffChanged();
+  }
 
   // Update nesMinChanged and nesMaxChanged
   nesMinChanged(): void {
@@ -414,9 +450,20 @@ export class GoComponent implements OnInit {
 
     console.log(`Filtered terms count: ${filteredTerms.length}/${this.go_terms.length}`);
 
-    // Calculate min/max from filtered data
-    let min_nes = filteredTerms.reduce((prev, cur) => (prev.nes < cur.nes) ? prev : cur).nes;
-    let max_nes = filteredTerms.reduce((prev, cur) => (prev.nes > cur.nes) ? prev : cur).nes;
+    // Calculate min/max from filtered data. reduce() with no seed value throws
+    // on an empty array, and that throw used to skip the series assignment
+    // further down, leaving the previously plotted points on screen. When the
+    // filters exclude everything, fall back to the selected NES window so the
+    // axis still reflects what the user asked for.
+    let min_nes: number;
+    let max_nes: number;
+    if (filteredTerms.length > 0) {
+      min_nes = filteredTerms.reduce((prev, cur) => (prev.nes < cur.nes) ? prev : cur).nes;
+      max_nes = filteredTerms.reduce((prev, cur) => (prev.nes > cur.nes) ? prev : cur).nes;
+    } else {
+      min_nes = this.nes_min ?? this.nes_min_bound;
+      max_nes = this.nes_max ?? this.nes_max_bound;
+    }
 
     // Respect nes_min and nes_max filters for axis bounds
     min_nes = this.nes_min !== null ? Math.floor(Math.min(this.nes_min, min_nes)) : Math.floor(min_nes - 1);
@@ -454,7 +501,6 @@ export class GoComponent implements OnInit {
       };
 
       go_data.push(formatted_data);
-      this.filtered_go_terms = filteredTerms;
 
       // Set core enrichment values
       let enrich_list = go_term.coreenrichment.split('/');
@@ -465,6 +511,10 @@ export class GoComponent implements OnInit {
       }
     };
 
+    // Assigned outside the loop so that an empty result clears the click
+    // targets rather than leaving the previous selection addressable.
+    this.filtered_go_terms = filteredTerms;
+
     console.log(go_data)
 
     let displayed_cluster_length = go_data.length
@@ -473,7 +523,7 @@ export class GoComponent implements OnInit {
     this.countOccurrences(this.upreg_enrich_list, 'UP', displayed_cluster_length)
     this.countOccurrences(this.downreg_enrich_list, 'DOWN', displayed_cluster_length)
     max_p_val = Math.ceil(max_p_val + 1)
-    let num_ticks = max_nes - min_nes
+    let num_ticks = Math.max(1, max_nes - min_nes)
     this.go_chart_options.series = [{ data: go_data }];
     this.go_chart_options.xaxis = {
       title: {
@@ -803,24 +853,24 @@ export class GoComponent implements OnInit {
           xaxis: [
             {
               x: this.nes_min ?? this.nes_min_bound,
-              borderColor: '#008FFB',
+              borderColor: this.NES_MIN_COLOR,
               strokeDashArray: 5,
               label: {
                 text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
                 style: {
-                  color: '#008FFB',
+                  color: this.NES_MIN_COLOR,
                   background: 'transparent',
                 },
               },
             },
             {
               x: this.nes_max ?? this.nes_max_bound,
-              borderColor: '#14c71dff',
+              borderColor: this.NES_MAX_COLOR,
               strokeDashArray: 5,
               label: {
                 text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
                 style: {
-                  color: '#14c71dff',
+                  color: this.NES_MAX_COLOR,
                   background: 'transparent',
                 },
               },
@@ -829,12 +879,12 @@ export class GoComponent implements OnInit {
           yaxis: [
             {
               y: 0 - Math.log10(this.fdr_cutoff),
-              borderColor: '#FF4560', // example color for FDR line
+              borderColor: this.FDR_COLOR, // example color for FDR line
               strokeDashArray: 10,
               label: {
                 text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
                 style: {
-                  color: '#FF4560',
+                  color: this.FDR_COLOR,
                   background: 'transparent',
                 },
               },
@@ -851,24 +901,24 @@ export class GoComponent implements OnInit {
         xaxis: [
           {
             x: this.nes_min ?? this.nes_min_bound,
-            borderColor: '#008FFB',
+            borderColor: this.NES_MIN_COLOR,
             strokeDashArray: 5,
             label: {
               text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
               style: {
-                color: '#008FFB',
+                color: this.NES_MIN_COLOR,
                 background: 'transparent',
               },
             },
           },
           {
             x: this.nes_max ?? this.nes_max_bound,
-            borderColor: '#14c71dff',
+            borderColor: this.NES_MAX_COLOR,
             strokeDashArray: 5,
             label: {
               text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
               style: {
-                color: '#14c71dff',
+                color: this.NES_MAX_COLOR,
                 background: 'transparent',
               },
             },
@@ -877,12 +927,12 @@ export class GoComponent implements OnInit {
         yaxis: [
           {
             y: 0 - Math.log10(this.fdr_cutoff),
-            borderColor: '#FF4560', // example color for FDR line
+            borderColor: this.FDR_COLOR, // example color for FDR line
             strokeDashArray: 10,
             label: {
               text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
               style: {
-                color: '#FF4560',
+                color: this.FDR_COLOR,
                 background: 'transparent',
               },
             },
@@ -893,30 +943,33 @@ export class GoComponent implements OnInit {
     this.resetAnnotations();
   }
 
-  CutoffChanged() {
-    this.createDisplayData();
+  async CutoffChanged() {
+    await this.createDisplayData();
     this.go_chart_options.annotations = {
       xaxis: [
         {
-          x: this.nes_min,
-          borderColor: '#008FFB',
+          // nes_min is null while the slider sits at its extreme; ApexCharts
+          // coerces a null x to 0 and draws the line through the middle of the
+          // plot, so fall back to the slider bound as the other blocks do.
+          x: this.nes_min ?? this.nes_min_bound,
+          borderColor: this.NES_MIN_COLOR,
           strokeDashArray: 5,
           label: {
             text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
             style: {
-              color: '#008FFB',
+              color: this.NES_MIN_COLOR,
               background: 'transparent',
             },
           },
         },
         {
-          x: this.nes_max,
-          borderColor: '#14c71dff',
+          x: this.nes_max ?? this.nes_max_bound,
+          borderColor: this.NES_MAX_COLOR,
           strokeDashArray: 5,
           label: {
             text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
             style: {
-              color: '#14c71dff',
+              color: this.NES_MAX_COLOR,
               background: 'transparent',
             },
           },
@@ -925,12 +978,12 @@ export class GoComponent implements OnInit {
       yaxis: [
         {
           y: 0 - Math.log10(this.fdr_cutoff),
-          borderColor: '#FF4560', // example color for FDR line
+          borderColor: this.FDR_COLOR, // example color for FDR line
           strokeDashArray: 10,
           label: {
             text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
             style: {
-              color: '#FF4560',
+              color: this.FDR_COLOR,
               background: 'transparent',
             },
           },

@@ -18,7 +18,7 @@
 }
 
 .page-header h2 {
-  letter-spacing: -.02em;
+  letter-spacing: 0;
 }
 
 .preview-notice {
@@ -28,7 +28,7 @@
 
 .spatial-workspace {
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr) 245px;
+  grid-template-columns: 250px minmax(0, 1fr) 270px;
   align-items: start;
   gap: .75rem;
 }
@@ -69,7 +69,7 @@
   color: var(--bs-secondary-color);
   font-size: .68rem;
   font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -216,6 +216,10 @@ legend.form-label {
   flex-wrap: wrap;
 }
 
+.compare-actions .btn {
+  min-width: 92px;
+}
+
 .zoom-value {
   min-width: 48px;
   font-variant-numeric: tabular-nums;
@@ -231,6 +235,16 @@ legend.form-label {
 
 .viewer-grid.is-comparing {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.viewer-grid.is-comparing .tissue-viewport {
+  height: clamp(480px, 62vh, 650px);
+  aspect-ratio: auto;
+}
+
+.viewer-grid.is-comparing .tissue-layer {
+  width: auto;
+  height: 100%;
 }
 
 .sample-view {
@@ -273,11 +287,33 @@ legend.form-label {
   background: #fde4ed;
 }
 
+.panel-feature {
+  max-width: 145px;
+  padding: .15rem .4rem;
+  overflow: hidden;
+  border: 1px solid rgba(var(--spatial-accent-rgb), .25);
+  border-radius: var(--bs-border-radius-sm);
+  color: var(--spatial-accent-dark);
+  background: rgba(var(--spatial-accent-rgb), .08);
+  font-size: .68rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-feature.cell-type {
+  border-color: rgba(13, 148, 136, .28);
+  color: #0f766e;
+  background: rgba(13, 148, 136, .09);
+}
+
 .tissue-viewport {
   position: relative;
-  min-height: 590px;
-  flex: 1;
+  width: 100%;
+  min-height: 0;
+  flex: 0 0 auto;
   overflow: hidden;
+  aspect-ratio: var(--tissue-aspect);
   background-color: #f5f0f2;
   background-image:
     linear-gradient(rgba(104, 65, 87, .035) 1px, transparent 1px),
@@ -285,6 +321,16 @@ legend.form-label {
     radial-gradient(circle at 50% 45%, #fff 0%, #f8f2f5 52%, #eee5ea 100%);
   background-size: 20px 20px, 20px 20px, auto;
   cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.tissue-viewport.can-pan {
+  cursor: grab;
+}
+
+.tissue-viewport.is-panning {
+  cursor: grabbing;
 }
 
 [data-bs-theme="dark"] .tissue-viewport {
@@ -297,38 +343,62 @@ legend.form-label {
 
 .tissue-layer {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
   transform-origin: 50% 50%;
   transition: transform .18s ease;
+  will-change: transform;
 }
 
-.heart-reference {
-  position: absolute;
-  top: 8%;
-  left: 50%;
-  width: min(53%, 310px);
-  height: 78%;
-  transform: translateX(-50%);
-  object-fit: contain;
-  opacity: .58;
-  filter: grayscale(.15) saturate(.55) hue-rotate(292deg) contrast(.86)
-    drop-shadow(0 .7rem 1.3rem rgba(78, 35, 58, .16));
+.tissue-layer.is-panning {
+  transition: none;
 }
 
-.tissue-outline {
+.tissue-image {
   position: absolute;
-  top: 10%;
-  left: 50%;
-  width: min(45%, 270px);
-  height: 72%;
-  transform: translateX(-50%);
-  border: 2px dashed rgba(var(--bs-body-color-rgb), .18);
-  border-radius: 48% 48% 44% 44% / 38% 38% 60% 60%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.tissue-placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--bs-tertiary-bg);
 }
 
 .spot-layer {
   position: absolute;
   inset: 0;
+}
+
+.layer-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  color: var(--bs-secondary-color);
+  background: rgba(var(--bs-body-bg-rgb), .78);
+  font-size: .8rem;
+  backdrop-filter: blur(2px);
+}
+
+.viewer-message {
+  padding: .65rem .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+  font-size: .8rem;
 }
 
 .spatial-spot {
@@ -354,6 +424,10 @@ legend.form-label {
   transform: translate(-50%, -50%) scale(1.5);
   outline: 2px solid var(--bs-body-bg);
   box-shadow: 0 0 0 3px var(--spatial-accent-dark), 0 4px 10px rgba(0, 0, 0, .25);
+}
+
+.spatial-spot.tiny {
+  box-shadow: none;
 }
 
 .orientation-marker {
@@ -427,9 +501,48 @@ legend.form-label {
 
 .legend-gradient {
   height: .75rem;
-  border: 1px solid rgba(var(--bs-body-color-rgb), .1);
-  border-radius: var(--bs-border-radius-pill);
-  background: linear-gradient(90deg, hsl(331 58% 93%), hsl(331 68% 68%), hsl(331 82% 40%));
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, hsl(331 58% 93%) 0%, hsl(331 70% 66%) 50%, hsl(331 82% 40%) 100%);
+}
+
+.legend-gradient.cell-type {
+  background: linear-gradient(90deg, hsl(174 48% 92%) 0%, hsl(174 63% 64%) 50%, hsl(174 78% 37%) 100%);
+}
+
+.legend-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.legend-entry + .legend-entry {
+  padding-top: 1rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.legend-heading {
+  margin-bottom: .35rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  font-size: .72rem;
+}
+
+.legend-heading span,
+.legend-normalization {
+  color: var(--bs-secondary-color);
+}
+
+.legend-heading span {
+  font-size: .65rem;
+}
+
+.legend-normalization {
+  margin-top: .3rem;
+  font-size: .65rem;
+  line-height: 1.25;
 }
 
 .legend-labels {
@@ -486,12 +599,73 @@ legend.form-label {
   flex-direction: column;
 }
 
+.selected-feature {
+  margin-top: .15rem;
+  color: var(--bs-secondary-color);
+  font-size: .68rem;
+}
+
 .spot-swatch {
   width: 1.8rem;
   height: 1.8rem;
   border: 3px solid var(--bs-body-bg);
   border-radius: 50%;
   box-shadow: 0 0 0 1px var(--bs-border-color);
+}
+
+.spot-swatch.small {
+  width: .8rem;
+  height: .8rem;
+  flex: 0 0 auto;
+  border-width: 1px;
+}
+
+.selected-measurements {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.selected-measurement,
+.spot-coordinate {
+  min-width: 0;
+  padding: .5rem .55rem;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-tertiary-bg);
+  font-size: .7rem;
+}
+
+.selected-measurement > div {
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.selected-measurement > div span {
+  overflow: hidden;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-measurement small,
+.spot-coordinate span {
+  color: var(--bs-secondary-color);
+}
+
+.selected-measurement strong,
+.spot-coordinate strong {
+  margin-left: auto;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spot-coordinate {
+  justify-content: space-between;
 }
 
 .spot-stat-grid {
@@ -595,12 +769,26 @@ legend.form-label {
     justify-content: flex-start;
   }
 
+  .compare-actions {
+    width: 100%;
+  }
+
+  .compare-actions .btn {
+    min-width: 0;
+  }
+
   .viewer-grid.is-comparing {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .tissue-viewport {
-    min-height: 470px;
+  .viewer-grid.is-comparing .tissue-viewport {
+    height: auto;
+    aspect-ratio: var(--tissue-aspect);
+  }
+
+  .viewer-grid.is-comparing .tissue-layer {
+    width: 100%;
+    height: 100%;
   }
 
   .viewer-footer {

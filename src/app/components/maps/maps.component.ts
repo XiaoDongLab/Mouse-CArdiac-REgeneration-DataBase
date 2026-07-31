@@ -3,12 +3,10 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { Image } from 'src/app/models/image.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations } from "ng-apexcharts";
-import { HttpClient, HttpContext } from '@angular/common/http';
 import { PubmedService } from 'src/app/services/pubmed.service';
-import { TranslateDirective, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterModule, Router } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateDirective, TranslatePipe } from '@ngx-translate/core';
+import { SpatialPreviewComponent } from '../spatial-preview/spatial-preview.component';
+import { SpatialSurgery } from 'src/app/services/spatial.service';
 // var ncbi = require('node-ncbi');
 
 export type ChartOptions = {
@@ -24,15 +22,107 @@ export type ChartOptions = {
   annotations: ApexAnnotations;
 };
 
+export interface GenomeBrowserSelection {
+  pmid: number;
+  cell_type: string;
+  gene: string | number;
+  cell_type2: string;
+  cell_type3: string;
+  slope: number;
+  pvalue: number;
+  intercept: number;
+  lfc: number;
+  g_id: number;
+  PSD: number;
+  Surgery: string;
+}
+
+export interface CuiSpatialContext {
+  gene: string;
+  cellType: string;
+  surgery: SpatialSurgery;
+  timepoint: '3 dpi';
+}
+
+const CUI_STUDY_PMIDS = new Set([32220304, 34489413]);
+const HEART_STUDY_METADATA: Record<number, { title: string; author: string; year: string }> = {
+  32220304: {
+    title: 'Dynamic Transcriptional Responses to Injury of Regenerative and Non-regenerative Cardiomyocytes Revealed by Single-Nucleus RNA Sequencing.',
+    author: 'Cui M',
+    year: '2020'
+  },
+  34489413: {
+    title: 'Nrf1 promotes heart regeneration and repair by regulating proteostasis and redox balance',
+    author: 'Miao Cui',
+    year: '2021'
+  },
+  33296652: {
+    title: 'Cell-Type-Specific Gene Regulatory Networks Underlying Murine Neonatal Heart Regeneration at Single-Cell Resolution.',
+    author: 'Wang Z',
+    year: '2020'
+  },
+  38510108: {
+    title: 'YAP induces a neonatal-like pro-renewal niche in the adult heart.',
+    author: 'Li RG',
+    year: '2024'
+  }
+};
+const CUI_CELL_TYPE_MAP: Record<string, string> = {
+  'cardiomyocyte': 'Cardiomyocytes',
+  'cardiomyocyte 1': 'CM1',
+  'cardiomyocyte 2': 'CM2',
+  'cardiomyocyte 3': 'CM3',
+  'cardiomyocyte 4': 'CM4',
+  'cardiomyocyte 5': 'CM5',
+  'cm1': 'CM1',
+  'cm2': 'CM2',
+  'cm3': 'CM3',
+  'cm4': 'CM4',
+  'cm5': 'CM5',
+  'endothelial cell': 'Endothelial cells',
+  'fibroblast': 'Fibroblasts',
+  'macrophage': 'Macrophage',
+  'mural cell': 'Pericyte/SMC'
+};
+
+export function getCuiSpatialContext(
+  selection: GenomeBrowserSelection | null | undefined,
+  gene: string | undefined
+): CuiSpatialContext | null {
+  if (!selection || !CUI_STUDY_PMIDS.has(Number(selection.pmid)) || Number(selection.PSD) !== 3) return null;
+
+  const normalizedSurgery = selection.Surgery?.trim().toLocaleLowerCase();
+  if (normalizedSurgery !== 'mi' && normalizedSurgery !== 'sham') return null;
+
+  const mappedCellTypes = [selection.cell_type, selection.cell_type2, selection.cell_type3]
+    .map(label => label?.trim().replace(/\s+/g, ' ').toLocaleLowerCase())
+    .filter(label => label && label !== 'na' && label !== 'none')
+    .map(label => {
+      const cardiomyocyteMatch = label.match(/^(?:cardiomyocyte|cm)\s*([1-5])(?:\s+\d+)?$/);
+      return cardiomyocyteMatch ? `CM${cardiomyocyteMatch[1]}` : CUI_CELL_TYPE_MAP[label];
+    })
+    .filter((cellType): cellType is string => Boolean(cellType));
+  const cellType = mappedCellTypes.find(candidate => /^CM[1-5]$/.test(candidate)) ?? mappedCellTypes[0];
+  const symbol = gene?.trim();
+  if (!cellType || !symbol) return null;
+
+  return {
+    gene: symbol,
+    cellType,
+    surgery: normalizedSurgery === 'mi' ? 'MI' : 'Sham',
+    timepoint: '3 dpi'
+  };
+}
+
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css'],
-  imports: [TranslatePipe, RouterOutlet, RouterModule, CommonModule, NgbModule, TranslateModule, TranslateDirective],
+  imports: [TranslatePipe, TranslateDirective, SpatialPreviewComponent],
   standalone: true
 })
 export class MapsComponent implements OnInit {
-  @Input() selected_info!: { pmid: number, cell_type: string, gene: string, cell_type2: string, cell_type3: string, slope: number, pvalue: number, intercept: number, lfc: number, g_id: number, PSD: number, Surgery: string };
+  @Input() selected_info!: GenomeBrowserSelection;
   @Input() en_id!: string | undefined;
   image: Image[];
   tsne: any;
@@ -46,6 +136,8 @@ export class MapsComponent implements OnInit {
   points_data: any[];
   line_data: any[];
   decade_change: number;
+  spatialContext: CuiSpatialContext | null = null;
+  private initialized = false;
 
   public linReg_chart_options: Partial<ChartOptions>;
 
@@ -53,11 +145,12 @@ export class MapsComponent implements OnInit {
   maps = [{ text: "UMAP" }, { text: "TSNE" }, { text: "Model Visualization" }, { text: "Meta Info" }];
   display = 'UMAP';
 
-  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer, private http: HttpClient, private pubmedService: PubmedService, private router: Router) { }
+  constructor(private databaseService: DatabaseService, private sanitizer: DomSanitizer, private pubmedService: PubmedService) { }
 
   ngOnInit(): void {
-    this.getClusterImages()
-    // this.getLinRegGraphData()
+    this.initialized = true;
+    this.loadSelectionData();
+    this.updateSpatialContext();
   }
 
   getClusterImages() {
@@ -182,41 +275,12 @@ export class MapsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selected_info'] && changes['selected_info'].currentValue) {
-      console.log('New selected_info:', changes['selected_info'].currentValue);
-      console.log('PSD:', changes['selected_info'].currentValue.PSD);
-      console.log('Surgery:', changes['selected_info'].currentValue.Surgery);
+    if (changes['selected_info']?.currentValue) {
+      this.selected_info = changes['selected_info'].currentValue;
+      if (this.initialized) this.loadSelectionData();
     }
-    this.selected_info = changes['selected_info'].currentValue;
-    this.formatOtherCellTypes()
-    this.calculateDecadeChange()
-    console.log('Fetching PubMed data for PMID:', this.selected_info.pmid);
 
-    /*const ncbi = await import('node-ncbi');
-    ncbi.pubmed.summary(this.selected_info.pmid).then((results: any) => {
-      console.log(results)
-      this.title = results.title
-      this.author = results.authors.split(',')[0].replace(' ', ', ')
-      this.year = results.pubDate.split('/')[0]
-    });*/
-    /*this.pubmedService.getPubmedData(this.selected_info.pmid).subscribe(html => {
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      this.title = doc.querySelector('h1.heading-title')?.textContent?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
-      this.author = doc.querySelector('div.authors-list span.authors-list-item a.full-name')?.textContent
-        ?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
-      this.year = doc.querySelector('time.citation-year')?.textContent
-        ?.replace(/\s+/g, ' ').trim() ?? 'Unknown';
-    }); */
-    this.pubmedService.getPubmedJson(this.selected_info.pmid.toString().replace("34489413", "32220304")).subscribe(pubmed => {
-      this.title = pubmed.title;
-      this.author = pubmed.first_author;
-      this.year = pubmed.publish_year.toString();
-    }); // Didn't change database, so only modify frontend. GEO shows this serie is also cited by #34489413.
-
-    this.getClusterImages()
-    // this.getLinRegGraphData()
-    // this.prepGraphData()
-    // this.makeLinRegGraph()
+    this.updateSpatialContext();
   }
 
   formatOtherCellTypes() {
@@ -234,8 +298,33 @@ export class MapsComponent implements OnInit {
 
   }
 
-  onClickSpatial() {
-    this.router.navigate(['/spatial'], { queryParams: { en_id: this.en_id } });
+  private loadSelectionData(): void {
+    if (!this.selected_info) return;
+
+    this.formatOtherCellTypes();
+    this.calculateDecadeChange();
+    this.getClusterImages();
+
+    const fallback = HEART_STUDY_METADATA[Number(this.selected_info.pmid)];
+    if (fallback) {
+      this.title = fallback.title;
+      this.author = fallback.author;
+      this.year = fallback.year;
+    }
+
+    this.pubmedService.getPubmedJson(this.selected_info.pmid).subscribe({
+      next: pubmed => {
+        if (pubmed.title && pubmed.title !== 'Unknown') this.title = pubmed.title;
+        if (pubmed.first_author && pubmed.first_author !== 'Unknown') this.author = pubmed.first_author;
+        if (pubmed.publish_year && pubmed.publish_year !== 'Unknown') this.year = pubmed.publish_year.toString();
+      },
+      error: error => console.error('Unable to fetch PubMed metadata', error)
+    });
+  }
+
+  private updateSpatialContext(): void {
+    this.spatialContext = getCuiSpatialContext(this.selected_info, this.en_id);
+    if (!this.spatialContext && this.display === 'Spatial') this.display = 'UMAP';
   }
 
 }

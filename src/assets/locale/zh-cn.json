@@ -129,6 +129,11 @@
     "spatial": {
         "title": "空间转录组",
         "subtitle": "探索再生期新生小鼠心脏中细胞群与基因表达的空间分布。",
+        "loading_metadata": "正在加载空间数据集...",
+        "loading_layer": "正在加载点位测量值...",
+        "metadata_error": "无法加载空间数据集。",
+        "layer_error": "无法加载所选空间图层。",
+        "retry": "重试",
         "preview_badge": "界面预览",
         "preview_notice": "当前点位数值仅用于界面预览，并与正式数据明确区分。接入空间数据接口后即可替换为处理后的 spot 级测量值。",
         "controls": {
@@ -142,8 +147,9 @@
             "layer": "可视化图层",
             "gene_expression": "基因表达",
             "cell_proportion": "细胞类型比例",
-            "gene": "基因",
-            "gene_placeholder": "基因符号或 Ensembl ID",
+      "gene": "基因",
+      "gene_placeholder": "基因符号或 Ensembl ID",
+      "gene_not_found": "此数据集中未找到匹配的基因符号。",
             "cell_type": "细胞类型",
             "estimated_note": "数值表示每个 Visium spot 中推定的细胞类型比例。",
             "display": "显示选项",
@@ -154,18 +160,24 @@
             "spot_size": "点位大小"
         },
         "viewer": {
-            "showing": "当前显示",
-            "compare": "对比",
-            "download": "下载",
-            "download_disabled": "接入空间数据接口后将开放下载。",
+      "showing": "当前显示",
+      "compare": "对比",
+      "compare_samples": "样本",
+      "compare_samples_hint": "比较同一时间点的 MI 与 Sham 切片",
+      "compare_layers": "图层",
+      "compare_layers_hint": "在同一切片上比较基因表达与细胞类型比例",
+      "download": "下载",
+      "download_disabled": "接入空间数据接口后将开放下载。",
+      "download_hint": "将当前可见点位测量值下载为 TSV",
             "heart_alt": "新生小鼠心脏组织参考图",
-            "hint": "点击点位查看详情",
+      "hint": "拖动平移；点击点位查看详情",
             "spots_visible": "个可见点位",
             "visium": "10x Visium 空间分辨率",
-            "double_click": "双击查看器可重置缩放"
+      "double_click": "双击查看器可重置缩放和位置"
         },
         "inspector": {
-            "layer": "当前图层",
+      "layer": "当前图层",
+      "legend": "图例",
             "expression": "表达量",
             "proportion": "比例",
             "scale": "色标",
@@ -238,7 +250,12 @@
             "enriched": "富集基因",
             "up": "表达量上调",
             "down": "表达量下调",
-            "xaxis": "标准化富集分数（NES）"
+            "xaxis": "标准化富集分数（NES）",
+            "empty_filtered_title": "没有符合筛选条件的簇",
+            "empty_filtered_hint": "当前的 FDR 与 NES 阈值排除了所有结果。请放宽阈值，或选择其他通路。",
+            "empty_reset": "重置阈值",
+            "empty_none_title": "无富集结果",
+            "empty_none_hint": "当前选择未返回任何通路。请尝试其他通路或不同的细胞类型。"
         }
     },
     "settings": {

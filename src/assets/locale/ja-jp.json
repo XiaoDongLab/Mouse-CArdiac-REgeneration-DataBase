@@ -127,6 +127,11 @@
     "spatial": {
         "title": "空間トランスクリプトーム",
         "subtitle": "再生期の新生仔マウス心臓における細胞集団と遺伝子発現の空間分布を探索します。",
+        "loading_metadata": "空間データセットを読み込んでいます...",
+        "loading_layer": "スポット測定値を読み込んでいます...",
+        "metadata_error": "空間データセットを読み込めませんでした。",
+        "layer_error": "選択した空間レイヤーを読み込めませんでした。",
+        "retry": "再試行",
         "preview_badge": "インターフェースプレビュー",
         "preview_notice": "現在のスポット値は画面プレビュー用です。空間データ API を接続すると、処理済みのスポット単位測定値に置き換わります。",
         "controls": {
@@ -140,8 +145,9 @@
             "layer": "可視化レイヤー",
             "gene_expression": "遺伝子発現",
             "cell_proportion": "細胞型の割合",
-            "gene": "遺伝子",
-            "gene_placeholder": "遺伝子シンボルまたは Ensembl ID",
+      "gene": "遺伝子",
+      "gene_placeholder": "遺伝子シンボルまたは Ensembl ID",
+      "gene_not_found": "このデータセットに一致する遺伝子シンボルがありません。",
             "cell_type": "細胞型",
             "estimated_note": "各 Visium スポットにおける推定細胞型割合を示します。",
             "display": "表示オプション",
@@ -152,18 +158,24 @@
             "spot_size": "スポットサイズ"
         },
         "viewer": {
-            "showing": "表示中",
-            "compare": "比較",
-            "download": "ダウンロード",
-            "download_disabled": "空間データ API 接続後にダウンロードできます。",
+      "showing": "表示中",
+      "compare": "比較",
+      "compare_samples": "サンプル",
+      "compare_samples_hint": "同じ時点の MI と Sham 切片を比較",
+      "compare_layers": "レイヤー",
+      "compare_layers_hint": "同じ切片で遺伝子発現と細胞型割合を比較",
+      "download": "ダウンロード",
+      "download_disabled": "空間データ API 接続後にダウンロードできます。",
+      "download_hint": "表示中のスポット測定値を TSV でダウンロード",
             "heart_alt": "新生仔マウス心臓組織の参照画像",
-            "hint": "スポットを選択して詳細を表示",
+      "hint": "ドラッグで移動し、スポットを選択して詳細を表示",
             "spots_visible": "スポットを表示中",
             "visium": "10x Visium 空間解像度",
-            "double_click": "ビューアをダブルクリックしてズームをリセット"
+      "double_click": "ビューアをダブルクリックしてズームと位置をリセット"
         },
         "inspector": {
-            "layer": "アクティブレイヤー",
+      "layer": "アクティブレイヤー",
+      "legend": "凡例",
             "expression": "発現量",
             "proportion": "割合",
             "scale": "カラースケール",
@@ -234,7 +246,12 @@
             "pval": "P 値",
             "enriched": "遺伝子が豊富",
             "up": "アップレギュレーション",
-            "down": "ダウンレギュレーション"
+            "down": "ダウンレギュレーション",
+            "empty_filtered_title": "条件に一致するクラスタがありません",
+            "empty_filtered_hint": "現在の FDR および NES のしきい値によりすべての結果が除外されました。しきい値を緩めるか、別のパスウェイを選択してください。",
+            "empty_reset": "しきい値をリセット",
+            "empty_none_title": "エンリッチメント結果がありません",
+            "empty_none_hint": "この選択ではパスウェイが返されませんでした。別のパスウェイまたは細胞タイプをお試しください。"
         }
     },
     "settings": {

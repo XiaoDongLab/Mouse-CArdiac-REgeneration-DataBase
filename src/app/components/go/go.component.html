@@ -48,8 +48,8 @@
       <!-- FDR Filter -->
       <h4>{{'pathway.filterarea.fdrqval' | translate}}</h4>
       <div class="d-flex align-items-center justify-content-between gap-2">
-        <input tabindex="0" type="range" class="form-range" min="0.01" max="1" step="0.01" [(ngModel)]="fdr_cutoff"
-          (change)="CutoffChanged()" />
+        <input tabindex="0" type="range" class="form-range cutoff-range" min="0.01" max="1" step="0.01"
+          [style.--thumb-color]="FDR_COLOR" [(ngModel)]="fdr_cutoff" (change)="CutoffChanged()" />
         <span style="width: 4rem;text-align: right;">{{fdr_cutoff}}</span>
       </div>
       <hr />
@@ -69,10 +69,12 @@
 
           <!-- Min thumb -->
           <input type="range" class="form-range slider-thumb" [min]="nes_slider_min" [max]="nes_slider_max" step="0.1"
+            [style.--thumb-color]="NES_MIN_COLOR"
             [(ngModel)]="nes_min_bound" (change)="nesMinChanged()" (change)="CutoffChanged()">
 
           <!-- Max thumb -->
           <input type="range" class="form-range slider-thumb" [min]="nes_slider_min" [max]="nes_slider_max" step="0.1"
+            [style.--thumb-color]="NES_MAX_COLOR"
             [(ngModel)]="nes_max_bound" (change)="nesMaxChanged()" (change)="CutoffChanged()">
         </div>
         <span style="width: 4rem; text-align: right;" class="text-nowrap">
@@ -160,12 +162,30 @@
     }
     @if (!loading) {
     <div class="d-flex flex-column h-100 align-items-between">
-      <div class="flex-grow-1">
+      <div class="flex-grow-1 position-relative">
         <apx-chart #chart [series]="go_chart_options.series!" [chart]="go_chart_options.chart!"
           [xaxis]="go_chart_options.xaxis!" [yaxis]="go_chart_options.yaxis!" [markers]="go_chart_options.markers!"
           [annotations]="go_chart_options.annotations!" [tooltip]="go_chart_options.tooltip!"
           [theme]="go_chart_options.theme!">
         </apx-chart>
+
+        @if (allTermsFilteredOut || noTermsForSelection) {
+        <div class="chart-empty-state" role="status">
+          <div class="chart-empty-card text-center">
+            <i class="fa fa-filter-circle-xmark chart-empty-icon"></i>
+            @if (allTermsFilteredOut) {
+            <h5 class="mb-1" translate="pathway.body.empty_filtered_title"></h5>
+            <p class="text-muted mb-3" translate="pathway.body.empty_filtered_hint"></p>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="resetCutoffs()">
+              <i class="fa fa-refresh me-1"></i>{{ 'pathway.body.empty_reset' | translate }}
+            </button>
+            } @else {
+            <h5 class="mb-1" translate="pathway.body.empty_none_title"></h5>
+            <p class="text-muted mb-0" translate="pathway.body.empty_none_hint"></p>
+            }
+          </div>
+        </div>
+        }
       </div>
       <div class="flex-shrink-0">
         @if (!term_selected&&!loading) {

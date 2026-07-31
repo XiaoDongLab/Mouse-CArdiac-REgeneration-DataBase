@@ -185,6 +185,11 @@
     "spatial": {
         "title": "Spatial Transcriptomics",
         "subtitle": "Explore the spatial organization of cell populations and gene expression in the regenerating neonatal mouse heart.",
+        "loading_metadata": "Loading spatial dataset...",
+        "loading_layer": "Loading spot measurements...",
+        "metadata_error": "The spatial dataset could not be loaded.",
+        "layer_error": "The selected spatial layer could not be loaded.",
+        "retry": "Retry",
         "preview_badge": "Interface preview",
         "preview_notice": "Preview values are illustrative and are clearly separated from the published dataset. Connect the spatial API to replace them with processed spot-level measurements.",
         "controls": {
@@ -198,8 +203,9 @@
             "layer": "Visualization layer",
             "gene_expression": "Gene expression",
             "cell_proportion": "Cell-type proportion",
-            "gene": "Gene",
-            "gene_placeholder": "Gene symbol or Ensembl ID",
+      "gene": "Gene",
+      "gene_placeholder": "Gene symbol or Ensembl ID",
+      "gene_not_found": "No matching gene symbol was found in this dataset.",
             "cell_type": "Cell type",
             "estimated_note": "Values represent the estimated proportion in each Visium spot.",
             "display": "Display options",
@@ -210,18 +216,24 @@
             "spot_size": "Spot size"
         },
         "viewer": {
-            "showing": "Showing",
-            "compare": "Compare",
-            "download": "Download",
-            "download_disabled": "Download will be enabled when the spatial API is connected.",
+      "showing": "Showing",
+      "compare": "Compare",
+      "compare_samples": "Samples",
+      "compare_samples_hint": "Compare MI and sham sections at the same timepoint",
+      "compare_layers": "Layers",
+      "compare_layers_hint": "Compare gene expression and cell-type proportion on the same section",
+      "download": "Download",
+      "download_disabled": "Download will be enabled when the spatial API is connected.",
+      "download_hint": "Download the visible spot measurements as TSV",
             "heart_alt": "Neonatal mouse heart tissue reference",
-            "hint": "Select a spot to inspect",
+      "hint": "Drag to pan; select a spot to inspect",
             "spots_visible": "spots visible",
             "visium": "10x Visium spatial resolution",
-            "double_click": "Double-click the viewer to reset zoom"
+      "double_click": "Double-click the viewer to reset zoom and position"
         },
         "inspector": {
-            "layer": "Active layer",
+      "layer": "Active layer",
+      "legend": "Legend",
             "expression": "Expression",
             "proportion": "Proportion",
             "scale": "Color scale",
@@ -297,7 +309,12 @@
             "enriched": "Genes enriched",
             "up": "Upregulated",
             "down": "Downregulated",
-            "xaxis": "Normalized Enrichment Score"
+            "xaxis": "Normalized Enrichment Score",
+            "empty_filtered_title": "No clusters match your filters",
+            "empty_filtered_hint": "All results were excluded by the current FDR and NES cutoffs. Try loosening them, or select another pathway.",
+            "empty_reset": "Reset cutoffs",
+            "empty_none_title": "No enrichment results",
+            "empty_none_hint": "This selection returned no pathways. Try another pathway or a different set of cell types."
         }
     },
     "settings": {

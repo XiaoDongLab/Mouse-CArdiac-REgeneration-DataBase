@@ -8,9 +8,11 @@
       <li class="nav-item">
         <a tabindex="0" class="nav-link" [class.active]="display=='TSNE'" (click)="onItemSelected_Nav('TSNE')" (keydown.enter)="onItemSelected_Nav('TSNE')"><i class="fa fa-map"></i> TSNE</a>
       </li>
-      <li class="nav-item">
-        <a tabindex="0" class="nav-link" [class.active]="display == 'Spatial'" (click)="onItemSelected_Nav('Spatial')" (keydown.enter)="onItemSelected_Nav('Spatial')"><i class="fa fa-diagram-project"></i> {{'maps.navbar.spatial' | translate}}</a>
-      </li>
+      @if (spatialContext) {
+        <li class="nav-item">
+          <a tabindex="0" class="nav-link" [class.active]="display == 'Spatial'" (click)="onItemSelected_Nav('Spatial')" (keydown.enter)="onItemSelected_Nav('Spatial')"><i class="fa fa-diagram-project"></i> {{'maps.navbar.spatial' | translate}}</a>
+        </li>
+      }
       <li class="nav-item">
         <a tabindex="0" class="nav-link" [class.active]="display == 'Meta Info'" (click)="onItemSelected_Nav('Meta Info')" (keydown.enter)="onItemSelected_Nav('Meta Info')"><i class="fa fa-info-circle"></i> {{'maps.navbar.metainfo' | translate}}</a>
       </li>
@@ -88,11 +90,10 @@
         </div>
       </div>
       }
-      @if (display=='Spatial') {
-        <div class="col-12 text-center">
-          <a class="btn btn-mcaredb" (click)="onClickSpatial()" (keydown.enter)="onClickSpatial()">
-            View Spatial Data
-          </a>
+      @if (display === 'Spatial' && spatialContext) {
+        <div class="col-12">
+          <app-spatial-preview [gene]="spatialContext.gene" [cellType]="spatialContext.cellType"
+            [surgery]="spatialContext.surgery" [timepoint]="spatialContext.timepoint"></app-spatial-preview>
         </div>
       }
     </div>

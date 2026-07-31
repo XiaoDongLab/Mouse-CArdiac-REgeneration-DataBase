@@ -56,7 +56,7 @@
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
-    background: var(--bs-primary);
+    background: var(--thumb-color, var(--bs-primary));
     cursor: pointer;
     pointer-events: auto;
     position: relative;
@@ -68,7 +68,7 @@
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
-    background: var(--bs-primary);
+    background: var(--thumb-color, var(--bs-primary));
     cursor: pointer;
     pointer-events: auto;
     position: relative;
@@ -79,7 +79,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--bs-primary);
+    background: var(--thumb-color, var(--bs-primary));
     cursor: pointer;
     pointer-events: auto;
     position: relative;
@@ -645,4 +645,47 @@
 
 ::ng-deep ngb-popover-window {
     width: 20rem !important;
+}
+
+/* Empty state shown over the plot when the cutoffs exclude every pathway,
+   or the current selection returned no enrichment results. Overlays rather
+   than replaces the chart so the axes and cutoff lines stay visible. */
+.chart-empty-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.chart-empty-card {
+    pointer-events: auto;
+    max-width: 22rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-lg, .5rem);
+    background-color: color-mix(in srgb, var(--bs-body-bg) 92%, transparent);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
+}
+
+.chart-empty-icon {
+    font-size: 1.75rem;
+    color: var(--bs-secondary-color);
+    margin-bottom: .5rem;
+}
+
+
+/* FDR slider uses the stock Bootstrap .form-range, whose thumb colour is set
+   on the vendor pseudo-elements. Override those (including the :active tint)
+   so the thumb matches its cutoff line on the plot. */
+.cutoff-range::-webkit-slider-thumb,
+.cutoff-range:active::-webkit-slider-thumb {
+    background-color: var(--thumb-color, var(--bs-primary));
+}
+
+.cutoff-range::-moz-range-thumb,
+.cutoff-range:active::-moz-range-thumb {
+    background-color: var(--thumb-color, var(--bs-primary));
 }

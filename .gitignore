@@ -5,6 +5,7 @@
 /frontend
 /*.zip
 /tmp
+/data/spatial
 /out-tsc
 /bazel-out
 # Node
@@ -31,6 +32,7 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+__pycache__/
 .sass-cache/
 /connect.lock
 /coverage

@@ -3,9 +3,6 @@
     <div>
       <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
         <h2 class="mb-0" translate="spatial.title"></h2>
-        <span class="badge rounded-pill text-bg-warning">
-          <i class="fa fa-flask me-1"></i>{{ 'spatial.preview_badge' | translate }}
-        </span>
       </div>
       <p class="text-muted mb-0" translate="spatial.subtitle"></p>
     </div>
@@ -15,10 +12,18 @@
     </a>
   </header>
 
-  <div class="preview-notice alert alert-warning d-flex align-items-start gap-2 py-2 mb-3" role="status">
-    <i class="fa fa-circle-info mt-1"></i>
-    <span translate="spatial.preview_notice"></span>
-  </div>
+  @if (loadingMetadata) {
+    <div class="alert alert-light border d-flex align-items-center gap-2 py-2 mb-3" role="status">
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <span translate="spatial.loading_metadata"></span>
+    </div>
+  }
+  @if (metadataError) {
+    <div class="alert alert-danger d-flex align-items-center gap-2 py-2 mb-3" role="alert">
+      <i class="fa fa-triangle-exclamation"></i>
+      <span translate="spatial.metadata_error"></span>
+    </div>
+  }
 
   <div class="spatial-workspace">
     <aside class="control-panel panel-card" aria-label="Spatial transcriptomics controls">
@@ -35,7 +40,7 @@
       <div class="panel-body d-flex flex-column gap-3">
         <div>
           <label class="form-label" for="spatialDataset" translate="spatial.controls.dataset"></label>
-          <select id="spatialDataset" class="form-select" [(ngModel)]="selectedDataset">
+          <select id="spatialDataset" class="form-select" [(ngModel)]="selectedDataset" [disabled]="loadingMetadata">
             @for (dataset of datasets; track dataset) {
               <option [value]="dataset">{{ dataset }}</option>
             }
@@ -46,7 +51,7 @@
           <legend class="form-label" translate="spatial.controls.surgery"></legend>
           <div class="segmented-control" role="group" aria-label="Surgery">
             @for (surgery of surgeries; track surgery) {
-              <button type="button" [class.active]="selectedSurgery === surgery"
+              <button type="button" [class.active]="selectedSurgery === surgery" [disabled]="loadingMetadata"
                 (click)="selectedSurgery = surgery; onConditionChange()">
                 {{ surgery }}
               </button>
@@ -58,7 +63,7 @@
           <legend class="form-label" translate="spatial.controls.timepoint"></legend>
           <div class="segmented-control" role="group" aria-label="Time after surgery">
             @for (timepoint of timepoints; track timepoint) {
-              <button type="button" [class.active]="selectedTimepoint === timepoint"
+              <button type="button" [class.active]="selectedTimepoint === timepoint" [disabled]="loadingMetadata"
                 (click)="selectedTimepoint = timepoint; onConditionChange()">
                 {{ timepoint }}
               </button>
@@ -66,40 +71,31 @@
           </div>
         </fieldset>
 
-        <div>
-          <label class="form-label" for="spatialReplicate" translate="spatial.controls.replicate"></label>
-          <select id="spatialReplicate" class="form-select" [(ngModel)]="selectedReplicate"
-            (ngModelChange)="onConditionChange()">
-            @for (replicate of availableReplicates; track replicate) {
-              <option [value]="replicate">{{ replicate }}</option>
-            }
-          </select>
-        </div>
-
         <hr class="my-1" />
 
         <div>
           <small class="eyebrow" translate="spatial.controls.layer"></small>
           <div class="layer-tabs mt-2" role="tablist">
-            <button type="button" role="tab" [attr.aria-selected]="viewMode === 'gene'"
-              [class.active]="viewMode === 'gene'" (click)="setViewMode('gene')">
+            <button type="button" role="tab" [attr.aria-selected]="viewMode === 'gene' || comparisonMode === 'feature'"
+              [class.active]="viewMode === 'gene' || comparisonMode === 'feature'" (click)="setViewMode('gene')">
               <i class="fa fa-dna"></i>
               <span translate="spatial.controls.gene_expression"></span>
             </button>
-            <button type="button" role="tab" [attr.aria-selected]="viewMode === 'cellType'"
-              [class.active]="viewMode === 'cellType'" (click)="setViewMode('cellType')">
+            <button type="button" role="tab" [attr.aria-selected]="viewMode === 'cellType' || comparisonMode === 'feature'"
+              [class.active]="viewMode === 'cellType' || comparisonMode === 'feature'" (click)="setViewMode('cellType')">
               <i class="fa fa-chart-pie"></i>
               <span translate="spatial.controls.cell_proportion"></span>
             </button>
           </div>
         </div>
 
-        @if (viewMode === 'gene') {
+        @if (viewMode === 'gene' || comparisonMode === 'feature') {
           <div>
             <label class="form-label" for="spatialGene" translate="spatial.controls.gene"></label>
             <div class="input-group">
               <span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
               <input id="spatialGene" class="form-control" [(ngModel)]="selectedGene"
+                (ngModelChange)="onGeneInput($event)" (change)="applyGene()" (keyup.enter)="applyGene()"
                 [attr.list]="'spatialGeneOptions'" [placeholder]="'spatial.controls.gene_placeholder' | translate" />
               <datalist id="spatialGeneOptions">
                 @for (gene of genes; track gene) {
@@ -107,11 +103,16 @@
                 }
               </datalist>
             </div>
+            @if (geneNotFound) {
+              <div class="form-text text-danger" role="alert" translate="spatial.controls.gene_not_found"></div>
+            }
           </div>
-        } @else {
+        }
+        @if (viewMode === 'cellType' || comparisonMode === 'feature') {
           <div>
             <label class="form-label" for="spatialCellType" translate="spatial.controls.cell_type"></label>
-            <select id="spatialCellType" class="form-select" [(ngModel)]="selectedCellType">
+            <select id="spatialCellType" class="form-select" [(ngModel)]="selectedCellType"
+              (ngModelChange)="onCellTypeChange()">
               @for (cellType of cellTypes; track cellType) {
                 <option [value]="cellType">{{ cellType }}</option>
               }
@@ -135,10 +136,6 @@
             <input class="form-check-input" type="checkbox" id="showSpots" [(ngModel)]="showSpots" />
             <label class="form-check-label" for="showSpots" translate="spatial.controls.spots"></label>
           </div>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="lockScale" [(ngModel)]="lockColorScale" />
-            <label class="form-check-label" for="lockScale" translate="spatial.controls.lock_scale"></label>
-          </div>
         </div>
 
         <div>
@@ -153,7 +150,7 @@
           <label for="spotSize" class="form-label d-flex justify-content-between">
             <span translate="spatial.controls.spot_size"></span><span>{{ spotSize }} px</span>
           </label>
-          <input id="spotSize" class="form-range" type="range" min="6" max="20" step="1"
+          <input id="spotSize" class="form-range" type="range" min="2" max="24" step="1"
             [(ngModel)]="spotSize" />
         </div>
       </div>
@@ -180,63 +177,101 @@
               <i class="fa fa-plus"></i>
             </button>
           </div>
-          <button type="button" class="btn btn-sm"
-            [class.btn-mcaredb]="comparisonMode" [class.btn-outline-secondary]="!comparisonMode"
-            (click)="comparisonMode = !comparisonMode">
-            <i class="fa fa-table-columns me-2"></i>{{ 'spatial.viewer.compare' | translate }}
-          </button>
-          <button type="button" class="btn btn-sm btn-outline-secondary" disabled
-            [ngbTooltip]="'spatial.viewer.download_disabled' | translate">
+          <div class="btn-group btn-group-sm compare-actions" role="group"
+            [attr.aria-label]="'spatial.viewer.compare' | translate">
+            <button type="button" class="btn"
+              [class.btn-mcaredb]="comparisonMode === 'sample'"
+              [class.btn-outline-secondary]="comparisonMode !== 'sample'"
+              (click)="setComparisonMode('sample')" [disabled]="loadingMetadata || !comparisonSample"
+              [ngbTooltip]="'spatial.viewer.compare_samples_hint' | translate">
+              <i class="fa fa-table-columns me-2"></i>{{ 'spatial.viewer.compare_samples' | translate }}
+            </button>
+            <button type="button" class="btn"
+              [class.btn-mcaredb]="comparisonMode === 'feature'"
+              [class.btn-outline-secondary]="comparisonMode !== 'feature'"
+              (click)="setComparisonMode('feature')" [disabled]="loadingMetadata"
+              [ngbTooltip]="'spatial.viewer.compare_layers_hint' | translate">
+              <i class="fa fa-layer-group me-2"></i>{{ 'spatial.viewer.compare_layers' | translate }}
+            </button>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary"
+            (click)="downloadVisibleData()" [disabled]="loadingLayers || visibleSpotCount === 0"
+            [ngbTooltip]="'spatial.viewer.download_hint' | translate">
             <i class="fa fa-download me-2"></i>{{ 'spatial.viewer.download' | translate }}
           </button>
         </div>
       </div>
 
-      <div class="viewer-grid" [class.is-comparing]="comparisonMode">
-        @for (sample of visibleSamples; track sample.id; let sampleIndex = $index) {
-          <section class="sample-view" [attr.aria-label]="sample.label">
+      @if (layerError) {
+        <div class="viewer-message text-danger" role="alert">
+          <i class="fa fa-triangle-exclamation"></i>
+          <span translate="spatial.layer_error"></span>
+          <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadVisibleLayers()"
+            translate="spatial.retry"></button>
+        </div>
+      }
+
+      <div class="viewer-grid" [class.is-comparing]="isComparing">
+        @for (panel of visiblePanels; track panel.id) {
+          <section class="sample-view" [attr.aria-label]="panel.sample.label + ' - ' + panel.feature">
             <div class="sample-label">
               <div>
-                <span class="condition-badge" [class.mi]="sample.surgery === 'MI'">{{ sample.surgery }}</span>
-                <strong>{{ sample.timepoint }}</strong>
+                <span class="condition-badge" [class.mi]="panel.sample.surgery === 'MI'">{{ panel.sample.surgery }}</span>
+                <strong>{{ panel.sample.timepoint }}</strong>
+                @if (isComparing) {
+                  <span class="panel-feature" [class.cell-type]="panel.viewMode === 'cellType'">{{ panel.feature }}</span>
+                }
               </div>
-              <small>{{ sample.accession }}</small>
+              <small>{{ panel.sample.accession }}</small>
             </div>
 
-            <div class="tissue-viewport" (dblclick)="resetViewer()">
-              <div class="tissue-layer" [style.transform]="'scale(' + zoom / 100 + ')'">
+            <div class="tissue-viewport" [class.can-pan]="zoom > 100 || isComparing" [class.is-panning]="isPanelPanning(panel)"
+              (pointerdown)="beginPan($event, panel)" (pointermove)="movePan($event)"
+              (pointerup)="endPan($event)" (pointercancel)="endPan($event)" (dblclick)="resetViewer()"
+              [style.--tissue-aspect]="panel.sample.imageWidth + ' / ' + panel.sample.imageHeight">
+              <div class="tissue-layer" [class.is-panning]="isPanelPanning(panel)" [style.transform]="transformFor(panel)"
+                [style.aspect-ratio]="panel.sample.imageWidth + ' / ' + panel.sample.imageHeight">
                 @if (showHistology) {
-                  <img class="heart-reference" src="../../../assets/images/neonatal.svg"
+                  <img class="tissue-image" [src]="panel.sample.imageUrl" draggable="false"
                     [alt]="'spatial.viewer.heart_alt' | translate" />
                 }
                 @if (!showHistology) {
-                  <div class="tissue-outline" aria-hidden="true"></div>
+                  <div class="tissue-placeholder" aria-hidden="true"></div>
                 }
 
                 @if (showSpots) {
                   <div class="spot-layer" aria-label="Spatial spots">
-                    @for (spot of previewSpots; track trackSpot($index, spot)) {
+                    @for (spot of spotsForPanel(panel); track trackSpot($index, spot)) {
                       <button type="button" class="spatial-spot"
-                        [class.selected]="selectedSpot?.id === spot.id"
-                        [style.left.%]="spot.x" [style.top.%]="spot.y"
+                        [class.selected]="isSpotSelected(spot, panel)"
+                        [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
                         [style.width.px]="spotSize" [style.height.px]="spotSize"
+                        [style.border-width.px]="spotSize < 4 ? 0.25 : spotSize < 6 ? 0.5 : 1"
+                        [class.tiny]="spotSize < 4"
                         [style.opacity]="spotOpacity / 100"
-                        [style.backgroundColor]="spotColor(spotValue(spot, sample))"
-                        [attr.aria-label]="spot.barcode + ': ' + spotValue(spot, sample).toFixed(2)"
-                        [title]="spot.barcode + ' · ' + spotValue(spot, sample).toFixed(2)"
-                        (click)="selectSpot(spot)">
+                        [style.backgroundColor]="spotColor(spot, panel)"
+                        [attr.aria-label]="spot.barcode + ': ' + formatValue(spot.value)"
+                        [title]="spot.barcode + ' · ' + formatValue(spot.value)"
+                        (click)="selectSpot(spot, panel)">
                       </button>
                     }
                   </div>
                 }
               </div>
 
+              @if (loadingLayers) {
+                <div class="layer-loading" role="status">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span translate="spatial.loading_layer"></span>
+                </div>
+              }
+
               <div class="orientation-marker" aria-hidden="true">
-                <span>A</span><i></i><span>P</span>
+                <span>R</span><i></i><span>L</span>
               </div>
               <div class="scale-bar"><i></i><span>500 μm</span></div>
               <div class="viewport-hint">
-                <i class="fa fa-computer-mouse me-1"></i>{{ 'spatial.viewer.hint' | translate }}
+                <i class="fa fa-hand me-1"></i>{{ 'spatial.viewer.hint' | translate }}
               </div>
             </div>
           </section>
@@ -246,7 +281,7 @@
       <footer class="viewer-footer">
         <div class="d-flex gap-2 align-items-center flex-wrap">
           <span class="status-dot"></span>
-          <span>{{ previewSpots.length }} {{ 'spatial.viewer.spots_visible' | translate }}</span>
+          <span>{{ visibleSpotCount }} {{ 'spatial.viewer.spots_visible' | translate }}</span>
           <span class="text-muted">·</span>
           <span translate="spatial.viewer.visium"></span>
         </div>
@@ -261,25 +296,24 @@
             <small class="eyebrow" translate="spatial.inspector.layer"></small>
             <h4 class="mb-0">{{ displayedFeature }}</h4>
           </div>
-          <span class="badge bg-body-secondary text-body border">
-            {{ viewMode === 'gene' ? ('spatial.inspector.expression' | translate) : ('spatial.inspector.proportion' | translate) }}
-          </span>
+          <span class="badge bg-body-secondary text-body border" translate="spatial.inspector.legend"></span>
         </div>
         <div class="panel-body">
-          <div class="legend-gradient" aria-label="Color scale"></div>
-          <div class="legend-labels">
-            <span>0</span>
-            <span>{{ viewMode === 'gene' ? '2.8' : '1.0' }}</span>
-          </div>
-          <div class="metric-list mt-3">
-            <div>
-              <span translate="spatial.inspector.scale"></span>
-              <strong>{{ lockColorScale ? ('spatial.inspector.shared' | translate) : ('spatial.inspector.independent' | translate) }}</strong>
-            </div>
-            <div>
-              <span translate="spatial.inspector.normalization"></span>
-              <strong>{{ viewMode === 'gene' ? 'Log-normalized' : 'Estimated fraction' }}</strong>
-            </div>
+          <div class="legend-stack">
+            @for (legend of legendEntries; track legend.id) {
+              <div class="legend-entry">
+                <div class="legend-heading">
+                  <strong>{{ legend.label }}</strong>
+                  <span>{{ legend.viewMode === 'gene' ? ('spatial.inspector.expression' | translate) : ('spatial.inspector.proportion' | translate) }}</span>
+                </div>
+                <div class="legend-gradient" [class.cell-type]="legend.viewMode === 'cellType'" aria-label="Color scale"></div>
+                <div class="legend-labels">
+                  <span>0</span>
+                  <span>{{ formatValue(legend.maximum) }}</span>
+                </div>
+                <div class="legend-normalization">{{ legend.normalization }}</div>
+              </div>
+            }
           </div>
         </div>
       </section>
@@ -294,21 +328,29 @@
         <div class="panel-body">
           @if (selectedSpot) {
             <div class="selected-spot-id mb-3">
-              <span class="spot-swatch" [style.backgroundColor]="spotColor(spotValue(selectedSpot, activeSample))"></span>
+              <span class="spot-swatch" [style.backgroundColor]="spotColor(selectedSpot.spot, selectedSpot.panel)"></span>
               <div>
                 <small class="text-muted">Barcode</small>
-                <strong>{{ selectedSpot.barcode }}</strong>
+                <strong>{{ selectedSpot.spot.barcode }}</strong>
+                <small class="selected-feature">{{ selectedSpot.panel.feature }}</small>
               </div>
             </div>
-            <div class="spot-stat-grid">
-              <div>
-                <span translate="spatial.inspector.value"></span>
-                <strong>{{ spotValue(selectedSpot, activeSample).toFixed(2) }}</strong>
-              </div>
-              <div>
-                <span>X / Y</span>
-                <strong>{{ selectedSpot.x.toFixed(1) }} / {{ selectedSpot.y.toFixed(1) }}</strong>
-              </div>
+            <div class="selected-measurements">
+              @for (measurement of selectedSpotMeasurements; track measurement.panel.id) {
+                <div class="selected-measurement">
+                  <span class="spot-swatch small"
+                    [style.backgroundColor]="spotColor(measurement.spot, measurement.panel)"></span>
+                  <div>
+                    <span>{{ measurement.panel.feature }}</span>
+                    <small>{{ measurement.panel.viewMode === 'gene' ? ('spatial.inspector.expression' | translate) : ('spatial.inspector.proportion' | translate) }}</small>
+                  </div>
+                  <strong>{{ formatValue(measurement.spot.value) }}</strong>
+                </div>
+              }
+            </div>
+            <div class="spot-coordinate mt-2">
+              <span>X / Y</span>
+              <strong>{{ selectedSpot.spot.xHires.toFixed(1) }} / {{ selectedSpot.spot.yHires.toFixed(1) }}</strong>
             </div>
           } @else {
             <div class="empty-selection text-center">
@@ -328,13 +370,15 @@
           <span class="badge bg-body-secondary text-body border">2021</span>
         </div>
         <div class="panel-body">
-          <dl class="sample-metadata">
-            <div><dt translate="spatial.inspector.sample"></dt><dd>{{ activeSample.accession }}</dd></div>
-            <div><dt translate="spatial.inspector.platform"></dt><dd>10x Visium</dd></div>
-            <div><dt translate="spatial.inspector.stage"></dt><dd>P1</dd></div>
-            <div><dt translate="spatial.inspector.condition"></dt><dd>{{ activeSample.surgery }} · {{ activeSample.timepoint }}</dd></div>
-            <div><dt translate="spatial.inspector.section"></dt><dd>200 μm below LAD ligation</dd></div>
-          </dl>
+          @if (activeSample; as sample) {
+            <dl class="sample-metadata">
+              <div><dt translate="spatial.inspector.sample"></dt><dd>{{ sample.accession }}</dd></div>
+              <div><dt translate="spatial.inspector.platform"></dt><dd>10x Visium</dd></div>
+              <div><dt translate="spatial.inspector.stage"></dt><dd>P1</dd></div>
+              <div><dt translate="spatial.inspector.condition"></dt><dd>{{ sample.surgery }} · {{ sample.timepoint }}</dd></div>
+              <div><dt translate="spatial.inspector.section"></dt><dd>200 μm below LAD ligation</dd></div>
+            </dl>
+          }
           <hr />
           <p class="small text-muted mb-2" translate="spatial.inspector.citation_note"></p>
           <a class="small text-decoration-none" href="https://doi.org/10.1038/s41467-021-25653-w"

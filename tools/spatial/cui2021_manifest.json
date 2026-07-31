@@ -1,0 +1,151 @@
+{
+  "dataset": "Cui et al. 2021 neonatal mouse heart Visium",
+  "series": "GSE163629",
+  "superseries": "GSE163631",
+  "paper_doi": "10.1038/s41467-021-25653-w",
+  "archive_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE163nnn/GSE163629/suppl/GSE163629_RAW.tar",
+  "archive_filename": "GSE163629_RAW.tar",
+  "coordinate_space": {
+    "name": "Seurat lowres image pixels",
+    "max_dimension_pixels": 600,
+    "hires_scale": 3.3333333333333335,
+    "scale_is_inferred": true,
+    "note": "GEO does not include scalefactors_json.json. Every supplied image has a 2000 px maximum dimension, while Seurat lowres coordinates use a 600 px maximum dimension. The inferred scale was visually checked against all five supplied H&E images; verify it again in the production viewer."
+  },
+  "cell_type_columns": [
+    "CM4",
+    "CM1",
+    "EndoEC",
+    "CM3",
+    "FB",
+    "EPI",
+    "Macrophage",
+    "Pericyte/SMC",
+    "EC",
+    "CM2",
+    "CM5"
+  ],
+  "samples": [
+    {
+      "sample_key": 1,
+      "accession": "GSM5268644",
+      "label": "P1 Sham - 3 dpi",
+      "surgery": "Sham",
+      "timepoint": "3 dpi",
+      "replicate": 1,
+      "counts_file": "GSM5268644_P1ShamD3_counts.csv.gz",
+      "metadata_file": "GSM5268644_P1ShamD3.metadata.csv.gz",
+      "image_file": "GSM5268644_P1ShamD3_tissue_hires_image.png.gz",
+      "matrix_total_column": "nCount_Spatial",
+      "expected_spots": 544,
+      "expected_genes": 32285,
+      "expected_nonzero_values": 2609242,
+      "image_width": 2000,
+      "image_height": 1818,
+      "estimated_spot_diameter_hires_px": 11.4872,
+      "sha256": {
+        "counts": "963d6f4c880725bef89419b9bdd399cd9e090438ed4d477560617dcff9b5a8c0",
+        "metadata": "d72f515eabd1edde942d47b9593c147e14338d96700d4af5dac8cf4a47d800ae",
+        "image": "730649ce8d986b24a07b715dd7312e6a3653d32de7cde7fd26ced91852445583"
+      }
+    },
+    {
+      "sample_key": 2,
+      "accession": "GSM5268645",
+      "label": "P1 Sham - 7 dpi",
+      "surgery": "Sham",
+      "timepoint": "7 dpi",
+      "replicate": 1,
+      "counts_file": "GSM5268645_P1ShamD7_counts.csv.gz",
+      "metadata_file": "GSM5268645_P1ShamD7.metadata.csv.gz",
+      "image_file": "GSM5268645_P1ShamD7.tissue_hires_image.png.gz",
+      "matrix_total_column": "nCount_SCT",
+      "expected_spots": 960,
+      "expected_genes": 14655,
+      "expected_nonzero_values": 4643183,
+      "image_width": 1968,
+      "image_height": 2000,
+      "estimated_spot_diameter_hires_px": 12.586,
+      "sha256": {
+        "counts": "15e84a3c0c9a9be27d300c7a570eeba22422727e77e394cff070709530c7f766",
+        "metadata": "6eec73e5faabbc3d771398e41d36680efe07be215f6caddf53b064c0d07a18c7",
+        "image": "b1a224fe29dbd8d1c196f9992cb3ddfc7fdddbbde4302b98fde71a1947601aa8"
+      }
+    },
+    {
+      "sample_key": 3,
+      "accession": "GSM5268646",
+      "label": "P1 MI - 3 dpi",
+      "surgery": "MI",
+      "timepoint": "3 dpi",
+      "replicate": 1,
+      "counts_file": "GSM5268646_P1MID3_counts.csv.gz",
+      "metadata_file": "GSM5268646_P1MID3.metadata.csv.gz",
+      "image_file": "GSM5268646_P1MID3_tissue_hires_image.png.gz",
+      "matrix_total_column": "nCount_SCT",
+      "expected_spots": 376,
+      "expected_genes": 14466,
+      "expected_nonzero_values": 2374470,
+      "image_width": 1968,
+      "image_height": 2000,
+      "estimated_spot_diameter_hires_px": 12.6422,
+      "gene_symbol_occurrence_corrections": {
+        "2-Mar": ["Marc2", "March2"]
+      },
+      "sha256": {
+        "counts": "b5fb669d0b948c14676b18add4a1bc162e8696b52e7190b39afe759214b66f2f",
+        "metadata": "be7edd61eceb35e2095a56107ea06bd4395ad31175ebc84139cf470e12f46cee",
+        "image": "cfc3e1fb0f23446995d3673489937d27f0b110445dd098b15ffa403c879b8a8d"
+      }
+    },
+    {
+      "sample_key": 4,
+      "accession": "GSM4983123",
+      "label": "P1 MI - 7 dpi - replicate 1",
+      "surgery": "MI",
+      "timepoint": "7 dpi",
+      "replicate": 1,
+      "counts_file": "GSM4983123_Count_matrix.csv.gz",
+      "metadata_file": "GSM4983123_metadata.csv.gz",
+      "image_file": "GSM4983123_P1MID7_Visum_tissue_hires_image.png.gz",
+      "matrix_total_column": "nCount_SCT",
+      "expected_spots": 693,
+      "expected_genes": 15300,
+      "expected_nonzero_values": 4849733,
+      "image_width": 2000,
+      "image_height": 1976,
+      "estimated_spot_diameter_hires_px": 11.4918,
+      "sha256": {
+        "counts": "2b6a2889434e27ed094039bce82c350c2abd9a86fb025af8213f0e2d32419bf9",
+        "metadata": "d9f81629645c52a29623a224e5f4cdf5888863d4a7fe8794bf98101ef869bb68",
+        "image": "efedca9a13e328baefeb650d4bc65d2426e4b82573b1272674e6db21f6180a6a"
+      }
+    },
+    {
+      "sample_key": 5,
+      "accession": "GSM5268647",
+      "label": "P1 MI - 7 dpi - replicate 2",
+      "surgery": "MI",
+      "timepoint": "7 dpi",
+      "replicate": 2,
+      "counts_file": "GSM5268647_P1MID7.rep2_counts.csv.gz",
+      "metadata_file": "GSM5268647_P1MID7.rep2.metadata.csv.gz",
+      "image_file": "GSM5268647_P1MID7.rep2.tissue_hires_image.png.gz",
+      "matrix_total_column": "nCount_SCT",
+      "expected_spots": 791,
+      "expected_genes": 14519,
+      "expected_nonzero_values": 3664806,
+      "image_width": 2000,
+      "image_height": 1818,
+      "estimated_spot_diameter_hires_px": 11.4881,
+      "gene_symbol_occurrence_corrections": {
+        "2-Mar": ["Marc2", "March2"]
+      },
+      "sha256": {
+        "counts": "b687decfb11782fadf0ccc3fe6bb2a175a6ef7d94a0d33a6d4d8004671fd8b18",
+        "metadata": "2bf68a34773520236dd17b6faac077cf4f8558bc39a2685fa3478cd4584a62a8",
+        "image": "d5840b1e5f9cc8bb91b9f59bae093cf9ee3055f584ed05bb0792a6444392c980"
+      }
+    }
+  ]
+}
