@@ -26,7 +26,13 @@ class FakeSpatialService {
 
   getCellTypes(): Observable<SpatialCellTypesResponse> {
     return of({
-      cellTypes: [],
+      cellTypes: [
+        'CM4', 'CM1', 'EndoEC', 'CM3', 'FB', 'EPI', 'Macrophage', 'Pericyte/SMC', 'EC', 'CM2', 'CM5'
+      ].map((name, index) => ({
+        cell_type_id: index + 1,
+        source_name: name,
+        display_name: name
+      })),
       aliases: [
         'Cardiomyocytes', 'Fibroblasts', 'Immune cells', 'Endothelial cells',
         'Endocardial cells', 'Epicardial cells', 'CM1', 'CM2', 'CM3', 'CM4',
@@ -139,6 +145,11 @@ describe('SpatialComponent', () => {
     expect(component.visibleSpotCount).toBe(1);
   });
 
+  it('uses the full-page spatial display defaults', () => {
+    expect(component.spotOpacity).toBe(80);
+    expect(component.spotSize).toBe(8);
+  });
+
   it('exposes every UI cell-type alias', () => {
     expect(component.cellTypes.length).toBe(12);
     expect(component.cellTypes).toContain('CM2');
@@ -189,6 +200,19 @@ describe('SpatialComponent', () => {
     expect(component.selectedGene).toBe('Acta2');
     expect(component.geneNotFound).toBeFalse();
     expect(spatialService.geneLayerCalls).toContain(['GSM5268646', 'Acta2']);
+  });
+
+  it('calculates an automatic view around the occupied tissue spots', () => {
+    const spots = [
+      { ...component.spotsForPanel(component.visiblePanels[0])[0], spotId: 1, x: .25, y: .35 },
+      { ...component.spotsForPanel(component.visiblePanels[0])[0], spotId: 2, x: .65, y: .7 }
+    ];
+
+    const fit = component.calculateClusterFit(spots);
+
+    expect(fit.zoom).toBeGreaterThan(100);
+    expect(fit.centerX).toBeCloseTo(.45);
+    expect(fit.centerY).toBeCloseTo(.525);
   });
 
   it('pans a zoomed image and resets its position', () => {
@@ -266,5 +290,35 @@ describe('SpatialComponent', () => {
 
     expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Fibroblasts']);
     expect(component.normalizationLabel).toBe('deconvolution proportion');
+  });
+
+  it('loads every published cell type and renders a pie for each spot', () => {
+    component.setViewMode('cellType');
+    component.showAllCellTypes = true;
+    component.onShowAllCellTypesChange();
+
+    const panel = component.visiblePanels[0];
+    const spot = component.spotsForPanel(panel)[0];
+
+    expect(component.sourceCellTypes.length).toBe(11);
+    expect(component.hasAllCellTypesPanel).toBeTrue();
+    expect(component.cellTypeLegend.length).toBe(11);
+    expect(component.pieGradient(spot, panel)).toContain('conic-gradient');
+    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'CM1']);
+    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Pericyte/SMC']);
+    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Fibroblasts']);
+    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Endothelial cells']);
+  });
+
+  it('shows every pie component for a selected spot', () => {
+    component.setViewMode('cellType');
+    component.showAllCellTypes = true;
+    component.onShowAllCellTypesChange();
+    const panel = component.visiblePanels[0];
+
+    component.selectSpot(component.spotsForPanel(panel)[0], panel);
+
+    expect(component.selectedCellTypeProportions.length).toBe(11);
+    expect(component.selectedCellTypeProportions.every(cellType => cellType.value === 0.35)).toBeTrue();
   });
 });

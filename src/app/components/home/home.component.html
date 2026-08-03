@@ -24,10 +24,11 @@
     </div>
     <div class="col-12">
       <h3><span translate="home.cite"></span>
-        <a tabindex="0" class="text-mcaredb text-decoration-none" href="javascript:void(0)" placement="top"
-          [ngbPopover]="'home.citepopup' | translate">
+        <button type="button" class="btn btn-link text-mcaredb text-decoration-none p-0 border-0 align-baseline"
+          placement="top" [ngbPopover]="'home.citepopup' | translate" (click)="copyCitation()"
+          aria-label="Copy citation">
           <i class="fa fa-copy"></i>
-        </a>
+        </button>
       </h3>
       <p>{{AppCitation}}</p>
     </div>

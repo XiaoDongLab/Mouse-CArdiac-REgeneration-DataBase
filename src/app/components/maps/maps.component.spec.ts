@@ -24,12 +24,24 @@ describe('getCuiSpatialContext', () => {
       gene: 'Nckap5',
       cellType: 'CM1',
       surgery: 'MI',
-      timepoint: '3 dpi'
+      timepoint: '3 dpi',
+      allowConditionSwitch: false
     });
   });
 
   it('supports the matching sham 3 dpi sample', () => {
     expect(getCuiSpatialContext({ ...selection, Surgery: 'Sham' }, 'Nckap5')?.surgery).toBe('Sham');
+  });
+
+  it('supports a Cui Sham-vs-MI point with an explicit tissue condition switch', () => {
+    const context = getCuiSpatialContext({
+      ...selection,
+      Surgery: '',
+      Comparison: 'ShamvsMI'
+    }, 'Nckap5');
+
+    expect(context?.surgery).toBe('MI');
+    expect(context?.allowConditionSwitch).toBeTrue();
   });
 
   it('accepts the public Cui PMID and suffixed Cui cluster labels', () => {
@@ -52,6 +64,19 @@ describe('getCuiSpatialContext', () => {
     expect(context?.cellType).toBe('CM1');
   });
 
+  it('maps broad and abbreviated Cui cell labels used by the spatial dataset', () => {
+    expect(getCuiSpatialContext({ ...selection, cell_type: 'Endocardial cells' }, 'Nckap5')?.cellType)
+      .toBe('Endocardial cells');
+    expect(getCuiSpatialContext({ ...selection, cell_type: 'EPI' }, 'Nckap5')?.cellType)
+      .toBe('EPI');
+    expect(getCuiSpatialContext({ ...selection, cell_type: 'Pericyte / SMC' }, 'Nckap5')?.cellType)
+      .toBe('Pericyte/SMC');
+  });
+
+  it('waits for an Ensembl ID to resolve to a spatial gene symbol', () => {
+    expect(getCuiSpatialContext(selection, 'ENSMUSG00000012345')).toBeNull();
+  });
+
   it('does not expose spatial data for another study', () => {
     expect(getCuiSpatialContext({ ...selection, pmid: 33296652 }, 'Nckap5')).toBeNull();
   });
@@ -62,6 +87,18 @@ describe('getCuiSpatialContext', () => {
 
   it('does not expose spatial data for an unsupported Cui cluster', () => {
     expect(getCuiSpatialContext({ ...selection, cell_type: 'Progenitor cell' }, 'Nckap5')).toBeNull();
+  });
+
+  it('returns to UMAP when a new selection is not spatially eligible', () => {
+    const component = new MapsComponent({} as any, {} as any, {} as any);
+    component.selected_info = { ...selection, pmid: 33296652 };
+    component.en_id = 'Nckap5';
+    component.display = 'Spatial';
+
+    component.ngOnChanges({} as any);
+
+    expect(component.spatialContext).toBeNull();
+    expect(component.display).toBe('UMAP');
   });
 
   it('loads study metadata during component initialization', () => {

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription, forkJoin, switchMap } from 'rxjs';
 
@@ -10,6 +11,7 @@ import {
   SpatialSpot,
   SpatialSurgery
 } from '../../services/spatial.service';
+import { SpatialClusterFit, calculateSpatialClusterFit } from '../spatial/spatial-fit';
 
 type PreviewLayerType = 'gene' | 'cellType';
 
@@ -22,7 +24,7 @@ interface PreviewPanel {
 @Component({
   selector: 'app-spatial-preview',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './spatial-preview.component.html',
   styleUrl: './spatial-preview.component.css'
 })
@@ -31,6 +33,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) cellType = '';
   @Input({ required: true }) surgery: SpatialSurgery = 'MI';
   @Input() timepoint: SpatialSample['timepoint'] = '3 dpi';
+  @Input() allowConditionSwitch = false;
 
   sample: SpatialSample | null = null;
   panels: PreviewPanel[] = [];
@@ -41,6 +44,13 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   panX = 0;
   panY = 0;
   isPanning = false;
+  activeSurgery: SpatialSurgery = 'MI';
+  showHistology = true;
+  showSpots = true;
+  spotOpacity = 80;
+  spotSize = 4;
+
+  @ViewChildren('previewViewport') private previewViewports?: QueryList<ElementRef<HTMLElement>>;
 
   private initialized = false;
   private loadSubscription?: Subscription;
@@ -53,16 +63,19 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   private viewportHeight = 0;
   private contentWidth = 0;
   private contentHeight = 0;
+  private fitTimer?: ReturnType<typeof setTimeout>;
 
   constructor(private readonly spatialService: SpatialService) {}
 
   ngOnInit(): void {
+    this.activeSurgery = this.surgery;
     this.initialized = true;
     this.loadLayers();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.initialized) return;
+    if (changes['surgery']) this.activeSurgery = this.surgery;
     if (changes['gene'] || changes['cellType'] || changes['surgery'] || changes['timepoint']) {
       this.loadLayers();
     }
@@ -70,6 +83,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.loadSubscription?.unsubscribe();
+    if (this.fitTimer) clearTimeout(this.fitTimer);
   }
 
   zoomIn(): void {
@@ -86,6 +100,12 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
     this.zoom = 100;
     this.panX = 0;
     this.panY = 0;
+  }
+
+  setSurgery(surgery: SpatialSurgery): void {
+    if (this.activeSurgery === surgery) return;
+    this.activeSurgery = surgery;
+    this.loadLayers();
   }
 
   selectSpot(spot: SpatialSpot): void {
@@ -161,6 +181,10 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
     return spot.spotId;
   }
 
+  calculateClusterFit(spots: SpatialSpot[]): SpatialClusterFit {
+    return calculateSpatialClusterFit(spots);
+  }
+
   loadLayers(): void {
     const gene = this.gene.trim();
     const cellType = this.cellType.trim();
@@ -176,7 +200,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
     this.loadSubscription = this.spatialService.getSamples().pipe(
       switchMap(samples => {
         const sample = samples.find(candidate =>
-          candidate.surgery === this.surgery && candidate.timepoint === this.timepoint
+          candidate.surgery === this.activeSurgery && candidate.timepoint === this.timepoint
         );
         if (!sample) throw new Error('No matching spatial sample');
         this.sample = sample;
@@ -192,11 +216,33 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
           { type: 'cellType', feature: cellType, layer: layers.cellType }
         ];
         this.loading = false;
+        this.scheduleClusterFit();
       },
       error: () => {
         this.loading = false;
         this.loadError = true;
       }
+    });
+  }
+
+  private scheduleClusterFit(): void {
+    if (this.fitTimer) clearTimeout(this.fitTimer);
+    this.fitTimer = setTimeout(() => {
+      const viewport = this.previewViewports?.first?.nativeElement;
+      const spots = this.panels[0]?.layer.spots ?? [];
+      if (!viewport || !spots.length) return;
+
+      const fit = this.calculateClusterFit(spots);
+      const visualCenterX = this.sample?.flipHorizontal ? 1 - fit.centerX : fit.centerX;
+      const scale = fit.zoom / 100;
+      this.viewportWidth = viewport.clientWidth;
+      this.viewportHeight = viewport.clientHeight;
+      this.contentWidth = viewport.clientWidth;
+      this.contentHeight = viewport.clientHeight;
+      this.zoom = fit.zoom;
+      this.panX = -(visualCenterX - .5) * this.contentWidth * scale;
+      this.panY = -(fit.centerY - .5) * this.contentHeight * scale;
+      this.clampPan();
     });
   }
 

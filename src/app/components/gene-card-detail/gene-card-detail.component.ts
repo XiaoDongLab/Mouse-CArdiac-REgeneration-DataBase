@@ -586,7 +586,8 @@ export class GeneCardDetailComponent {
                 lfc: slected_gene.lfc,
                 g_id: slected_gene.plotting_id,
                 PSD: slected_gene.PSD,
-                Surgery: slected_gene.Surgery
+                Surgery: slected_gene.Surgery,
+                Comparison: slected_gene.Comparison
               };
               this.model_selected = true;
             }
@@ -694,7 +695,8 @@ export class GeneCardDetailComponent {
                 lfc: slected_gene.lfc,
                 g_id: slected_gene.plotting_id,
                 PSD: slected_gene.PSD,
-                Surgery: slected_gene.Surgery
+                Surgery: slected_gene.Surgery,
+                Comparison: slected_gene.Comparison
               };
               this.model_selected = true;
             }
@@ -793,7 +795,8 @@ export class GeneCardDetailComponent {
                 lfc: slected_gene.lfc,
                 g_id: slected_gene.plotting_id,
                 PSD: slected_gene.PSD,
-                Surgery: slected_gene.Surgery
+                Surgery: slected_gene.Surgery,
+                Comparison: slected_gene.Comparison
               };
               this.model_selected = true;
             }
@@ -890,7 +893,8 @@ export class GeneCardDetailComponent {
                 lfc: slected_gene.lfc,
                 g_id: slected_gene.plotting_id,
                 PSD: slected_gene.PSD,
-                Surgery: slected_gene.Surgery
+                Surgery: slected_gene.Surgery,
+                Comparison: slected_gene.Comparison
               };
               this.model_selected = true;
             }

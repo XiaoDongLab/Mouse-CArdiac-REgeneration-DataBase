@@ -31,7 +31,7 @@
         }
       </div>
 
-      @if (display === 'tsne' && this.tsne === null) {
+      @if (display === 'TSNE' && this.tsne === null) {
       <div id="myimage" class="col-12">
         <p class="text-muted text-center">
           {{'maps.body.no-tsne' | translate}}
@@ -93,7 +93,8 @@
       @if (display === 'Spatial' && spatialContext) {
         <div class="col-12">
           <app-spatial-preview [gene]="spatialContext.gene" [cellType]="spatialContext.cellType"
-            [surgery]="spatialContext.surgery" [timepoint]="spatialContext.timepoint"></app-spatial-preview>
+            [surgery]="spatialContext.surgery" [timepoint]="spatialContext.timepoint"
+            [allowConditionSwitch]="spatialContext.allowConditionSwitch"></app-spatial-preview>
         </div>
       }
     </div>

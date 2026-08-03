@@ -1,13 +1,55 @@
 <section class="spatial-preview" aria-live="polite">
   <header class="preview-toolbar">
     <div class="preview-context">
-      <span class="condition-badge" [class.mi]="surgery === 'MI'">{{ surgery }}</span>
+      @if (allowConditionSwitch) {
+        <div class="condition-switch" role="group" aria-label="Spatial tissue condition">
+          <button type="button" [class.active]="activeSurgery === 'MI'" [attr.aria-pressed]="activeSurgery === 'MI'"
+            (click)="setSurgery('MI')">MI</button>
+          <button type="button" [class.active]="activeSurgery === 'Sham'" [attr.aria-pressed]="activeSurgery === 'Sham'"
+            (click)="setSurgery('Sham')">Sham</button>
+        </div>
+      } @else {
+        <span class="condition-badge" [class.mi]="activeSurgery === 'MI'">{{ activeSurgery }}</span>
+      }
       <strong>{{ timepoint }}</strong>
       @if (sample) {
         <small>{{ sample.accession }}</small>
       }
     </div>
-    <div class="preview-actions" role="group" aria-label="Spatial zoom controls">
+    <div class="preview-actions" role="group" aria-label="Spatial viewer controls">
+      <details class="display-options">
+        <summary class="btn btn-sm btn-outline-secondary" [title]="'spatial.controls.display' | translate">
+          <i class="fa fa-sliders" aria-hidden="true"></i>
+          <span>{{ 'spatial.controls.display' | translate }}</span>
+        </summary>
+        <div class="display-options-menu">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="previewShowHistology"
+              [(ngModel)]="showHistology" />
+            <label class="form-check-label" for="previewShowHistology">
+              {{ 'spatial.controls.histology' | translate }}
+            </label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="previewShowSpots" [(ngModel)]="showSpots" />
+            <label class="form-check-label" for="previewShowSpots">
+              {{ 'spatial.controls.spots' | translate }}
+            </label>
+          </div>
+          <label for="previewSpotOpacity" class="range-label">
+            <span>{{ 'spatial.controls.opacity' | translate }}</span>
+            <strong>{{ spotOpacity }}%</strong>
+          </label>
+          <input id="previewSpotOpacity" class="form-range" type="range" min="20" max="100" step="2"
+            [(ngModel)]="spotOpacity" [disabled]="!showSpots" />
+          <label for="previewSpotSize" class="range-label">
+            <span>{{ 'spatial.controls.spot_size' | translate }}</span>
+            <strong>{{ spotSize }} px</strong>
+          </label>
+          <input id="previewSpotSize" class="form-range" type="range" min="2" max="24" step="1"
+            [(ngModel)]="spotSize" [disabled]="!showSpots" />
+        </div>
+      </details>
       <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomOut()"
         [disabled]="zoom <= 75" aria-label="Zoom out" title="Zoom out">
         <i class="fa fa-minus" aria-hidden="true"></i>
@@ -52,22 +94,28 @@
             </div>
           </div>
 
-          <div class="preview-viewport" [class.can-pan]="zoom > 100" [class.is-panning]="isPanning"
+          <div #previewViewport class="preview-viewport" [class.can-pan]="zoom > 100" [class.is-panning]="isPanning"
             [style.aspect-ratio]="sample.imageWidth + ' / ' + sample.imageHeight"
             (pointerdown)="beginPan($event)" (pointermove)="movePan($event)"
             (pointerup)="endPan($event)" (pointercancel)="endPan($event)" (dblclick)="resetViewer()">
             <div class="preview-tissue" [class.is-panning]="isPanning" [style.transform]="tissueTransform()">
-              <img [src]="sample.imageUrl" draggable="false" [alt]="'spatial.viewer.heart_alt' | translate" />
-              <div class="preview-spots">
-                @for (spot of panel.layer.spots; track trackSpot($index, spot)) {
-                  <button type="button" class="preview-spot" [class.selected]="isSelected(spot)"
-                    [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
-                    [style.background-color]="spotColor(spot, panel)"
-                    [attr.aria-label]="spot.barcode + ': ' + formatValue(spot.value)"
-                    [title]="spot.barcode + ' · ' + formatValue(spot.value)"
-                    (click)="selectSpot(spot)"></button>
-                }
-              </div>
+              @if (showHistology) {
+                <img [src]="sample.imageUrl" draggable="false" [alt]="'spatial.viewer.heart_alt' | translate" />
+              }
+              @if (showSpots) {
+                <div class="preview-spots" [style.opacity]="spotOpacity / 100">
+                  @for (spot of panel.layer.spots; track trackSpot($index, spot)) {
+                    <button type="button" class="preview-spot" [class.selected]="isSelected(spot)"
+                      [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
+                      [style.width.px]="spotSize" [style.height.px]="spotSize"
+                      [style.border-width.px]="spotSize < 4 ? 0.25 : spotSize < 6 ? 0.5 : 1"
+                      [style.background-color]="spotColor(spot, panel)"
+                      [attr.aria-label]="spot.barcode + ': ' + formatValue(spot.value)"
+                      [title]="spot.barcode + ' · ' + formatValue(spot.value)"
+                      (click)="selectSpot(spot)"></button>
+                  }
+                </div>
+              }
             </div>
           </div>
 

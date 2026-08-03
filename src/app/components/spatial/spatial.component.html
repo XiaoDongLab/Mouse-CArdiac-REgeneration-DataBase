@@ -3,6 +3,7 @@
     <div>
       <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
         <h2 class="mb-0" translate="spatial.title"></h2>
+        <span class="p1-page-badge" translate="spatial.p1_badge"></span>
       </div>
       <p class="text-muted mb-0" translate="spatial.subtitle"></p>
     </div>
@@ -45,6 +46,12 @@
               <option [value]="dataset">{{ dataset }}</option>
             }
           </select>
+        </div>
+
+        <div class="fixed-stage" aria-label="P1 developmental stage">
+          <span translate="spatial.controls.developmental_stage"></span>
+          <strong translate="spatial.controls.p1_stage"></strong>
+          <small translate="spatial.controls.p1_note"></small>
         </div>
 
         <fieldset>
@@ -111,12 +118,19 @@
         @if (viewMode === 'cellType' || comparisonMode === 'feature') {
           <div>
             <label class="form-label" for="spatialCellType" translate="spatial.controls.cell_type"></label>
-            <select id="spatialCellType" class="form-select" [(ngModel)]="selectedCellType"
-              (ngModelChange)="onCellTypeChange()">
-              @for (cellType of cellTypes; track cellType) {
-                <option [value]="cellType">{{ cellType }}</option>
-              }
-            </select>
+            <div class="cell-type-control-row">
+              <select id="spatialCellType" class="form-select" [(ngModel)]="selectedCellType"
+                (ngModelChange)="onCellTypeChange()" [disabled]="showAllCellTypes">
+                @for (cellType of cellTypes; track cellType) {
+                  <option [value]="cellType">{{ cellType }}</option>
+                }
+              </select>
+              <label class="display-all-toggle" for="displayAllCellTypes">
+                <input class="form-check-input" type="checkbox" id="displayAllCellTypes"
+                  [(ngModel)]="showAllCellTypes" (ngModelChange)="onShowAllCellTypesChange()" />
+                <span translate="spatial.controls.display_all"></span>
+              </label>
+            </div>
             <div class="form-text" translate="spatial.controls.estimated_note"></div>
           </div>
         }
@@ -216,16 +230,19 @@
           <section class="sample-view" [attr.aria-label]="panel.sample.label + ' - ' + panel.feature">
             <div class="sample-label">
               <div>
+                <span class="p1-sample-badge">P1</span>
                 <span class="condition-badge" [class.mi]="panel.sample.surgery === 'MI'">{{ panel.sample.surgery }}</span>
                 <strong>{{ panel.sample.timepoint }}</strong>
                 @if (isComparing) {
-                  <span class="panel-feature" [class.cell-type]="panel.viewMode === 'cellType'">{{ panel.feature }}</span>
+                  <span class="panel-feature" [class.cell-type]="panel.viewMode === 'cellType'">
+                    {{ isAllCellTypesPanel(panel) ? ('spatial.controls.all_cell_types' | translate) : panel.feature }}
+                  </span>
                 }
               </div>
               <small>{{ panel.sample.accession }}</small>
             </div>
 
-            <div class="tissue-viewport" [class.can-pan]="zoom > 100 || isComparing" [class.is-panning]="isPanelPanning(panel)"
+            <div #tissueViewport class="tissue-viewport" [class.can-pan]="zoom > 100 || isComparing" [class.is-panning]="isPanelPanning(panel)"
               (pointerdown)="beginPan($event, panel)" (pointermove)="movePan($event)"
               (pointerup)="endPan($event)" (pointercancel)="endPan($event)" (dblclick)="resetViewer()"
               [style.--tissue-aspect]="panel.sample.imageWidth + ' / ' + panel.sample.imageHeight">
@@ -249,9 +266,9 @@
                         [style.border-width.px]="spotSize < 4 ? 0.25 : spotSize < 6 ? 0.5 : 1"
                         [class.tiny]="spotSize < 4"
                         [style.opacity]="spotOpacity / 100"
-                        [style.backgroundColor]="spotColor(spot, panel)"
-                        [attr.aria-label]="spot.barcode + ': ' + formatValue(spot.value)"
-                        [title]="spot.barcode + ' · ' + formatValue(spot.value)"
+                        [style.background]="spotColor(spot, panel)"
+                        [attr.aria-label]="spotLabel(spot, panel)"
+                        [title]="spotLabel(spot, panel)"
                         (click)="selectSpot(spot, panel)">
                       </button>
                     }
@@ -300,6 +317,17 @@
         </div>
         <div class="panel-body">
           <div class="legend-stack">
+            @if (hasAllCellTypesPanel) {
+              <div class="cell-type-pie-legend">
+                @for (cellType of cellTypeLegend; track cellType.name) {
+                  <div>
+                    <span [style.background-color]="cellType.color"></span>
+                    <strong [title]="cellType.label">{{ cellType.label }}</strong>
+                  </div>
+                }
+              </div>
+              <p class="legend-normalization mb-0" translate="spatial.inspector.pie_note"></p>
+            }
             @for (legend of legendEntries; track legend.id) {
               <div class="legend-entry">
                 <div class="legend-heading">
@@ -328,11 +356,13 @@
         <div class="panel-body">
           @if (selectedSpot) {
             <div class="selected-spot-id mb-3">
-              <span class="spot-swatch" [style.backgroundColor]="spotColor(selectedSpot.spot, selectedSpot.panel)"></span>
+              <span class="spot-swatch" [style.background]="spotColor(selectedSpot.spot, selectedSpot.panel)"></span>
               <div>
                 <small class="text-muted">Barcode</small>
                 <strong>{{ selectedSpot.spot.barcode }}</strong>
-                <small class="selected-feature">{{ selectedSpot.panel.feature }}</small>
+                <small class="selected-feature">
+                  {{ isAllCellTypesPanel(selectedSpot.panel) ? ('spatial.controls.all_cell_types' | translate) : selectedSpot.panel.feature }}
+                </small>
               </div>
             </div>
             <div class="selected-measurements">
@@ -348,6 +378,17 @@
                 </div>
               }
             </div>
+            @if (selectedCellTypeProportions.length) {
+              <div class="selected-cell-type-proportions mt-2">
+                @for (cellType of selectedCellTypeProportions; track cellType.name) {
+                  <div>
+                    <span class="spot-swatch small" [style.background-color]="cellType.color"></span>
+                    <span>{{ cellType.label }}</span>
+                    <strong>{{ formatValue(cellType.value) }}</strong>
+                  </div>
+                }
+              </div>
+            }
             <div class="spot-coordinate mt-2">
               <span>X / Y</span>
               <strong>{{ selectedSpot.spot.xHires.toFixed(1) }} / {{ selectedSpot.spot.yHires.toFixed(1) }}</strong>
@@ -374,7 +415,7 @@
             <dl class="sample-metadata">
               <div><dt translate="spatial.inspector.sample"></dt><dd>{{ sample.accession }}</dd></div>
               <div><dt translate="spatial.inspector.platform"></dt><dd>10x Visium</dd></div>
-              <div><dt translate="spatial.inspector.stage"></dt><dd>P1</dd></div>
+              <div><dt translate="spatial.inspector.stage"></dt><dd translate="spatial.controls.p1_stage"></dd></div>
               <div><dt translate="spatial.inspector.condition"></dt><dd>{{ sample.surgery }} · {{ sample.timepoint }}</dd></div>
               <div><dt translate="spatial.inspector.section"></dt><dd>200 μm below LAD ligation</dd></div>
             </dl>

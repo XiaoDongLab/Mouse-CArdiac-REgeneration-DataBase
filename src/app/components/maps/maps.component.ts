@@ -35,6 +35,7 @@ export interface GenomeBrowserSelection {
   g_id: number;
   PSD: number;
   Surgery: string;
+  Comparison?: string;
 }
 
 export interface CuiSpatialContext {
@@ -42,6 +43,7 @@ export interface CuiSpatialContext {
   cellType: string;
   surgery: SpatialSurgery;
   timepoint: '3 dpi';
+  allowConditionSwitch: boolean;
 }
 
 const CUI_STUDY_PMIDS = new Set([32220304, 34489413]);
@@ -69,6 +71,7 @@ const HEART_STUDY_METADATA: Record<number, { title: string; author: string; year
 };
 const CUI_CELL_TYPE_MAP: Record<string, string> = {
   'cardiomyocyte': 'Cardiomyocytes',
+  'cardiomyocytes': 'Cardiomyocytes',
   'cardiomyocyte 1': 'CM1',
   'cardiomyocyte 2': 'CM2',
   'cardiomyocyte 3': 'CM3',
@@ -80,9 +83,25 @@ const CUI_CELL_TYPE_MAP: Record<string, string> = {
   'cm4': 'CM4',
   'cm5': 'CM5',
   'endothelial cell': 'Endothelial cells',
+  'endothelial cells': 'Endothelial cells',
+  'ec': 'EC',
+  'endocardial cell': 'Endocardial cells',
+  'endocardial cells': 'Endocardial cells',
+  'endoec': 'EndoEC',
+  'epicardial cell': 'Epicardial cells',
+  'epicardial cells': 'Epicardial cells',
+  'epi': 'EPI',
   'fibroblast': 'Fibroblasts',
+  'fibroblasts': 'Fibroblasts',
+  'fb': 'FB',
+  'immune cell': 'Immune cells',
+  'immune cells': 'Immune cells',
   'macrophage': 'Macrophage',
-  'mural cell': 'Pericyte/SMC'
+  'macrophages': 'Macrophage',
+  'mural cell': 'Pericyte/SMC',
+  'mural cells': 'Pericyte/SMC',
+  'pericyte/smc': 'Pericyte/SMC',
+  'pericyte / smc': 'Pericyte/SMC'
 };
 
 export function getCuiSpatialContext(
@@ -92,7 +111,8 @@ export function getCuiSpatialContext(
   if (!selection || !CUI_STUDY_PMIDS.has(Number(selection.pmid)) || Number(selection.PSD) !== 3) return null;
 
   const normalizedSurgery = selection.Surgery?.trim().toLocaleLowerCase();
-  if (normalizedSurgery !== 'mi' && normalizedSurgery !== 'sham') return null;
+  const isConditionComparison = !normalizedSurgery && selection.Comparison === 'ShamvsMI';
+  if (normalizedSurgery !== 'mi' && normalizedSurgery !== 'sham' && !isConditionComparison) return null;
 
   const mappedCellTypes = [selection.cell_type, selection.cell_type2, selection.cell_type3]
     .map(label => label?.trim().replace(/\s+/g, ' ').toLocaleLowerCase())
@@ -104,13 +124,15 @@ export function getCuiSpatialContext(
     .filter((cellType): cellType is string => Boolean(cellType));
   const cellType = mappedCellTypes.find(candidate => /^CM[1-5]$/.test(candidate)) ?? mappedCellTypes[0];
   const symbol = gene?.trim();
-  if (!cellType || !symbol) return null;
+  const isUnresolvedEnsemblId = /^ENSMUSG\d+(?:\.\d+)?$/i.test(symbol ?? '');
+  if (!cellType || !symbol || isUnresolvedEnsemblId) return null;
 
   return {
     gene: symbol,
     cellType,
-    surgery: normalizedSurgery === 'mi' ? 'MI' : 'Sham',
-    timepoint: '3 dpi'
+    surgery: normalizedSurgery === 'sham' ? 'Sham' : 'MI',
+    timepoint: '3 dpi',
+    allowConditionSwitch: isConditionComparison
   };
 }
 

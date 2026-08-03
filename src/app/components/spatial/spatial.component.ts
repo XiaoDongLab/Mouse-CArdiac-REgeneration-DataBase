@@ -1,14 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, catchError, debounceTime, distinctUntilChanged, forkJoin, of, switchMap } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Subject, Subscription, catchError, debounceTime, distinctUntilChanged, forkJoin, map, of, switchMap } from 'rxjs';
 
 import {
   SpatialGene,
+  SpatialCellType,
   SpatialLayerResponse,
   SpatialSample,
   SpatialService,
   SpatialSpot,
   SpatialSurgery
 } from '../../services/spatial.service';
+import { SpatialClusterFit, calculateSpatialClusterFit } from './spatial-fit';
 
 type SpatialViewMode = 'gene' | 'cellType';
 type SpatialComparisonMode = 'none' | 'sample' | 'feature';
@@ -38,6 +41,22 @@ interface SelectedSpotMeasurement {
   spot: SpatialSpot;
 }
 
+interface CellTypeLegendEntry {
+  name: string;
+  label: string;
+  color: string;
+}
+
+interface CellTypeProportion extends CellTypeLegendEntry {
+  value: number;
+}
+
+interface LoadedSpatialPanel {
+  panel: SpatialPanel;
+  layer: SpatialLayerResponse;
+  cellTypeLayers?: SpatialLayerResponse[];
+}
+
 interface PanPosition {
   x: number;
   y: number;
@@ -57,6 +76,18 @@ interface PanBounds {
   standalone: false
 })
 export class SpatialComponent implements OnInit, OnDestroy {
+  private readonly allCellTypesFeature = '__all_cell_types__';
+  private readonly cellTypeColors = [
+    '#7b3294', '#d73027', '#4575b4', '#fdae61', '#66a61e', '#e6ab02',
+    '#6a3d9a', '#8c564b', '#1f9e89', '#f46d43', '#c51b7d'
+  ];
+  private readonly sourceCellTypeApiAliases: Record<string, string> = {
+    EndoEC: 'Endocardial cells',
+    FB: 'Fibroblasts',
+    EPI: 'Epicardial cells',
+    Macrophage: 'Immune cells',
+    EC: 'Endothelial cells'
+  };
   readonly datasets = ['Cui et al. 2021'];
   readonly surgeries: SpatialSurgery[] = ['MI', 'Sham'];
   readonly timepoints: SpatialSample['timepoint'][] = ['3 dpi', '7 dpi'];
@@ -64,6 +95,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
   samples: SpatialSample[] = [];
   genes = ['Acta2', 'Nfe2l1', 'Mki67', 'Tnnt2', 'Col1a1', 'Hmox1'];
   cellTypes: string[] = [];
+  sourceCellTypes: SpatialCellType[] = [];
 
   selectedDataset = this.datasets[0];
   selectedSurgery: SpatialSurgery = 'MI';
@@ -72,11 +104,12 @@ export class SpatialComponent implements OnInit, OnDestroy {
   viewMode: SpatialViewMode = 'gene';
   selectedGene = 'Acta2';
   selectedCellType = 'Fibroblasts';
+  showAllCellTypes = false;
   comparisonMode: SpatialComparisonMode = 'none';
   showHistology = true;
   showSpots = true;
-  spotOpacity = 78;
-  spotSize = 12;
+  spotOpacity = 80;
+  spotSize = 8;
   zoom = 100;
   panX = 0;
   panY = 0;
@@ -88,7 +121,12 @@ export class SpatialComponent implements OnInit, OnDestroy {
   layerError = false;
   geneNotFound = false;
 
+  @ViewChildren('tissueViewport') private tissueViewports?: QueryList<ElementRef<HTMLElement>>;
+
   private readonly layers = new Map<string, SpatialLayerResponse>();
+  private readonly allCellTypeLayers = new Map<string, Map<string, SpatialLayerResponse>>();
+  private readonly allCellTypeValues = new Map<string, Map<string, number[]>>();
+  private readonly pieGradients = new Map<string, string>();
   private readonly geneSearch = new Subject<string>();
   private readonly subscriptions = new Subscription();
   private layerRequestId = 0;
@@ -104,8 +142,12 @@ export class SpatialComponent implements OnInit, OnDestroy {
   private activePanKey: string | null = null;
   private readonly samplePanPositions = new Map<string, PanPosition>();
   private readonly panBounds = new Map<string, PanBounds>();
+  private autoFitTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private readonly spatialService: SpatialService) {}
+  constructor(
+    private readonly spatialService: SpatialService,
+    private readonly translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -128,6 +170,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
         next: ({ samples, cellTypes }) => {
           this.samples = samples;
           this.cellTypes = cellTypes.aliases;
+          this.sourceCellTypes = cellTypes.cellTypes;
           this.loadingMetadata = false;
           this.metadataError = false;
           this.ensureValidSelection();
@@ -143,6 +186,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    if (this.autoFitTimer) clearTimeout(this.autoFitTimer);
   }
 
   get activeSample(): SpatialSample | null {
@@ -162,9 +206,12 @@ export class SpatialComponent implements OnInit, OnDestroy {
   }
 
   get displayedFeature(): string {
+    const cellTypeFeature = this.showAllCellTypes
+      ? this.translate.instant('spatial.controls.all_cell_types')
+      : this.selectedCellType;
     return this.comparisonMode === 'feature'
-      ? `${this.selectedGene} / ${this.selectedCellType}`
-      : this.viewMode === 'gene' ? this.selectedGene : this.selectedCellType;
+      ? `${this.selectedGene} / ${cellTypeFeature}`
+      : this.viewMode === 'gene' ? this.selectedGene : cellTypeFeature;
   }
 
   get comparisonSample(): SpatialSample | null {
@@ -180,7 +227,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
     if (this.comparisonMode === 'feature') {
       return [
         this.createPanel(active, 'gene', this.selectedGene),
-        this.createPanel(active, 'cellType', this.selectedCellType)
+        this.createPanel(active, 'cellType', this.currentCellTypeFeature())
       ];
     }
 
@@ -213,7 +260,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
   }
 
   get legendEntries(): SpatialLegend[] {
-    const panels = this.visiblePanels;
+    const panels = this.visiblePanels.filter(panel => !this.isAllCellTypesPanel(panel));
     const sharedMaximum = this.useSharedScale ? this.sharedMaximum() : null;
     return panels.map(panel => ({
       id: panel.id,
@@ -233,11 +280,32 @@ export class SpatialComponent implements OnInit, OnDestroy {
     const selected = this.selectedSpot;
     return this.visiblePanels.flatMap(panel => {
       if (panel.sample.accession !== selected.panel.sample.accession) return [];
+      if (this.isAllCellTypesPanel(panel)) return [];
       const spot = this.spotsForPanel(panel).find(candidate =>
         candidate.spotId === selected.spot.spotId || candidate.barcode === selected.spot.barcode
       );
       return spot ? [{ panel, spot }] : [];
     });
+  }
+
+  get hasAllCellTypesPanel(): boolean {
+    return this.visiblePanels.some(panel => this.isAllCellTypesPanel(panel));
+  }
+
+  get cellTypeLegend(): CellTypeLegendEntry[] {
+    return this.sourceCellTypes.map((cellType, index) => ({
+      name: cellType.source_name,
+      label: cellType.display_name || cellType.source_name,
+      color: this.cellTypeColors[index % this.cellTypeColors.length]
+    }));
+  }
+
+  get selectedCellTypeProportions(): CellTypeProportion[] {
+    if (!this.selectedSpot || !this.hasAllCellTypesPanel) return [];
+    const accession = this.selectedSpot.panel.sample.accession;
+    const values = this.allCellTypeValues.get(accession)?.get(this.selectedSpot.spot.barcode);
+    if (!values) return [];
+    return this.cellTypeLegend.map((entry, index) => ({ ...entry, value: values[index] ?? 0 }));
   }
 
   setViewMode(mode: SpatialViewMode): void {
@@ -295,7 +363,13 @@ export class SpatialComponent implements OnInit, OnDestroy {
   }
 
   onCellTypeChange(): void {
+    if (this.showAllCellTypes) return;
     this.clearSelectionAndLoad();
+  }
+
+  onShowAllCellTypesChange(): void {
+    this.selectedSpot = null;
+    this.loadVisibleLayers();
   }
 
   selectSpot(spot: SpatialSpot, panel: SpatialPanel): void {
@@ -333,23 +407,17 @@ export class SpatialComponent implements OnInit, OnDestroy {
     ].join('\t')];
 
     panels.forEach(panel => {
+      if (this.isAllCellTypesPanel(panel)) {
+        const layers = this.allCellTypeLayers.get(panel.sample.accession);
+        this.sourceCellTypes.forEach(cellType => {
+          const layer = layers?.get(cellType.source_name);
+          if (layer) this.appendDownloadRows(rows, panel, layer, cellType.source_name);
+        });
+        return;
+      }
       const layer = this.layerForPanel(panel);
       if (!layer) return;
-      layer.spots.forEach(spot => rows.push([
-        panel.sample.accession,
-        panel.sample.surgery,
-        panel.sample.timepoint,
-        panel.sample.replicate,
-        panel.viewMode === 'gene' ? 'gene_expression' : 'cell_type_proportion',
-        panel.feature,
-        layer.feature.normalization,
-        spot.barcode,
-        spot.xHires,
-        spot.yHires,
-        spot.inTissue ? 1 : 0,
-        spot.rawCount ?? '',
-        spot.value
-      ].map(value => this.tsvValue(value)).join('\t')));
+      this.appendDownloadRows(rows, panel, layer, panel.feature);
     });
 
     const blob = new Blob([`${rows.join('\n')}\n`], { type: 'text/tab-separated-values;charset=utf-8' });
@@ -438,6 +506,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
   }
 
   spotColor(spot: SpatialSpot, panel: SpatialPanel): string {
+    if (this.isAllCellTypesPanel(panel)) return this.pieGradient(spot, panel);
     const maximum = this.useSharedScale ? this.sharedMaximum() : this.panelMaximum(panel);
     const normalized = maximum > 0 ? Math.max(0, Math.min(1, spot.value / maximum)) : 0;
     if (panel.viewMode === 'cellType') {
@@ -450,30 +519,69 @@ export class SpatialComponent implements OnInit, OnDestroy {
     return `hsl(331 ${saturation}% ${lightness}%)`;
   }
 
+  pieGradient(spot: SpatialSpot, panel: SpatialPanel): string {
+    const cacheKey = `${panel.sample.accession}:${spot.barcode}`;
+    const cached = this.pieGradients.get(cacheKey);
+    if (cached) return cached;
+
+    const values = this.allCellTypeValues.get(panel.sample.accession)?.get(spot.barcode) ?? [];
+    const total = values.reduce((sum, value) => sum + Math.max(0, value), 0);
+    if (total <= 0) return 'transparent';
+
+    let end = 0;
+    const segments = values.map((value, index) => {
+      const start = end;
+      end += Math.max(0, value) / total * 100;
+      const color = this.cellTypeColors[index % this.cellTypeColors.length];
+      return `${color} ${start.toFixed(3)}% ${end.toFixed(3)}%`;
+    });
+    const gradient = `conic-gradient(${segments.join(', ')})`;
+    this.pieGradients.set(cacheKey, gradient);
+    return gradient;
+  }
+
+  isAllCellTypesPanel(panel: SpatialPanel): boolean {
+    return panel.viewMode === 'cellType' && panel.feature === this.allCellTypesFeature;
+  }
+
   formatValue(value: number): string {
     return value < 0.01 && value > 0 ? value.toPrecision(2) : value.toFixed(2);
+  }
+
+  spotLabel(spot: SpatialSpot, panel: SpatialPanel): string {
+    if (this.isAllCellTypesPanel(panel)) {
+      return `${spot.barcode}: ${this.translate.instant('spatial.controls.all_cell_types')}`;
+    }
+    return `${spot.barcode}: ${this.formatValue(spot.value)}`;
   }
 
   trackSpot(_: number, spot: SpatialSpot): number {
     return spot.spotId;
   }
 
+  calculateClusterFit(spots: SpatialSpot[]): SpatialClusterFit {
+    return calculateSpatialClusterFit(spots);
+  }
+
   loadVisibleLayers(): void {
     const panels = this.visiblePanels;
     if (!panels.length || panels.some(panel => !panel.feature.trim())) return;
 
+    if (this.autoFitTimer) clearTimeout(this.autoFitTimer);
     const requestId = ++this.layerRequestId;
     this.loadingLayers = true;
     this.layerError = false;
-    const requests = panels.map(panel => panel.viewMode === 'gene'
-      ? this.spatialService.getGeneLayer(panel.sample.accession, panel.feature)
-      : this.spatialService.getCellTypeLayer(panel.sample.accession, panel.feature));
+    const requests = panels.map(panel => this.loadPanel(panel));
 
     this.subscriptions.add(forkJoin(requests).subscribe({
-      next: layers => {
+      next: loadedPanels => {
         if (requestId !== this.layerRequestId) return;
-        layers.forEach((layer, index) => this.layers.set(this.layerKey(panels[index]), layer));
+        loadedPanels.forEach(loaded => {
+          this.layers.set(this.layerKey(loaded.panel), loaded.layer);
+          if (loaded.cellTypeLayers) this.indexAllCellTypeLayers(loaded.panel.sample, loaded.cellTypeLayers);
+        });
         this.loadingLayers = false;
+        this.scheduleAutoFit();
       },
       error: () => {
         if (requestId !== this.layerRequestId) return;
@@ -482,6 +590,51 @@ export class SpatialComponent implements OnInit, OnDestroy {
         this.layerError = true;
       }
     }));
+  }
+
+  private scheduleAutoFit(): void {
+    if (this.autoFitTimer) clearTimeout(this.autoFitTimer);
+    this.autoFitTimer = setTimeout(() => this.autoFitVisiblePanels());
+  }
+
+  private autoFitVisiblePanels(): void {
+    const panels = this.visiblePanels;
+    const viewports = this.tissueViewports?.toArray() ?? [];
+    if (!panels.length || viewports.length < panels.length) return;
+
+    const measurements = panels.flatMap((panel, index) => {
+      const viewport = viewports[index].nativeElement;
+      const content = viewport.querySelector<HTMLElement>('.tissue-layer');
+      const spots = this.spotsForPanel(panel);
+      if (!content || !spots.length || !viewport.clientWidth || !viewport.clientHeight) return [];
+
+      const fit = this.calculateClusterFit(spots);
+      const bounds: PanBounds = {
+        viewportWidth: viewport.clientWidth,
+        viewportHeight: viewport.clientHeight,
+        contentWidth: content.offsetWidth,
+        contentHeight: content.offsetHeight
+      };
+      const widthZoom = .84 * bounds.viewportWidth / (fit.occupiedWidth * bounds.contentWidth);
+      const heightZoom = .84 * bounds.viewportHeight / (fit.occupiedHeight * bounds.contentHeight);
+      return [{ panel, fit, bounds, zoom: Math.max(1, Math.min(2.5, widthZoom, heightZoom)) }];
+    });
+    if (!measurements.length) return;
+
+    this.zoom = Math.floor(Math.min(...measurements.map(measurement => measurement.zoom)) * 100);
+    this.resetPan();
+    const scale = this.zoom / 100;
+    measurements.forEach(({ panel, fit, bounds }) => {
+      const key = this.panKey(panel);
+      const visualCenterX = panel.sample.flipHorizontal ? 1 - fit.centerX : fit.centerX;
+      this.panBounds.set(key, bounds);
+      const position = this.clampedPanPosition(
+        key,
+        -(visualCenterX - .5) * bounds.contentWidth * scale,
+        -(fit.centerY - .5) * bounds.contentHeight * scale
+      );
+      this.setPanPosition(key, position);
+    });
   }
 
   private createPanel(sample: SpatialSample, viewMode: SpatialViewMode, feature: string): SpatialPanel {
@@ -493,8 +646,99 @@ export class SpatialComponent implements OnInit, OnDestroy {
     };
   }
 
+  private loadPanel(panel: SpatialPanel) {
+    if (!this.isAllCellTypesPanel(panel)) {
+      const request = panel.viewMode === 'gene'
+        ? this.spatialService.getGeneLayer(panel.sample.accession, panel.feature)
+        : this.spatialService.getCellTypeLayer(panel.sample.accession, panel.feature);
+      return request.pipe(map(layer => ({ panel, layer } as LoadedSpatialPanel)));
+    }
+
+    const cached = this.allCellTypeLayers.get(panel.sample.accession);
+    const cachedLayers = this.sourceCellTypes
+      .map(cellType => cached?.get(cellType.source_name))
+      .filter((layer): layer is SpatialLayerResponse => Boolean(layer));
+    if (cachedLayers.length === this.sourceCellTypes.length && cachedLayers.length > 0) {
+      return of({
+        panel,
+        layer: this.createAllCellTypesLayer(cachedLayers),
+        cellTypeLayers: cachedLayers
+      } as LoadedSpatialPanel);
+    }
+
+    const requests = this.sourceCellTypes.map(cellType =>
+      this.spatialService.getCellTypeLayer(
+        panel.sample.accession,
+        this.sourceCellTypeApiAliases[cellType.source_name] ?? cellType.source_name
+      )
+    );
+    return forkJoin(requests).pipe(map(cellTypeLayers => ({
+      panel,
+      layer: this.createAllCellTypesLayer(cellTypeLayers),
+      cellTypeLayers
+    } as LoadedSpatialPanel)));
+  }
+
+  private createAllCellTypesLayer(cellTypeLayers: SpatialLayerResponse[]): SpatialLayerResponse {
+    const base = cellTypeLayers[0];
+    return {
+      ...base,
+      feature: {
+        type: 'cell_type',
+        name: this.allCellTypesFeature,
+        normalization: 'deconvolution proportions'
+      }
+    };
+  }
+
+  private indexAllCellTypeLayers(sample: SpatialSample, layers: SpatialLayerResponse[]): void {
+    const layerMap = new Map<string, SpatialLayerResponse>();
+    const valuesByBarcode = new Map<string, number[]>();
+    layers.forEach((layer, index) => {
+      const sourceName = this.sourceCellTypes[index]?.source_name ?? layer.feature.name;
+      layerMap.set(sourceName, layer);
+      layer.spots.forEach(spot => {
+        const values = valuesByBarcode.get(spot.barcode) ?? new Array(layers.length).fill(0);
+        values[index] = spot.value;
+        valuesByBarcode.set(spot.barcode, values);
+      });
+    });
+    this.allCellTypeLayers.set(sample.accession, layerMap);
+    this.allCellTypeValues.set(sample.accession, valuesByBarcode);
+    [...this.pieGradients.keys()]
+      .filter(key => key.startsWith(`${sample.accession}:`))
+      .forEach(key => this.pieGradients.delete(key));
+  }
+
+  private appendDownloadRows(
+    rows: string[],
+    panel: SpatialPanel,
+    layer: SpatialLayerResponse,
+    feature: string
+  ): void {
+    layer.spots.forEach(spot => rows.push([
+      panel.sample.accession,
+      panel.sample.surgery,
+      panel.sample.timepoint,
+      panel.sample.replicate,
+      panel.viewMode === 'gene' ? 'gene_expression' : 'cell_type_proportion',
+      feature,
+      layer.feature.normalization,
+      spot.barcode,
+      spot.xHires,
+      spot.yHires,
+      spot.inTissue ? 1 : 0,
+      spot.rawCount ?? '',
+      spot.value
+    ].map(value => this.tsvValue(value)).join('\t')));
+  }
+
   private currentFeature(): string {
-    return this.viewMode === 'gene' ? this.selectedGene : this.selectedCellType;
+    return this.viewMode === 'gene' ? this.selectedGene : this.currentCellTypeFeature();
+  }
+
+  private currentCellTypeFeature(): string {
+    return this.showAllCellTypes ? this.allCellTypesFeature : this.selectedCellType;
   }
 
   private layerKey(panel: SpatialPanel): string {

@@ -50,10 +50,96 @@
   background: #fde4ed;
 }
 
+.condition-switch {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+
+.condition-switch button {
+  min-width: 42px;
+  padding: .18rem .45rem;
+  border: 0;
+  color: var(--bs-secondary-color);
+  background: var(--bs-body-bg);
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.condition-switch button + button {
+  border-left: 1px solid var(--bs-border-color);
+}
+
+.condition-switch button.active {
+  color: #fff;
+  background: #9b224d;
+}
+
 .preview-actions .btn {
   width: 30px;
   height: 30px;
   padding: 0;
+}
+
+.preview-actions .display-options > summary.btn {
+  width: auto;
+  min-width: 30px;
+  padding-inline: .5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  list-style: none;
+}
+
+.display-options {
+  position: relative;
+}
+
+.display-options > summary::-webkit-details-marker {
+  display: none;
+}
+
+.display-options[open] > summary {
+  color: var(--bs-btn-active-color);
+  background: var(--bs-btn-active-bg);
+  border-color: var(--bs-btn-active-border-color);
+}
+
+.display-options-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + .4rem);
+  right: 0;
+  width: min(260px, calc(100vw - 2rem));
+  padding: .75rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+  box-shadow: 0 .5rem 1.25rem rgba(33, 27, 31, .16);
+}
+
+.display-options-menu .form-check + .form-check {
+  margin-top: .45rem;
+}
+
+.range-label {
+  margin-top: .7rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--bs-secondary-color);
+  font-size: .75rem;
+}
+
+.range-label strong {
+  color: var(--bs-body-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.display-options-menu .form-range {
+  display: block;
+  margin: .15rem 0 0;
 }
 
 .zoom-value {
@@ -165,8 +251,6 @@
 
 .preview-spot {
   position: absolute;
-  width: 6px;
-  height: 6px;
   padding: 0;
   transform: translate(-50%, -50%);
   border: .5px solid rgba(255, 255, 255, .65);

@@ -77,4 +77,4 @@ export class AppComponent implements OnInit {
 export const AppVersion = "2.2512.01.1";
 export const AppCompileDate = "20251204";
 export const AppBranch = "main";
-export const AppCitation = "Abcd, E., 2025, https://mcaredb.org/";
+export const AppCitation = "Shea, A., Cui, J., Li, M., Leonard, R. J., Bartz, J., Nguyen, T., Zhang, J., Garry, D. J., & Dong, X. (2025). Mouse Cardiac Regeneration Database (MCAREDB): a single-cell atlas of neonatal cardiac regeneration in mice. bioRxiv. https://doi.org/10.64898/2025.12.22.696074";
