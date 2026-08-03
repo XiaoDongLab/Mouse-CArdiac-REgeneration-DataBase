@@ -76,7 +76,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
   showHistology = true;
   showSpots = true;
   spotOpacity = 78;
-  spotSize = 12;
+  spotSize = 0.5;
   zoom = 100;
   panX = 0;
   panY = 0;

@@ -148,9 +148,9 @@
 
         <div>
           <label for="spotSize" class="form-label d-flex justify-content-between">
-            <span translate="spatial.controls.spot_size"></span><span>{{ spotSize }} px</span>
+            <span translate="spatial.controls.spot_size"></span><span>{{ spotSize }} rem / {{ spotSize * 16 }} px</span>
           </label>
-          <input id="spotSize" class="form-range" type="range" min="2" max="24" step="1"
+          <input id="spotSize" class="form-range" type="range" min="0.1" max="1" step="0.1"
             [(ngModel)]="spotSize" />
         </div>
       </div>
@@ -245,7 +245,7 @@
                       <button type="button" class="spatial-spot"
                         [class.selected]="isSpotSelected(spot, panel)"
                         [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
-                        [style.width.px]="spotSize" [style.height.px]="spotSize"
+                        [style.width.rem]="spotSize" [style.height.rem]="spotSize"
                         [style.border-width.px]="spotSize < 4 ? 0.25 : spotSize < 6 ? 0.5 : 1"
                         [class.tiny]="spotSize < 4"
                         [style.opacity]="spotOpacity / 100"
