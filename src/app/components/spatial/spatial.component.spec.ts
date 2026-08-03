@@ -147,7 +147,7 @@ describe('SpatialComponent', () => {
 
   it('uses the full-page spatial display defaults', () => {
     expect(component.spotOpacity).toBe(80);
-    expect(component.spotSize).toBe(8);
+    expect(component.spotSize).toBe(0.5);
   });
 
   it('exposes every UI cell-type alias', () => {
