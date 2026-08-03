@@ -68,6 +68,19 @@ class FakeSpatialService {
 
   getCellTypeLayer(accession: string, cellType: string): Observable<SpatialLayerResponse> {
     this.cellTypeLayerCalls.push([accession, cellType]);
+    const values: Record<string, number> = {
+      CM1: 0.8,
+      CM2: 0.7,
+      CM3: 0.6,
+      CM4: 0.5,
+      CM5: 0.4,
+      Fibroblasts: 0.35,
+      'Endothelial cells': 0.3,
+      'Endocardial cells': 0.25,
+      'Pericyte/SMC': 0.2,
+      'Immune cells': 0.15,
+      'Epicardial cells': 0
+    };
     return of({
       sample: this.samples.find(sample => sample.accession === accession)!,
       feature: { type: 'cell_type', name: cellType, normalization: 'deconvolution proportion' },
@@ -79,7 +92,7 @@ class FakeSpatialService {
         xHires: 500,
         yHires: 1000,
         inTissue: true,
-        value: 0.35
+        value: values[cellType] ?? 0.35
       }],
       min: 0,
       max: 1
@@ -147,7 +160,14 @@ describe('SpatialComponent', () => {
 
   it('uses the full-page spatial display defaults', () => {
     expect(component.spotOpacity).toBe(80);
-    expect(component.spotSize).toBe(0.5);
+    expect(component.spotSize).toBe(1.125);
+  });
+
+  it('formats cell-type proportions as percentages for spot details', () => {
+    expect(component.formatProportion(0.35)).toBe('35%');
+    expect(component.formatProportion(0.075)).toBe('7.5%');
+    expect(component.formatProportion(0.0015)).toBe('0.15%');
+    expect(component.formatProportion(0)).toBe('0%');
   });
 
   it('exposes every UI cell-type alias', () => {
@@ -303,6 +323,16 @@ describe('SpatialComponent', () => {
     expect(component.sourceCellTypes.length).toBe(11);
     expect(component.hasAllCellTypesPanel).toBeTrue();
     expect(component.cellTypeLegend.length).toBe(11);
+    expect(component.cellTypeLegend.map(cellType => cellType.name)).toEqual([
+      'CM1', 'CM2', 'CM3', 'CM4', 'CM5',
+      'FB', 'EC', 'EndoEC', 'Pericyte/SMC', 'Macrophage', 'EPI'
+    ]);
+    expect(component.cellTypeLegend.map(cellType => cellType.label)).toEqual([
+      'CM1', 'CM2', 'CM3', 'CM4', 'CM5',
+      'Fibroblasts', 'Endothelial cells', 'Endocardial cells', 'Pericyte/SMC',
+      'Immune cells', 'Epicardial cells'
+    ]);
+    expect(new Set(component.cellTypeLegend.map(cellType => cellType.color)).size).toBe(11);
     expect(component.pieGradient(spot, panel)).toContain('conic-gradient');
     expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'CM1']);
     expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Pericyte/SMC']);
@@ -318,7 +348,14 @@ describe('SpatialComponent', () => {
 
     component.selectSpot(component.spotsForPanel(panel)[0], panel);
 
-    expect(component.selectedCellTypeProportions.length).toBe(11);
-    expect(component.selectedCellTypeProportions.every(cellType => cellType.value === 0.35)).toBeTrue();
+    expect(component.selectedCellTypeProportions.length).toBe(10);
+    expect(component.selectedCellTypeProportions.map(cellType => cellType.name)).toEqual([
+      'CM1', 'CM2', 'CM3', 'CM4', 'CM5',
+      'FB', 'EC', 'EndoEC', 'Pericyte/SMC', 'Macrophage'
+    ]);
+    expect(component.selectedCellTypeProportions.map(cellType => cellType.value)).toEqual([
+      0.8, 0.7, 0.6, 0.5, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15
+    ]);
+    expect(component.selectedCellTypeProportions.some(cellType => cellType.name === 'EPI')).toBeFalse();
   });
 });

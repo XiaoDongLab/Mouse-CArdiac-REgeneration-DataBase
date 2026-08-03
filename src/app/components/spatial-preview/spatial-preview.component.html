@@ -103,11 +103,12 @@
                 <img [src]="sample.imageUrl" draggable="false" [alt]="'spatial.viewer.heart_alt' | translate" />
               }
               @if (showSpots) {
-                <div class="preview-spots" [style.opacity]="spotOpacity / 100">
+                <div class="preview-spots" [style.opacity]="spotOpacity / 100"
+                  [style.--spot-counter-scale]="100 / zoom">
                   @for (spot of panel.layer.spots; track trackSpot($index, spot)) {
                     <button type="button" class="preview-spot" [class.selected]="isSelected(spot)"
                       [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
-                      [style.width.px]="spotSize" [style.height.px]="spotSize"
+                      [style.width.px]="spotSize"
                       [style.border-width.px]="spotSize < 4 ? 0.25 : spotSize < 6 ? 0.5 : 1"
                       [style.background-color]="spotColor(spot, panel)"
                       [attr.aria-label]="spot.barcode + ': ' + formatValue(spot.value)"

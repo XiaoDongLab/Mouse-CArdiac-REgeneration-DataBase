@@ -48,7 +48,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   showHistology = true;
   showSpots = true;
   spotOpacity = 80;
-  spotSize = 4;
+  spotSize = 9;
 
   @ViewChildren('previewViewport') private previewViewports?: QueryList<ElementRef<HTMLElement>>;
 

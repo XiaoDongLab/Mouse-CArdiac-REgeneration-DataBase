@@ -40,7 +40,7 @@ describe('SpatialPreviewComponent', () => {
     expect(component.showHistology).toBeTrue();
     expect(component.showSpots).toBeTrue();
     expect(component.spotOpacity).toBe(80);
-    expect(component.spotSize).toBe(4);
+    expect(component.spotSize).toBe(9);
   });
 
   it('calculates an automatic view around the occupied tissue spots', () => {

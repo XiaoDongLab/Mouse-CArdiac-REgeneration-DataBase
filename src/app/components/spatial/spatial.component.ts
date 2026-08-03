@@ -45,6 +45,7 @@ interface CellTypeLegendEntry {
   name: string;
   label: string;
   color: string;
+  sourceIndex: number;
 }
 
 interface CellTypeProportion extends CellTypeLegendEntry {
@@ -77,11 +78,27 @@ interface PanBounds {
 })
 export class SpatialComponent implements OnInit, OnDestroy {
   private readonly allCellTypesFeature = '__all_cell_types__';
-  private readonly cellTypeColors = [
-    '#7b3294', '#d73027', '#4575b4', '#fdae61', '#66a61e', '#e6ab02',
-    '#6a3d9a', '#8c564b', '#1f9e89', '#f46d43', '#c51b7d'
+  private readonly cellTypeLegendOrder = [
+    'CM1', 'CM2', 'CM3', 'CM4', 'CM5',
+    'FB', 'EC', 'EndoEC', 'Pericyte/SMC', 'Macrophage', 'EPI'
   ];
-  private readonly sourceCellTypeApiAliases: Record<string, string> = {
+  private readonly cellTypeColors: Record<string, string> = {
+    CM1: '#0057b8',
+    CM2: '#f28e2b',
+    CM3: '#2e8540',
+    CM4: '#8e44ad',
+    CM5: '#d62728',
+    FB: '#8c564b',
+    EC: '#00a6d2',
+    EndoEC: '#e83e8c',
+    'Pericyte/SMC': '#6b7280',
+    Macrophage: '#c49a00',
+    EPI: '#111827'
+  };
+  private readonly fallbackCellTypeColors = [
+    '#3b82f6', '#f97316', '#22c55e', '#a855f7', '#ef4444', '#14b8a6'
+  ];
+  private readonly sourceCellTypeAliases: Record<string, string> = {
     EndoEC: 'Endocardial cells',
     FB: 'Fibroblasts',
     EPI: 'Epicardial cells',
@@ -109,7 +126,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
   showHistology = true;
   showSpots = true;
   spotOpacity = 80;
-  spotSize = 0.5;
+  spotSize = 1.125;
   zoom = 100;
   panX = 0;
   panY = 0;
@@ -293,11 +310,19 @@ export class SpatialComponent implements OnInit, OnDestroy {
   }
 
   get cellTypeLegend(): CellTypeLegendEntry[] {
-    return this.sourceCellTypes.map((cellType, index) => ({
-      name: cellType.source_name,
-      label: cellType.display_name || cellType.source_name,
-      color: this.cellTypeColors[index % this.cellTypeColors.length]
-    }));
+    return this.sourceCellTypes
+      .map((cellType, sourceIndex) => ({
+        name: cellType.source_name,
+        label: this.sourceCellTypeAliases[cellType.source_name] ??
+          (cellType.display_name || cellType.source_name),
+        color: this.cellTypeColors[cellType.source_name] ??
+          this.fallbackCellTypeColors[sourceIndex % this.fallbackCellTypeColors.length],
+        sourceIndex
+      }))
+      .sort((left, right) =>
+        this.cellTypeLegendRank(left.name) - this.cellTypeLegendRank(right.name) ||
+        left.label.localeCompare(right.label)
+      );
   }
 
   get selectedCellTypeProportions(): CellTypeProportion[] {
@@ -305,7 +330,13 @@ export class SpatialComponent implements OnInit, OnDestroy {
     const accession = this.selectedSpot.panel.sample.accession;
     const values = this.allCellTypeValues.get(accession)?.get(this.selectedSpot.spot.barcode);
     if (!values) return [];
-    return this.cellTypeLegend.map((entry, index) => ({ ...entry, value: values[index] ?? 0 }));
+    return this.cellTypeLegend
+      .map(entry => ({ ...entry, value: values[entry.sourceIndex] ?? 0 }))
+      .filter(entry => entry.value > 0)
+      .sort((left, right) =>
+        right.value - left.value ||
+        this.cellTypeLegendRank(left.name) - this.cellTypeLegendRank(right.name)
+      );
   }
 
   setViewMode(mode: SpatialViewMode): void {
@@ -529,11 +560,11 @@ export class SpatialComponent implements OnInit, OnDestroy {
     if (total <= 0) return 'transparent';
 
     let end = 0;
-    const segments = values.map((value, index) => {
+    const segments = this.cellTypeLegend.map(cellType => {
+      const value = values[cellType.sourceIndex] ?? 0;
       const start = end;
       end += Math.max(0, value) / total * 100;
-      const color = this.cellTypeColors[index % this.cellTypeColors.length];
-      return `${color} ${start.toFixed(3)}% ${end.toFixed(3)}%`;
+      return `${cellType.color} ${start.toFixed(3)}% ${end.toFixed(3)}%`;
     });
     const gradient = `conic-gradient(${segments.join(', ')})`;
     this.pieGradients.set(cacheKey, gradient);
@@ -546,6 +577,13 @@ export class SpatialComponent implements OnInit, OnDestroy {
 
   formatValue(value: number): string {
     return value < 0.01 && value > 0 ? value.toPrecision(2) : value.toFixed(2);
+  }
+
+  formatProportion(value: number): string {
+    const percentage = Math.max(0, value) * 100;
+    if (percentage === 0) return '0%';
+    const precision = percentage < 1 ? 2 : percentage < 10 ? 1 : 0;
+    return `${percentage.toFixed(precision)}%`;
   }
 
   spotLabel(spot: SpatialSpot, panel: SpatialPanel): string {
@@ -669,7 +707,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
     const requests = this.sourceCellTypes.map(cellType =>
       this.spatialService.getCellTypeLayer(
         panel.sample.accession,
-        this.sourceCellTypeApiAliases[cellType.source_name] ?? cellType.source_name
+        this.sourceCellTypeAliases[cellType.source_name] ?? cellType.source_name
       )
     );
     return forkJoin(requests).pipe(map(cellTypeLayers => ({
@@ -708,6 +746,11 @@ export class SpatialComponent implements OnInit, OnDestroy {
     [...this.pieGradients.keys()]
       .filter(key => key.startsWith(`${sample.accession}:`))
       .forEach(key => this.pieGradients.delete(key));
+  }
+
+  private cellTypeLegendRank(name: string): number {
+    const index = this.cellTypeLegendOrder.indexOf(name);
+    return index === -1 ? this.cellTypeLegendOrder.length : index;
   }
 
   private appendDownloadRows(
