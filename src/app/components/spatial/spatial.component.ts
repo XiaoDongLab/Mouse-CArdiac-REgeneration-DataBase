@@ -159,6 +159,8 @@ export class SpatialComponent implements OnInit, OnDestroy {
   private activePanKey: string | null = null;
   private readonly samplePanPositions = new Map<string, PanPosition>();
   private readonly panBounds = new Map<string, PanBounds>();
+  private readonly dualPanelSpotSize = 0.875;
+  private singlePanelSpotSize = this.spotSize;
   private autoFitTimer?: ReturnType<typeof setTimeout>;
 
   constructor(
@@ -342,12 +344,22 @@ export class SpatialComponent implements OnInit, OnDestroy {
   setViewMode(mode: SpatialViewMode): void {
     if (this.viewMode === mode && this.comparisonMode !== 'feature') return;
     this.viewMode = mode;
-    if (this.comparisonMode === 'feature') this.comparisonMode = 'none';
+    if (this.comparisonMode === 'feature') {
+      this.comparisonMode = 'none';
+      this.spotSize = this.singlePanelSpotSize;
+    }
     this.clearSelectionAndLoad();
   }
 
   setComparisonMode(mode: Exclude<SpatialComparisonMode, 'none'>): void {
-    this.comparisonMode = this.comparisonMode === mode ? 'none' : mode;
+    const previousMode = this.comparisonMode;
+    this.comparisonMode = previousMode === mode ? 'none' : mode;
+    if (previousMode === 'none' && this.comparisonMode !== 'none') {
+      this.singlePanelSpotSize = this.spotSize;
+      this.spotSize = this.dualPanelSpotSize;
+    } else if (previousMode !== 'none' && this.comparisonMode === 'none') {
+      this.spotSize = this.singlePanelSpotSize;
+    }
     this.resetPan();
     this.clearSelectionAndLoad();
   }

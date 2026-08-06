@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, SimpleChanges, Type, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ApexAxisChartSeries, ApexChart, ApexPlotOptions, ApexXAxis, ApexTitleSubtitle, ApexTooltip, ApexYAxis, ApexMarkers, ApexFill, ApexAnnotations, ApexStroke, ApexDataLabels, ChartComponent, ApexTheme } from "ng-apexcharts";
 import { GoTerm } from 'src/app/models/goTerm.model';
 import { DatabaseService } from 'src/app/services/database.service';
@@ -8,7 +8,7 @@ import { LociService } from 'src/app/services/loci.service';
 import { PathwayinfoService } from 'src/app/services/pathwayinfo.service';
 import { GiniScore } from 'src/app/models/giniScore.model';
 import { DatabaseConstsService } from 'src/app/services/database-consts.service';
-import { min, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -37,6 +37,8 @@ export type ChartOptions = {
 })
 export class GoComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
+  private dataRequestId = 0;
+  private displayGeneration = 0;
   // Anthony
   comparisonTypes = [
     { text: 'P1 vs P8: MI - PSD1', value: '1' },  // text is correct value, young_old is becuase i am lazy to change
@@ -284,69 +286,10 @@ export class GoComponent implements OnInit {
         console.error(err);
       }
     });
-    this.prepareData()
   }
 
   ngOnInit(): void {
-    this.prepareData().then(() => {
-
-      if (this.go_terms.length > 0) {
-        const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
-        const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
-        this.go_terms.forEach(term => {
-          term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
-        });
-      }
-
-      // Apply initial filtering
-      this.nes_min = this.nes_min_bound;
-      console.log("NES min:", this.nes_min);
-      this.nes_max = this.nes_max_bound;
-      this.nesFilterChanged().then(() => {
-        this.go_chart_options.annotations = {
-          xaxis: [
-            {
-              x: this.nes_min ?? this.nes_min_bound,
-              borderColor: this.NES_MIN_COLOR,
-              strokeDashArray: 5,
-              label: {
-                text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
-                style: {
-                  color: this.NES_MIN_COLOR,
-                  background: 'transparent',
-                },
-              },
-            },
-            {
-              x: this.nes_max ?? this.nes_max_bound,
-              borderColor: this.NES_MAX_COLOR,
-              strokeDashArray: 5,
-              label: {
-                text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
-                style: {
-                  color: this.NES_MAX_COLOR,
-                  background: 'transparent',
-                },
-              },
-            },
-          ],
-          yaxis: [
-            {
-              y: 0 - Math.log10(this.fdr_cutoff),
-              borderColor: this.FDR_COLOR, // example color for FDR line
-              strokeDashArray: 10,
-              label: {
-                text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
-                style: {
-                  color: this.FDR_COLOR,
-                  background: 'transparent',
-                },
-              },
-            }
-          ]
-        }
-      });
-    });
+    void this.prepareData();
   }
 
 
@@ -428,10 +371,7 @@ export class GoComponent implements OnInit {
 
 
   async createDisplayData() {
-    console.log('Starting createDisplayData');
-    console.log(`NES Filter: min=${this.nes_min}, max=${this.nes_max}`);
-    console.log(`NES Slider Bounds: min_bound=${this.nes_min_bound}, max_bound=${this.nes_max_bound}`);
-    console.log(`Data Range: min=${Math.min(...this.go_terms.map(t => t.nes))}, max=${Math.max(...this.go_terms.map(t => t.nes))}`);
+    const displayGeneration = ++this.displayGeneration;
 
     let filteredTerms = this.go_terms.filter(term => {
       const nes = term.nes;
@@ -441,14 +381,8 @@ export class GoComponent implements OnInit {
       const passMax = this.nes_max === null ? true : nes <= this.nes_max;
       const passFDR = this.fdr_cutoff === null ? true : fdr <= this.fdr_cutoff;
 
-      if (!passMin) console.log(`Filtered out (min): ${term.cell_type} NES=${nes} < ${this.nes_min}`);
-      if (!passMax) console.log(`Filtered out (max): ${term.cell_type} NES=${nes} > ${this.nes_max}`);
-      if (!passFDR) console.log(`Filtered out (FDR): ${term.cell_type} FDR=${fdr} > ${this.fdr_cutoff}`);
-
       return passMin && passMax && passFDR;
     });
-
-    console.log(`Filtered terms count: ${filteredTerms.length}/${this.go_terms.length}`);
 
     // Calculate min/max from filtered data. reduce() with no seed value throws
     // on an empty array, and that throw used to skip the series assignment
@@ -469,16 +403,19 @@ export class GoComponent implements OnInit {
     min_nes = this.nes_min !== null ? Math.floor(Math.min(this.nes_min, min_nes)) : Math.floor(min_nes - 1);
     max_nes = this.nes_max !== null ? Math.ceil(Math.max(this.nes_max, max_nes)) : Math.ceil(max_nes + 1);
 
-    console.log(`Calculated min_nes: ${min_nes}, max_nes: ${max_nes}`);
-
     // NOW USE FILTERED TERMS FOR THE REST OF THE FUNCTION
     this.upreg_enrich_list = [];
     this.downreg_enrich_list = [];
+    this.upreg_gene_counts = [];
+    this.downreg_gene_counts = [];
     let go_data = [];
 
-    let max_p_val = -Math.log10(Number(this.go_terms.reduce((prev, cur) => {
-      return (prev && prev.P_Value < cur.P_Value) ? prev : cur;
-    }).P_Value));
+    const positivePValues = this.go_terms
+      .map(term => Number(term.P_Value))
+      .filter(value => Number.isFinite(value) && value > 0);
+    let max_p_val = positivePValues.length > 0
+      ? -Math.log10(Math.min(...positivePValues))
+      : 1;
 
     // Loop through FILTERED TERMS, not this.go_terms
     for (let i = 0; i < filteredTerms.length; i++) {
@@ -515,13 +452,16 @@ export class GoComponent implements OnInit {
     // targets rather than leaving the previous selection addressable.
     this.filtered_go_terms = filteredTerms;
 
-    console.log(go_data)
-
     let displayed_cluster_length = go_data.length
 
-    //calculte gene prevalance
-    this.countOccurrences(this.upreg_enrich_list, 'UP', displayed_cluster_length)
-    this.countOccurrences(this.downreg_enrich_list, 'DOWN', displayed_cluster_length)
+    // Calculate gene prevalence. Ignore conversions started for an older chart.
+    if (displayed_cluster_length > 0) {
+      this.countOccurrences(this.upreg_enrich_list, 'UP', displayed_cluster_length, displayGeneration)
+      this.countOccurrences(this.downreg_enrich_list, 'DOWN', displayed_cluster_length, displayGeneration)
+    } else {
+      this.upreg_gene_counts = [];
+      this.downreg_gene_counts = [];
+    }
     max_p_val = Math.ceil(max_p_val + 1)
     let num_ticks = Math.max(1, max_nes - min_nes)
     this.go_chart_options.series = [{ data: go_data }];
@@ -569,6 +509,12 @@ export class GoComponent implements OnInit {
   }
 
   getColorForValue(value: number, min_val: number, max_val: number): string {
+    if (min_val === max_val) {
+      if (value < 0) return 'rgb(25,25,112)';
+      if (value > 0) return 'rgb(178,34,34)';
+      return 'rgb(255,255,255)';
+    }
+
     // Normalize value to be between 0 and 1
     const min_value = min_val;
     const max_value = max_val;
@@ -606,10 +552,14 @@ export class GoComponent implements OnInit {
   }
 
   getGeneSymbols(selected_term: GoTerm): void {
+    const requestId = this.dataRequestId;
     let ensemble_list = selected_term.coreenrichment.split('/')
     this.geneConversionService.convertEnsemblListToGeneList(ensemble_list)
       .then((result: string[]) => {
-        let selected_gene_counts = selected_term.nes > 0 ? this.upreg_gene_counts : this.downreg_gene_counts
+        if (requestId !== this.dataRequestId || this.selected_term !== selected_term) {
+          return;
+        }
+        let selected_gene_counts = (selected_term.nes > 0 ? this.upreg_gene_counts : this.downreg_gene_counts) ?? [];
         const geneOrderMap = new Map(selected_gene_counts.map(item => [item.gene, item.count]));
         // Filter and sort `result` based on the order in `gene_counts`
         this.selected_core_enrichment = result
@@ -626,13 +576,12 @@ export class GoComponent implements OnInit {
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.prepareData();
-  }
-
-  countOccurrences(gene_list: string[], direction: string, displayed_cluster_length: number): void {
+  countOccurrences(gene_list: string[], direction: string, displayed_cluster_length: number, displayGeneration: number): void {
     this.geneConversionService.convertEnsemblListToGeneList(gene_list)
       .then((result: string[]) => {
+        if (displayGeneration !== this.displayGeneration) {
+          return;
+        }
         const counts: { [gene: string]: number } = {};
 
         // Count occurrences
@@ -678,20 +627,38 @@ export class GoComponent implements OnInit {
     return arr;
   }
 
-  getPathDisplayData() { //Go pathway
-    if (this.pathway_groupby_go) {
-      this.pathwayInfoService.getPathwayInfo(this.go_terms[0].goid).subscribe({
-        next: (data) => {
-          this.pathway_info = data.results[0]
-          this.pathway_info.name = this.pathway_info.name.replace(/\b\w/g, (char: string) => char.toUpperCase());
-        },
-        complete: () => {
+  async getPathDisplayData(requestId: number, terms: GoTerm[], isGoPathway: boolean): Promise<void> {
+    if (terms.length === 0) {
+      if (requestId === this.dataRequestId) {
+        this.pathway_info = null;
+      }
+      return;
+    }
+
+    if (isGoPathway) {
+      try {
+        const data = await firstValueFrom(this.pathwayInfoService.getPathwayInfo(terms[0].goid));
+        if (requestId !== this.dataRequestId) {
+          return;
         }
-      })
-    } else {
-      console.log(this.kegg_pathway_info)
-      this.pathway_info = this.kegg_pathway_info[this.go_terms[0].pathway];
-      console.log(this.pathway_info)
+        const pathwayInfo = data?.results?.[0];
+        this.pathway_info = pathwayInfo
+          ? {
+            ...pathwayInfo,
+            name: String(pathwayInfo.name || '').replace(/\b\w/g, (char: string) => char.toUpperCase())
+          }
+          : null;
+      } catch (error) {
+        if (requestId === this.dataRequestId) {
+          this.pathway_info = null;
+          console.error('Error loading GO pathway information:', error);
+        }
+      }
+      return;
+    }
+
+    if (requestId === this.dataRequestId) {
+      this.pathway_info = this.kegg_pathway_info?.[terms[0].pathway] ?? null;
     }
   }
 
@@ -729,106 +696,92 @@ export class GoComponent implements OnInit {
   }
 
   async prepareData() {
+    const requestId = ++this.dataRequestId;
+    const isGoPathway = this.pathway_groupby_go;
+    const selectedPathway = isGoPathway ? this.selected_pathway : this.selected_pathway_kegg;
+    const selectedTissues = [...(this.selected_tissues ?? [])];
+    const selectedCellTypes = [...(this.selected_cell_types ?? [])];
+    const selectedComparisonType = this.selectedComparisonType;
+
     this.loading = true;
-    this.selected_pathway ??= (this.pathway_groupby_go ? this.pathways[0] : this.kegg_pathways[0]);
-    this.selected_cell_types = this.selected_cell_types.length === 0 ? this.cell_types : this.selected_cell_types;
+    this.term_selected = false;
+    this.selected_core_enrichment = [];
+    this.pathway_info = null;
 
-    if (this.pathway_groupby_go) {
-      try {
-        const data = await firstValueFrom(
-          this.databaseService.getGoTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway, this.selectedComparisonType)
-        );
-        console.log('Raw GO terms data:', data);
-        // Map data to GoTerm class
-        this.go_terms = (data || []).map(item => new GoTerm(
-          String(item.pathway || this.selected_pathway || ''),
-          String(item.goid || ''),
-          Number(item.nes || 0),
-          Number(item.P_Value || 0),
-          String(item.coreenrichment || ''),
-          String(item.cell_type || ''),
-          String(item.tissue || this.selected_tissues.join(',') || ''),
-          Number(item.pmid || 0),
-          ''
-        ));
-        console.log('Mapped go_terms:', this.go_terms);
-
-        if (this.go_terms.length > 0) {
-          const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
-          const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
-          this.go_terms.forEach(term => {
-            term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
-            console.log(`Assigned color to ${term.cell_type}: ${term.color} for NES=${term.nes}`);
-          });
-        } else {
-          console.warn('No GO terms available to assign colors');
-        }
-
-        this.filtered_go_terms = [];
-        if (this.go_terms.length > 0) {
-          const minNES = Math.min(...this.go_terms.map(term => term.nes));
-          const maxNES = Math.max(...this.go_terms.map(term => term.nes));
-          this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
-          this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
-          this.nes_min_bound = this.nes_slider_min;
-          this.nes_max_bound = this.nes_slider_max;
-          this.nes_min = this.nes_min_bound;
-          this.nes_max = this.nes_max_bound;
-        }
-        this.createDisplayData();
-        this.getPathDisplayData();
-        this.loading = false;
-      } catch (e) {
-        console.error('Error loading GO terms:', e);
+    if (!selectedPathway || selectedCellTypes.length === 0) {
+      this.go_terms = [];
+      this.filtered_go_terms = [];
+      await this.createDisplayData();
+      this.updateAnnotations();
+      if (requestId === this.dataRequestId) {
         this.loading = false;
       }
-    } else {
-      try {
-        const data = await firstValueFrom(
-          this.databaseService.getKEGGTerms(this.selected_tissues, this.selected_cell_types, this.selected_pathway_kegg, this.selectedComparisonType)
-        );
-        console.log('Raw KEGG terms data:', data);
-        // Map data to GoTerm class
-        this.go_terms = (data || []).map(item => new GoTerm(
-          String(item.pathway || this.selected_pathway_kegg || ''),
-          String(item.goid || ''),
-          Number(item.nes || 0),
-          Number(item.P_Value || 0),
-          String(item.coreenrichment || ''),
-          String(item.cell_type || ''),
-          String(item.tissue || this.selected_tissues.join(',') || ''),
-          Number(item.pmid || 0),
-          ''
-        ));
-        console.log('Mapped go_terms:', this.go_terms);
+      return;
+    }
 
-        if (this.go_terms.length > 0) {
-          const full_min_nes = Math.min(...this.go_terms.map(t => t.nes));
-          const full_max_nes = Math.max(...this.go_terms.map(t => t.nes));
-          this.go_terms.forEach(term => {
-            term.color = this.getColorForValue(term.nes, full_min_nes, full_max_nes);
-            console.log(`Assigned color to ${term.cell_type}: ${term.color} for NES=${term.nes}`);
-          });
+    try {
+      const request = isGoPathway
+        ? this.databaseService.getGoTerms(selectedTissues, selectedCellTypes, selectedPathway, selectedComparisonType)
+        : this.databaseService.getKEGGTerms(selectedTissues, selectedCellTypes, selectedPathway, selectedComparisonType);
+      const data = await firstValueFrom(request);
+
+      if (requestId !== this.dataRequestId) {
+        return;
+      }
+
+      const terms = (data || []).map(item => new GoTerm(
+        String(item.pathway || selectedPathway),
+        String(item.goid || ''),
+        Number(item.nes || 0),
+        Number(item.P_Value || 0),
+        String(item.coreenrichment || ''),
+        String(item.cell_type || ''),
+        String(item.tissue || selectedTissues.join(',')),
+        Number(item.pmid || 0),
+        ''
+      ));
+
+      if (terms.length > 0) {
+        const fullMinNes = Math.min(...terms.map(term => term.nes));
+        const fullMaxNes = Math.max(...terms.map(term => term.nes));
+        terms.forEach(term => {
+          term.color = this.getColorForValue(term.nes, fullMinNes, fullMaxNes);
+        });
+
+        if (fullMinNes === fullMaxNes) {
+          this.nes_slider_min = Math.floor(fullMinNes) - 1;
+          this.nes_slider_max = Math.ceil(fullMaxNes) + 1;
         } else {
-          console.warn('No KEGG terms available to assign colors');
+          const rangePadding = (fullMaxNes - fullMinNes) * 0.1;
+          this.nes_slider_min = Math.floor(fullMinNes - rangePadding);
+          this.nes_slider_max = Math.ceil(fullMaxNes + rangePadding);
         }
+      } else {
+        this.nes_slider_min = -10;
+        this.nes_slider_max = 10;
+      }
 
-        this.filtered_go_terms = [];
-        if (this.go_terms.length > 0) {
-          const minNES = Math.min(...this.go_terms.map(term => term.nes));
-          const maxNES = Math.max(...this.go_terms.map(term => term.nes));
-          this.nes_slider_min = Math.floor(minNES - (maxNES - minNES) * 0.1);
-          this.nes_slider_max = Math.ceil(maxNES + (maxNES - minNES) * 0.1);
-          this.nes_min_bound = this.nes_slider_min;
-          this.nes_max_bound = this.nes_slider_max;
-          this.nes_min = this.nes_min_bound;
-          this.nes_max = this.nes_max_bound;
-        }
-        this.createDisplayData();
-        this.getPathDisplayData();
-        this.loading = false;
-      } catch (e) {
-        console.error('Error loading KEGG terms:', e);
+      this.go_terms = terms;
+      this.filtered_go_terms = [];
+      this.nes_min_bound = this.nes_slider_min;
+      this.nes_max_bound = this.nes_slider_max;
+      this.nes_min = this.nes_min_bound;
+      this.nes_max = this.nes_max_bound;
+
+      await this.createDisplayData();
+      this.updateAnnotations();
+      void this.getPathDisplayData(requestId, terms, isGoPathway);
+    } catch (error) {
+      if (requestId !== this.dataRequestId) {
+        return;
+      }
+      console.error(`Error loading ${isGoPathway ? 'GO' : 'KEGG'} terms:`, error);
+      this.go_terms = [];
+      this.filtered_go_terms = [];
+      await this.createDisplayData();
+      this.updateAnnotations();
+    } finally {
+      if (requestId === this.dataRequestId) {
         this.loading = false;
       }
     }
@@ -847,104 +800,19 @@ export class GoComponent implements OnInit {
   }
 
   onCellsChanged() {
-    if (this.selected_cell_types.length > 0) {
-      this.prepareData().then(() => {
-        this.go_chart_options.annotations = {
-          xaxis: [
-            {
-              x: this.nes_min ?? this.nes_min_bound,
-              borderColor: this.NES_MIN_COLOR,
-              strokeDashArray: 5,
-              label: {
-                text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
-                style: {
-                  color: this.NES_MIN_COLOR,
-                  background: 'transparent',
-                },
-              },
-            },
-            {
-              x: this.nes_max ?? this.nes_max_bound,
-              borderColor: this.NES_MAX_COLOR,
-              strokeDashArray: 5,
-              label: {
-                text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
-                style: {
-                  color: this.NES_MAX_COLOR,
-                  background: 'transparent',
-                },
-              },
-            },
-          ],
-          yaxis: [
-            {
-              y: 0 - Math.log10(this.fdr_cutoff),
-              borderColor: this.FDR_COLOR, // example color for FDR line
-              strokeDashArray: 10,
-              label: {
-                text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
-                style: {
-                  color: this.FDR_COLOR,
-                  background: 'transparent',
-                },
-              },
-            }
-          ]
-        }
-      });
-    }
-    this.resetAnnotations()
+    void this.prepareData();
   }
+
   onPathwayChange() {
-    this.prepareData().then(() => {
-      this.go_chart_options.annotations = {
-        xaxis: [
-          {
-            x: this.nes_min ?? this.nes_min_bound,
-            borderColor: this.NES_MIN_COLOR,
-            strokeDashArray: 5,
-            label: {
-              text: `NES min: ${(this.nes_min ?? this.nes_min_bound).toFixed(1)}`,
-              style: {
-                color: this.NES_MIN_COLOR,
-                background: 'transparent',
-              },
-            },
-          },
-          {
-            x: this.nes_max ?? this.nes_max_bound,
-            borderColor: this.NES_MAX_COLOR,
-            strokeDashArray: 5,
-            label: {
-              text: `NES max: ${(this.nes_max ?? this.nes_max_bound).toFixed(1)}`,
-              style: {
-                color: this.NES_MAX_COLOR,
-                background: 'transparent',
-              },
-            },
-          },
-        ],
-        yaxis: [
-          {
-            y: 0 - Math.log10(this.fdr_cutoff),
-            borderColor: this.FDR_COLOR, // example color for FDR line
-            strokeDashArray: 10,
-            label: {
-              text: `FDR cutoff: ${this.fdr_cutoff.toFixed(2)}`,
-              style: {
-                color: this.FDR_COLOR,
-                background: 'transparent',
-              },
-            },
-          }
-        ]
-      }
-    });
-    this.resetAnnotations();
+    void this.prepareData();
   }
 
   async CutoffChanged() {
     await this.createDisplayData();
+    this.updateAnnotations();
+  }
+
+  private updateAnnotations(): void {
     this.go_chart_options.annotations = {
       xaxis: [
         {

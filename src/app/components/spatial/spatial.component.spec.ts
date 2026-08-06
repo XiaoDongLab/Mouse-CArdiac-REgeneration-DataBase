@@ -187,6 +187,17 @@ describe('SpatialComponent', () => {
     expect(spatialService.geneLayerCalls).toContain(['GSM5268644', 'Acta2']);
   });
 
+  it('uses smaller spots in dual-panel views and restores the single-panel size', () => {
+    component.toggleComparison();
+    expect(component.spotSize).toBe(0.875);
+
+    component.setComparisonMode('feature');
+    expect(component.spotSize).toBe(0.875);
+
+    component.setComparisonMode('feature');
+    expect(component.spotSize).toBe(1.125);
+  });
+
   it('compares gene expression and cell-type proportion on the same sample', () => {
     component.setComparisonMode('feature');
 

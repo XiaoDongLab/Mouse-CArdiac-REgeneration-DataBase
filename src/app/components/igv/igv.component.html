@@ -114,7 +114,7 @@
           [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
         paginate='true'></dx-tag-box>-->
       <ng-select tabindex="0" [items]="cell_types" [searchable]="true" [clearable]="true"
-        (onValueChanged)="onCellChanged($event)" placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells"
+        (change)="onCellChanged($event)" placeholder="Select Cell Type(s)" [(ngModel)]="selected_cells"
         [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false" [addTag]="false"
         [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
@@ -127,17 +127,6 @@
           </div>
         </ng-template>
       </ng-select>
-      <hr />
-      <div class="progress mb-2" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0"
-        aria-valuemax="100">
-        <div class="progress-bar text-bg-mcaredb" [class.progress-bar-striped]="load_progress != 100"
-          [class.progress-bar-animated]="load_progress != 100" [style.width]="load_progress + '%'">
-          {{`${load_progress.toFixed(2)}%`}}</div>
-      </div>
-      <button tabindex="0" class="btn btn-mcaredb w-100" id="btn-apply-detail" [disabled]="!completely_loaded"
-        (click)="subsetCorrectCellAndTissueTypes()">
-        <i class="fa fa-arrows-rotate"></i> {{ 'igv.filterarea.apply' | translate }}
-      </button>
       <hr />
       <h4 translate="igv.filterarea.legend"></h4>
       <div class="color-legend">
@@ -187,17 +176,18 @@
     <div ngbAccordion>
       @for (gene_list of this.grouped_genes; track gene_list) {
       @if (gene_list[0]) {
-      <div ngbAccordionItem>
+      <div ngbAccordionItem [collapsed]="!isGeneExpanded(gene_list)"
+        (show)="onGeneExpanded(gene_list)" (hide)="onGeneCollapsed(gene_list)">
         <h2 ngbAccordionHeader>
           <button ngbAccordionButton>
             <app-gene-card [gene_list]="gene_list" [indices]="selected_indices"
-              [completely_loaded]="completely_loaded"></app-gene-card>
+              [completely_loaded]="isGenePlotReady(gene_list)"></app-gene-card>
           </button>
         </h2>
         <div ngbAccordionCollapse>
           <div ngbAccordionBody>
             <app-gene-card-detail [gene_list]="gene_list" [indices]="selected_indices"
-              [completely_loaded]="completely_loaded"></app-gene-card-detail>
+              [completely_loaded]="isGenePlotReady(gene_list)"></app-gene-card-detail>
           </div>
         </div>
       </div>

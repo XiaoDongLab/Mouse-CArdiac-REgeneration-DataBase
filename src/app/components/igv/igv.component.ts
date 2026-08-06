@@ -124,6 +124,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   initial_genes: any[] = [];
   grouped_genes: DiffExp[][] = [];
   original_grouped_genes: DiffExp[][] = [];
+  general_grouped_genes: DiffExp[][] = [];
   selected_indices: Indices[];
   original_indices: Indices[];
   completely_loaded: boolean = false;
@@ -132,6 +133,14 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   found = false;
   loading: boolean = false;
   fakeInterval: any | undefined;
+  automaticApplyFrame: number | undefined;
+  automaticApplyTimer: number | undefined;
+  readonly eagerPlotGeneLimit = 20;
+  detailedDataLoaded = false;
+  lazyPlotMode = false;
+  expandedGeneKeys = new Set<string>();
+  plotReadyGeneKeys = new Set<string>();
+  detailedGenesByKey = new Map<string, DiffExp[]>();
 
 
   constructor(private databaseService: DatabaseService, public databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router) {
@@ -247,9 +256,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   }
   getInRangeGenes() {
     // This function loads data **without any criteria**. After 'general' data is loaded, detailed data will be scanned at the backend.
+    this.resetDetailedPlotState();
     this.loading = true;
-    this.completely_loaded = false;
-    document.getElementById("btn-apply-detail")?.setAttribute('disabled', 'disabled');
     const loci = this.browser.currentLoci().split(':');
     const chr = loci[0].replace('chr', '')
     const start = Math.floor(loci[1].split('-')[0])
@@ -267,8 +275,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   }
 
   getDiffExpGenesInterest() {
+    this.resetDetailedPlotState();
     this.loading = true;
-    this.completely_loaded = false;
     const convertedList: number[] = this.genes_interested.map((str) => {
       // Remove 'ENSG' from the beginning of each string
       const strippedString = str.replace('ENSMUSG', '');
@@ -284,6 +292,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.grouped_genes = data.map(gene => [gene]);
           console.log(this.grouped_genes);
           this.grouped_genes = this.sortGenesByDEG(this.grouped_genes, null);
+          this.general_grouped_genes = this.grouped_genes;
           this.genes = data;
           this.grouped_genes.forEach((gene, idx) => {
             this.deg_sorted_list.set(gene[0]?.gene?.toString() ?? '', idx);
@@ -334,6 +343,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.grouped_genes = data.map(gene => [gene]);
           console.log(this.grouped_genes);
           this.grouped_genes = this.sortGenesByDEG(this.grouped_genes, null);
+          this.general_grouped_genes = this.grouped_genes;
           this.genes = data;
           this.grouped_genes.forEach((gene, idx) => {
             this.deg_sorted_list.set(gene[0]?.gene?.toString() ?? '', idx);
@@ -399,9 +409,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.original_genes = data;
           this.genes = data;
           this.original_grouped_genes = this.convertDiffExpData(this.original_genes)
-          document.getElementById("btn-apply-detail")?.removeAttribute("disabled");
-          // this.subsetCorrectCellAndTissueTypes()
-          // console.log(this.grouped_genes)
+          this.detailedGenesByKey = new Map(
+            this.original_grouped_genes.map(geneset => [this.getGeneKey(geneset), geneset])
+          );
+          this.detailedDataLoaded = true;
+          this.lazyPlotMode = this.original_grouped_genes.length > this.eagerPlotGeneLimit;
+          this.scheduleAutomaticApply();
           //this.original_genes = this.assignGeneNames(this.original_genes)
           //this.genes = this.assignGeneNames(this.genes)
           // this.original_genes = this.prettyOrderer(this.original_genes)
@@ -419,6 +432,11 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       });
   }
   ngOnDestroy() {
+    window.clearInterval(this.fakeInterval)
+    if (this.automaticApplyFrame !== undefined) {
+      window.cancelAnimationFrame(this.automaticApplyFrame)
+    }
+    window.clearTimeout(this.automaticApplyTimer)
     igv.removeAllBrowsers()
   }
 
@@ -455,44 +473,177 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     return (Object.values(groupedLists));
   }
 
-  async subsetCorrectCellAndTissueTypes() {
-    this.loading = true;
-    this.grouped_genes = JSON.parse(JSON.stringify(this.original_grouped_genes));
-    console.log(this.grouped_genes);
-    this.selected_cells = this.selected_cells.length == 0 ? this.databaseConstService.getDECellTypes() : this.selected_cells;
-    let selected_pmids: number[] = [];
+  private scheduleAutomaticApply() {
+    if (this.automaticApplyFrame !== undefined) {
+      window.cancelAnimationFrame(this.automaticApplyFrame);
+    }
+    window.clearTimeout(this.automaticApplyTimer);
+    this.automaticApplyFrame = window.requestAnimationFrame(() => {
+      this.automaticApplyFrame = undefined;
+      this.automaticApplyTimer = window.setTimeout(() => {
+        this.automaticApplyTimer = undefined;
+        if (this.lazyPlotMode) {
+          this.hydrateExpandedGenePlots();
+        } else {
+          this.subsetCorrectCellAndTissueTypes(false);
+        }
+      });
+    });
+  }
+
+  subsetCorrectCellAndTissueTypes(showLoadingOverlay = true) {
+    if (showLoadingOverlay) {
+      if (this.automaticApplyFrame !== undefined) {
+        window.cancelAnimationFrame(this.automaticApplyFrame);
+        this.automaticApplyFrame = undefined;
+      }
+      window.clearTimeout(this.automaticApplyTimer);
+      this.automaticApplyTimer = undefined;
+      this.loading = true;
+    }
+
+    if (this.lazyPlotMode) {
+      this.refreshExpandedGenePlots();
+      if (showLoadingOverlay) {
+        this.loading = false;
+      }
+      return;
+    }
+
+    const selectedCells = this.getSelectedCells();
+    const selectedPmids = this.getSelectedPmids();
+    const filteredGenes = this.original_grouped_genes.map(geneset =>
+      this.filterGeneSet(geneset, selectedCells, selectedPmids)
+    );
+
+    this.grouped_genes = this.sortGenesByDEG(filteredGenes, this.deg_sorted_list);
+    this.completely_loaded = true;
+    if (showLoadingOverlay) {
+      this.loading = false;
+    }
+  }
+
+  onGeneExpanded(geneList: DiffExp[]) {
+    const key = this.getGeneKey(geneList);
+    this.expandedGeneKeys.add(key);
+    if (this.lazyPlotMode && this.detailedDataLoaded) {
+      this.hydrateGenePlots(key);
+    }
+  }
+
+  onGeneCollapsed(geneList: DiffExp[]) {
+    this.expandedGeneKeys.delete(this.getGeneKey(geneList));
+  }
+
+  isGeneExpanded(geneList: DiffExp[]) {
+    return this.expandedGeneKeys.has(this.getGeneKey(geneList));
+  }
+
+  isGenePlotReady(geneList: DiffExp[]) {
+    return this.completely_loaded || this.plotReadyGeneKeys.has(this.getGeneKey(geneList));
+  }
+
+  getGeneKey(geneList: DiffExp[]) {
+    return geneList[0]?.gene?.toString().replace('ENSMUSG', '').replace(/^0+/, '') ?? '';
+  }
+
+  private hydrateGenePlots(key: string) {
+    if (this.plotReadyGeneKeys.has(key)) {
+      return;
+    }
+
+    const detailedGenes = this.detailedGenesByKey.get(key);
+    const geneIndex = this.grouped_genes.findIndex(geneset => this.getGeneKey(geneset) === key);
+    if (!detailedGenes || geneIndex < 0) {
+      return;
+    }
+
+    const filteredGenes = this.filterGeneSet(
+      detailedGenes,
+      this.getSelectedCells(),
+      this.getSelectedPmids()
+    );
+    const nextGroupedGenes = [...this.grouped_genes];
+    nextGroupedGenes[geneIndex] = filteredGenes;
+    this.plotReadyGeneKeys.add(key);
+    this.grouped_genes = nextGroupedGenes;
+  }
+
+  private refreshExpandedGenePlots() {
+    this.completely_loaded = false;
+    const previouslyReadyKeys = new Set(this.plotReadyGeneKeys);
+    this.grouped_genes = this.grouped_genes.map(geneset => {
+      const key = this.getGeneKey(geneset);
+      if (!previouslyReadyKeys.has(key)) {
+        return geneset;
+      }
+      return this.general_grouped_genes.find(generalGenes => this.getGeneKey(generalGenes) === key) ?? geneset;
+    });
+    this.plotReadyGeneKeys.clear();
+    this.hydrateExpandedGenePlots();
+  }
+
+  private hydrateExpandedGenePlots() {
+    [...this.expandedGeneKeys].forEach(key => this.hydrateGenePlots(key));
+  }
+
+  private filterGeneSet(geneset: DiffExp[], selectedCells: string[], selectedPmids: Set<number>) {
+    return geneset.filter(gene => {
+      if (gene.cell_type?.includes('All')) {
+        return true;
+      }
+      const cleanedCellType = gene.cell_type?.replace(/\s+\d+$/, '');
+      return selectedCells.includes(cleanedCellType!) && selectedPmids.has(gene.pmid!);
+    });
+  }
+
+  private getSelectedCells() {
+    const selectedCells = this.selected_cells.length == 0
+      ? this.databaseConstService.getDECellTypes()
+      : this.selected_cells;
+    this.selected_cells = selectedCells;
+    return selectedCells;
+  }
+
+  private getSelectedPmids() {
+    const selectedPmids = new Set<number>();
     for (const key in this.pmid_tissue_dist) {
       if (this.selected_tissues.includes(key)) {
-        selected_pmids.push(...this.pmid_tissue_dist[key]);
+        this.pmid_tissue_dist[key].forEach(pmid => selectedPmids.add(pmid));
       }
     }
-    for (let i = this.grouped_genes.length - 1; i >= 0; i--) {
-      let geneset = this.grouped_genes[i];
-      for (let j = geneset.length - 1; j >= 0; j--) {
-        let gene = geneset[j];
-        let cleaned_celltype = gene.cell_type?.replace(/\s+\d+$/, '');
-        if (gene.cell_type?.includes('All')) {
-          continue;
-        }
-        if (!this.selected_cells.includes(cleaned_celltype!) || !selected_pmids.includes(gene.pmid!)) {
-          console.log('Splicing');
-          console.log(gene);
-          this.grouped_genes[i].splice(j, 1);
-        }
-      }
+    return selectedPmids;
+  }
+
+  private resetDetailedPlotState() {
+    if (this.automaticApplyFrame !== undefined) {
+      window.cancelAnimationFrame(this.automaticApplyFrame);
+      this.automaticApplyFrame = undefined;
     }
-    this.grouped_genes = this.sortGenesByDEG(this.grouped_genes, this.deg_sorted_list);
-    console.log(this.grouped_genes[0].length);
-    this.loading = false;
-    this.completely_loaded = true;
+    window.clearTimeout(this.automaticApplyTimer);
+    this.automaticApplyTimer = undefined;
+    this.completely_loaded = false;
+    this.detailedDataLoaded = false;
+    this.lazyPlotMode = false;
+    this.expandedGeneKeys.clear();
+    this.plotReadyGeneKeys.clear();
+    this.detailedGenesByKey.clear();
   }
 
   onTissuesChanged($event: any) {
     this.selected_tissues = $event.value
+    this.refreshPlotsAfterFilterChange();
   }
 
-  onCellChanged($event: any) {
-    this.selected_cells = $event.value
+  onCellChanged(selectedCells: string[] | null) {
+    this.selected_cells = selectedCells ?? [];
+    this.refreshPlotsAfterFilterChange();
+  }
+
+  private refreshPlotsAfterFilterChange() {
+    if (this.detailedDataLoaded) {
+      this.subsetCorrectCellAndTissueTypes(false);
+    }
   }
 
   reorder(list: any, ids: any) {
@@ -567,8 +718,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     console.log(gene_list);
     console.log(false_genes)
     if (check_passed) {
+      this.resetDetailedPlotState();
       this.loading = true;
-      this.completely_loaded = false;
       this.getDiffExpGeneralData(gene_list, true);
     } else alert(`Entered gene(s): ${false_genes.join(", ")} not found!`)
   }

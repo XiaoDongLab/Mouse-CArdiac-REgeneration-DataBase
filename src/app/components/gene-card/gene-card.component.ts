@@ -66,12 +66,14 @@ export class GeneCardComponent implements OnInit {
   num_studies: Number;
   en_id: string;
   ensembl_id: string;
-  sig_up_color: string = 'rgb(99, 99, 255)'
-  sli_up_color: string = 'rgb(255, 99, 255)'
+  sig_up_color: string = 'rgb(215, 59, 59)'
+  sli_up_color: string = 'rgb(239, 124, 124)'
   no_change_color: string = 'rgb(0, 142, 0)'
-  sli_dn_color: string = 'rgb(157, 136, 0)'
-  sig_dn_color: string = 'rgb(255, 99, 99)'
+  sli_dn_color: string = 'rgb(111, 137, 214)'
+  sig_dn_color: string = 'rgb(59, 89, 180)'
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
+  all_cells_color: string = 'rgb(232, 216, 181)'
+  all_cells_border_color: string = 'rgb(0, 0, 0)'
   progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color].slice().reverse();
   labels = ["Significantly downregulated", "Slightly downregulated", "No change", "Slightly upregulated", "Significantly upregulated", "No significant fit"].slice().reverse();
   // lfc_sig_cutoff = 0.0116
@@ -1111,7 +1113,7 @@ export class GeneCardComponent implements OnInit {
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
 
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_data1_Sham.push(formatted_data);
     }
 
@@ -1133,7 +1135,7 @@ export class GeneCardComponent implements OnInit {
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_data3_Sham.push(formatted_data);
     }
 
@@ -1153,7 +1155,7 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_data1_MI.push(formatted_data);
     }
 
@@ -1173,7 +1175,7 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_data3_MI.push(formatted_data);
     }
 
@@ -1193,7 +1195,7 @@ export class GeneCardComponent implements OnInit {
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
 
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_dataP1_1.push(formatted_data);
     }
 
@@ -1213,7 +1215,7 @@ export class GeneCardComponent implements OnInit {
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
 
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_dataP8_1.push(formatted_data);
     }
 
@@ -1233,7 +1235,7 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_dataP1_3.push(formatted_data);
     }
 
@@ -1256,7 +1258,7 @@ export class GeneCardComponent implements OnInit {
 
       let fill_color = this.getFillColor(p_value, lfc, gene.cell_type);
       if (p_value == 0 && !JSON.parse(localStorage["showNogSigCluster"] ?? false)) continue;
-      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, label: gene.cell_type };
+      let formatted_data = { x: lfc, y: p_value, fillColor: fill_color, strokeColor: this.getStrokeColor(gene.cell_type, fill_color), label: gene.cell_type };
       model_dataP8_3.push(formatted_data);
     }
 
@@ -1711,27 +1713,29 @@ export class GeneCardComponent implements OnInit {
 
 
   getFillColor(p_val: number, lfc: number, cell_type: string) {
+    if (cell_type.includes("All")) {
+      return this.all_cells_color;
+    }
     if (p_val < 0 - Math.log10(this.fdr_cutoff)) {
-      return 'rgba(0, 0, 0, ' + (!cell_type.includes("All") ? "1)" : "0.5)");
+      return this.no_sig_fit_color;
     }
     if (lfc < -this.lfc_sig_cutoff) {
-      return !cell_type.includes("All") ? this.sig_dn_color : this.sig_dn_color.replace("rgb", "rgba")
-        .replace(")", ", .5)");
+      return this.sig_dn_color;
     }
     else if (lfc < -this.lfc_minor_sig_cutoff && lfc >= -this.lfc_sig_cutoff) {
-      return !cell_type.includes("All") ? this.sli_dn_color : this.sli_dn_color.replace("rgb", "rgba")
-        .replace(")", ", .5)");
+      return this.sli_dn_color;
     }
     else if (lfc > this.lfc_sig_cutoff) {
-      return !cell_type.includes("All") ? this.sig_up_color : this.sig_up_color.replace("rgb", "rgba")
-        .replace(")", ", .5)");
+      return this.sig_up_color;
     }
     else if (lfc > this.lfc_minor_sig_cutoff && lfc <= this.lfc_sig_cutoff) {
-      return !cell_type.includes("All") ? this.sli_up_color : this.sli_up_color.replace("rgb", "rgba")
-        .replace(")", ", .5)");
+      return this.sli_up_color;
     }
-    else return !cell_type.includes("All") ? this.no_change_color : this.no_change_color.replace("rgb", "rgba")
-      .replace(")", ", .5)");;
+    else return this.no_change_color;
+  }
+
+  getStrokeColor(cell_type: string, fill_color: string) {
+    return cell_type.includes("All") ? this.all_cells_border_color : fill_color;
   }
 
   hideToastControl(control_id: string): void {
