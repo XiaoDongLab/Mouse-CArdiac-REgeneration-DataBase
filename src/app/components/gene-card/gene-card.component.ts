@@ -74,8 +74,8 @@ export class GeneCardComponent implements OnInit {
   no_sig_fit_color: string = 'rgb(0, 0, 0)'
   all_cells_color: string = 'rgb(232, 216, 181)'
   all_cells_border_color: string = 'rgb(0, 0, 0)'
-  progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color].slice().reverse();
-  labels = ["Significantly downregulated", "Slightly downregulated", "No change", "Slightly upregulated", "Significantly upregulated", "No significant fit"].slice().reverse();
+  progressbar_colors = [this.sig_dn_color, this.sli_dn_color, this.no_change_color, this.sli_up_color, this.sig_up_color, this.no_sig_fit_color];
+  labels = ["Significantly downregulated", "Slightly downregulated", "No change", "Slightly upregulated", "Significantly upregulated", "No significant fit"];
   // lfc_sig_cutoff = 0.0116
   // lfc_minor_sig_cutoff = 0.0037
   lfc_sig_cutoff = 0.58
@@ -967,49 +967,49 @@ export class GeneCardComponent implements OnInit {
     let meta_series_infoP1_3 = P1_3_temp.map(val => this.removeNullNumber(val));
     const P1_3_sum = meta_series_infoP1_3.reduce((sum, p) => sum + p);
     this.sum_3_P1 = P1_3_sum;
-    this.series_3_P1 = meta_series_infoP1_3.slice().reverse();
+    this.series_3_P1 = meta_series_infoP1_3;
 
     let P1_1_temp = this.removeNullString(this.gene_list[0].P1_1).split(',');
     let meta_series_infoP1_1 = P1_1_temp.map(val => this.removeNullNumber(val));
     const P1_1_sum = meta_series_infoP1_1.reduce((sum, p) => sum + p);
     this.sum_1_P1 = P1_1_sum;
-    this.series_1_P1 = meta_series_infoP1_1.slice().reverse();
+    this.series_1_P1 = meta_series_infoP1_1;
 
     let P8_3_temp = this.removeNullString(this.gene_list[0].P8_3).split(',');
     let meta_series_infoP8_3 = P8_3_temp.map(val => this.removeNullNumber(val));
     const P8_3_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
     this.sum_3_P8 = P8_3_sum;
-    this.series_3_P8 = meta_series_infoP8_3.slice().reverse();
+    this.series_3_P8 = meta_series_infoP8_3;
 
     let P8_1_temp = this.removeNullString(this.gene_list[0].P8_1).split(',');
     let meta_series_infoP8_1 = P8_1_temp.map(val => this.removeNullNumber(val));
     const P8_1_sum = meta_series_infoP8_1.reduce((sum, p) => sum + p);
     this.sum_1_P8 = P8_1_sum;
-    this.series_1_P8 = meta_series_infoP8_1.slice().reverse();
+    this.series_1_P8 = meta_series_infoP8_1;
 
     let Sham_3_temp = this.removeNullString(this.gene_list[0].Sham_3).split(',');
     let meta_series_infoSham_3 = Sham_3_temp.map(val => this.removeNullNumber(val));
     const Sham_3_sum = meta_series_infoSham_3.reduce((sum, p) => sum + p);
     this.sum_3_Sham = Sham_3_sum;
-    this.series_3_Sham = meta_series_infoSham_3.slice().reverse();
+    this.series_3_Sham = meta_series_infoSham_3;
 
     let Sham_1_temp = this.removeNullString(this.gene_list[0].Sham_1).split(',');
     let meta_series_infoSham_1 = Sham_1_temp.map(val => this.removeNullNumber(val));
     const Sham_1_sum = meta_series_infoSham_1.reduce((sum, p) => sum + p);
     this.sum_1_Sham = Sham_1_sum;
-    this.series_1_Sham = meta_series_infoSham_1.slice().reverse();
+    this.series_1_Sham = meta_series_infoSham_1;
 
     let MI_3_temp = this.removeNullString(this.gene_list[0].MI_3).split(',');
     let meta_series_infoMI_3 = MI_3_temp.map(val => this.removeNullNumber(val));
     const MI_3_sum = meta_series_infoMI_3.reduce((sum, p) => sum + p);
     this.sum_3_MI = MI_3_sum;
-    this.series_3_MI = meta_series_infoMI_3.slice().reverse();
+    this.series_3_MI = meta_series_infoMI_3;
 
     let MI_1_temp = this.removeNullString(this.gene_list[0].MI_1).split(',');
     let meta_series_infoMI_1 = MI_1_temp.map(val => this.removeNullNumber(val));
     const MI_1_sum = meta_series_infoMI_1.reduce((sum, p) => sum + p);
     this.sum_1_MI = MI_1_sum;
-    this.series_1_MI = meta_series_infoMI_1.slice().reverse();
+    this.series_1_MI = meta_series_infoMI_1;
 
   }
 
@@ -1636,35 +1636,35 @@ export class GeneCardComponent implements OnInit {
 
     const P1_3_sum = meta_series_infoP1_3.reduce((sum, p) => sum + p);
     this.sum_3_P1 = P1_3_sum;
-    this.series_3_P1 = meta_series_infoP1_3.slice().reverse();
+    this.series_3_P1 = meta_series_infoP1_3;
 
     const P1_1_sum = meta_series_infoP1_1.reduce((sum, p) => sum + p);
     this.sum_1_P1 = P1_1_sum;
-    this.series_1_P1 = meta_series_infoP1_1.slice().reverse();
+    this.series_1_P1 = meta_series_infoP1_1;
 
     const P8_3_sum = meta_series_infoP8_3.reduce((sum, p) => sum + p);
     this.sum_3_P8 = P8_3_sum;
-    this.series_3_P8 = meta_series_infoP8_3.slice().reverse();
+    this.series_3_P8 = meta_series_infoP8_3;
 
     const P8_1_sum = meta_series_infoP8_1.reduce((sum, p) => sum + p);
     this.sum_1_P8 = P8_1_sum;
-    this.series_1_P8 = meta_series_infoP8_1.slice().reverse();
+    this.series_1_P8 = meta_series_infoP8_1;
 
     const Sham_3_sum = meta_series_info3_Sham.reduce((sum, p) => sum + p);
     this.sum_3_Sham = Sham_3_sum;
-    this.series_3_Sham = meta_series_info3_Sham.slice().reverse();
+    this.series_3_Sham = meta_series_info3_Sham;
 
     const Sham_1_sum = meta_series_info1_Sham.reduce((sum, p) => sum + p);
     this.sum_1_Sham = Sham_1_sum;
-    this.series_1_Sham = meta_series_info1_Sham.slice().reverse();
+    this.series_1_Sham = meta_series_info1_Sham;
 
     const MI_3_sum = meta_series_info3_MI.reduce((sum, p) => sum + p);
     this.sum_3_MI = MI_3_sum;
-    this.series_3_MI = meta_series_info3_MI.slice().reverse();
+    this.series_3_MI = meta_series_info3_MI;
 
     const MI_1_sum = meta_series_info1_MI.reduce((sum, p) => sum + p);
     this.sum_1_MI = MI_1_sum;
-    this.series_1_MI = meta_series_info1_MI.slice().reverse();
+    this.series_1_MI = meta_series_info1_MI;
 
     document.querySelectorAll('.tooltip').forEach(item => { item.remove() });
   }

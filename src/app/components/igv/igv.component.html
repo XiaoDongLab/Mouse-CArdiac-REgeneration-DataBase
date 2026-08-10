@@ -103,7 +103,122 @@
       </li>
     </ul>
   </div>
+  <div class="track-controls" aria-label="Genome browser track controls">
+    <div ngbDropdown [autoClose]="'outside'" class="track-picker">
+      <button type="button" class="btn btn-outline-secondary track-picker-toggle" ngbDropdownToggle
+        aria-label="Choose genome browser tracks" data-testid="track-picker-toggle">
+        <i class="fa fa-layer-group" aria-hidden="true"></i>
+        Tracks
+        <span class="track-count">{{ visibleTrackCount }}/{{ trackCatalog.length }}</span>
+      </button>
+      <div ngbDropdownMenu class="track-picker-menu" data-testid="track-picker-menu">
+        <div class="track-picker-actions">
+          <span class="track-preset-label">Quick views</span>
+          @for (preset of trackPresets; track preset.id) {
+          <button type="button" class="btn btn-sm"
+            [class.btn-mcaredb]="isTrackPresetActive(preset.trackIds)"
+            [class.btn-outline-secondary]="!isTrackPresetActive(preset.trackIds)"
+            [disabled]="trackSelectionBusy"
+            (click)="applyTrackPreset(preset.trackIds)">
+            {{ preset.label }}
+          </button>
+          }
+          <button type="button" class="btn btn-sm"
+            [class.btn-mcaredb]="visibleTrackCount === 0"
+            [class.btn-outline-secondary]="visibleTrackCount !== 0"
+            [disabled]="trackSelectionBusy" (click)="applyTrackPreset([])">
+            Clear all
+          </button>
+        </div>
+        @for (group of trackGroups; track group.id) {
+        <section class="track-group" [attr.aria-labelledby]="'track-group-' + group.id">
+          <div class="track-group-heading">
+            <h3 [id]="'track-group-' + group.id">
+              <button type="button" class="track-group-toggle"
+                [attr.aria-expanded]="isTrackGroupExpanded(group.id)"
+                [attr.aria-controls]="'track-group-options-' + group.id"
+                (click)="toggleTrackGroupExpanded(group.id)">
+                <i class="fa" [class.fa-chevron-down]="isTrackGroupExpanded(group.id)"
+                  [class.fa-chevron-right]="!isTrackGroupExpanded(group.id)" aria-hidden="true"></i>
+                <span>{{ group.label }}</span>
+                <span class="track-group-count">
+                  {{ selectedTrackCountForGroup(group.id) }}/{{ tracksForGroup(group.id).length }}
+                </span>
+              </button>
+            </h3>
+            <button type="button" class="btn btn-sm btn-link track-group-select-all"
+              [disabled]="isTrackGroupLoading(group.id)"
+              [attr.aria-label]="(isTrackGroupVisible(group.id) ? 'Select none in ' : 'Select all in ') + group.label"
+              (click)="toggleTrackGroupVisibility(group.id)">
+              {{ isTrackGroupVisible(group.id) ? 'None' : 'All' }}
+            </button>
+          </div>
+          @if (isTrackGroupExpanded(group.id)) {
+          <div class="track-group-options" [id]="'track-group-options-' + group.id">
+          @for (track of tracksForGroup(group.id); track track.id) {
+          <label class="track-option" [class.track-option-loading]="loadingTrackIds.has(track.id)"
+            [for]="'track-option-' + track.id">
+            <input class="form-check-input" type="checkbox" [id]="'track-option-' + track.id"
+              [checked]="isTrackVisible(track.id)" [disabled]="loadingTrackIds.has(track.id)"
+              (change)="setTrackVisible(track.id, $any($event.target).checked)" />
+            <span class="track-swatch" [style.backgroundColor]="track.config.color" aria-hidden="true"></span>
+            <span class="track-option-label">{{ track.label }}</span>
+            @if (loadingTrackIds.has(track.id)) {
+            <span class="spinner-border spinner-border-sm" role="status" aria-label="Loading track"></span>
+            }
+          </label>
+          }
+          </div>
+          }
+        </section>
+        }
+      </div>
+    </div>
+    <div class="track-legend" aria-label="Track color legend">
+      <span><i class="legend-swatch p1-mi"></i>P1 MI</span>
+      <span><i class="legend-swatch p1-sham"></i>P1 Sham</span>
+      <span><i class="legend-swatch p8-mi"></i>P8 MI</span>
+      <span><i class="legend-swatch p8-sham"></i>P8 Sham</span>
+    </div>
+    <span class="population-label" title="The public GEO deposit does not include published barcode-to-cell-type labels.">
+      scATAC population: <strong>All cells</strong>
+    </span>
+  </div>
+  @if (visibleTrackCount === 0) {
+  <div class="alert alert-secondary py-2 mb-1" role="status">
+    No data tracks are selected. Use the Tracks menu to add accessibility, histone, or methylation data.
+  </div>
+  }
   <div #igvdiv class="igv" part="igv"></div>
+  <details class="track-source-note">
+    <summary><i class="fa fa-circle-info" aria-hidden="true"></i> About these tracks and comparisons</summary>
+    <div class="track-source-content">
+      <p>
+        The scATAC tracks are CPM-normalized, condition-level pseudobulk signals generated from the processed
+        all-cell peak matrix in <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153479"
+          target="_blank" rel="noopener">GSE153479</a> from
+        <a href="https://doi.org/10.1016/j.celrep.2020.108472" target="_blank" rel="noopener">Wang et al. (2020)</a>.
+        Their shared scale supports direct comparison.
+      </p>
+      <p>
+        For injury studies, P1 and P8 are the ages at surgery. PSD3 samples were collected at approximately P4 and
+        P11, respectively. Optional matched H3K27ac tracks are individual biological replicates from
+        <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE123867" target="_blank"
+          rel="noopener">GSE123867</a> and
+        <a href="https://doi.org/10.1073/pnas.1905824116" target="_blank" rel="noopener">Wang et al. (2019)</a>.
+      </p>
+      <p>
+        P0 H3K27ac and WGBS are uninjured heart developmental references, not injury-matched controls. WGBS tracks
+        show strand-specific CpG methylation percentages on a fixed 0–100% scale; a high value therefore represents
+        more DNA methylation and should not be interpreted like a high accessibility or H3K27ac signal. All displayed
+        data use the mm10/GRCm38 assembly.
+      </p>
+      <p class="mb-0">
+        Cell-type scATAC tracks are not shown because the public deposition does not provide the authors' validated
+        barcode-to-cell-type assignments. MCaReDB does not infer those labels without a reproducible annotation source.
+      </p>
+    </div>
+  </details>
   <div [ngbNavOutlet]="nav"></div>
   @if (this.genes.length > 0) {
   <div class="col-lg-3 col-md-12">

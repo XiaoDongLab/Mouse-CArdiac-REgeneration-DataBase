@@ -32,6 +32,20 @@ export class Gene {
   reference: string;
 }
 
+export interface GenomeTrackOption {
+  id: string;
+  group: 'accessibility' | 'matched-histone' | 'developmental-reference';
+  label: string;
+  defaultVisible: boolean;
+  config: any;
+}
+
+interface GenomeTrackPreset {
+  id: string;
+  label: string;
+  trackIds: readonly string[];
+}
+
 @Component({
   selector: 'app-igv',
   templateUrl: './igv.component.html',
@@ -83,29 +97,160 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       },
     ],
   };
+  static readonly TRACK_GROUPS = [
+    { id: 'accessibility', label: 'scATAC accessibility — PSD3' },
+    { id: 'matched-histone', label: 'H3K27ac — PSD3' },
+    { id: 'developmental-reference', label: 'P0 developmental references' },
+  ] as const;
+
+  static readonly TRACK_CATALOG: readonly GenomeTrackOption[] = [
+    ...[
+      { id: 'scatac-p1-mi', age: 'P1', treatment: 'MI', color: '#a92e50', url: 'assets/tracks/scatac/wang2020_p1_mi_psd3.bw', order: 10 },
+      { id: 'scatac-p1-sham', age: 'P1', treatment: 'Sham', color: '#dc8ca3', url: 'assets/tracks/scatac/wang2020_p1_sham_psd3.bw', order: 20 },
+      { id: 'scatac-p8-mi', age: 'P8', treatment: 'MI', color: '#28598f', url: 'assets/tracks/scatac/wang2020_p8_mi_psd3.bw', order: 30 },
+      { id: 'scatac-p8-sham', age: 'P8', treatment: 'Sham', color: '#86acd6', url: 'assets/tracks/scatac/wang2020_p8_sham_psd3.bw', order: 40 },
+    ].map(track => ({
+      id: track.id,
+      group: 'accessibility' as const,
+      label: `${track.age} · ${track.treatment}`,
+      defaultVisible: true,
+      config: {
+        name: `scATAC · ${track.age} · ${track.treatment} · PSD3`,
+        type: 'wig',
+        format: 'bigWig',
+        url: track.url,
+        color: track.color,
+        autoscaleGroup: 'wang-scatac-psd3',
+        height: 55,
+        order: track.order,
+        removable: false,
+      },
+    })),
+    ...[
+      { id: 'h3k27ac-p1-mi-r1', gsm: 'GSM3514873', age: 'P1', treatment: 'MI', replicate: 1, color: '#a92e50', order: 100 },
+      { id: 'h3k27ac-p1-mi-r2', gsm: 'GSM3514874', age: 'P1', treatment: 'MI', replicate: 2, color: '#a92e50', order: 101 },
+      { id: 'h3k27ac-p1-sham-r1', gsm: 'GSM3514879', age: 'P1', treatment: 'Sham', replicate: 1, color: '#dc8ca3', order: 102 },
+      { id: 'h3k27ac-p1-sham-r2', gsm: 'GSM3514880', age: 'P1', treatment: 'Sham', replicate: 2, color: '#dc8ca3', order: 103 },
+      { id: 'h3k27ac-p8-mi-r1', gsm: 'GSM3514909', age: 'P8', treatment: 'MI', replicate: 1, color: '#28598f', order: 104 },
+      { id: 'h3k27ac-p8-mi-r2', gsm: 'GSM3514910', age: 'P8', treatment: 'MI', replicate: 2, color: '#28598f', order: 105 },
+      { id: 'h3k27ac-p8-sham-r1', gsm: 'GSM3514915', age: 'P8', treatment: 'Sham', replicate: 1, color: '#86acd6', order: 106 },
+      { id: 'h3k27ac-p8-sham-r2', gsm: 'GSM3514916', age: 'P8', treatment: 'Sham', replicate: 2, color: '#86acd6', order: 107 },
+    ].map(track => ({
+      id: track.id,
+      group: 'matched-histone' as const,
+      label: `${track.age} · ${track.treatment} · Rep ${track.replicate}`,
+      defaultVisible: false,
+      config: {
+        name: `H3K27ac · ${track.age} · ${track.treatment} · PSD3 · R${track.replicate}`,
+        type: 'wig',
+        format: 'bigWig',
+        url: `https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3514nnn/${track.gsm}/suppl/${track.gsm}_${track.age}_3${track.treatment}_rep${track.replicate}_H3K27ac.fc.signal.bw`,
+        color: track.color,
+        autoscaleGroup: 'wang-h3k27ac-psd3',
+        height: 55,
+        order: track.order,
+        removable: false,
+      },
+    })),
+    {
+      id: 'reference-p0-h3k27ac',
+      group: 'developmental-reference',
+      label: 'H3K27ac · uninjured heart',
+      defaultVisible: false,
+      config: {
+        name: 'H3K27ac · P0 · uninjured reference',
+        type: 'wig',
+        format: 'bigWig',
+        url: 'https://api.mcaredb.org:3305/downloads/ENCFF657GDL.bigWig',
+        color: '#087f8c',
+        autoscaleGroup: 'encode-p0-h3k27ac',
+        height: 55,
+        order: 200,
+        removable: false,
+      },
+    },
+    ...[
+      {
+        id: 'reference-p0-wgbs-r1-plus', replicate: 1, strand: '+', accession: 'ENCFF870MPN',
+        url: 'https://encode-public.s3.amazonaws.com/2022/01/10/191dbc77-c232-47a3-82ca-b88dab350e3d/ENCFF870MPN.bigWig',
+        color: '#5946b2', order: 210,
+      },
+      {
+        id: 'reference-p0-wgbs-r1-minus', replicate: 1, strand: '−', accession: 'ENCFF280ZWP',
+        url: 'https://encode-public.s3.amazonaws.com/2022/01/10/909c118a-1eed-488d-b5dc-b5073de268b1/ENCFF280ZWP.bigWig',
+        color: '#8676d1', order: 211,
+      },
+      {
+        id: 'reference-p0-wgbs-r2-plus', replicate: 2, strand: '+', accession: 'ENCFF382VDQ',
+        url: 'https://encode-public.s3.amazonaws.com/2022/01/10/ab01eb17-7964-47ec-a2d2-b943ed3e8771/ENCFF382VDQ.bigWig',
+        color: '#5946b2', order: 212,
+      },
+      {
+        id: 'reference-p0-wgbs-r2-minus', replicate: 2, strand: '−', accession: 'ENCFF880AXC',
+        url: 'https://encode-public.s3.amazonaws.com/2022/01/10/5dc525da-e1b9-461e-9721-33f98c094582/ENCFF880AXC.bigWig',
+        color: '#8676d1', order: 213,
+      },
+    ].map(track => ({
+      id: track.id,
+      group: 'developmental-reference' as const,
+      label: `WGBS · Rep ${track.replicate} · ${track.strand} strand`,
+      defaultVisible: false,
+      config: {
+        name: `WGBS (%) · P0 · R${track.replicate} · ${track.strand} strand`,
+        type: 'wig',
+        format: 'bigWig',
+        url: track.url,
+        color: track.color,
+        autoscale: false,
+        min: 0,
+        max: 100,
+        height: 55,
+        order: track.order,
+        removable: false,
+      },
+    })),
+  ];
+
+  static readonly RECOMMENDED_TRACK_IDS = IgvComponent.TRACK_CATALOG
+    .filter(track => track.defaultVisible)
+    .map(track => track.id);
+
+  static readonly DATA_TRACKS = IgvComponent.TRACK_CATALOG
+    .filter(track => track.defaultVisible)
+    .map(track => ({ ...track.config }));
+
+  static readonly TRACK_PRESETS: readonly GenomeTrackPreset[] = [
+    {
+      id: 'accessibility',
+      label: 'PSD3 accessibility',
+      trackIds: IgvComponent.RECOMMENDED_TRACK_IDS,
+    },
+    {
+      id: 'histone',
+      label: 'PSD3 H3K27ac',
+      trackIds: IgvComponent.TRACK_CATALOG
+        .filter(track => track.group === 'matched-histone')
+        .map(track => track.id),
+    },
+    {
+      id: 'all',
+      label: 'All tracks',
+      trackIds: IgvComponent.TRACK_CATALOG.map(track => track.id),
+    },
+  ];
+
+  readonly trackGroups = IgvComponent.TRACK_GROUPS;
+  readonly trackCatalog = IgvComponent.TRACK_CATALOG;
+  readonly recommendedTrackIds = IgvComponent.RECOMMENDED_TRACK_IDS;
+  readonly trackPresets = IgvComponent.TRACK_PRESETS;
+  selectedTrackIds = new Set(IgvComponent.RECOMMENDED_TRACK_IDS);
+  loadingTrackIds = new Set<string>();
+  expandedTrackGroupIds = new Set<GenomeTrackOption['group']>(['accessibility']);
   options: any = {
     reference: IgvComponent.MM10_REFERENCE,
     locus: 'chr8:14000000-15000000',
-    tracks: [
-      {
-        name: 'Histone CHIP-seq (H3K27ac) : Heart Tissue Postnatal (0 days)',
-        type: 'wig',
-        format: 'bigWig',
-        // url: this.trackUrl,
-        url: 'https://api.mcaredb.org:3305/downloads/ENCFF657GDL.bigWig',
-        color: '#0078d7',
-        autoscaleGroup: 'hist'
-      }, // Add methylation marks
-      {
-        name: 'WGBS : Heart Tissue Postnatal (0 days)',
-        type: 'wig',
-        format: 'bigWig',
-        // url: this.trackUrl,
-        url: 'https://api.mcaredb.org:3305/downloads/ENCFF980ZXR.bigWig',
-        color: '#6650e9',
-        autoscaleGroup: 'meth'
-      }
-    ],
+    tracks: IgvComponent.DATA_TRACKS.map(track => ({ ...track })),
+    showMultiSelectButton: false,
   };
 
   //Chart Variables
@@ -143,7 +288,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   detailedGenesByKey = new Map<string, DiffExp[]>();
 
 
-  constructor(private databaseService: DatabaseService, public databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router) {
+  constructor(private databaseService: DatabaseService, public databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router, private changeDetector: ChangeDetectorRef) {
     this.cell_types = databaseConstService.getDECellTypes();
     this.selected_cells = this.cell_types;
     this.load_progress = 0;
@@ -213,28 +358,8 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
 
     if (loci != null) {
       this.options = {
-        reference: IgvComponent.MM10_REFERENCE,
+        ...this.options,
         locus: loci,
-        tracks: [
-          {
-            name: 'Histone CHIP-seq (H3K27ac) : Heart Tissue Postnatal (0 days)',
-            type: 'wig',
-            format: 'bigWig',
-            // url: this.trackUrl,
-            url: 'https://www.encodeproject.org/files/ENCFF657GDL/@@download/ENCFF657GDL.bigWig',
-            color: '#0078d7',
-            autoscaleGroup: 'hist'
-          }, // Add methylation marks
-          {
-            name: 'WGBS : Heart Tissue Postnatal (0 days)',
-            type: 'wig',
-            format: 'bigWig',
-            // url: this.trackUrl,
-            url: 'https://www.encodeproject.org/files/ENCFF980ZXR/@@download/ENCFF980ZXR.bigWig',
-            color: '#6650e9',
-            autoscaleGroup: 'meth'
-          }
-        ],
       };
     }
     this.createBrowser();
@@ -244,11 +369,138 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     try {
       this.browser = await igv.createBrowser(this.igvDiv.nativeElement, this.options)
 
+      // This vendored IGV build still creates its multi-track selection button
+      // when showMultiSelectButton is false. Hide it so the MCaReDB track picker
+      // is the single, unambiguous place for choosing tracks.
+      this.browser.navbar?.multiTrackSelectButton?.setVisibility(false);
+
       //this.addTrackByUrl()
     } catch (e) {
       console.log(e)
     }
   }
+
+  get visibleTrackCount(): number {
+    return this.selectedTrackIds.size;
+  }
+
+  get trackSelectionBusy(): boolean {
+    return this.loadingTrackIds.size > 0;
+  }
+
+  tracksForGroup(groupId: GenomeTrackOption['group']): readonly GenomeTrackOption[] {
+    return this.trackCatalog.filter(track => track.group === groupId);
+  }
+
+  isTrackGroupVisible(groupId: GenomeTrackOption['group']): boolean {
+    return this.tracksForGroup(groupId).every(track => this.selectedTrackIds.has(track.id));
+  }
+
+  selectedTrackCountForGroup(groupId: GenomeTrackOption['group']): number {
+    return this.tracksForGroup(groupId).filter(track => this.selectedTrackIds.has(track.id)).length;
+  }
+
+  isTrackGroupExpanded(groupId: GenomeTrackOption['group']): boolean {
+    return this.expandedTrackGroupIds.has(groupId);
+  }
+
+  toggleTrackGroupExpanded(groupId: GenomeTrackOption['group']): void {
+    if (this.expandedTrackGroupIds.has(groupId)) {
+      this.expandedTrackGroupIds.delete(groupId);
+    } else {
+      this.expandedTrackGroupIds.add(groupId);
+    }
+  }
+
+  isTrackPresetActive(trackIds: readonly string[]): boolean {
+    return trackIds.length === this.selectedTrackIds.size &&
+      trackIds.every(trackId => this.selectedTrackIds.has(trackId));
+  }
+
+  isTrackGroupLoading(groupId: GenomeTrackOption['group']): boolean {
+    return this.tracksForGroup(groupId).some(track => this.loadingTrackIds.has(track.id));
+  }
+
+  isTrackVisible(trackId: string): boolean {
+    return this.selectedTrackIds.has(trackId);
+  }
+
+  async setTrackVisible(trackId: string, visible: boolean): Promise<void> {
+    const track = this.trackCatalog.find(item => item.id === trackId);
+    if (!track || !this.browser || this.loadingTrackIds.has(trackId)) {
+      return;
+    }
+
+    if (visible === this.selectedTrackIds.has(trackId)) {
+      return;
+    }
+
+    this.loadingTrackIds.add(trackId);
+    try {
+      if (visible) {
+        await this.browser.loadTrack({ ...track.config });
+        this.selectedTrackIds.add(trackId);
+      } else {
+        this.browser.removeTrackByName(track.config.name);
+        this.selectedTrackIds.delete(trackId);
+      }
+    } catch (error) {
+      console.error(`Unable to update genome-browser track ${track.config.name}`, error);
+    } finally {
+      this.loadingTrackIds.delete(trackId);
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  async applyTrackPreset(trackIds: readonly string[]): Promise<void> {
+    if (!this.browser) {
+      return;
+    }
+
+    const requestedIds = new Set(trackIds);
+    const tracksToHide = this.trackCatalog.filter(track =>
+      this.selectedTrackIds.has(track.id) && !requestedIds.has(track.id)
+    );
+    const tracksToShow = this.trackCatalog.filter(track =>
+      requestedIds.has(track.id) && !this.selectedTrackIds.has(track.id)
+    );
+
+    for (const track of tracksToHide) {
+      await this.setTrackVisible(track.id, false);
+    }
+    for (const track of tracksToShow) {
+      await this.setTrackVisible(track.id, true);
+    }
+  }
+
+  async showTrackGroup(groupId: GenomeTrackOption['group']): Promise<void> {
+    const tracksToShow = this.tracksForGroup(groupId).filter(track =>
+      !this.selectedTrackIds.has(track.id)
+    );
+
+    for (const track of tracksToShow) {
+      await this.setTrackVisible(track.id, true);
+    }
+  }
+
+  async hideTrackGroup(groupId: GenomeTrackOption['group']): Promise<void> {
+    const tracksToHide = this.tracksForGroup(groupId).filter(track =>
+      this.selectedTrackIds.has(track.id)
+    );
+
+    for (const track of tracksToHide) {
+      await this.setTrackVisible(track.id, false);
+    }
+  }
+
+  async toggleTrackGroupVisibility(groupId: GenomeTrackOption['group']): Promise<void> {
+    if (this.isTrackGroupVisible(groupId)) {
+      await this.hideTrackGroup(groupId);
+    } else {
+      await this.showTrackGroup(groupId);
+    }
+  }
+
   addTrackByUrl() {
     this.browser.loadTrack({
       url: this.trackUrl,

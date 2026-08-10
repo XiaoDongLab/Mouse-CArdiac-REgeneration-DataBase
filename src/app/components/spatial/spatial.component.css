@@ -201,6 +201,11 @@ legend.form-label {
   box-shadow: 0 2px 6px rgba(var(--spatial-accent-rgb), .28);
 }
 
+.expression-scale-control .segmented-control button {
+  min-height: 30px;
+  font-size: .75rem;
+}
+
 .layer-tabs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -588,11 +593,11 @@ legend.form-label {
   height: .75rem;
   border: 0;
   border-radius: 2px;
-  background: linear-gradient(90deg, hsl(331 58% 93%) 0%, hsl(331 70% 66%) 50%, hsl(331 82% 40%) 100%);
+  background: linear-gradient(90deg, #f7f4f9 0%, #9e9ac8 50%, #3f007d 100%);
 }
 
 .legend-gradient.cell-type {
-  background: linear-gradient(90deg, hsl(174 48% 92%) 0%, hsl(174 63% 64%) 50%, hsl(174 78% 37%) 100%);
+  background: linear-gradient(90deg, #f7fcfd 0%, #41b6c4 50%, #00441b 100%);
 }
 
 .legend-stack {

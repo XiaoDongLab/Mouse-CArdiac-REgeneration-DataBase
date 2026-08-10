@@ -129,6 +129,42 @@ describe('SpatialComponent', () => {
       imageWidth: 1968,
       imageHeight: 2000,
       spotDiameter: 12.6422
+    },
+    {
+      sampleKey: 5,
+      accession: 'GSM5268645',
+      label: 'P1 Sham - 7 dpi',
+      surgery: 'Sham',
+      timepoint: '7 dpi',
+      replicate: 1,
+      imageUrl: 'https://api.mcaredb.org:3305/downloads/GSM5268645.png',
+      imageWidth: 2000,
+      imageHeight: 1950,
+      spotDiameter: 11.5
+    },
+    {
+      sampleKey: 7,
+      accession: 'GSM4983123',
+      label: 'P1 MI - 7 dpi',
+      surgery: 'MI',
+      timepoint: '7 dpi',
+      replicate: 1,
+      imageUrl: 'https://api.mcaredb.org:3305/downloads/GSM4983123.png',
+      imageWidth: 1980,
+      imageHeight: 2000,
+      spotDiameter: 12.5
+    },
+    {
+      sampleKey: 8,
+      accession: 'GSM5268647',
+      label: 'P1 MI - 7 dpi - replicate 2',
+      surgery: 'MI',
+      timepoint: '7 dpi',
+      replicate: 2,
+      imageUrl: 'https://api.mcaredb.org:3305/downloads/GSM5268647.png',
+      imageWidth: 1980,
+      imageHeight: 2000,
+      spotDiameter: 12.5
     }
   ];
 
@@ -161,6 +197,25 @@ describe('SpatialComponent', () => {
   it('uses the full-page spatial display defaults', () => {
     expect(component.spotOpacity).toBe(80);
     expect(component.spotSize).toBe(1.125);
+    expect(component.expressionScale).toBe('log');
+    expect(component.showAllCellTypes).toBeTrue();
+  });
+
+  it('switches gene expression between published log1p and back-transformed linear values', () => {
+    const panel = component.visiblePanels[0];
+    const spot = { ...component.spotsForPanel(panel)[0], value: Math.log1p(10) };
+
+    expect(component.spotDisplayValue(spot, panel)).toBeCloseTo(Math.log1p(10));
+
+    component.setExpressionScale('linear');
+
+    expect(component.spotDisplayValue(spot, panel)).toBeCloseTo(10);
+    expect(component.legendMax).toBeCloseTo(Math.expm1(2.5));
+  });
+
+  it('displays study timepoints using PSD terminology', () => {
+    expect(component.formatTimepoint('3 dpi')).toBe('PSD3');
+    expect(component.formatTimepoint('7 dpi')).toBe('PSD7');
   });
 
   it('formats cell-type proportions as percentages for spot details', () => {
@@ -198,6 +253,69 @@ describe('SpatialComponent', () => {
     expect(component.spotSize).toBe(1.125);
   });
 
+  it('uses and restores each sample-specific spot-size default in dual view', () => {
+    component.selectedTimepoint = '7 dpi';
+    component.onConditionChange();
+    const singlePanel = component.visiblePanels[0];
+    expect(component.spotSizeForPanel(singlePanel) * 16).toBe(18);
+
+    component.toggleComparison();
+    const [miPanel, shamPanel] = component.visiblePanels;
+
+    expect(component.spotSizeForPanel(miPanel) * 16).toBe(10);
+    expect(component.spotSizeForPanel(shamPanel) * 16).toBe(9);
+    expect(component.selectedPanelSpotSize * 16).toBe(10);
+
+    component.selectedSurgery = 'Sham';
+    component.onConditionChange();
+    expect(component.selectedPanelSpotSize * 16).toBe(9);
+
+    component.onSpotSizeChange(0.5);
+    expect(component.spotSizeForPanel(shamPanel) * 16).toBe(8);
+    expect(component.selectedPanelSpotSize * 16).toBe(8);
+
+    component.selectedTimepoint = '3 dpi';
+    component.onConditionChange();
+    expect(component.selectedPanelSpotSize * 16).toBe(12);
+
+    component.selectedSurgery = 'MI';
+    component.onConditionChange();
+    expect(component.selectedPanelSpotSize * 16).toBe(14);
+
+    component.selectedTimepoint = '7 dpi';
+    component.onConditionChange();
+    expect(component.selectedPanelSpotSize * 16).toBe(10);
+
+    component.selectedSurgery = 'Sham';
+    component.onConditionChange();
+    expect(component.selectedPanelSpotSize * 16).toBe(9);
+  });
+
+  it('shows and switches MI 7 dpi replicates', () => {
+    component.selectedTimepoint = '7 dpi';
+    component.onConditionChange();
+    fixture.detectChanges();
+
+    const replicateSelect = fixture.nativeElement.querySelector('#spatialReplicate') as HTMLSelectElement;
+    expect(component.availableReplicates).toEqual([1, 2]);
+    expect(replicateSelect).not.toBeNull();
+    expect(replicateSelect.options.length).toBe(2);
+
+    component.toggleComparison();
+    expect(component.selectedPanelSpotSize * 16).toBe(10);
+
+    component.selectedReplicate = 2;
+    component.onConditionChange();
+    expect(component.activeSample?.accession).toBe('GSM5268647');
+    expect(spatialService.geneLayerCalls).toContain(['GSM5268647', 'Acta2']);
+    expect(component.selectedPanelSpotSize * 16).toBe(9);
+
+    component.selectedSurgery = 'Sham';
+    component.onConditionChange();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#spatialReplicate')).toBeNull();
+  });
+
   it('compares gene expression and cell-type proportion on the same sample', () => {
     component.setComparisonMode('feature');
 
@@ -207,7 +325,8 @@ describe('SpatialComponent', () => {
     ]);
     expect(component.visiblePanels.map(panel => panel.viewMode)).toEqual(['gene', 'cellType']);
     expect(spatialService.geneLayerCalls).toContain(['GSM5268646', 'Acta2']);
-    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Fibroblasts']);
+    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'CM1']);
+    expect(component.hasAllCellTypesPanel).toBeTrue();
     expect(component.useSharedScale).toBeFalse();
   });
 
@@ -319,8 +438,8 @@ describe('SpatialComponent', () => {
   it('switches to cell-type proportions without synthetic value offsets', () => {
     component.setViewMode('cellType');
 
-    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'Fibroblasts']);
-    expect(component.normalizationLabel).toBe('deconvolution proportion');
+    expect(spatialService.cellTypeLayerCalls).toContain(['GSM5268646', 'CM1']);
+    expect(component.hasAllCellTypesPanel).toBeTrue();
   });
 
   it('loads every published cell type and renders a pie for each spot', () => {

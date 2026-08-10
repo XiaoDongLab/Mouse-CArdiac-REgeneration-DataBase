@@ -8,13 +8,13 @@ selectionMode="single"
 [routerLink]="selected_path">
 </dx-tabs>-->
 <nav class="navbar sticky-top navbar-expand-lg bg-blurred" #navbarTop>
-  <div class="container d-block">
+  <div class="container-fluid d-block">
     <!--<a class="navbar-brand" href="javascript:void(0)" (click)="selectTab(0)">MCareDB</a>-->
     <button class="navbar-toggler" type="button" (click)="navbarExpanded = !navbarExpanded; testExpansion()"
       [attr.aria-expanded]="navbarExpanded">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="d-none d-lg-block overflow-x-auto">
+    <div class="d-none d-lg-block">
       <ul class="navbar-nav justify-content-center w-100">
         @for (tab of tabs; track tab; let i = $index) {
         <li class="nav-item">
@@ -32,7 +32,7 @@ selectionMode="single"
       </ul>
     </div>
     <div #collapse="ngbCollapse" [ngbCollapse]="navbarExpanded">
-      <div class="d-block d-lg-none overflow-x-auto">
+      <div class="d-block d-lg-none">
         <ul class="navbar-nav justify-content-center w-100">
           @for (tab of tabs; track tab; let i = $index) {
           <li class="nav-item">

@@ -68,15 +68,27 @@
 
         <fieldset>
           <legend class="form-label" translate="spatial.controls.timepoint"></legend>
-          <div class="segmented-control" role="group" aria-label="Time after surgery">
+          <div class="segmented-control" role="group" aria-label="Post-surgery day">
             @for (timepoint of timepoints; track timepoint) {
               <button type="button" [class.active]="selectedTimepoint === timepoint" [disabled]="loadingMetadata"
                 (click)="selectedTimepoint = timepoint; onConditionChange()">
-                {{ timepoint }}
+                {{ formatTimepoint(timepoint) }}
               </button>
             }
           </div>
         </fieldset>
+
+        @if (availableReplicates.length > 1) {
+          <div>
+            <label class="form-label" for="spatialReplicate" translate="spatial.controls.replicate"></label>
+            <select id="spatialReplicate" class="form-select" [(ngModel)]="selectedReplicate"
+              (ngModelChange)="onConditionChange()" [disabled]="loadingMetadata">
+              @for (replicate of availableReplicates; track replicate) {
+                <option [ngValue]="replicate">{{ replicate }}</option>
+              }
+            </select>
+          </div>
+        }
 
         <hr class="my-1" />
 
@@ -113,6 +125,22 @@
             @if (geneNotFound) {
               <div class="form-text text-danger" role="alert" translate="spatial.controls.gene_not_found"></div>
             }
+            <div class="expression-scale-control mt-3">
+              <label class="form-label" translate="spatial.controls.expression_scale"></label>
+              <div class="segmented-control" role="group"
+                [attr.aria-label]="'spatial.controls.expression_scale' | translate">
+                <button type="button" [class.active]="expressionScale === 'linear'"
+                  [attr.aria-pressed]="expressionScale === 'linear'"
+                  (click)="setExpressionScale('linear')">
+                  {{ 'spatial.controls.linear' | translate }}
+                </button>
+                <button type="button" [class.active]="expressionScale === 'log'"
+                  [attr.aria-pressed]="expressionScale === 'log'"
+                  (click)="setExpressionScale('log')">
+                  {{ 'spatial.controls.log1p' | translate }}
+                </button>
+              </div>
+            </div>
           </div>
         }
         @if (viewMode === 'cellType' || comparisonMode === 'feature') {
@@ -161,10 +189,10 @@
 
         <div>
           <label for="spotSize" class="form-label d-flex justify-content-between">
-            <span translate="spatial.controls.spot_size"></span><span>{{ spotSize * 16 }} px</span>
+            <span translate="spatial.controls.spot_size"></span><span>{{ selectedPanelSpotSize * 16 }} px</span>
           </label>
           <input id="spotSize" class="form-range" type="range" min="0.125" max="1.5" step="0.0625"
-            [(ngModel)]="spotSize" />
+            [ngModel]="selectedPanelSpotSize" (ngModelChange)="onSpotSizeChange($event)" />
         </div>
       </div>
     </aside>
@@ -226,12 +254,14 @@
 
       <div class="viewer-grid" [class.is-comparing]="isComparing">
         @for (panel of visiblePanels; track panel.id) {
-          <section class="sample-view" [attr.aria-label]="panel.sample.label + ' - ' + panel.feature">
+          @let panelSpotSize = spotSizeForPanel(panel);
+          <section class="sample-view"
+            [attr.aria-label]="'P1 ' + panel.sample.surgery + ' ' + formatTimepoint(panel.sample.timepoint) + ' - ' + panel.feature">
             <div class="sample-label">
               <div>
                 <span class="p1-sample-badge">P1</span>
                 <span class="condition-badge" [class.mi]="panel.sample.surgery === 'MI'">{{ panel.sample.surgery }}</span>
-                <strong>{{ panel.sample.timepoint }}</strong>
+                <strong>{{ formatTimepoint(panel.sample.timepoint) }}</strong>
                 @if (isComparing) {
                   <span class="panel-feature" [class.cell-type]="panel.viewMode === 'cellType'">
                     {{ isAllCellTypesPanel(panel) ? ('spatial.controls.all_cell_types' | translate) : panel.feature }}
@@ -262,9 +292,9 @@
                       <button type="button" class="spatial-spot"
                         [class.selected]="isSpotSelected(spot, panel)"
                         [style.left.%]="spot.x * 100" [style.top.%]="spot.y * 100"
-                        [style.width.rem]="spotSize"
-                        [style.border-width.px]="spotSize * 16 < 4 ? 0.25 : spotSize * 16 < 6 ? 0.5 : 1"
-                        [class.tiny]="spotSize * 16 < 4"
+                        [style.width.rem]="panelSpotSize"
+                        [style.border-width.px]="panelSpotSize * 16 < 4 ? 0.25 : panelSpotSize * 16 < 6 ? 0.5 : 1"
+                        [class.tiny]="panelSpotSize * 16 < 4"
                         [style.opacity]="spotOpacity / 100"
                         [style.background]="spotColor(spot, panel)"
                         [attr.aria-label]="spotLabel(spot, panel)"
@@ -377,7 +407,7 @@
                   <strong>
                     {{ measurement.panel.viewMode === 'cellType'
                       ? formatProportion(measurement.spot.value)
-                      : formatValue(measurement.spot.value) }}
+                      : formatValue(spotDisplayValue(measurement.spot, measurement.panel)) }}
                   </strong>
                 </div>
               }
@@ -420,7 +450,7 @@
               <div><dt translate="spatial.inspector.sample"></dt><dd>{{ sample.accession }}</dd></div>
               <div><dt translate="spatial.inspector.platform"></dt><dd>10x Visium</dd></div>
               <div><dt translate="spatial.inspector.stage"></dt><dd translate="spatial.controls.p1_stage"></dd></div>
-              <div><dt translate="spatial.inspector.condition"></dt><dd>{{ sample.surgery }} · {{ sample.timepoint }}</dd></div>
+              <div><dt translate="spatial.inspector.condition"></dt><dd>{{ sample.surgery }} · {{ formatTimepoint(sample.timepoint) }}</dd></div>
               <div><dt translate="spatial.inspector.section"></dt><dd>200 μm below LAD ligation</dd></div>
             </dl>
           }

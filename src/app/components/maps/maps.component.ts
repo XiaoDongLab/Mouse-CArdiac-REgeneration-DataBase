@@ -38,25 +38,19 @@ export interface GenomeBrowserSelection {
   Comparison?: string;
 }
 
-export interface CuiSpatialContext {
+export interface GenomeSpatialContext {
   gene: string;
   cellType: string;
   surgery: SpatialSurgery;
-  timepoint: '3 dpi';
+  timepoint: '3 dpi' | '7 dpi';
   allowConditionSwitch: boolean;
 }
 
-const CUI_STUDY_PMIDS = new Set([32220304, 34489413]);
 const HEART_STUDY_METADATA: Record<number, { title: string; author: string; year: string }> = {
   32220304: {
     title: 'Dynamic Transcriptional Responses to Injury of Regenerative and Non-regenerative Cardiomyocytes Revealed by Single-Nucleus RNA Sequencing.',
     author: 'Cui M',
     year: '2020'
-  },
-  34489413: {
-    title: 'Nrf1 promotes heart regeneration and repair by regulating proteostasis and redox balance',
-    author: 'Miao Cui',
-    year: '2021'
   },
   33296652: {
     title: 'Cell-Type-Specific Gene Regulatory Networks Underlying Murine Neonatal Heart Regeneration at Single-Cell Resolution.',
@@ -69,7 +63,13 @@ const HEART_STUDY_METADATA: Record<number, { title: string; author: string; year
     year: '2024'
   }
 };
-const CUI_CELL_TYPE_MAP: Record<string, string> = {
+const PUBLIC_STUDY_PMIDS: Record<number, number> = {
+  // Differential-expression records retain the original internal PMID used for this dataset.
+  34489413: 32220304
+};
+const SPATIAL_CELL_TYPE_MAP: Record<string, string> = {
+  'cardiac cell': 'Cardiomyocytes',
+  'cardiac cells': 'Cardiomyocytes',
   'cardiomyocyte': 'Cardiomyocytes',
   'cardiomyocytes': 'Cardiomyocytes',
   'cardiomyocyte 1': 'CM1',
@@ -98,28 +98,37 @@ const CUI_CELL_TYPE_MAP: Record<string, string> = {
   'immune cells': 'Immune cells',
   'macrophage': 'Macrophage',
   'macrophages': 'Macrophage',
+  'm2 macrophage': 'Macrophage',
+  'b cell': 'Immune cells',
+  't cell': 'Immune cells',
+  'granulocyte': 'Immune cells',
+  'activated fibroblast': 'Fibroblasts',
+  'well-established epicardial progenitor cell': 'Epicardial cells',
+  'sinoatrial node (san) cell': 'Cardiomyocytes',
+  'sinoatrial node cell': 'Cardiomyocytes',
   'mural cell': 'Pericyte/SMC',
   'mural cells': 'Pericyte/SMC',
   'pericyte/smc': 'Pericyte/SMC',
   'pericyte / smc': 'Pericyte/SMC'
 };
 
-export function getCuiSpatialContext(
+export function getGenomeSpatialContext(
   selection: GenomeBrowserSelection | null | undefined,
   gene: string | undefined
-): CuiSpatialContext | null {
-  if (!selection || !CUI_STUDY_PMIDS.has(Number(selection.pmid)) || Number(selection.PSD) !== 3) return null;
+): GenomeSpatialContext | null {
+  if (!selection) return null;
 
   const normalizedSurgery = selection.Surgery?.trim().toLocaleLowerCase();
-  const isConditionComparison = !normalizedSurgery && selection.Comparison === 'ShamvsMI';
-  if (normalizedSurgery !== 'mi' && normalizedSurgery !== 'sham' && !isConditionComparison) return null;
+  const hasExplicitCondition = normalizedSurgery === 'mi' || normalizedSurgery === 'sham';
+  const isConditionComparison = selection.Comparison?.trim().toLocaleLowerCase() === 'shamvsmi';
 
   const mappedCellTypes = [selection.cell_type, selection.cell_type2, selection.cell_type3]
     .map(label => label?.trim().replace(/\s+/g, ' ').toLocaleLowerCase())
     .filter(label => label && label !== 'na' && label !== 'none')
     .map(label => {
-      const cardiomyocyteMatch = label.match(/^(?:cardiomyocyte|cm)\s*([1-5])(?:\s+\d+)?$/);
-      return cardiomyocyteMatch ? `CM${cardiomyocyteMatch[1]}` : CUI_CELL_TYPE_MAP[label];
+      const cardiomyocyteMatch = label.match(/^(?:cardiomyocyte|cm)\s*([1-5])(?:\s+\d+)*$/);
+      if (cardiomyocyteMatch) return `CM${cardiomyocyteMatch[1]}`;
+      return SPATIAL_CELL_TYPE_MAP[label] ?? SPATIAL_CELL_TYPE_MAP[label.replace(/\s+\d+$/, '')];
     })
     .filter((cellType): cellType is string => Boolean(cellType));
   const cellType = mappedCellTypes.find(candidate => /^CM[1-5]$/.test(candidate)) ?? mappedCellTypes[0];
@@ -131,9 +140,19 @@ export function getCuiSpatialContext(
     gene: symbol,
     cellType,
     surgery: normalizedSurgery === 'sham' ? 'Sham' : 'MI',
-    timepoint: '3 dpi',
-    allowConditionSwitch: isConditionComparison
+    timepoint: Number(selection.PSD) === 7 ? '7 dpi' : '3 dpi',
+    allowConditionSwitch: isConditionComparison || !hasExplicitCondition
   };
+}
+
+export function getGenomeCellTypeLabel(cellType: string | null | undefined): string {
+  const label = cellType?.trim().replace(/\s+/g, ' ') ?? '';
+  return label.replace(/^(Cardiomyocyte\s+[1-5])(?:\s+\d+)+$/i, '$1');
+}
+
+export function getPublicStudyPmid(pmid: number | string | null | undefined): number {
+  const studyPmid = Number(pmid);
+  return PUBLIC_STUDY_PMIDS[studyPmid] ?? studyPmid;
 }
 
 @Component({
@@ -158,10 +177,18 @@ export class MapsComponent implements OnInit {
   points_data: any[];
   line_data: any[];
   decade_change: number;
-  spatialContext: CuiSpatialContext | null = null;
+  spatialContext: GenomeSpatialContext | null = null;
   private initialized = false;
 
   public linReg_chart_options: Partial<ChartOptions>;
+
+  get displayedCellType(): string {
+    return getGenomeCellTypeLabel(this.selected_info?.cell_type);
+  }
+
+  get publicStudyPmid(): number {
+    return getPublicStudyPmid(this.selected_info?.pmid);
+  }
 
 
   maps = [{ text: "UMAP" }, { text: "TSNE" }, { text: "Model Visualization" }, { text: "Meta Info" }];
@@ -327,14 +354,14 @@ export class MapsComponent implements OnInit {
     this.calculateDecadeChange();
     this.getClusterImages();
 
-    const fallback = HEART_STUDY_METADATA[Number(this.selected_info.pmid)];
+    const fallback = HEART_STUDY_METADATA[this.publicStudyPmid];
     if (fallback) {
       this.title = fallback.title;
       this.author = fallback.author;
       this.year = fallback.year;
     }
 
-    this.pubmedService.getPubmedJson(this.selected_info.pmid).subscribe({
+    this.pubmedService.getPubmedJson(this.publicStudyPmid).subscribe({
       next: pubmed => {
         if (pubmed.title && pubmed.title !== 'Unknown') this.title = pubmed.title;
         if (pubmed.first_author && pubmed.first_author !== 'Unknown') this.author = pubmed.first_author;
@@ -345,7 +372,7 @@ export class MapsComponent implements OnInit {
   }
 
   private updateSpatialContext(): void {
-    this.spatialContext = getCuiSpatialContext(this.selected_info, this.en_id);
+    this.spatialContext = getGenomeSpatialContext(this.selected_info, this.en_id);
     if (!this.spatialContext && this.display === 'Spatial') this.display = 'UMAP';
   }
 

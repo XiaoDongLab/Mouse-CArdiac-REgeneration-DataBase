@@ -9,11 +9,13 @@ import {
   SpatialSample,
   SpatialService,
   SpatialSpot,
-  SpatialSurgery
+  SpatialSurgery,
+  formatSpatialTimepoint
 } from '../../services/spatial.service';
 import { SpatialClusterFit, calculateSpatialClusterFit } from '../spatial/spatial-fit';
 
 type PreviewLayerType = 'gene' | 'cellType';
+type PreviewExpressionScale = 'log' | 'linear';
 
 interface PreviewPanel {
   type: PreviewLayerType;
@@ -29,10 +31,15 @@ interface PreviewPanel {
   styleUrl: './spatial-preview.component.css'
 })
 export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
+  readonly formatTimepoint = formatSpatialTimepoint;
+  readonly timepoints: SpatialSample['timepoint'][] = ['3 dpi', '7 dpi'];
+  private readonly expressionColorStops = ['#f7f4f9', '#9e9ac8', '#3f007d'];
+  private readonly proportionColorStops = ['#f7fcfd', '#41b6c4', '#00441b'];
   @Input({ required: true }) gene = '';
   @Input({ required: true }) cellType = '';
   @Input({ required: true }) surgery: SpatialSurgery = 'MI';
   @Input() timepoint: SpatialSample['timepoint'] = '3 dpi';
+  @Input() sourcePsd: number | null = null;
   @Input() allowConditionSwitch = false;
 
   sample: SpatialSample | null = null;
@@ -45,10 +52,12 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   panY = 0;
   isPanning = false;
   activeSurgery: SpatialSurgery = 'MI';
+  activeTimepoint: SpatialSample['timepoint'] = '3 dpi';
   showHistology = true;
   showSpots = true;
   spotOpacity = 80;
   spotSize = 9;
+  expressionScale: PreviewExpressionScale = 'log';
 
   @ViewChildren('previewViewport') private previewViewports?: QueryList<ElementRef<HTMLElement>>;
 
@@ -69,6 +78,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.activeSurgery = this.surgery;
+    this.activeTimepoint = this.timepoint;
     this.initialized = true;
     this.loadLayers();
   }
@@ -76,6 +86,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.initialized) return;
     if (changes['surgery']) this.activeSurgery = this.surgery;
+    if (changes['timepoint']) this.activeTimepoint = this.timepoint;
     if (changes['gene'] || changes['cellType'] || changes['surgery'] || changes['timepoint']) {
       this.loadLayers();
     }
@@ -106,6 +117,20 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
     if (this.activeSurgery === surgery) return;
     this.activeSurgery = surgery;
     this.loadLayers();
+  }
+
+  setTimepoint(timepoint: SpatialSample['timepoint']): void {
+    if (this.activeTimepoint === timepoint) return;
+    this.activeTimepoint = timepoint;
+    this.loadLayers();
+  }
+
+  setExpressionScale(scale: PreviewExpressionScale): void {
+    this.expressionScale = scale;
+  }
+
+  get showPsd1Notice(): boolean {
+    return Number(this.sourcePsd) === 1;
   }
 
   selectSpot(spot: SpatialSpot): void {
@@ -160,14 +185,25 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   spotColor(spot: SpatialSpot, panel: PreviewPanel): string {
-    const normalized = Math.max(0, Math.min(1, spot.value / this.maximum(panel)));
+    const normalized = Math.max(0, Math.min(1, this.spotDisplayValue(spot, panel) / this.maximum(panel)));
     if (panel.type === 'cellType') {
-      return `hsl(174 ${48 + normalized * 30}% ${92 - normalized * 55}%)`;
+      return this.colorFromStops(normalized, this.proportionColorStops);
     }
-    return `hsl(331 ${58 + normalized * 24}% ${93 - normalized * 53}%)`;
+    return this.colorFromStops(normalized, this.expressionColorStops);
   }
 
   maximum(panel: PreviewPanel): number {
+    const maximum = this.rawMaximum(panel);
+    if (panel.type !== 'gene' || this.expressionScale === 'log') return maximum;
+    return /log1p/i.test(panel.layer.feature.normalization) ? Math.expm1(maximum) : maximum;
+  }
+
+  spotDisplayValue(spot: SpatialSpot, panel: PreviewPanel): number {
+    if (panel.type !== 'gene' || this.expressionScale === 'log') return spot.value;
+    return /log1p/i.test(panel.layer.feature.normalization) ? Math.expm1(spot.value) : spot.value;
+  }
+
+  private rawMaximum(panel: PreviewPanel): number {
     const supplied = Number(panel.layer.max);
     if (Number.isFinite(supplied) && supplied > 0) return supplied;
     return Math.max(0, ...panel.layer.spots.map(spot => spot.value)) || 1;
@@ -200,7 +236,7 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
     this.loadSubscription = this.spatialService.getSamples().pipe(
       switchMap(samples => {
         const sample = samples.find(candidate =>
-          candidate.surgery === this.activeSurgery && candidate.timepoint === this.timepoint
+          candidate.surgery === this.activeSurgery && candidate.timepoint === this.activeTimepoint
         );
         if (!sample) throw new Error('No matching spatial sample');
         this.sample = sample;
@@ -252,5 +288,24 @@ export class SpatialPreviewComponent implements OnInit, OnChanges, OnDestroy {
     const maxY = Math.max(0, (this.contentHeight * scale - this.viewportHeight) / 2);
     this.panX = Math.max(-maxX, Math.min(maxX, this.panX));
     this.panY = Math.max(-maxY, Math.min(maxY, this.panY));
+  }
+
+  private colorFromStops(value: number, stops: string[]): string {
+    const normalized = Math.max(0, Math.min(1, value));
+    const scaled = normalized * (stops.length - 1);
+    const index = Math.min(Math.floor(scaled), stops.length - 2);
+    const fraction = scaled - index;
+    const start = this.hexToRgb(stops[index]);
+    const end = this.hexToRgb(stops[index + 1]);
+    const channel = (from: number, to: number) => Math.round(from + (to - from) * fraction);
+    return `rgb(${channel(start[0], end[0])}, ${channel(start[1], end[1])}, ${channel(start[2], end[2])})`;
+  }
+
+  private hexToRgb(color: string): [number, number, number] {
+    return [
+      Number.parseInt(color.slice(1, 3), 16),
+      Number.parseInt(color.slice(3, 5), 16),
+      Number.parseInt(color.slice(5, 7), 16)
+    ];
   }
 }

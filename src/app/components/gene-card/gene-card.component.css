@@ -365,6 +365,10 @@ canvas,
     height: 1.5rem;
 }
 
+.progress-stacked>.progress:last-child {
+    order: -1;
+}
+
 /*::ng-deep [data-bs-theme=dark] .gene-card .progress-stacked {
     filter: invert(1) hue-rotate(180deg);
 }*/

@@ -19,6 +19,11 @@ export interface SpatialSample {
   flipHorizontal?: boolean;
 }
 
+export function formatSpatialTimepoint(timepoint: SpatialSample['timepoint']): string {
+  const day = timepoint.match(/\d+/)?.[0];
+  return day ? `PSD${day}` : timepoint;
+}
+
 export interface SpatialCellType {
   cell_type_id: number;
   source_name: string;

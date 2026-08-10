@@ -41,6 +41,48 @@ describe('SpatialPreviewComponent', () => {
     expect(component.showSpots).toBeTrue();
     expect(component.spotOpacity).toBe(80);
     expect(component.spotSize).toBe(9);
+    expect(component.expressionScale).toBe('log');
+  });
+
+  it('switches expression between log1p and back-transformed linear values', () => {
+    const component = new SpatialPreviewComponent({} as SpatialService);
+    const geneLayer = layer('gene', 'Nckap5');
+    geneLayer.spots[0].value = Math.log1p(10);
+    geneLayer.max = Math.log1p(10);
+    const panel = { type: 'gene' as const, feature: 'Nckap5', layer: geneLayer };
+
+    expect(component.spotDisplayValue(geneLayer.spots[0], panel)).toBeCloseTo(Math.log1p(10));
+
+    component.setExpressionScale('linear');
+
+    expect(component.spotDisplayValue(geneLayer.spots[0], panel)).toBeCloseTo(10);
+    expect(component.maximum(panel)).toBeCloseTo(10);
+  });
+
+  it('uses the same high-contrast expression and proportion ramps as the full spatial page', () => {
+    const component = new SpatialPreviewComponent({} as SpatialService);
+    const genePanel = { type: 'gene' as const, feature: 'Nckap5', layer: layer('gene', 'Nckap5') };
+    const cellPanel = { type: 'cellType' as const, feature: 'CM1', layer: layer('cell_type', 'CM1') };
+
+    expect(component.spotColor(genePanel.layer.spots[0], genePanel)).toBe('rgb(63, 0, 125)');
+    expect(component.spotColor(cellPanel.layer.spots[0], cellPanel)).toBe('rgb(0, 68, 27)');
+  });
+
+  it('displays the genome-browser spatial timepoint using PSD terminology', () => {
+    const component = new SpatialPreviewComponent({} as SpatialService);
+
+    expect(component.formatTimepoint('3 dpi')).toBe('PSD3');
+    expect(component.formatTimepoint('7 dpi')).toBe('PSD7');
+  });
+
+  it('flags PSD1 records because the spatial study starts at PSD3', () => {
+    const component = new SpatialPreviewComponent({} as SpatialService);
+
+    component.sourcePsd = 1;
+    expect(component.showPsd1Notice).toBeTrue();
+
+    component.sourcePsd = 3;
+    expect(component.showPsd1Notice).toBeFalse();
   });
 
   it('calculates an automatic view around the occupied tissue spots', () => {
@@ -131,5 +173,31 @@ describe('SpatialPreviewComponent', () => {
     expect(component.activeSurgery).toBe('Sham');
     expect(service.getGeneLayer).toHaveBeenCalledWith('GSM5268644', 'Nckap5');
     expect(service.getCellTypeLayer).toHaveBeenCalledWith('GSM5268644', 'CM1');
+  });
+
+  it('switches the genome-browser spatial sample between PSD3 and PSD7', () => {
+    const psd7Sample: SpatialSample = {
+      ...sample,
+      sampleKey: 7,
+      accession: 'GSM4983123',
+      label: 'P1 MI - 7 dpi',
+      timepoint: '7 dpi'
+    };
+    const service = {
+      getSamples: () => of([sample, psd7Sample]),
+      getGeneLayer: jasmine.createSpy().and.returnValue(of(layer('gene', 'Nckap5'))),
+      getCellTypeLayer: jasmine.createSpy().and.returnValue(of(layer('cell_type', 'CM1')))
+    } as unknown as SpatialService;
+    const component = new SpatialPreviewComponent(service);
+    component.gene = 'Nckap5';
+    component.cellType = 'CM1';
+    component.surgery = 'MI';
+    component.ngOnInit();
+
+    component.setTimepoint('7 dpi');
+
+    expect(component.activeTimepoint).toBe('7 dpi');
+    expect(service.getGeneLayer).toHaveBeenCalledWith('GSM4983123', 'Nckap5');
+    expect(service.getCellTypeLayer).toHaveBeenCalledWith('GSM4983123', 'CM1');
   });
 });

@@ -9,12 +9,14 @@ import {
   SpatialSample,
   SpatialService,
   SpatialSpot,
-  SpatialSurgery
+  SpatialSurgery,
+  formatSpatialTimepoint
 } from '../../services/spatial.service';
 import { SpatialClusterFit, calculateSpatialClusterFit } from './spatial-fit';
 
 type SpatialViewMode = 'gene' | 'cellType';
 type SpatialComparisonMode = 'none' | 'sample' | 'feature';
+type SpatialExpressionScale = 'log' | 'linear';
 
 interface SpatialPanel {
   id: string;
@@ -77,6 +79,7 @@ interface PanBounds {
   standalone: false
 })
 export class SpatialComponent implements OnInit, OnDestroy {
+  readonly formatTimepoint = formatSpatialTimepoint;
   private readonly allCellTypesFeature = '__all_cell_types__';
   private readonly cellTypeLegendOrder = [
     'CM1', 'CM2', 'CM3', 'CM4', 'CM5',
@@ -98,6 +101,8 @@ export class SpatialComponent implements OnInit, OnDestroy {
   private readonly fallbackCellTypeColors = [
     '#3b82f6', '#f97316', '#22c55e', '#a855f7', '#ef4444', '#14b8a6'
   ];
+  private readonly expressionColorStops = ['#f7f4f9', '#9e9ac8', '#3f007d'];
+  private readonly proportionColorStops = ['#f7fcfd', '#41b6c4', '#00441b'];
   private readonly sourceCellTypeAliases: Record<string, string> = {
     EndoEC: 'Endocardial cells',
     FB: 'Fibroblasts',
@@ -119,9 +124,10 @@ export class SpatialComponent implements OnInit, OnDestroy {
   selectedTimepoint: SpatialSample['timepoint'] = '3 dpi';
   selectedReplicate = 1;
   viewMode: SpatialViewMode = 'gene';
+  expressionScale: SpatialExpressionScale = 'log';
   selectedGene = 'Acta2';
   selectedCellType = 'Fibroblasts';
-  showAllCellTypes = false;
+  showAllCellTypes = true;
   comparisonMode: SpatialComparisonMode = 'none';
   showHistology = true;
   showSpots = true;
@@ -160,7 +166,13 @@ export class SpatialComponent implements OnInit, OnDestroy {
   private readonly samplePanPositions = new Map<string, PanPosition>();
   private readonly panBounds = new Map<string, PanBounds>();
   private readonly dualPanelSpotSize = 0.875;
+  private readonly dualPanelSpotSizes: Record<SpatialSurgery, Record<SpatialSample['timepoint'], number>> = {
+    MI: { '3 dpi': 14 / 16, '7 dpi': 10 / 16 },
+    Sham: { '3 dpi': 12 / 16, '7 dpi': 9 / 16 }
+  };
+  private readonly miSevenDpiReplicateTwoSpotSize = 9 / 16;
   private singlePanelSpotSize = this.spotSize;
+  private selectedPanelSpotSizeOverride: number | null = null;
   private autoFitTimer?: ReturnType<typeof setTimeout>;
 
   constructor(
@@ -221,7 +233,8 @@ export class SpatialComponent implements OnInit, OnDestroy {
   get availableReplicates(): number[] {
     return [...new Set(this.samples
       .filter(sample => sample.surgery === this.selectedSurgery && sample.timepoint === this.selectedTimepoint)
-      .map(sample => sample.replicate))];
+      .map(sample => sample.replicate))]
+      .sort((left, right) => left - right);
   }
 
   get displayedFeature(): string {
@@ -270,6 +283,11 @@ export class SpatialComponent implements OnInit, OnDestroy {
     return this.visiblePanels.reduce((total, panel) => total + this.spotsForPanel(panel).length, 0);
   }
 
+  get selectedPanelSpotSize(): number {
+    const selectedPanel = this.visiblePanels[0];
+    return selectedPanel ? this.spotSizeForPanel(selectedPanel) : this.spotSize;
+  }
+
   get legendMax(): number {
     return this.legendEntries[0]?.maximum ?? 1;
   }
@@ -285,8 +303,8 @@ export class SpatialComponent implements OnInit, OnDestroy {
       id: panel.id,
       label: panel.feature,
       viewMode: panel.viewMode,
-      maximum: sharedMaximum ?? this.panelMaximum(panel),
-      normalization: this.layerForPanel(panel)?.feature.normalization ?? ''
+      maximum: sharedMaximum ?? this.panelDisplayMaximum(panel),
+      normalization: this.normalizationForPanel(panel)
     }));
   }
 
@@ -351,9 +369,14 @@ export class SpatialComponent implements OnInit, OnDestroy {
     this.clearSelectionAndLoad();
   }
 
+  setExpressionScale(scale: SpatialExpressionScale): void {
+    this.expressionScale = scale;
+  }
+
   setComparisonMode(mode: Exclude<SpatialComparisonMode, 'none'>): void {
     const previousMode = this.comparisonMode;
     this.comparisonMode = previousMode === mode ? 'none' : mode;
+    this.selectedPanelSpotSizeOverride = null;
     if (previousMode === 'none' && this.comparisonMode !== 'none') {
       this.singlePanelSpotSize = this.spotSize;
       this.spotSize = this.dualPanelSpotSize;
@@ -370,6 +393,7 @@ export class SpatialComponent implements OnInit, OnDestroy {
 
   onConditionChange(): void {
     this.ensureValidSelection();
+    this.selectedPanelSpotSizeOverride = null;
     this.resetPan();
     this.clearSelectionAndLoad();
   }
@@ -413,6 +437,14 @@ export class SpatialComponent implements OnInit, OnDestroy {
   onShowAllCellTypesChange(): void {
     this.selectedSpot = null;
     this.loadVisibleLayers();
+  }
+
+  onSpotSizeChange(spotSize: number): void {
+    if (this.isComparing) {
+      this.selectedPanelSpotSizeOverride = spotSize;
+    } else {
+      this.spotSize = spotSize;
+    }
   }
 
   selectSpot(spot: SpatialSpot, panel: SpatialPanel): void {
@@ -548,18 +580,29 @@ export class SpatialComponent implements OnInit, OnDestroy {
     return this.layerForPanel(panel)?.spots ?? [];
   }
 
+  spotSizeForPanel(panel: SpatialPanel): number {
+    if (!this.isComparing) return this.spotSize;
+
+    const selectedPanel = this.visiblePanels[0];
+    if (this.selectedPanelSpotSizeOverride !== null &&
+        selectedPanel?.sample.accession === panel.sample.accession) {
+      return this.selectedPanelSpotSizeOverride;
+    }
+    if (panel.sample.surgery === 'MI' && panel.sample.timepoint === '7 dpi' && panel.sample.replicate === 2) {
+      return this.miSevenDpiReplicateTwoSpotSize;
+    }
+    return this.dualPanelSpotSizes[panel.sample.surgery][panel.sample.timepoint];
+  }
+
   spotColor(spot: SpatialSpot, panel: SpatialPanel): string {
     if (this.isAllCellTypesPanel(panel)) return this.pieGradient(spot, panel);
-    const maximum = this.useSharedScale ? this.sharedMaximum() : this.panelMaximum(panel);
-    const normalized = maximum > 0 ? Math.max(0, Math.min(1, spot.value / maximum)) : 0;
+    const maximum = this.useSharedScale ? this.sharedMaximum() : this.panelDisplayMaximum(panel);
+    const value = this.spotDisplayValue(spot, panel);
+    const normalized = maximum > 0 ? Math.max(0, Math.min(1, value / maximum)) : 0;
     if (panel.viewMode === 'cellType') {
-      const lightness = 92 - normalized * 55;
-      const saturation = 48 + normalized * 30;
-      return `hsl(174 ${saturation}% ${lightness}%)`;
+      return this.colorFromStops(normalized, this.proportionColorStops);
     }
-    const lightness = 93 - normalized * 53;
-    const saturation = 58 + normalized * 24;
-    return `hsl(331 ${saturation}% ${lightness}%)`;
+    return this.colorFromStops(normalized, this.expressionColorStops);
   }
 
   pieGradient(spot: SpatialSpot, panel: SpatialPanel): string {
@@ -598,11 +641,17 @@ export class SpatialComponent implements OnInit, OnDestroy {
     return `${percentage.toFixed(precision)}%`;
   }
 
+  spotDisplayValue(spot: SpatialSpot, panel: SpatialPanel): number {
+    if (panel.viewMode !== 'gene' || this.expressionScale === 'log') return spot.value;
+    const normalization = this.layerForPanel(panel)?.feature.normalization ?? '';
+    return /log1p/i.test(normalization) ? Math.expm1(spot.value) : spot.value;
+  }
+
   spotLabel(spot: SpatialSpot, panel: SpatialPanel): string {
     if (this.isAllCellTypesPanel(panel)) {
       return `${spot.barcode}: ${this.translate.instant('spatial.controls.all_cell_types')}`;
     }
-    return `${spot.barcode}: ${this.formatValue(spot.value)}`;
+    return `${spot.barcode}: ${this.formatValue(this.spotDisplayValue(spot, panel))}`;
   }
 
   trackSpot(_: number, spot: SpatialSpot): number {
@@ -828,8 +877,42 @@ export class SpatialComponent implements OnInit, OnDestroy {
     return Math.max(0, ...layer.spots.map(spot => spot.value)) || 1;
   }
 
+  private panelDisplayMaximum(panel: SpatialPanel): number {
+    const maximum = this.panelMaximum(panel);
+    if (panel.viewMode !== 'gene' || this.expressionScale === 'log') return maximum;
+    const normalization = this.layerForPanel(panel)?.feature.normalization ?? '';
+    return /log1p/i.test(normalization) ? Math.expm1(maximum) : maximum;
+  }
+
   private sharedMaximum(): number {
-    return Math.max(1e-9, ...this.visiblePanels.map(panel => this.panelMaximum(panel)));
+    return Math.max(1e-9, ...this.visiblePanels.map(panel => this.panelDisplayMaximum(panel)));
+  }
+
+  private normalizationForPanel(panel: SpatialPanel): string {
+    const normalization = this.layerForPanel(panel)?.feature.normalization ?? '';
+    if (panel.viewMode !== 'gene' || this.expressionScale === 'log' || !/log1p/i.test(normalization)) {
+      return normalization;
+    }
+    return `${normalization} · ${this.translate.instant('spatial.controls.linear_back_transformed')}`;
+  }
+
+  private colorFromStops(value: number, stops: string[]): string {
+    const normalized = Math.max(0, Math.min(1, value));
+    const scaled = normalized * (stops.length - 1);
+    const index = Math.min(Math.floor(scaled), stops.length - 2);
+    const fraction = scaled - index;
+    const start = this.hexToRgb(stops[index]);
+    const end = this.hexToRgb(stops[index + 1]);
+    const channel = (from: number, to: number) => Math.round(from + (to - from) * fraction);
+    return `rgb(${channel(start[0], end[0])}, ${channel(start[1], end[1])}, ${channel(start[2], end[2])})`;
+  }
+
+  private hexToRgb(color: string): [number, number, number] {
+    return [
+      Number.parseInt(color.slice(1, 3), 16),
+      Number.parseInt(color.slice(3, 5), 16),
+      Number.parseInt(color.slice(5, 7), 16)
+    ];
   }
 
   private clampedPanPosition(key: string, x: number, y: number): PanPosition {
