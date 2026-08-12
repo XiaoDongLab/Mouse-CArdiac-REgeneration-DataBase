@@ -4,7 +4,6 @@ import { HomeComponent } from './components/home/home.component';
 import { SearchComponent } from './components/search/search.component';
 import { IgvComponent } from './components/igv/igv.component';
 import { MapsComponent } from './components/maps/maps.component';
-import { DocumentationComponent } from './components/documentation/documentation.component';
 import { GoComponent } from './components/go/go.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
