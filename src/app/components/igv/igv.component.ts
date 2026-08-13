@@ -37,6 +37,8 @@ export interface GenomeTrackOption {
   group: 'accessibility' | 'matched-histone' | 'developmental-reference';
   label: string;
   defaultVisible: boolean;
+  populationId?: string;
+  conditionId?: string;
   config: any;
 }
 
@@ -98,34 +100,61 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     ],
   };
   static readonly TRACK_GROUPS = [
-    { id: 'accessibility', label: 'scATAC accessibility — PSD3' },
+    { id: 'accessibility', label: 'scATAC accessibility — PSD3 pseudobulk' },
     { id: 'matched-histone', label: 'H3K27ac — PSD3' },
     { id: 'developmental-reference', label: 'P0 developmental references' },
   ] as const;
 
+  static readonly SCATAC_POPULATIONS = [
+    { id: 'all', label: 'All cells', trackLabel: 'All cells', slug: '' },
+    { id: 'cm', label: 'Cardiomyocyte (CM)', trackLabel: 'CM', slug: 'cm' },
+    { id: 'art-ec', label: 'Arterial endothelial (Art.EC)', trackLabel: 'Art.EC', slug: 'art_ec' },
+    { id: 'vec', label: 'Vascular endothelial (VEC)', trackLabel: 'VEC', slug: 'vec' },
+    { id: 'endo', label: 'Endocardial (Endo)', trackLabel: 'Endo', slug: 'endo' },
+    { id: 'fb', label: 'Fibroblast (FB)', trackLabel: 'FB', slug: 'fb' },
+    { id: 'smc-pericyte', label: 'SMC / pericyte', trackLabel: 'SMC/Pericyte', slug: 'smc_pericyte' },
+    { id: 'epi', label: 'Epicardial (Epi)', trackLabel: 'Epi', slug: 'epi' },
+    { id: 'macrophage', label: 'Macrophage', trackLabel: 'Macrophage', slug: 'macrophage' },
+    { id: 'lymphocyte', label: 'Lymphocyte', trackLabel: 'Lymphocyte', slug: 'lymphocyte' },
+  ] as const;
+
+  static readonly SCATAC_CONDITIONS = [
+    { id: 'p1-mi', age: 'P1', treatment: 'MI', color: '#a92e50', fileSlug: 'p1_mi', order: 10 },
+    { id: 'p1-sham', age: 'P1', treatment: 'Sham', color: '#dc8ca3', fileSlug: 'p1_sham', order: 20 },
+    { id: 'p8-mi', age: 'P8', treatment: 'MI', color: '#28598f', fileSlug: 'p8_mi', order: 30 },
+    { id: 'p8-sham', age: 'P8', treatment: 'Sham', color: '#86acd6', fileSlug: 'p8_sham', order: 40 },
+  ] as const;
+
+  static readonly SCATAC_TRACKS: readonly GenomeTrackOption[] = IgvComponent.SCATAC_POPULATIONS.flatMap(population =>
+    IgvComponent.SCATAC_CONDITIONS.map(condition => {
+      const allCells = population.id === 'all';
+      const filePrefix = allCells ? 'wang2020' : `wang2020_${population.slug}`;
+      return {
+        id: `scatac-${population.id}-${condition.id}`,
+        group: 'accessibility' as const,
+        populationId: population.id,
+        conditionId: condition.id,
+        label: `${condition.age} · ${condition.treatment}`,
+        defaultVisible: allCells,
+        config: {
+          name: allCells
+            ? `scATAC · ${condition.age} · ${condition.treatment} · PSD3`
+            : `scATAC · ${population.trackLabel} · ${condition.age} · ${condition.treatment} · PSD3`,
+          type: 'wig',
+          format: 'bigWig',
+          url: `assets/tracks/scatac/${filePrefix}_${condition.fileSlug}_psd3.bw`,
+          color: condition.color,
+          autoscaleGroup: `wang-scatac-${population.id}-psd3`,
+          height: 55,
+          order: condition.order,
+          removable: false,
+        },
+      };
+    })
+  );
+
   static readonly TRACK_CATALOG: readonly GenomeTrackOption[] = [
-    ...[
-      { id: 'scatac-p1-mi', age: 'P1', treatment: 'MI', color: '#a92e50', url: 'assets/tracks/scatac/wang2020_p1_mi_psd3.bw', order: 10 },
-      { id: 'scatac-p1-sham', age: 'P1', treatment: 'Sham', color: '#dc8ca3', url: 'assets/tracks/scatac/wang2020_p1_sham_psd3.bw', order: 20 },
-      { id: 'scatac-p8-mi', age: 'P8', treatment: 'MI', color: '#28598f', url: 'assets/tracks/scatac/wang2020_p8_mi_psd3.bw', order: 30 },
-      { id: 'scatac-p8-sham', age: 'P8', treatment: 'Sham', color: '#86acd6', url: 'assets/tracks/scatac/wang2020_p8_sham_psd3.bw', order: 40 },
-    ].map(track => ({
-      id: track.id,
-      group: 'accessibility' as const,
-      label: `${track.age} · ${track.treatment}`,
-      defaultVisible: true,
-      config: {
-        name: `scATAC · ${track.age} · ${track.treatment} · PSD3`,
-        type: 'wig',
-        format: 'bigWig',
-        url: track.url,
-        color: track.color,
-        autoscaleGroup: 'wang-scatac-psd3',
-        height: 55,
-        order: track.order,
-        removable: false,
-      },
-    })),
+    ...IgvComponent.SCATAC_TRACKS,
     ...[
       { id: 'h3k27ac-p1-mi-r1', gsm: 'GSM3514873', age: 'P1', treatment: 'MI', replicate: 1, color: '#a92e50', order: 100 },
       { id: 'h3k27ac-p1-mi-r2', gsm: 'GSM3514874', age: 'P1', treatment: 'MI', replicate: 2, color: '#a92e50', order: 101 },
@@ -219,31 +248,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     .filter(track => track.defaultVisible)
     .map(track => ({ ...track.config }));
 
-  static readonly TRACK_PRESETS: readonly GenomeTrackPreset[] = [
-    {
-      id: 'accessibility',
-      label: 'PSD3 accessibility',
-      trackIds: IgvComponent.RECOMMENDED_TRACK_IDS,
-    },
-    {
-      id: 'histone',
-      label: 'PSD3 H3K27ac',
-      trackIds: IgvComponent.TRACK_CATALOG
-        .filter(track => track.group === 'matched-histone')
-        .map(track => track.id),
-    },
-    {
-      id: 'all',
-      label: 'All tracks',
-      trackIds: IgvComponent.TRACK_CATALOG.map(track => track.id),
-    },
-  ];
-
   readonly trackGroups = IgvComponent.TRACK_GROUPS;
   readonly trackCatalog = IgvComponent.TRACK_CATALOG;
   readonly recommendedTrackIds = IgvComponent.RECOMMENDED_TRACK_IDS;
-  readonly trackPresets = IgvComponent.TRACK_PRESETS;
+  readonly scAtacPopulations = IgvComponent.SCATAC_POPULATIONS;
   selectedTrackIds = new Set(IgvComponent.RECOMMENDED_TRACK_IDS);
+  selectedScAtacPopulationId = 'all';
   loadingTrackIds = new Set<string>();
   expandedTrackGroupIds = new Set<GenomeTrackOption['group']>(['accessibility']);
   options: any = {
@@ -384,12 +394,84 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
     return this.selectedTrackIds.size;
   }
 
+  get selectableTrackCount(): number {
+    return this.trackGroups.reduce((total, group) => total + this.tracksForGroup(group.id).length, 0);
+  }
+
+  get selectedScAtacPopulation() {
+    return IgvComponent.SCATAC_POPULATIONS.find(population =>
+      population.id === this.selectedScAtacPopulationId
+    )!;
+  }
+
+  get trackPresets(): readonly GenomeTrackPreset[] {
+    return [
+      {
+        id: 'accessibility',
+        label: 'PSD3 accessibility',
+        trackIds: this.tracksForGroup('accessibility').map(track => track.id),
+      },
+      {
+        id: 'histone',
+        label: 'PSD3 H3K27ac',
+        trackIds: this.trackCatalog
+          .filter(track => track.group === 'matched-histone')
+          .map(track => track.id),
+      },
+      {
+        id: 'all',
+        label: 'All tracks',
+        trackIds: this.trackGroups.flatMap(group => this.tracksForGroup(group.id).map(track => track.id)),
+      },
+    ];
+  }
+
   get trackSelectionBusy(): boolean {
     return this.loadingTrackIds.size > 0;
   }
 
   tracksForGroup(groupId: GenomeTrackOption['group']): readonly GenomeTrackOption[] {
-    return this.trackCatalog.filter(track => track.group === groupId);
+    return this.trackCatalog.filter(track =>
+      track.group === groupId &&
+      (groupId !== 'accessibility' || track.populationId === this.selectedScAtacPopulationId)
+    );
+  }
+
+  async setScAtacPopulation(populationId: string): Promise<void> {
+    if (populationId === this.selectedScAtacPopulationId || this.trackSelectionBusy) {
+      return;
+    }
+    if (!IgvComponent.SCATAC_POPULATIONS.some(population => population.id === populationId)) {
+      return;
+    }
+
+    const currentTracks = this.tracksForGroup('accessibility');
+    const visibleConditions = new Set(
+      currentTracks
+        .filter(track => this.selectedTrackIds.has(track.id))
+        .map(track => track.conditionId)
+    );
+
+    if (this.browser) {
+      for (const track of currentTracks.filter(track => this.selectedTrackIds.has(track.id))) {
+        await this.setTrackVisible(track.id, false);
+      }
+    } else {
+      currentTracks.forEach(track => this.selectedTrackIds.delete(track.id));
+    }
+
+    this.selectedScAtacPopulationId = populationId;
+    const requestedTracks = this.tracksForGroup('accessibility').filter(track =>
+      visibleConditions.has(track.conditionId)
+    );
+    if (this.browser) {
+      for (const track of requestedTracks) {
+        await this.setTrackVisible(track.id, true);
+      }
+    } else {
+      requestedTracks.forEach(track => this.selectedTrackIds.add(track.id));
+    }
+    this.changeDetector.detectChanges();
   }
 
   isTrackGroupVisible(groupId: GenomeTrackOption['group']): boolean {

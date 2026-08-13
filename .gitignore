@@ -43,3 +43,18 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local Claude Code tool permissions
+/.claude/settings.local.json
+
+# Figure 2 analysis workspace (local only)
+/fig2/
+
+# Per-cell-type scATAC bigwigs: ~4.5 GB of derived data, several files over
+# GitHub's 100 MB limit. Regenerate with scripts/run_wang_celltype_tracks.sh.
+# The four pooled tracks below predate this rule and stay in the repo.
+/src/assets/tracks/scatac/*.bw
+!/src/assets/tracks/scatac/wang2020_p1_mi_psd3.bw
+!/src/assets/tracks/scatac/wang2020_p1_sham_psd3.bw
+!/src/assets/tracks/scatac/wang2020_p8_mi_psd3.bw
+!/src/assets/tracks/scatac/wang2020_p8_sham_psd3.bw

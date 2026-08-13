@@ -1,23 +1,78 @@
 # Wang et al. scATAC-seq tracks
 
-These tracks are condition-level pseudobulk accessibility signals generated
-from the processed peak-by-cell matrix for GSE153479. The four barcode suffixes
-are mapped according to `GSE153479_description.txt.gz`:
+This directory contains two related GSE153479 track sets on GRCm38/mm10.
 
-- `-1`: P1 MI, PSD3
-- `-2`: P1 Sham, PSD3
-- `-3`: P8 MI, PSD3
-- `-4`: P8 Sham, PSD3
+The four `wang2020_p*_psd3.bw` files are legacy condition-level all-cell
+pseudobulks generated from the public processed peak-by-cell matrix. Peak
+counts were summed by the four barcode suffixes and normalized to counts per
+million peak-matrix insertions.
 
-For each condition, peak counts were summed across cells and normalized to
-counts per million total peak-matrix insertions. Coordinates use GRCm38/mm10.
-The tracks can be reproduced with `scripts/generate_wang_scatac_tracks.R` from
-the GEO `GSE153479_filtered_peak_bc_matrix.h5` file.
+The 36 `wang2020_<cell-type>_<condition>_psd3.bw` files are fragment-derived
+pseudobulks for the nine populations displayed by Wang et al.:
 
-The public GEO files include cell-barcode QC information but do not include the
-authors' barcode-to-cell-type assignments. Consequently, the browser labels
-these tracks as all-cell pseudobulks rather than inferring unvalidated cell
-types.
+- CM
+- Art.EC
+- VEC
+- Endo
+- FB
+- SMC/Pericyte
+- Epi
+- Macrophage
+- Lymphocyte
+
+Each population has `p1_mi`, `p1_sham`, `p8_mi`, and `p8_sham` tracks. The
+condition suffixes map to P1+3 dpi, P1+3 dps, P8+3 dpi, and P8+3 dps,
+respectively.
+
+## Label provenance
+
+GEO and the paper supplement do **not** contain the authors' original
+barcode-to-cell-type table. The cell labels here are independently re-derived,
+not exact author assignments. The reproducible workflow:
+
+1. applies the paper's 5,000–40,000 peak-count and <5% blacklist filters;
+2. computes TF-IDF, 50-component LSI, condition correction, a 30-neighbor
+   graph, and Leiden clusters;
+3. annotates with the published positive marker peaks in Table S2, holding
+   half of the ranked peaks out for validation; and
+4. constrains the final per-condition population sizes to the published Table
+   S1 counts (30,520 retained cells total).
+
+All nine labels show positive enrichment using the held-out marker peaks. See
+`annotation_metadata.json`, `heldout_marker_validation.tsv`,
+`cell_type_counts.tsv`, `cluster_cell_type_counts.tsv`, and the downloadable
+`wang2020_barcode_cell_types.tsv.gz` assignments for the audit.
+
+## Coverage method
+
+Cell-type tracks are generated from `GSE153479_fragments.tsv.gz`, rather than
+painting peak-matrix values across peak intervals. They reproduce the relevant
+Signac 0.2.5 `CoveragePlot` behavior used by the paper: each unique fragment
+row contributes one cut at its start and end (the 10x PCR-support column is
+ignored), each condition is normalized to the median peak-matrix depth of the
+four conditions in that cell type, and signal is smoothed with a centered
+100-bp mean. Non-overlapping 10-bp output bins match CoveragePlot's default 0.1
+positional downsampling. The BigWigs and their SHA-256 checksums are listed in
+`cell_type_track_metadata.tsv`. `bigwig_validation.tsv` records header-level
+integrity checks, and `track_marker_validation.tsv` confirms that the held-out
+marker peaks are enriched in each fragment-derived population after removing
+the population-specific display scale.
+
+These remain pseudobulk browser tracks. Single cells supply the cell-type
+assignments, but pooling is necessary for interpretable genomic coverage and
+matches how the paper displayed its scATAC tracks.
+
+## Reproduction
+
+The analysis scripts are:
+
+- `scripts/derive_wang_cell_types.py`
+- `scripts/generate_wang_celltype_bigwigs.py`
+- `scripts/run_wang_celltype_tracks.sh`
+
+Their Python dependencies are pinned in
+`scripts/requirements-wang-scatac.txt`. Large GEO inputs are downloaded to a
+caller-selected working directory and are not committed.
 
 Source: Wang et al., *Cell Reports* 33(10), 108472 (2020),
 https://doi.org/10.1016/j.celrep.2020.108472.

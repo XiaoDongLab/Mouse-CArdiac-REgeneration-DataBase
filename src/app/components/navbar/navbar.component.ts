@@ -53,13 +53,13 @@ export class NavbarComponent implements OnInit {
       {
         id: 3,
         text: 'navbar.spatial',
-        icon: 'fa-diagram-project',
+        icon: 'fa-magnifying-glass',
         path: 'spatial'
       },
       {
         id: 4,
         text: 'navbar.pathway',
-        icon: 'fa-magnifying-glass',
+        icon: 'fa-diagram-project',
         path: 'go'
       },
       {

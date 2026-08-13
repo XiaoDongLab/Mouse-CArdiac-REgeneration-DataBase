@@ -194,10 +194,22 @@
 .p8-mi { background: #28598f; }
 .p8-sham { background: #86acd6; }
 
-.population-label {
+.population-selector {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
   color: var(--bs-secondary-color);
   font-size: .78rem;
+}
+
+.population-selector span {
+  white-space: nowrap;
+}
+
+.population-selector .form-select {
+  width: auto;
+  min-width: 13rem;
 }
 
 .track-source-note {
@@ -244,9 +256,13 @@
     width: calc(100vw - 2rem);
   }
 
-  .population-label {
+  .population-selector {
     width: 100%;
     margin-left: 0;
+  }
+
+  .population-selector .form-select {
+    width: 100%;
   }
 }
 

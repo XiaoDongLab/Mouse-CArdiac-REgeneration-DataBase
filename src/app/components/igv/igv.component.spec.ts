@@ -25,7 +25,7 @@ describe('IgvComponent', () => {
 
   it('includes all four Wang PSD3 scATAC-seq conditions on a shared scale', () => {
     const scAtacTracks = IgvComponent.TRACK_CATALOG
-      .filter(track => track.id.startsWith('scatac-') && track.config.format === 'bigWig')
+      .filter(track => track.populationId === 'all' && track.config.format === 'bigWig')
       .map(track => track.config);
 
     expect(scAtacTracks.map(track => track.name)).toEqual([
@@ -35,8 +35,20 @@ describe('IgvComponent', () => {
       'scATAC · P8 · Sham · PSD3'
     ]);
     expect(new Set(scAtacTracks.map(track => track.autoscaleGroup))).toEqual(
-      new Set(['wang-scatac-psd3'])
+      new Set(['wang-scatac-all-psd3'])
     );
+  });
+
+  it('offers nine reconstructed cell populations with four condition tracks each', () => {
+    const reconstructed = IgvComponent.TRACK_CATALOG.filter(track =>
+      track.group === 'accessibility' && track.populationId !== 'all'
+    );
+
+    expect(IgvComponent.SCATAC_POPULATIONS.length).toBe(10);
+    expect(reconstructed.length).toBe(36);
+    expect(new Set(reconstructed.map(track => track.populationId)).size).toBe(9);
+    expect(reconstructed.every(track => track.defaultVisible === false)).toBeTrue();
+    expect(reconstructed.every(track => track.config.url.endsWith('.bw'))).toBeTrue();
   });
 
   it('offers matched PSD3 H3K27ac biological replicates and optional P0 references', () => {
@@ -60,15 +72,15 @@ describe('IgvComponent', () => {
 
   it('uses the comparison-focused accessibility preset by default', () => {
     expect(IgvComponent.RECOMMENDED_TRACK_IDS).toEqual([
-      'scatac-p1-mi',
-      'scatac-p1-sham',
-      'scatac-p8-mi',
-      'scatac-p8-sham'
+      'scatac-all-p1-mi',
+      'scatac-all-p1-sham',
+      'scatac-all-p8-mi',
+      'scatac-all-p8-sham'
     ]);
   });
 
   it('keeps the PSD3 H3K27ac preset separate from scATAC accessibility', () => {
-    const histonePreset = IgvComponent.TRACK_PRESETS.find(preset => preset.id === 'histone');
+    const histonePreset = component.trackPresets.find(preset => preset.id === 'histone');
 
     expect(histonePreset).toBeDefined();
     expect(histonePreset!.trackIds.length).toBe(8);
@@ -99,7 +111,7 @@ describe('IgvComponent', () => {
     await component.showTrackGroup('developmental-reference');
 
     expect(component.isTrackGroupVisible('developmental-reference')).toBeTrue();
-    expect(component.isTrackVisible('scatac-p1-mi')).toBeTrue();
+    expect(component.isTrackVisible('scatac-all-p1-mi')).toBeTrue();
     expect(loadTrack).toHaveBeenCalledTimes(5);
   });
 
@@ -123,6 +135,26 @@ describe('IgvComponent', () => {
     await component.toggleTrackGroupVisibility('accessibility');
     expect(component.isTrackGroupVisible('accessibility')).toBeTrue();
     expect(loadTrack).toHaveBeenCalledTimes(4);
+  });
+
+  it('swaps the four visible accessibility conditions when the population changes', async () => {
+    const loadTrack = jasmine.createSpy('loadTrack').and.resolveTo(undefined);
+    const removeTrackByName = jasmine.createSpy('removeTrackByName');
+    component.browser = { loadTrack, removeTrackByName };
+
+    await component.setScAtacPopulation('cm');
+
+    expect(component.selectedScAtacPopulationId).toBe('cm');
+    expect(removeTrackByName).toHaveBeenCalledTimes(4);
+    expect(loadTrack).toHaveBeenCalledTimes(4);
+    expect(component.tracksForGroup('accessibility').map(track => track.id)).toEqual([
+      'scatac-cm-p1-mi',
+      'scatac-cm-p1-sham',
+      'scatac-cm-p8-mi',
+      'scatac-cm-p8-sham'
+    ]);
+    expect(component.selectedTrackIds.has('scatac-all-p1-mi')).toBeFalse();
+    expect(component.selectedTrackIds.has('scatac-cm-p1-mi')).toBeTrue();
   });
 
   it('hides IGV multi-track selection in favor of the MCaReDB picker', () => {

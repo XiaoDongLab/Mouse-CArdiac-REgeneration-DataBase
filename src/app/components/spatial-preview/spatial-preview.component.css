@@ -6,6 +6,9 @@
 }
 
 .spatial-preview {
+  /* The preview is embedded in narrow grid columns (e.g. the gene card detail's
+     col-xl-9), so the toolbar must respond to its own width, not the viewport. */
+  container: spatialPreview / inline-size;
   overflow: hidden;
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
@@ -16,7 +19,7 @@
   min-height: 48px;
   padding: .45rem .65rem;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: .75rem;
@@ -31,11 +34,26 @@
   gap: .45rem;
 }
 
+.preview-context {
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
 .preview-actions {
   flex: 0 0 auto;
   flex-wrap: nowrap;
   justify-content: flex-end;
   gap: .3rem;
+}
+
+/* Segmented controls keep their intrinsic size; only the accession label gives
+   way, so a long sample id can never force the toolbar onto a second line. */
+.condition-switch,
+.timepoint-switch,
+.condition-badge,
+.expression-scale-control {
+  flex: 0 0 auto;
 }
 
 .expression-scale-control {
@@ -73,12 +91,12 @@
   background: #3f007d;
 }
 
-.preview-context {
-  flex-wrap: wrap;
-}
-
 .preview-context small {
+  min-width: 0;
+  overflow: hidden;
   color: var(--bs-secondary-color);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .condition-badge {
@@ -373,13 +391,72 @@
   gap: .65rem;
 }
 
-@media (max-width: 767.98px) {
+/* Progressive compaction of the toolbar, keyed off the component's own width so
+   it also applies when the preview is embedded in a narrow column. The order
+   sheds the least useful pixels first: the "Display options" caption, then the
+   fixed button widths, then the sample accession. */
+@container spatialPreview (max-width: 720px) {
+  /* Icon-only trigger; the caption stays available to assistive tech and the
+     `title` attribute keeps it discoverable on hover. */
+  .preview-actions .display-options > summary.btn {
+    gap: 0;
+    padding-inline: .4rem;
+  }
+
+  .preview-actions .display-options > summary.btn > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@container spatialPreview (max-width: 620px) {
+  .preview-toolbar {
+    padding-inline: .5rem;
+    gap: .5rem;
+  }
+
+  .preview-context {
+    gap: .3rem;
+  }
+
+  .condition-switch button,
+  .timepoint-switch button,
+  .expression-scale-switch button {
+    min-width: 0;
+    padding-inline: .4rem;
+  }
+
+  .zoom-value {
+    min-width: 34px;
+  }
+
   .preview-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
 
+@container spatialPreview (max-width: 500px) {
+  .preview-context small {
+    display: none;
+  }
+}
+
+/* Last resort: stack the two groups rather than squeezing them further. */
+@container spatialPreview (max-width: 400px) {
   .preview-toolbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .preview-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

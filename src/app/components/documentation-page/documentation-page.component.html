@@ -1,249 +1,125 @@
-<div class="documentation-page">
-  <header class="docs-hero">
-    <div class="hero-copy">
-      <span class="docs-eyebrow"><i class="fa fa-book-open"></i> MCAREDB user guide</span>
-      <h1>Explore neonatal cardiac regeneration with confidence</h1>
-      <p>
-        A practical guide to the transcriptomic, epigenomic, spatial, and pathway-analysis tools in the
-        Mouse Cardiac Regeneration Database.
-      </p>
-      <div class="hero-actions">
-        <button type="button" class="btn btn-light" (click)="scrollTo('quick-start')">
-          <i class="fa fa-bolt me-2"></i>Start with a workflow
-        </button>
-        <button type="button" class="btn btn-outline-light" (click)="openTool('/spatial')">
-          <i class="fa fa-location-dot me-2"></i>Open Spatial
-        </button>
-      </div>
+<div class="row g-2">
+  <h2 translate="navbar.documentation"></h2>
+  <!-- Terminology Section -->
+  <section>
+    <h4 translate="documentation.exp_term"></h4>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th translate="documentation.term"></th>
+            <th translate="documentation.def"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>P1</strong></td>
+            <td translate="documentation.P1.def"></td>
+          </tr>
+          <tr>
+            <td><strong>P2</strong></td>
+            <td translate="documentation.P2.def"></td>
+          </tr>
+          <tr>
+            <td><strong>P8</strong></td>
+            <td translate="documentation.P8.def"></td>
+          </tr>
+          <tr>
+            <td><strong>Sham</strong></td>
+            <td translate="documentation.sham.def"></td>
+          </tr>
+          <tr>
+            <td><strong>MI</strong></td>
+            <td translate="documentation.mi.def"></td>
+          </tr>
+          <tr>
+            <td><strong>PSD#</strong></td>
+            <td translate="documentation.psdx.def"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="hero-map" aria-hidden="true">
-      <span class="map-ring ring-one"></span>
-      <span class="map-ring ring-two"></span>
-      <span class="map-ring ring-three"></span>
-      <i class="map-heart fa fa-heart-pulse"></i>
-      <span class="map-spot spot-one"></span><span class="map-spot spot-two"></span>
-      <span class="map-spot spot-three"></span><span class="map-spot spot-four"></span>
-      <span class="map-spot spot-five"></span><span class="map-spot spot-six"></span>
+  </section>
+  <section>
+    <h4 translate="documentation.stat_term"></h4>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th translate="documentation.case"></th>
+            <th translate="documentation.meaning"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>P1 vs P8</strong></td>
+            <td translate="documentation.p1vsp8.def"></td>
+          </tr>
+          <tr>
+            <td><strong>MI vs Sham</strong></td>
+            <td translate="documentation.shamvsmi.def"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </header>
+  </section>
 
-  <div class="docs-layout">
-    <aside class="docs-sidebar">
-      <nav aria-label="Documentation sections">
-        <span class="sidebar-label">On this page</span>
-        @for (section of sections; track section.id) {
-          <button type="button" [class.active]="activeSection === section.id" (click)="scrollTo(section.id)">
-            <i class="fa" [class]="'fa ' + section.icon"></i><span>{{ section.label }}</span>
+  <!--  Add: Definition of Comparisons (P1 vs P8 / MI vs Sham)    Also double check all markers below for newly added cell types -->
+  <!--  Also look for file with full list, I have CM subtypes but cant find all markers -->
+
+
+  <!-- Cell Type Definitions -->
+  <section>
+    <h4 translate="documentation.cell_def"></h4>
+    <p>
+      <span translate="documentation.cell_defs.description"></span>
+      <a href="../../../assets/mouseHeart_new.csv" target="_blank">mouseHeart_new.csv</a>
+    </p>
+    <div ngbAccordion>
+      @for (item of cellTypes; track item; let i = $index) {
+      <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton>
+            {{item.name | translate}}
           </button>
-        }
-      </nav>
-      <div class="sidebar-help">
-        <i class="fa fa-circle-info"></i>
-        <p><strong>New to MCAREDB?</strong><br />Choose a research question below and follow the suggested path.</p>
-      </div>
-    </aside>
-
-    <main class="docs-content">
-      <section id="overview" class="docs-section intro-section">
-        <div class="section-kicker">01 · Overview</div>
-        <h2>One resource, several views of cardiac regeneration</h2>
-        <p class="section-lead">
-          MCAREDB connects single-cell expression, differential expression, chromatin-associated tracks,
-          spatial transcriptomics, and pathway enrichment. Each page answers a different part of the same question:
-          what changes after cardiac injury, in which cells, and where does it happen?
-        </p>
-        <div class="scope-grid">
-          <article><i class="fa fa-cells"></i><strong>Cell identity</strong><span>Compare annotated cardiac cell populations and subclusters.</span></article>
-          <article><i class="fa fa-chart-line"></i><strong>Molecular response</strong><span>Inspect expression and injury-associated differential signals.</span></article>
-          <article><i class="fa fa-layer-group"></i><strong>Regulatory context</strong><span>View accessibility, histone, and methylation tracks in mm10.</span></article>
-          <article><i class="fa fa-location-dot"></i><strong>Tissue context</strong><span>Map genes and estimated cell-type composition across heart sections.</span></article>
-        </div>
-        <div class="callout note-callout">
-          <i class="fa fa-lightbulb"></i>
-          <div><strong>A useful analysis pattern</strong><p>Find a gene in Genome Browser, compare its distribution in Gene Expression, inspect its location in Spatial, then review related biology in Pathway Enrichment.</p></div>
-        </div>
-      </section>
-
-      <section id="quick-start" class="docs-section">
-        <div class="section-kicker">02 · Quick start</div>
-        <h2>Choose a workflow</h2>
-        <p class="section-lead">Start from the biological question rather than the data format.</p>
-        <div class="workflow-grid">
-          <article class="workflow-card">
-            <span class="workflow-number">01</span><i class="fa fa-dna"></i>
-            <h3>Where is my gene, and what regulates it?</h3>
-            <p>Navigate the mm10 locus, add epigenomic tracks, and retrieve differential-expression summaries.</p>
-            <button type="button" (click)="openTool('/igv')">Open Genome Browser <i class="fa fa-arrow-right"></i></button>
-          </article>
-          <article class="workflow-card">
-            <span class="workflow-number">02</span><i class="fa fa-chart-column"></i>
-            <h3>How is expression distributed across groups?</h3>
-            <p>Add one or more genes and compare distributions by cell type, injury, or developmental group.</p>
-            <button type="button" (click)="openTool('/expression')">Open Gene Expression <i class="fa fa-arrow-right"></i></button>
-          </article>
-          <article class="workflow-card featured">
-            <span class="workflow-number">03</span><i class="fa fa-location-dot"></i>
-            <h3>Where is a signal located in the injured heart?</h3>
-            <p>Explore P1 MI and sham Visium sections at 3 and 7 days after injury.</p>
-            <button type="button" (click)="openTool('/spatial')">Open Spatial <i class="fa fa-arrow-right"></i></button>
-          </article>
-          <article class="workflow-card">
-            <span class="workflow-number">04</span><i class="fa fa-diagram-project"></i>
-            <h3>Which biological programs are enriched?</h3>
-            <p>Filter GO or KEGG enrichment by comparison, cell type, FDR, and normalized enrichment score.</p>
-            <button type="button" (click)="openTool('/go')">Open Pathway Enrichment <i class="fa fa-arrow-right"></i></button>
-          </article>
-          <article class="workflow-card wide">
-            <span class="workflow-number">05</span><i class="fa fa-file-arrow-down"></i>
-            <h3>I need the underlying files</h3>
-            <p>Filter records by file type, cell type, and PMID; select matching rows and download them together.</p>
-            <button type="button" (click)="openTool('/search')">Open Search & Download <i class="fa fa-arrow-right"></i></button>
-          </article>
-        </div>
-      </section>
-
-      <section id="dataset" class="docs-section">
-        <div class="section-kicker">03 · Data orientation</div>
-        <h2>Dataset and experimental terminology</h2>
-        <p class="section-lead">Read the comparison labels literally: the first group is the tested group and the second is the reference group unless a page states otherwise.</p>
-        <div class="table-card">
-          <div class="table-responsive">
-            <table class="table align-middle mb-0">
-              <thead><tr><th>Term</th><th>Meaning</th><th>Where you will see it</th></tr></thead>
-              <tbody>
-                <tr><td><span class="term-chip">P1 / P2 / P8</span></td><td>Postnatal day at surgery or collection, depending on the source study.</td><td>Expression, differential analysis, genomic tracks</td></tr>
-                <tr><td><span class="term-chip">MI</span></td><td>Myocardial infarction induced as the experimental cardiac injury.</td><td>All injury comparisons</td></tr>
-                <tr><td><span class="term-chip">Sham</span></td><td>Control surgery performed without induction of myocardial infarction.</td><td>Reference condition</td></tr>
-                <tr><td><span class="term-chip">PSD / dpi</span></td><td>Post-surgery day / days post injury; the elapsed time after surgery.</td><td>Injury datasets and Spatial</td></tr>
-                <tr><td><span class="term-chip">P1 vs P8</span></td><td>Neonatal/regenerative-stage signal compared with the older reference group.</td><td>Differential expression and pathways</td></tr>
-                <tr><td><span class="term-chip">MI vs Sham</span></td><td>Injury-associated signal compared with the matched surgical control.</td><td>Differential expression and pathways</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="callout warning-callout">
-          <i class="fa fa-triangle-exclamation"></i>
-          <div><strong>Check study context before combining results</strong><p>Age, collection time, assay, normalization, and available cell labels vary by source study. Use each page's dataset note and accession links when interpreting cross-modal agreement.</p></div>
-        </div>
-      </section>
-
-      <section id="genome-browser" class="docs-section tool-section">
-        <div class="tool-heading"><span class="tool-icon"><i class="fa fa-dna"></i></span><div><div class="section-kicker">04 · Tool guide</div><h2>Genome Browser</h2></div><button class="btn btn-outline-mcaredb" (click)="openTool('/igv')">Open tool <i class="fa fa-arrow-up-right-from-square ms-1"></i></button></div>
-        <p class="section-lead">Explore an mm10/GRCm38 locus together with condition-level scATAC pseudobulk, optional H3K27ac, methylation references, and gene-level differential-expression cards.</p>
-        <div class="step-list">
-          <article><span>1</span><div><h3>Go to a locus</h3><p>Use the browser search to enter a gene, chromosome interval, or supported identifier. Pan and zoom directly inside the genome viewer.</p></div></article>
-          <article><span>2</span><div><h3>Choose tracks</h3><p>Open <strong>Tracks</strong> to use quick views or select individual accessibility, histone, and methylation tracks. Track colors identify P1/P8 and MI/Sham conditions.</p></div></article>
-          <article><span>3</span><div><h3>Retrieve genes</h3><p>Use <strong>Explore chromosome</strong> for genes in the visible window, <strong>Core genes</strong> for curated genes, or <strong>Search genes</strong> for a comma-separated list.</p></div></article>
-          <article><span>4</span><div><h3>Inspect gene cards</h3><p>Review fold change and adjusted significance across cell clusters. Open a cluster detail to inspect embedding and metadata views.</p></div></article>
-        </div>
-        <div class="callout info-callout"><i class="fa fa-scale-balanced"></i><div><strong>Track scales are not interchangeable</strong><p>Accessibility and H3K27ac represent signal intensity; WGBS represents CpG methylation percentage on a 0–100% scale. A high methylation value should not be interpreted as high accessibility.</p></div></div>
-      </section>
-
-      <section id="gene-expression" class="docs-section tool-section">
-        <div class="tool-heading"><span class="tool-icon"><i class="fa fa-chart-column"></i></span><div><div class="section-kicker">05 · Tool guide</div><h2>Gene Expression</h2></div><button class="btn btn-outline-mcaredb" (click)="openTool('/expression')">Open tool <i class="fa fa-arrow-up-right-from-square ms-1"></i></button></div>
-        <p class="section-lead">Build a multi-gene distribution plot and keep the filter context of every added gene visible.</p>
-        <div class="feature-grid">
-          <article><i class="fa fa-filter"></i><h3>Set criteria</h3><p>Select cell type, surgery, and age group before choosing a gene.</p></article>
-          <article><i class="fa fa-plus"></i><h3>Add genes</h3><p>Search and add genes one at a time. Each entry retains the criteria used for that query.</p></article>
-          <article><i class="fa fa-eye"></i><h3>Adjust the view</h3><p>Toggle log scale, split the plot, and show or hide individual x-axis columns.</p></article>
-          <article><i class="fa fa-clock-rotate-left"></i><h3>Reuse queries</h3><p>Load recent gene/filter combinations again or clear the query history.</p></article>
-        </div>
-        <p class="fine-print"><i class="fa fa-circle-info"></i> “Data points” reports the number of records contributing to that added gene. Distribution width shows density; it is not an additional measure of expression.</p>
-      </section>
-
-      <section id="spatial" class="docs-section tool-section spatial-guide">
-        <div class="tool-heading"><span class="tool-icon"><i class="fa fa-location-dot"></i></span><div><div class="section-kicker">06 · New modality</div><h2>Spatial Transcriptomics</h2></div><button class="btn btn-mcaredb" (click)="openTool('/spatial')">Open Spatial <i class="fa fa-arrow-right ms-1"></i></button></div>
-        <p class="section-lead">Query gene expression and estimated cell-type composition in P1 injured and sham heart sections from Cui et al. (2021), sampled at 3 and 7 days post injury.</p>
-        <div class="spatial-flow">
-          <div class="flow-controls">
-            <span class="mini-label">1 · Select a section</span>
-            <div class="mock-segments"><span class="active">MI</span><span>Sham</span></div>
-            <div class="mock-segments"><span class="active">3 dpi</span><span>7 dpi</span></div>
-          </div>
-          <i class="fa fa-chevron-right"></i>
-          <div class="flow-controls">
-            <span class="mini-label">2 · Select a layer</span>
-            <div class="mock-layer"><i class="fa fa-dna"></i> Gene expression</div>
-            <div class="mock-layer"><i class="fa fa-chart-pie"></i> Cell proportions</div>
-          </div>
-          <i class="fa fa-chevron-right"></i>
-          <div class="flow-controls">
-            <span class="mini-label">3 · Inspect or compare</span>
-            <div class="mock-layer"><i class="fa fa-location-crosshairs"></i> Select a spot</div>
-            <div class="mock-layer"><i class="fa fa-table-columns"></i> Compare panels</div>
-          </div>
-        </div>
-        <div class="step-list compact">
-          <article><span>1</span><div><h3>Select the experiment</h3><p>Choose MI or Sham, 3 or 7 dpi, and a replicate when more than one section is available. The developmental stage is fixed at P1.</p></div></article>
-          <article><span>2</span><div><h3>Choose the measurement</h3><p>For gene expression, enter a gene and choose linear or log1p display. For cell composition, select one cell type or display all estimated cell types as spot-level mixtures.</p></div></article>
-          <article><span>3</span><div><h3>Control the tissue view</h3><p>Toggle histology and spots, tune opacity and spot size, zoom with the toolbar, drag to pan, and double-click to reset the view.</p></div></article>
-          <article><span>4</span><div><h3>Compare and export</h3><p><strong>Compare samples</strong> places MI and Sham side by side at the same timepoint. <strong>Compare layers</strong> pairs the selected gene and cell-type layer. Download exports the currently visible spot data.</p></div></article>
-        </div>
-        <div class="two-callouts">
-          <div class="callout info-callout"><i class="fa fa-circle-nodes"></i><div><strong>A spot is not a single cell</strong><p>10x Visium spots may capture RNA from multiple cells. Cell-type values are estimated proportions, and the all-cell view represents mixtures rather than categorical spot labels.</p></div></div>
-          <div class="callout note-callout"><i class="fa fa-crosshairs"></i><div><strong>Coordinates and selection</strong><p>Select a spot to see its barcode, feature value, cell proportions, and high-resolution X/Y coordinates. Spot placement is aligned to each section's histology image.</p></div></div>
-        </div>
-        <div class="source-strip"><div><strong>Spatial source</strong><span>Cui et al., Nature Communications (2021) · P1 MI + sham · 3 and 7 dpi · 10x Visium</span></div><a href="https://doi.org/10.1038/s41467-021-25653-w" target="_blank" rel="noopener">Paper <i class="fa fa-arrow-up-right-from-square"></i></a><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE163629" target="_blank" rel="noopener">GSE163629 <i class="fa fa-arrow-up-right-from-square"></i></a></div>
-      </section>
-
-      <section id="pathway" class="docs-section tool-section">
-        <div class="tool-heading"><span class="tool-icon"><i class="fa fa-diagram-project"></i></span><div><div class="section-kicker">07 · Tool guide</div><h2>Pathway Enrichment</h2></div><button class="btn btn-outline-mcaredb" (click)="openTool('/go')">Open tool <i class="fa fa-arrow-up-right-from-square ms-1"></i></button></div>
-        <div class="guide-columns"><div><h3>Build the view</h3><ol><li>Choose the biological comparison.</li><li>Select one or more cell types.</li><li>Set the FDR cutoff and NES range.</li><li>Search a pathway and group results by GO or KEGG.</li><li>Select a plotted term to inspect its cluster, NES, p-value, and associated genes.</li></ol></div><div class="interpret-card"><span class="mini-label">How to read NES</span><div class="nes-axis"><span>Negative</span><i></i><span>Positive</span></div><p>NES direction follows the comparison shown on the page. Magnitude reflects enrichment strength after normalization; statistical confidence must still be checked with FDR/q-value.</p></div></div>
-        <p class="fine-print"><i class="fa fa-link"></i> Pathway information and diagram links open the corresponding external GO/BioCyc or KEGG resource when available. Gene links can continue the analysis in Genome Browser.</p>
-      </section>
-
-      <section id="download" class="docs-section tool-section">
-        <div class="tool-heading"><span class="tool-icon"><i class="fa fa-file-arrow-down"></i></span><div><div class="section-kicker">08 · Tool guide</div><h2>Search & Download</h2></div><button class="btn btn-outline-mcaredb" (click)="openTool('/search')">Open tool <i class="fa fa-arrow-up-right-from-square ms-1"></i></button></div>
-        <div class="download-steps"><article><span>Filter</span><p>Choose file categories, cell types, and PMID values. Multiple selections are supported.</p></article><article><span>Refine</span><p>Use advanced commands such as <code>--comparison=shamvsmi</code> or <code>--group=psd3</code>.</p></article><article><span>Select</span><p>Review the matching table and select one or more rows. The page reports selection count and total size.</p></article><article><span>Download</span><p>Use the download button to retrieve the selected files together.</p></article></div>
-        <div class="callout warning-callout"><i class="fa fa-hard-drive"></i><div><strong>Large files</strong><p>Processed matrices and analysis objects can be substantially larger than result tables. Confirm the displayed total size before starting a multi-file download.</p></div></div>
-      </section>
-
-      <section id="settings" class="docs-section tool-section">
-        <div class="tool-heading"><span class="tool-icon"><i class="fa fa-sliders"></i></span><div><div class="section-kicker">09 · Preferences</div><h2>Settings</h2></div><button class="btn btn-outline-mcaredb" (click)="openTool('/settings')">Open settings <i class="fa fa-arrow-up-right-from-square ms-1"></i></button></div>
-        <div class="settings-grid"><article><i class="fa fa-moon"></i><div><strong>Theme and contrast</strong><span>Switch between light and dark display and choose normal or high contrast.</span></div></article><article><i class="fa fa-text-height"></i><div><strong>Font size</strong><span>Scale interface text across the application.</span></div></article><article><i class="fa fa-chart-simple"></i><div><strong>Non-significant clusters</strong><span>Show or hide non-significant clusters in supported differential views.</span></div></article><article><i class="fa fa-up-down"></i><div><strong>Y-axis and FDR</strong><span>Choose adjusted p-value or −log10(adjusted p-value), and set the global FDR cutoff.</span></div></article></div>
-      </section>
-
-      <section id="interpretation" class="docs-section">
-        <div class="section-kicker">10 · Interpretation</div>
-        <h2>Statistical and visual conventions</h2>
-        <div class="table-card"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Measure</th><th>Interpretation</th><th>Do not infer</th></tr></thead><tbody>
-          <tr><td><strong>Log fold change (LFC)</strong></td><td>Direction and magnitude of change for the displayed comparison.</td><td>Biological importance from magnitude alone.</td></tr>
-          <tr><td><strong>Adjusted p-value / FDR</strong></td><td>Multiple-testing-adjusted evidence against the null model; smaller values provide stronger evidence.</td><td>Effect size or probability that the hypothesis is true.</td></tr>
-          <tr><td><strong>−log10(adjusted p)</strong></td><td>A plotting transform: larger values correspond to smaller adjusted p-values.</td><td>A different statistical test.</td></tr>
-          <tr><td><strong>NES</strong></td><td>Normalized pathway enrichment direction and strength.</td><td>Significance without checking FDR/q-value.</td></tr>
-          <tr><td><strong>UMAP / t-SNE</strong></td><td>Low-dimensional views preserving selected aspects of transcriptomic similarity.</td><td>Literal physical distance, lineage, or developmental time.</td></tr>
-          <tr><td><strong>Spatial spot value</strong></td><td>Measured expression or estimated cell-type proportion at a capture spot.</td><td>A measurement from exactly one cell.</td></tr>
-        </tbody></table></div></div>
-      </section>
-
-      <section id="cell-types" class="docs-section">
-        <div class="section-kicker">11 · Reference</div>
-        <h2>Cell cluster definitions</h2>
-        <p class="section-lead">Cluster labels are based on marker-gene patterns in the source analysis. Select a marker gene below to open it in Genome Browser, or download the <a href="../../../assets/mouseHeart_new.csv" target="_blank">marker list</a>.</p>
-        <div ngbAccordion class="cell-accordion">
-          @for (item of cellTypes; track item; let i = $index) {
-            <div ngbAccordionItem>
-              <h3 ngbAccordionHeader><button ngbAccordionButton>{{ item.name | translate }}</button></h3>
-              <div ngbAccordionCollapse><div ngbAccordionBody>
-                <div class="cluster-content"><span class="mini-label">Description</span><p>{{ item.def | translate }}</p><span class="mini-label">Top marker genes</span><div class="marker-list">
-                  @for (gene of translateService.instant(item.marker || 'Undefined').split(','); track gene) {
-                    @if (gene.trim() !== 'Undefined') {<button type="button" (click)="geneRerout(gene.trim())">{{ gene.trim() }} <i class="fa fa-arrow-up-right-from-square"></i></button>}
-                    @else {<span class="text-muted">Undefined</span>}
-                  }
-                </div></div>
-                @if (item.subsets.length > 0) {<div class="subset-grid">@for (subitem of item.subsets; track subitem) {<article><h4>{{ subitem.name | translate }}</h4><p>{{ subitem.def | translate }}</p><div class="marker-list">@for (gene of translateService.instant(subitem.marker || 'Undefined').split(','); track gene) {@if (gene.trim() !== 'Undefined') {<button type="button" (click)="geneRerout(gene.trim())">{{ gene.trim() }}</button>}}</div></article>}</div>}
-              </div></div>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <div class="row">
+              <small class="text-muted" translate="documentation.cell_defs.def"></small>
+              <h6 class="fw-normal">{{item.def | translate}}</h6>
+              <small class="text-muted" translate="documentation.cell_defs.marker"></small>
+              <h6 class="fw-normal d-flex gap-2 flex-wrap">
+                @for (gene of translateService.instant(item.marker || 'Undefined').split(","); track gene) {
+                <a href="javascript:void(0)" class="text-decoration-none"
+                  (click)="gene == 'Undefined' ? '' : geneRerout(gene?.trim())">{{gene?.trim()}}</a>
+                }
+              </h6>
+              @if (item.subsets.length > 0) {
+              <ul class="list-group list-group-flush">
+                @for (subitem of item.subsets; track subitem; let j = $index) {
+                <li class="list-group-item">
+                  <div class="row">
+                    <h5>{{subitem.name | translate}}</h5>
+                    <small class="text-muted" translate="documentation.cell_defs.def"></small>
+                    <h6 class="fw-normal">{{subitem.def | translate}}</h6>
+                    <small class="text-muted" translate="documentation.cell_defs.marker"></small>
+                    <h6 class="fw-normal d-flex gap-2 flex-wrap">
+                      @for (gene of translateService.instant(subitem.marker || 'Undefined').split(","); track gene) {
+                      <a href="javascript:void(0)" class="text-decoration-none"
+                        (click)="gene == 'Undefined' ? '' : geneRerout(gene?.trim())">{{gene?.trim()}}</a>
+                      }
+                    </h6>
+                  </div>
+                </li>
+                }
+              </ul>
+              }
             </div>
-          }
+          </div>
         </div>
-      </section>
-
-      <section id="citation" class="docs-section citation-section">
-        <div class="section-kicker">12 · Attribution</div>
-        <h2>Citation and data sources</h2>
-        <div class="citation-card"><i class="fa fa-quote-left"></i><p>{{ citation }}</p></div>
-        <div class="source-links"><a href="https://www.biorxiv.org/content/10.64898/2025.12.22.696074v1" target="_blank" rel="noopener"><i class="fa fa-file-lines"></i><span><strong>MCAREDB manuscript</strong><small>bioRxiv preprint</small></span><i class="fa fa-arrow-up-right-from-square"></i></a><a href="https://doi.org/10.1038/s41467-021-25653-w" target="_blank" rel="noopener"><i class="fa fa-location-dot"></i><span><strong>Spatial transcriptomics study</strong><small>Cui et al., 2021</small></span><i class="fa fa-arrow-up-right-from-square"></i></a><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE163629" target="_blank" rel="noopener"><i class="fa fa-database"></i><span><strong>Spatial data accession</strong><small>GEO: GSE163629</small></span><i class="fa fa-arrow-up-right-from-square"></i></a></div>
-      </section>
-    </main>
-  </div>
+      </div>
+      }
+    </div>
+  </section>
 </div>

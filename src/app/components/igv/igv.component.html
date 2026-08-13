@@ -109,7 +109,7 @@
         aria-label="Choose genome browser tracks" data-testid="track-picker-toggle">
         <i class="fa fa-layer-group" aria-hidden="true"></i>
         Tracks
-        <span class="track-count">{{ visibleTrackCount }}/{{ trackCatalog.length }}</span>
+        <span class="track-count">{{ visibleTrackCount }}/{{ selectableTrackCount }}</span>
       </button>
       <div ngbDropdownMenu class="track-picker-menu" data-testid="track-picker-menu">
         <div class="track-picker-actions">
@@ -180,9 +180,18 @@
       <span><i class="legend-swatch p8-mi"></i>P8 MI</span>
       <span><i class="legend-swatch p8-sham"></i>P8 Sham</span>
     </div>
-    <span class="population-label" title="The public GEO deposit does not include published barcode-to-cell-type labels.">
-      scATAC population: <strong>All cells</strong>
-    </span>
+    <label class="population-selector" for="scatac-population">
+      <span>scATAC population</span>
+      <select id="scatac-population" class="form-select form-select-sm"
+        [disabled]="trackSelectionBusy" [ngModel]="selectedScAtacPopulationId"
+        (ngModelChange)="setScAtacPopulation($event)" data-testid="scatac-population-selector">
+        @for (population of scAtacPopulations; track population.id) {
+        <option [value]="population.id">
+          {{ population.label }}{{ population.id === 'all' ? '' : ' — re-derived' }}
+        </option>
+        }
+      </select>
+    </label>
   </div>
   @if (visibleTrackCount === 0) {
   <div class="alert alert-secondary py-2 mb-1" role="status">
@@ -194,11 +203,12 @@
     <summary><i class="fa fa-circle-info" aria-hidden="true"></i> About these tracks and comparisons</summary>
     <div class="track-source-content">
       <p>
-        The scATAC tracks are CPM-normalized, condition-level pseudobulk signals generated from the processed
-        all-cell peak matrix in <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153479"
+        The all-cell scATAC tracks are CPM-normalized condition pseudobulks from the processed peak matrix. The nine
+        selectable cell populations are fragment-derived pseudobulks reconstructed from the single-cell matrix and
+        fragments in <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153479"
           target="_blank" rel="noopener">GSE153479</a> from
         <a href="https://doi.org/10.1016/j.celrep.2020.108472" target="_blank" rel="noopener">Wang et al. (2020)</a>.
-        Their shared scale supports direct comparison.
+        Each selected population displays the four injury/age conditions on a shared scale.
       </p>
       <p>
         For injury studies, P1 and P8 are the ages at surgery. PSD3 samples were collected at approximately P4 and
@@ -213,9 +223,22 @@
         more DNA methylation and should not be interpreted like a high accessibility or H3K27ac signal. All displayed
         data use the mm10/GRCm38 assembly.
       </p>
+      <p>
+        The authors plotted cell-type and condition pseudobulks—not one browser track per cell. We reconstructed
+        per-barcode labels with the reported peak-count and blacklist QC, TF-IDF/LSI/graph clustering, the positive
+        marker peaks in Table S2, and the final per-condition cell counts in Table S1. Because a barcode-level TSS score
+        was not deposited, low-confidence cells were excluded to those published totals. Independent held-out marker
+        peaks were enriched in all nine reconstructed populations. The tracks preserve single-cell-derived population
+        specificity while pooling cells to obtain interpretable browser coverage.
+      </p>
       <p class="mb-0">
-        Cell-type scATAC tracks are not shown because the public deposition does not provide the authors' validated
-        barcode-to-cell-type assignments. MCaReDB does not infer those labels without a reproducible annotation source.
+        Important provenance: neither GEO nor the supplement contains the authors' original barcode-to-cell-type table,
+        so these are independently re-derived labels and may not match their assignments barcode-for-barcode. See the
+        <a href="assets/tracks/scatac/annotation_metadata.json" target="_blank" rel="noopener">annotation audit</a>,
+        <a href="assets/tracks/scatac/wang2020_barcode_cell_types.tsv.gz" target="_blank" rel="noopener">barcode assignments</a>,
+        <a href="assets/tracks/scatac/heldout_marker_validation.tsv" target="_blank" rel="noopener">held-out validation</a>,
+        <a href="assets/tracks/scatac/track_marker_validation.tsv" target="_blank" rel="noopener">track-level marker validation</a>,
+        and <a href="assets/tracks/scatac/cell_type_track_metadata.tsv" target="_blank" rel="noopener">track checksums</a>.
       </p>
     </div>
   </details>

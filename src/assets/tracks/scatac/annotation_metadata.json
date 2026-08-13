@@ -1,0 +1,25 @@
+{
+  "study": "Wang et al. Cell Reports 2020, DOI 10.1016/j.celrep.2020.108472",
+  "source_accession": "GSE153479",
+  "label_status": "independently re-derived; not original per-barcode author labels",
+  "method_reference": "Signac 0.2.5 RunTFIDF method 1 and RunSVD embedding scaling",
+  "unavailable_original_fields": [
+    "barcode-to-cell-type assignments",
+    "per-barcode TSS enrichment",
+    "Seurat integration and clustering parameters"
+  ],
+  "qc_peak_count": "5000 <= nCount_peaks <= 40000",
+  "qc_blacklist_ratio": "blacklist_region_fragments / peak_region_fragments < 0.05",
+  "annotation": "Signac 0.2.5 TF-IDF/LSI semantics, condition location/scale correction, Leiden graph clusters, published Table S2 marker peaks",
+  "class_constraints": "published Table S1 per-condition cell counts",
+  "matrix_cells": 42478,
+  "cells_after_numeric_qc": 33877,
+  "cells_retained": 30520,
+  "cells_excluded_low_confidence": 3357,
+  "features": 118256,
+  "lsi_components": 50,
+  "neighbors": 30,
+  "leiden_resolution": 0.8,
+  "random_seed": 2020,
+  "svd_explained_variance": 0.04420693218708038
+}
