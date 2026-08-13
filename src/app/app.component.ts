@@ -21,9 +21,19 @@ export class AppComponent implements OnInit {
   @ViewChild(NavbarComponent, {static: false}) navbar!: NavbarComponent;
   constructor(private t: TranslateService) {
     this.t.addLangs(["en-us", "zh-cn", "zh-hk", "ja-jp"]);
-    // const userLang = navigator.language.toLowerCase();
-    // this.t.use(this.defLanguage === 'def' ? (this.t.langs.includes(userLang) ? userLang : 'en-us') : this.defLanguage);
-    this.t.use("en-us");
+    this.t.use(this.resolveLanguage(this.defLanguage));
+  }
+
+  private resolveLanguage(preference: string): string {
+    if (preference !== 'def' && this.t.langs.includes(preference)) return preference;
+
+    const browserLanguage = navigator.language.toLowerCase();
+    if (this.t.langs.includes(browserLanguage)) return browserLanguage;
+    if (browserLanguage.startsWith('zh')) {
+      return /-(hk|tw|mo)/.test(browserLanguage) ? 'zh-hk' : 'zh-cn';
+    }
+    if (browserLanguage.startsWith('ja')) return 'ja-jp';
+    return 'en-us';
   }
 
   ngOnInit(): void {

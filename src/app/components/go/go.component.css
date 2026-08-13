@@ -689,3 +689,27 @@
 .cutoff-range:active::-moz-range-thumb {
     background-color: var(--thumb-color, var(--bs-primary));
 }
+
+/* Workspace layout: keeps the existing analysis flow while using the viewport
+   more efficiently and giving every column a clear visual boundary. */
+.pathway-layout { align-items: stretch; }
+.page-title-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .2rem; }
+.analysis-status { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .45rem; }
+.analysis-status span { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .62rem; border: 1px solid rgba(187,45,116,.2); border-radius: 2rem; color: #bb2d74; background: rgba(187,45,116,.07); font-size: .76rem; font-weight: 600; }
+.workspace-panel { height: 100%; border: 1px solid var(--bs-border-color-translucent); border-radius: .75rem; background: var(--bs-body-bg); }
+.pathway-controls { height: auto; max-height: calc(100vh - var(--navbar-height, 70px) - 1rem); padding: 1rem; overflow-y: auto; scrollbar-width: thin; }
+.pathway-controls h4 { font-size: 1rem; }.pathway-controls h5 { font-size: .9rem; }.pathway-controls hr { margin: .85rem 0; }.pathway-controls .btn-link { padding: .2rem .25rem; font-size: .75rem; }
+.pathway-chart-panel { min-height: 680px; padding: .45rem; overflow: hidden; }.pathway-chart-panel apx-chart { display: block; width: 100%; }.pathway-chart-panel .card { margin: 0 .45rem .45rem; border-color: var(--bs-border-color-translucent); }.pathway-chart-panel .card-header { padding: .6rem .8rem; }.pathway-chart-panel .card-header h4 { font-size: 1rem; }.pathway-chart-panel .card-body { min-height: 180px; }
+.regulated-panel { padding: .65rem; }.regulated-card { min-height: 0; overflow: hidden; border-color: var(--bs-border-color-translucent); }.regulated-card .card-header { padding: .65rem .8rem; background: rgba(var(--bs-secondary-bg-rgb),.45); }.regulated-card .card-header h4 { font-size: .95rem; }.regulated-list { height: 33vh; min-height: 210px; scrollbar-width: thin; }.regulated-list .list-group-item { padding: .42rem .75rem; font-size: .84rem; }
+
+@media (min-width: 992px) {
+  .pathway-chart-column, .pathway-genes-column { min-height: calc(100vh - var(--navbar-height, 70px) - 4.5rem); }
+  .regulated-panel { position: sticky; top: var(--navbar-height, 70px); height: calc(100vh - var(--navbar-height, 70px) - 1rem); }
+  .regulated-list { height: auto; }
+}
+@media (max-width: 991.98px) {
+  .pathway-controls { position: static !important; max-height: none; }.pathway-chart-panel { min-height: 580px; }.regulated-panel { height: auto !important; }.regulated-list { height: 280px; min-height: 0; }
+}
+@media (max-width: 575.98px) {
+  .page-title-row { align-items: flex-start; flex-direction: column; }.analysis-status { justify-content: flex-start; }.pathway-chart-panel { min-height: 500px; padding: 0; }.regulated-list { height: 230px; }
+}

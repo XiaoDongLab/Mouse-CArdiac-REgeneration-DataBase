@@ -106,7 +106,14 @@ export class SettingsComponent implements OnInit {
 
   defLanguageChanged(): void {
     localStorage["defLanguage"] = this.defLanguage;
-    const userLang = navigator.language.toLowerCase();
-    this.t.use(this.defLanguage === 'def' ? (this.t.langs.includes(userLang) ? userLang : 'en-us') : this.defLanguage);
+    this.t.use(this.defLanguage === 'def' ? this.browserLanguage() : this.defLanguage);
+  }
+
+  private browserLanguage(): string {
+    const language = navigator.language.toLowerCase();
+    if (this.t.langs.includes(language)) return language;
+    if (language.startsWith('zh')) return /-(hk|tw|mo)/.test(language) ? 'zh-hk' : 'zh-cn';
+    if (language.startsWith('ja')) return 'ja-jp';
+    return 'en-us';
   }
 }

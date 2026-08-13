@@ -72,6 +72,29 @@
         },
         "citepopup": "複製成功！"
     },
+    "home_v2": {
+        "eyebrow": "多組學整合資源", "hero_description": "從分子、細胞、調控和空間層面探索新生期心臟與出生後期心臟再生能力差異背後的生物學程序。",
+        "explore": "開始探索數據庫", "guide": "閱讀使用指南", "focus_label": "研究重點", "focus_title": "為甚麼新生期心臟受傷後仍能再生？",
+        "focus_description": "MCAREDB 將互補的測序技術整合到同一研究流程中，用於分析心肌細胞增殖及損傷應答如何隨年齡變化。",
+        "neonatal": "新生期", "postnatal": "出生後期", "high_capacity": "高再生能力", "reduced_capacity": "再生能力降低", "transition": "能力逐漸下降",
+        "tools_label": "探索數據庫", "tools_title": "從基因位點追蹤到組織空間", "tools_description": "每個工作區回答同一生物學問題的不同部分。您可以從任意入口開始，並跨模態追蹤基因、細胞類型和通路。", "open_tool": "開啟工具", "new": "新增",
+        "tools": {
+            "genome": { "title": "基因組瀏覽器", "description": "在 mm10 基因組位點中聯合查看染色質可及性、H3K27ac、DNA 甲基化和差異表達資訊。" },
+            "expression": { "title": "基因表達", "description": "比較不同細胞類型、損傷條件和發育階段中的多基因表達分佈。" },
+            "spatial": { "title": "空間轉錄組", "description": "在心肌梗死和假手術心臟切片中定位基因表達及推斷的細胞類型組成。" },
+            "pathway": { "title": "通路富集", "description": "根據比較組、細胞類型、FDR 和標準化富集分數解析 GO 與 KEGG 通路。" },
+            "download": { "title": "搜尋及下載", "description": "按數據類型、細胞類型和文獻篩選原始或處理後檔案，並下載所選記錄。" }
+        },
+        "spatial": { "label": "新增空間視圖", "title": "觀察損傷相關訊號出現在哪裏", "description": "探索 P1 小鼠接受心肌梗死或假手術後第 3 天和第 7 天的 10x Visium 心臟切片。", "point1": "在同一時間點並排比較 MI 與 Sham 切片。", "point2": "在基因表達和推斷的細胞類型比例之間切換。", "point3": "選擇單個 spot，查看條碼、數值、細胞組成和座標。", "explore": "探索空間轉錄組" },
+        "evidence_label": "證據層", "evidence_title": "面向跨模態綜合解讀",
+        "evidence": {
+            "single_cell": { "title": "單細胞表達", "description": "細胞群、亞群、差異表達和降維圖。" },
+            "epigenome": { "title": "調控背景", "description": "mm10 上的染色質可及性、活性染色質和 DNA 甲基化軌跡。" },
+            "spatial": { "title": "組織定位", "description": "與組織學影像對齊的 spot 表達和推斷細胞組成。" },
+            "provenance": { "title": "可追溯來源", "description": "研究背景、數據編號、比較定義和引用資訊。" }
+        },
+        "citation_label": "引用 MCAREDB", "copy_citation": "複製引用"
+    },
     "navbar": {
         "home": "首頁",
         "genome": "基因組瀏覽器",
@@ -80,6 +103,7 @@
         "spatial": "空間轉錄組",
         "download": "蒐索及下載",
         "settings": "設置",
+        "documentation": "文檔",
         "language": {
             "title": "語言"
         }
@@ -290,7 +314,13 @@
         "hide": "隱藏",
         "yaxis": "散點圖 Y 軸",
         "yaxis-d": "差異表達分析中的散點圖使用 -Log10(調整後 P 值)",
-        "adjpval": "調整後 P 值"
+        "adjpval": "調整後 P 值",
+        "changelog": "更新記錄",
+        "license": "授權條款",
+        "fdrqval": "FDR 閾值",
+        "fdrqval-d": "預設 FDR 閾值為 0.05。",
+        "language": "顯示語言",
+        "language-d": "初次使用時將根據瀏覽器語言自動選擇。"
     },
     "download": {
         "filterarea": {
@@ -304,5 +334,8 @@
             "total": "總計：",
             "d": "下載多個文件或大體積文件時，響應速度可能因壓縮降低。"
         }
+    }
+    ,"languages": {
+        "en-us": "英語（美國）", "zh-cn": "中文（簡體）", "zh-hk": "中文（繁體）", "ja-jp": "日語"
     }
 }

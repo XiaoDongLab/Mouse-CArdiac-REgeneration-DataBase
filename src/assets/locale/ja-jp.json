@@ -71,6 +71,29 @@
             "software": "テクニカルサポート"
         }
     },
+    "home_v2": {
+        "eyebrow": "統合マルチオミクスリソース", "hero_description": "新生児期と出生後期の心臓で再生能が異なる仕組みを、分子・細胞・制御・空間の各レベルから探索します。",
+        "explore": "データベースを探索", "guide": "ユーザーガイド", "focus_label": "研究テーマ", "focus_title": "新生児期の心臓は、なぜ損傷後も再生できるのか？",
+        "focus_description": "MCAREDB は相補的なアッセイを一つの研究フローに統合し、心筋細胞の増殖と損傷応答が年齢とともにどう変化するかを解析できるようにします。",
+        "neonatal": "新生児期", "postnatal": "出生後期", "high_capacity": "高い再生能力", "reduced_capacity": "再生能力の低下", "transition": "再生能が低下",
+        "tools_label": "データベースを探索", "tools_title": "ゲノム座位から組織空間まで", "tools_description": "各ワークスペースは、同じ生物学的課題を異なる側面から捉えます。どこからでも開始し、遺伝子・細胞型・経路をモダリティ横断で追跡できます。", "open_tool": "ツールを開く", "new": "新規",
+        "tools": {
+            "genome": { "title": "ゲノムブラウザ", "description": "mm10 の座位において、アクセシビリティ、H3K27ac、DNA メチル化、差次的発現を併せて表示します。" },
+            "expression": { "title": "遺伝子発現", "description": "細胞型、損傷条件、発生段階ごとに複数遺伝子の発現分布を比較します。" },
+            "spatial": { "title": "空間トランスクリプトーム", "description": "梗塞および偽手術の心臓切片上で、遺伝子発現と推定細胞型組成を可視化します。" },
+            "pathway": { "title": "パスウェイ濃縮解析", "description": "比較群、細胞型、FDR、正規化濃縮スコアに基づいて GO と KEGG を解釈します。" },
+            "download": { "title": "検索・ダウンロード", "description": "データ種別、細胞型、論文でファイルを絞り込み、選択したデータをダウンロードします。" }
+        },
+        "spatial": { "label": "新しい空間ビュー", "title": "損傷関連シグナルが生じる場所を見る", "description": "P1 マウスの心筋梗塞または偽手術後 3 日・7 日の 10x Visium 心臓切片を探索します。", "point1": "同じ時点の MI と Sham 切片を並べて比較できます。", "point2": "遺伝子発現と推定細胞型比率を切り替えられます。", "point3": "各スポットを選択し、バーコード、値、組成、座標を確認できます。", "explore": "空間データを探索" },
+        "evidence_label": "エビデンス層", "evidence_title": "モダリティ横断の解釈に対応",
+        "evidence": {
+            "single_cell": { "title": "単一細胞発現", "description": "細胞集団、サブクラスター、差次的発現、埋め込み表示。" },
+            "epigenome": { "title": "制御コンテキスト", "description": "mm10 上のアクセシビリティ、活性クロマチン、DNA メチル化トラック。" },
+            "spatial": { "title": "組織内局在", "description": "組織画像に整列したスポット発現と推定細胞組成。" },
+            "provenance": { "title": "追跡可能な出典", "description": "研究背景、アクセッション、比較定義、引用情報。" }
+        },
+        "citation_label": "MCAREDB の引用", "copy_citation": "引用をコピー"
+    },
     "navbar": {
         "home": "ホーム",
         "genome": "ゲノムブラウザ",
@@ -79,18 +102,19 @@
         "spatial": "空間トランスクリプトーム",
         "download": "検索・ダウンロード",
         "settings": "設定",
+        "documentation": "ドキュメント",
         "language": {
             "title": "言語"
         }
     },
     "footer": {
-        "copyright": "保留所有权利。",
+        "copyright": "All rights reserved.",
         "window": {
             "changelog": {
                 "title": "更新の内容"
             },
             "license": {
-                "title": "许可证"
+                "title": "ライセンス"
             }
         }
     },
@@ -283,20 +307,20 @@
         },
         "fontsize": "フォントサイズ",
         "fontsize-d": "システム設定はデフォルトで適用される",
-        "data": "数据分析",
-        "nonsig-data": "无显著意义样本",
-        "nonsig-data-d": "样本的 -Log10(調整済み P 値) 小于 0.01",
+        "data": "データ解析",
+        "nonsig-data": "有意でないクラスター",
+        "nonsig-data-d": "差次的発現結果で調整済み P 値が 1.00 のクラスター",
         "show": "表示",
         "hide": "非表示",
         "yaxis": "散布図のY軸",
-        "yaxis-d": "差异表达分析中的散点图使用 -Log10(調整済み P 値)",
+        "yaxis-d": "差次的発現結果の Y 軸表示方法を選択します。",
         "adjpval": "調整済み P 値",
-        "changelog": "Changelog",
-        "license": "License",
-        "fdrqval": "FDR 阈值",
-        "fdrqval-d": "默认 FDR 阈值为 0.05。",
-        "language": "显示语言",
-        "language-d": "默认显示语言为英语。"
+        "changelog": "更新履歴",
+        "license": "ライセンス",
+        "fdrqval": "FDR カットオフ",
+        "fdrqval-d": "既定の FDR カットオフは 0.05 です。",
+        "language": "表示言語",
+        "language-d": "初回はブラウザの言語に合わせて自動選択されます。"
     },
     "download": {
         "filterarea": {
@@ -310,5 +334,8 @@
             "total": "全部で：",
             "d": "下载多个文件或大体积文件时，响应速度可能因后台压缩降低。"
         }
+    }
+    ,"languages": {
+        "en-us": "英語（米国）", "zh-cn": "中国語（簡体字）", "zh-hk": "中国語（繁体字）", "ja-jp": "日本語"
     }
 }

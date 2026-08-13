@@ -85,6 +85,50 @@
         },
         "detail_navigator": "For detailed cluster definitions and experimental terminology, see the"
     },
+    "home_v2": {
+        "eyebrow": "Integrated multi-omics resource",
+        "hero_description": "Explore the molecular, cellular, regulatory, and spatial programs that distinguish regenerative neonatal hearts from later postnatal stages.",
+        "explore": "Explore the database",
+        "guide": "Read the user guide",
+        "focus_label": "Research focus",
+        "focus_title": "Why can the neonatal heart regenerate after injury?",
+        "focus_description": "MCAREDB brings complementary assays into one research path to examine how cardiomyocyte proliferation and the injury response change with age.",
+        "neonatal": "Neonatal phase",
+        "postnatal": "Postnatal phase",
+        "high_capacity": "High regenerative capacity",
+        "reduced_capacity": "Reduced regenerative capacity",
+        "transition": "capacity declines",
+        "tools_label": "Explore the database",
+        "tools_title": "Move from locus to tissue context",
+        "tools_description": "Each workspace answers a different part of the same biological question. Start anywhere and follow genes, cell types, and pathways across modalities.",
+        "open_tool": "Open tool",
+        "new": "New",
+        "tools": {
+            "genome": { "title": "Genome Browser", "description": "View mm10 loci with accessibility, H3K27ac, methylation, and differential-expression context." },
+            "expression": { "title": "Gene Expression", "description": "Compare multi-gene expression distributions across cell type, injury, and developmental groups." },
+            "spatial": { "title": "Spatial Transcriptomics", "description": "Map gene expression and estimated cell-type composition across injured and sham heart sections." },
+            "pathway": { "title": "Pathway Enrichment", "description": "Interpret GO and KEGG programs by comparison, cell type, FDR, and normalized enrichment score." },
+            "download": { "title": "Search & Download", "description": "Filter source and processed files by data type, cell type, and publication, then download selected records." }
+        },
+        "spatial": {
+            "label": "New spatial view", "title": "See where injury-associated signals occur",
+            "description": "Explore 10x Visium heart sections from P1 mice after myocardial infarction or sham surgery at 3 and 7 days post injury.",
+            "point1": "Compare MI and Sham sections side by side at the same timepoint.",
+            "point2": "Switch between gene expression and estimated cell-type proportions.",
+            "point3": "Select individual spots to inspect barcodes, values, composition, and coordinates.",
+            "explore": "Explore Spatial"
+        },
+        "evidence_label": "Evidence layers",
+        "evidence_title": "Designed for cross-modal interpretation",
+        "evidence": {
+            "single_cell": { "title": "Single-cell expression", "description": "Cell populations, subclusters, differential expression, and embeddings." },
+            "epigenome": { "title": "Regulatory context", "description": "Accessibility, active chromatin, and DNA methylation tracks in mm10." },
+            "spatial": { "title": "Tissue localization", "description": "Spot-level expression and estimated cell composition aligned to histology." },
+            "provenance": { "title": "Traceable sources", "description": "Study context, accession links, comparison definitions, and citations." }
+        },
+        "citation_label": "Cite MCAREDB",
+        "copy_citation": "Copy citation"
+    },
     "navbar": {
         "home": "Home",
         "genome": "Genome Browser",
@@ -359,7 +403,7 @@
         "fdrqval": "FDR Cutoff",
         "fdrqval-d": "Default cutoff value will be 0.05.",
         "language": "Display language",
-        "language-d": "Default language will be English if you use the website first time."
+        "language-d": "The browser language is used by default; your selection is saved on this device."
     },
     "download": {
         "filterarea": {

@@ -66,7 +66,7 @@
                     <span class="description text-muted" translate="settings.language-d"></span>
                 </div>
                 <div class="settings-option">
-                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" disabled [(ngModel)]="defLanguage"
+                    <select tabindex="0" class="form-select" (change)="defLanguageChanged()" [(ngModel)]="defLanguage"
                         aria-label="default language">
                         <option value="def">{{'settings.colors.sys-set' | translate}}</option>
                         <!-- <option value="en-us">English</option>

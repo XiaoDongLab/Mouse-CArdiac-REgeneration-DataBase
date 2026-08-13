@@ -72,6 +72,29 @@
         },
         "citepopup": "复制成功！"
     },
+    "home_v2": {
+        "eyebrow": "多组学整合资源", "hero_description": "从分子、细胞、调控和空间层面探索新生期心脏与出生后期心脏再生能力差异背后的生物学程序。",
+        "explore": "开始探索数据库", "guide": "阅读使用指南", "focus_label": "研究重点", "focus_title": "为什么新生期心脏受伤后仍能再生？",
+        "focus_description": "MCAREDB 将互补的测序技术整合到同一研究流程中，用于分析心肌细胞增殖及损伤应答如何随年龄变化。",
+        "neonatal": "新生期", "postnatal": "出生后期", "high_capacity": "高再生能力", "reduced_capacity": "再生能力降低", "transition": "能力逐渐下降",
+        "tools_label": "探索数据库", "tools_title": "从基因位点追踪到组织空间", "tools_description": "每个工作区回答同一生物学问题的不同部分。您可以从任意入口开始，并跨模态追踪基因、细胞类型和通路。", "open_tool": "打开工具", "new": "新增",
+        "tools": {
+            "genome": { "title": "基因组浏览器", "description": "在 mm10 基因组位点中联合查看染色质可及性、H3K27ac、DNA 甲基化和差异表达信息。" },
+            "expression": { "title": "基因表达", "description": "比较不同细胞类型、损伤条件和发育阶段中的多基因表达分布。" },
+            "spatial": { "title": "空间转录组", "description": "在心肌梗死和假手术心脏切片中定位基因表达及推断的细胞类型组成。" },
+            "pathway": { "title": "通路富集", "description": "根据比较组、细胞类型、FDR 和标准化富集分数解析 GO 与 KEGG 通路。" },
+            "download": { "title": "搜索及下载", "description": "按数据类型、细胞类型和文献筛选原始或处理后文件，并下载所选记录。" }
+        },
+        "spatial": { "label": "新增空间视图", "title": "观察损伤相关信号出现在哪里", "description": "探索 P1 小鼠接受心肌梗死或假手术后第 3 天和第 7 天的 10x Visium 心脏切片。", "point1": "在同一时间点并排比较 MI 与 Sham 切片。", "point2": "在基因表达和推断的细胞类型比例之间切换。", "point3": "选择单个 spot，查看条形码、数值、细胞组成和坐标。", "explore": "探索空间转录组" },
+        "evidence_label": "证据层", "evidence_title": "面向跨模态综合解读",
+        "evidence": {
+            "single_cell": { "title": "单细胞表达", "description": "细胞群、亚群、差异表达和降维图。" },
+            "epigenome": { "title": "调控背景", "description": "mm10 上的染色质可及性、活性染色质和 DNA 甲基化轨迹。" },
+            "spatial": { "title": "组织定位", "description": "与组织学图像对齐的 spot 表达和推断细胞组成。" },
+            "provenance": { "title": "可追溯来源", "description": "研究背景、数据编号、比较定义和引用信息。" }
+        },
+        "citation_label": "引用 MCAREDB", "copy_citation": "复制引用"
+    },
     "navbar": {
         "home": "首页",
         "genome": "基因组浏览器",
@@ -300,7 +323,7 @@
         "fdrqval": "FDR 阈值",
         "fdrqval-d": "默认 FDR 阈值为 0.05。",
         "language": "显示语言",
-        "language-d": "默认显示语言为英语。"
+        "language-d": "初次使用时将根据浏览器语言自动选择。"
     },
     "download": {
         "filterarea": {
@@ -314,5 +337,8 @@
             "total": "总计：",
             "d": "下载多个文件或大体积文件时，响应速度可能因后台压缩降低。"
         }
+    }
+    ,"languages": {
+        "en-us": "英语（美国）", "zh-cn": "中文（简体）", "zh-hk": "中文（繁体）", "ja-jp": "日语"
     }
 }

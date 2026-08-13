@@ -106,7 +106,7 @@
                 <div class="row g-2">
                     @for (item of t.langs; track item) {
                     <div class="col">
-                        <button class="btn w-100 h-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != item" [disabled]="item !== 'en-us'"
+                        <button class="btn w-100 h-100 text-decoration-none" [class.btn-outline-mcaredb]="t.currentLang != item"
                             [class.btn-mcaredb]="t.currentLang == item" [class.active]="t.currentLang == item" (click)="switch(item)">
                             <div class="card-body">
                                 <h5 class="mb-0">{{('languages.' + item) | translate}}</h5>

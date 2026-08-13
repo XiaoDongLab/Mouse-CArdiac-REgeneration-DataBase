@@ -5,10 +5,16 @@
   </div>
 </div>
 }-->
-<div class="row d-flex g-2">
-  <h2 translate="navbar.pathway"></h2>
-  <div class="col-lg-3 col-md-12">
-    <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
+<div class="row d-flex g-3 pathway-layout">
+  <header class="page-title-row">
+    <h2 class="mb-0" translate="navbar.pathway"></h2>
+    <div class="analysis-status">
+      <span><i class="fa fa-cells"></i>{{ selected_cell_types.length }} {{ 'pathway.filterarea.celltype' | translate }}</span>
+      <span><i class="fa fa-filter"></i>FDR ≤ {{ fdr_cutoff }}</span>
+    </div>
+  </header>
+  <div class="col-lg-3 col-md-12 pathway-controls-column">
+    <div class="sidebar-sticky-top workspace-panel pathway-controls" [ngStyle]="{ top: 'var(--navbar-height)' }">
       <h4 translate="pathway.filterarea.comparison"></h4>
       <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedComparisonType"
         (change)="prepareData()">
@@ -148,7 +154,8 @@
       </label>
     </div>
   </div>
-  <div class="col-lg-6 col-md-12">
+  <div class="col-lg-6 col-md-12 pathway-chart-column">
+    <div class="workspace-panel pathway-chart-panel">
     @if (loading) {
     <div class="w-100 h-100 d-flex">
       <div class="d-flex align-items-center justify-content-center w-100">
@@ -241,15 +248,16 @@
       </div>
     </div>
     }
+    </div>
   </div>
 
-  <div class="col-lg-3 col-md-12">
-    <div class="d-flex flex-column h-100 gap-2">
-      <div class="card flex-fill" style="min-height: 0;">
+  <div class="col-lg-3 col-md-12 pathway-genes-column">
+    <div class="workspace-panel regulated-panel d-flex flex-column h-100 gap-2">
+      <div class="card flex-fill regulated-card">
         <div class="card-header">
           <h4 class="mb-0"><i class="fa fa-arrow-up"></i> {{'pathway.body.up' | translate}}</h4>
         </div>
-        <ul class="list-group list-group-flush overflow-y-auto d-flex flex-fill" style="height: 35vh;">
+        <ul class="list-group list-group-flush overflow-y-auto d-flex flex-fill regulated-list">
           @if (loading) {
           @for (n of [].constructor(20); track n) {
           <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">
@@ -269,11 +277,11 @@
           }
         </ul>
       </div>
-      <div class="card flex-fill" style="min-height: 0;">
+      <div class="card flex-fill regulated-card">
         <div class="card-header">
           <h4 class="mb-0"><i class="fa fa-arrow-down"></i> {{'pathway.body.down' | translate}}</h4>
         </div>
-        <ul class="list-group list-group-flush overflow-y-auto d-flex flex-fill" style="height: 35vh;">
+        <ul class="list-group list-group-flush overflow-y-auto d-flex flex-fill regulated-list">
           @if (loading) {
           @for (n of [].constructor(20); track n) {
           <li class="list-group-item list-group-item-action placeholder-glow d-flex justify-content-between">

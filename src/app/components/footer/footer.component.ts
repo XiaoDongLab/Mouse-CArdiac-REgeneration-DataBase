@@ -49,6 +49,7 @@ export class FooterComponent implements OnInit {
 
   switch(lang: string) {
     this.t.use(lang);
+    localStorage["defLanguage"] = lang;
     this.hideToastControl('languageToast');
   }
 }
