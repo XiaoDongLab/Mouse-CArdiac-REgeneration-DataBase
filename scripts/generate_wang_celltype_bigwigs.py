@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create fragment-derived Wang 2020 cell-type/condition BigWigs.
+"""Create fragment-derived Wang 2020 all-cell and cell-type BigWigs.
 
 The signal follows Signac 0.2.5 CoveragePlot semantics: Tn5 cut sites are
 summed, normalized to the median peak-matrix depth of the four condition groups
@@ -49,6 +49,12 @@ def arguments():
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--bin-size", type=int, default=10)
     parser.add_argument("--smooth-bp", type=int, default=100)
+    parser.add_argument(
+        "--track-set",
+        choices=("all", "populations", "both"),
+        default="both",
+        help="Generate all-cell tracks, population tracks, or both in one fragment scan.",
+    )
     return parser.parse_args()
 
 
@@ -186,36 +192,74 @@ def main():
 
     assignments = pd.read_csv(args.assignments, sep="\t", compression="infer")
     assignments = assignments.loc[assignments["retained"].astype(bool)].copy()
-    assignments["group"] = assignments["cell_type"] + "|" + assignments["condition"]
-    barcode_to_group = dict(zip(assignments["barcode"], assignments["group"]))
-    group_depth = assignments.groupby("group")["nCount_peaks"].sum().to_dict()
+    assignments["population_group"] = assignments["cell_type"] + "|" + assignments["condition"]
+    assignments["all_group"] = "All|" + assignments["condition"]
+    group_depth = assignments.groupby("population_group")["nCount_peaks"].sum().to_dict()
+    all_group_depth = assignments.groupby("all_group")["nCount_peaks"].sum().to_dict()
     population_scale = {
         cell_type: float(np.median([
             group_depth[f"{cell_type}|{condition}"] for condition in CONDITION_SLUGS
         ]))
         for cell_type in CELL_SLUGS
     }
+    all_scale = float(np.median(list(all_group_depth.values())))
+
+    include_populations = args.track_set in {"populations", "both"}
+    include_all = args.track_set in {"all", "both"}
+    barcode_to_groups = {}
+    for row in assignments.itertuples(index=False):
+        groups = []
+        if include_populations:
+            groups.append(row.population_group)
+        if include_all:
+            groups.append(row.all_group)
+        barcode_to_groups[row.barcode] = groups
 
     writers = {}
     metadata = []
-    for cell_type, cell_slug in CELL_SLUGS.items():
+    if include_populations:
+        for cell_type, cell_slug in CELL_SLUGS.items():
+            for condition, condition_slug in CONDITION_SLUGS.items():
+                group = f"{cell_type}|{condition}"
+                filename = f"wang2020_{cell_slug}_{condition_slug}_psd3.bw"
+                path = args.output / filename
+                cells = int((assignments["population_group"] == group).sum())
+                depth = int(group_depth[group])
+                writers[group] = TrackWriter(
+                    path, chrom_sizes, population_scale[cell_type] / depth,
+                    args.bin_size, args.smooth_bp
+                )
+                metadata.append({
+                    "track_set": "population",
+                    "cell_type": cell_type,
+                    "condition": condition,
+                    "cells": cells,
+                    "peak_matrix_counts": depth,
+                    "normalization": "Tn5 cut sites * cell-type median condition depth / condition peak-matrix counts; 100-bp centered mean",
+                    "scale_factor": population_scale[cell_type],
+                    "bin_size": args.bin_size,
+                    "file": filename,
+                })
+
+    if include_all:
         for condition, condition_slug in CONDITION_SLUGS.items():
-            group = f"{cell_type}|{condition}"
-            filename = f"wang2020_{cell_slug}_{condition_slug}_psd3.bw"
+            group = f"All|{condition}"
+            filename = f"wang2020_{condition_slug}_psd3.bw"
             path = args.output / filename
-            cells = int((assignments["group"] == group).sum())
-            depth = int(group_depth[group])
+            cells = int((assignments["all_group"] == group).sum())
+            depth = int(all_group_depth[group])
             writers[group] = TrackWriter(
-                path, chrom_sizes, population_scale[cell_type] / depth,
+                path, chrom_sizes, all_scale / depth,
                 args.bin_size, args.smooth_bp
             )
             metadata.append({
-                "cell_type": cell_type,
+                "track_set": "all_cells",
+                "cell_type": "All",
                 "condition": condition,
                 "cells": cells,
                 "peak_matrix_counts": depth,
-                "normalization": "Tn5 cut sites * cell-type median group depth / group peak-matrix counts; 100-bp centered mean",
-                "scale_factor": population_scale[cell_type],
+                "normalization": "Tn5 cut sites * all-cell median condition depth / condition peak-matrix counts; 100-bp centered mean",
+                "scale_factor": all_scale,
                 "bin_size": args.bin_size,
                 "file": filename,
             })
@@ -240,9 +284,10 @@ def main():
                 for writer in writers.values():
                     writer.start_chromosome(chrom, chrom_size_map[chrom])
                 print(f"processing {chrom}; {processed_lines:,} fragment rows", flush=True)
-            group = barcode_to_group.get(barcode)
-            if group is not None:
-                writers[group].add_fragment(int(start), int(end))
+            groups = barcode_to_groups.get(barcode)
+            if groups is not None:
+                for group in groups:
+                    writers[group].add_fragment(int(start), int(end))
                 used_fragment_rows += 1
 
     for writer in writers.values():
@@ -256,13 +301,21 @@ def main():
         row["sha256"] = sha256(path)
         with pyBigWig.open(str(path)) as bigwig:
             row["bigwig_chromosomes"] = len(bigwig.chroms())
-    pd.DataFrame(metadata).to_csv(args.output / "cell_type_track_metadata.tsv", sep="\t", index=False)
+    metadata_frame = pd.DataFrame(metadata)
+    metadata_frame.to_csv(args.output / "fragment_track_metadata.tsv", sep="\t", index=False)
+    population_metadata = metadata_frame.loc[metadata_frame["track_set"] == "population"]
+    if not population_metadata.empty:
+        population_metadata.to_csv(args.output / "cell_type_track_metadata.tsv", sep="\t", index=False)
+    all_metadata = metadata_frame.loc[metadata_frame["track_set"] == "all_cells"]
+    if not all_metadata.empty:
+        all_metadata.to_csv(args.output / "all_cell_track_metadata.tsv", sep="\t", index=False)
     run = {
         "fragments": str(args.fragments),
         "assignments": str(args.assignments),
         "processed_fragment_rows": processed_lines,
         "retained_fragment_rows": used_fragment_rows,
         "tracks": len(metadata),
+        "track_set": args.track_set,
         "bin_size": args.bin_size,
         "smoothing_window_bp": args.smooth_bp,
     }

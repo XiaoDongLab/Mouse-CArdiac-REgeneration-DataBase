@@ -67,6 +67,10 @@ const PUBLIC_STUDY_PMIDS: Record<number, number> = {
   // Differential-expression records retain the original internal PMID used for this dataset.
   34489413: 32220304
 };
+// Maps a genome-browser cell-type label to a spatial layer name. Values must come
+// from the `aliases` list served by GET /api/spatial/cell-types -- the layer
+// endpoint rejects the dataset's raw source_names (EC, EndoEC, EPI, FB,
+// Macrophage) with 404.
 const SPATIAL_CELL_TYPE_MAP: Record<string, string> = {
   'cardiac cell': 'Cardiomyocytes',
   'cardiac cells': 'Cardiomyocytes',
@@ -84,21 +88,23 @@ const SPATIAL_CELL_TYPE_MAP: Record<string, string> = {
   'cm5': 'CM5',
   'endothelial cell': 'Endothelial cells',
   'endothelial cells': 'Endothelial cells',
-  'ec': 'EC',
+  'ec': 'Endothelial cells',
   'endocardial cell': 'Endocardial cells',
   'endocardial cells': 'Endocardial cells',
-  'endoec': 'EndoEC',
+  'endoec': 'Endocardial cells',
   'epicardial cell': 'Epicardial cells',
   'epicardial cells': 'Epicardial cells',
-  'epi': 'EPI',
+  'epi': 'Epicardial cells',
   'fibroblast': 'Fibroblasts',
   'fibroblasts': 'Fibroblasts',
-  'fb': 'FB',
+  'fb': 'Fibroblasts',
   'immune cell': 'Immune cells',
   'immune cells': 'Immune cells',
-  'macrophage': 'Macrophage',
-  'macrophages': 'Macrophage',
-  'm2 macrophage': 'Macrophage',
+  // The deconvolution's only immune population is the macrophage signature
+  // (source_name "Macrophage"), published under the alias "Immune cells".
+  'macrophage': 'Immune cells',
+  'macrophages': 'Immune cells',
+  'm2 macrophage': 'Immune cells',
   'b cell': 'Immune cells',
   't cell': 'Immune cells',
   'granulocyte': 'Immune cells',

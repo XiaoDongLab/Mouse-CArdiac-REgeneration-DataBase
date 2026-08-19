@@ -187,7 +187,7 @@
         (ngModelChange)="setScAtacPopulation($event)" data-testid="scatac-population-selector">
         @for (population of scAtacPopulations; track population.id) {
         <option [value]="population.id">
-          {{ population.label }}{{ population.id === 'all' ? '' : ' — re-derived' }}
+          {{ population.label }}
         </option>
         }
       </select>
@@ -203,12 +203,13 @@
     <summary><i class="fa fa-circle-info" aria-hidden="true"></i> About these tracks and comparisons</summary>
     <div class="track-source-content">
       <p>
-        The all-cell scATAC tracks are CPM-normalized condition pseudobulks from the processed peak matrix. The nine
-        selectable cell populations are fragment-derived pseudobulks reconstructed from the single-cell matrix and
-        fragments in <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153479"
+        The all-cell and nine selectable cell-population scATAC tracks are fragment-derived condition pseudobulks
+        reconstructed from the single-cell matrix and fragments in
+        <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153479"
           target="_blank" rel="noopener">GSE153479</a> from
         <a href="https://doi.org/10.1016/j.celrep.2020.108472" target="_blank" rel="noopener">Wang et al. (2020)</a>.
-        Each selected population displays the four injury/age conditions on a shared scale.
+        All tracks use Tn5 insertion coverage from the 30,520 QC-retained cells, with 100-bp smoothing and 10-bp
+        output bins. Each selected population displays the four injury/age conditions on a shared depth-normalized scale.
       </p>
       <p>
         For injury studies, P1 and P8 are the ages at surgery. PSD3 samples were collected at approximately P4 and
@@ -219,9 +220,8 @@
       </p>
       <p>
         P0 H3K27ac and WGBS are uninjured heart developmental references, not injury-matched controls. WGBS tracks
-        show strand-specific CpG methylation percentages on a fixed 0–100% scale; a high value therefore represents
-        more DNA methylation and should not be interpreted like a high accessibility or H3K27ac signal. All displayed
-        data use the mm10/GRCm38 assembly.
+        show strand-specific CpG methylation percentages on a fixed 0–100% scale. All displayed data use the
+        mm10/GRCm38 assembly.
       </p>
       <p>
         The authors plotted cell-type and condition pseudobulks—not one browser track per cell. We reconstructed
@@ -233,12 +233,13 @@
       </p>
       <p class="mb-0">
         Important provenance: neither GEO nor the supplement contains the authors' original barcode-to-cell-type table,
-        so these are independently re-derived labels and may not match their assignments barcode-for-barcode. See the
+        so the nine cell-population labels shown in the dropdown are independently re-derived and may not match the
+        authors' assignments barcode-for-barcode. See the
         <a href="assets/tracks/scatac/annotation_metadata.json" target="_blank" rel="noopener">annotation audit</a>,
         <a href="assets/tracks/scatac/wang2020_barcode_cell_types.tsv.gz" target="_blank" rel="noopener">barcode assignments</a>,
         <a href="assets/tracks/scatac/heldout_marker_validation.tsv" target="_blank" rel="noopener">held-out validation</a>,
         <a href="assets/tracks/scatac/track_marker_validation.tsv" target="_blank" rel="noopener">track-level marker validation</a>,
-        and <a href="assets/tracks/scatac/cell_type_track_metadata.tsv" target="_blank" rel="noopener">track checksums</a>.
+        and <a href="assets/tracks/scatac/fragment_track_metadata.tsv" target="_blank" rel="noopener">track checksums</a>.
       </p>
     </div>
   </details>
@@ -246,7 +247,18 @@
   @if (this.genes.length > 0) {
   <div class="col-lg-3 col-md-12">
     <div class="sidebar-sticky-top pt-2" [ngStyle]="{ top: 'var(--navbar-height)' }">
-      <h4 translate="igv.filterarea.celltype"></h4>
+      <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+        <h4 class="mb-0" translate="igv.filterarea.celltype"></h4>
+        @if (selected_cells.length === 0) {
+        <button class="btn btn-sm btn-link text-decoration-none" (click)="selectAllCells()">
+          <i class="fa fa-check-double"></i> {{'igv.filterarea.selectAll' | translate}}
+        </button>
+        } @else {
+        <button class="btn btn-sm btn-link text-decoration-none" (click)="clearSelectedCells()">
+          <i class="fa fa-times"></i> {{'igv.filterarea.clearSelection' | translate}}
+        </button>
+        }
+      </div>
       <!--<dx-tag-box style="width: 100%; flex: 1;" [items]="cell_types" [searchEnabled]="true"
           placeholder="Select Cell Type(s)" (onValueChanged)="onCellChanged($event)" [showClearButton]="true"
           [showSelectionControls]="true" [multiline]="false" [maxDisplayedTags]="5" [value]='cell_types'
@@ -257,9 +269,9 @@
         [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
-            <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"
+            <input type="checkbox" tabindex="-1" aria-hidden="true" class="form-check-input me-0 mt-0"
               [ngModel]="item$.selected" />
-            <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;" for="item-{{index}}">
+            <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;">
               {{ item }}
             </label>
           </div>
@@ -298,7 +310,7 @@
             <i class="fa fa-angles-down"></i>
           </span>{{'igv.filterarea.sg-dn' | translate}}
         </h6>
-        <h6 tabindex="0" tabindex="0" placement="right" popoverTitle="Not have a significant fit"
+        <h6 tabindex="0" tabindex="0" placement="right" popoverTitle="No Significant Fit"
           ngbPopover="p &gt; 0.05 (equivalent to -log10P-val &lt; 1.30103)"><span class="no-ft">
             <i class="fa fa-xmark"></i>
           </span>{{'igv.filterarea.no-ft' | translate}}</h6>
@@ -311,7 +323,7 @@
 
   @if (this.genes.length > 0) {
   <div class="col-lg-9 col-md-12 mt-2" [class.searching]="loading">
-    <div ngbAccordion>
+    <div ngbAccordion class="gene-card-accordion">
       @for (gene_list of this.grouped_genes; track gene_list) {
       @if (gene_list[0]) {
       <div ngbAccordionItem [collapsed]="!isGeneExpanded(gene_list)"

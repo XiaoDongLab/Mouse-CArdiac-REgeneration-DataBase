@@ -1,0 +1,10 @@
+{
+  "fragments": "/private/tmp/GSE153479_fragments.tsv.gz",
+  "assignments": "../src/assets/tracks/scatac/wang2020_barcode_cell_types.tsv.gz",
+  "processed_fragment_rows": 776103198,
+  "retained_fragment_rows": 433407548,
+  "tracks": 4,
+  "track_set": "all",
+  "bin_size": 10,
+  "smoothing_window_bp": 100
+}

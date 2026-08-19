@@ -288,6 +288,10 @@ export class SpatialComponent implements OnInit, OnDestroy {
     return selectedPanel ? this.spotSizeForPanel(selectedPanel) : this.spotSize;
   }
 
+  get scaleBarWidthPx(): number {
+    return 55 * this.zoom / 100;
+  }
+
   get legendMax(): number {
     return this.legendEntries[0]?.maximum ?? 1;
   }

@@ -1,5 +1,5 @@
 condition	cells	peak_counts	normalization	file
-P1 MI	9546	116481621	counts per million peak-matrix insertions	wang2020_p1_mi_psd3.bw
-P1 Sham	10216	123245088	counts per million peak-matrix insertions	wang2020_p1_sham_psd3.bw
-P8 MI	9409	92285483	counts per million peak-matrix insertions	wang2020_p8_mi_psd3.bw
-P8 Sham	13307	144976233	counts per million peak-matrix insertions	wang2020_p8_sham_psd3.bw
+P1+3 dpi	7273	97861135	Tn5 cut sites * all-cell median condition depth / condition peak-matrix counts; 100-bp centered mean	wang2020_p1_mi_psd3.bw
+P1+3 dps	7374	98686801	Tn5 cut sites * all-cell median condition depth / condition peak-matrix counts; 100-bp centered mean	wang2020_p1_sham_psd3.bw
+P8+3 dpi	6697	80348019	Tn5 cut sites * all-cell median condition depth / condition peak-matrix counts; 100-bp centered mean	wang2020_p8_mi_psd3.bw
+P8+3 dps	9176	117980139	Tn5 cut sites * all-cell median condition depth / condition peak-matrix counts; 100-bp centered mean	wang2020_p8_sham_psd3.bw

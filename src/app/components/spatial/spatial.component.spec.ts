@@ -201,6 +201,26 @@ describe('SpatialComponent', () => {
     expect(component.showAllCellTypes).toBeTrue();
   });
 
+  it('keeps the 500 micrometer scale bar synchronized with zoom', () => {
+    component.zoom = 100;
+    fixture.detectChanges();
+    const scaleBarLine = fixture.nativeElement.querySelector('.scale-bar i') as HTMLElement;
+
+    expect(scaleBarLine.style.width).toBe('55px');
+
+    component.zoomIn();
+    fixture.detectChanges();
+
+    expect(component.zoom).toBe(125);
+    expect(scaleBarLine.style.width).toBe('68.75px');
+
+    component.zoomOut();
+    fixture.detectChanges();
+
+    expect(component.zoom).toBe(115);
+    expect(scaleBarLine.style.width).toBe('63.25px');
+  });
+
   it('switches gene expression between published log1p and back-transformed linear values', () => {
     const panel = component.visiblePanels[0];
     const spot = { ...component.spotsForPanel(panel)[0], value: Math.log1p(10) };

@@ -17,6 +17,16 @@
             "d1": "查看基因卡片中的對照組。您可以比較 P1 / P8（第 1 組）或 Sham / MI（第 2 組）。",
             "d2": "點擊基因卡片展開統計數據。點擊散點圖上的任意數據點即可顯示 UMAP、TSNE 和元信息。"
         },
+        "spatial-guide": {
+            "title": "空間轉錄組",
+            "subtitle": "探索心臟組織切片中的基因表達和推測細胞類型組成",
+            "card": {
+                "t1": "使用方法",
+                "d1": "選擇手術條件和術後日期，然後選擇基因表達或細胞類型比例。",
+                "d2": "搜尋基因或選擇細胞類型，並使用比較控制項並排查看樣本或圖層。",
+                "d3": "選擇組織中的 spot，以查看其條碼、座標、表達量和推測細胞類型比例。"
+            }
+        },
         "pathway": {
             "title": "通路富集",
             "subtitle": "探索不同年齡和實驗條件對各種通路的影響",
@@ -195,10 +205,10 @@
         "viewer": {
       "showing": "目前顯示",
       "compare": "比較",
-      "compare_samples": "樣本",
-      "compare_samples_hint": "比較同一時間點的 MI 與 Sham 切片",
-      "compare_layers": "圖層",
-      "compare_layers_hint": "在同一切片上比較基因表達與細胞類型比例",
+      "compare_samples": "MI 與 Sham",
+      "compare_samples_hint": "並排顯示所選術後時間的 MI 與 Sham 組織切片",
+      "compare_layers": "表達與細胞類型",
+      "compare_layers_hint": "在所選組織切片上並排顯示基因表達與估算的細胞類型比例",
       "download": "下載",
       "download_disabled": "接入空間數據介面後將開放下載。",
       "download_hint": "將目前可見點位測量值下載為 TSV",

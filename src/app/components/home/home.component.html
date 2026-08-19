@@ -26,7 +26,7 @@
     <div class="col-12">
       <h3 translate="home.userguide"></h3>
       <div ngbAccordion>
-        <div ngbAccordionItem>
+        <div ngbAccordionItem data-guide-section="genome">
           <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
               <div class="row">
@@ -39,23 +39,26 @@
             <div ngbAccordionBody>
               <div class="row">
                 <div class="col-lg-8 col-md-12">
-                  <ngb-carousel>
-                    <ng-template ngbSlide>
-                      <div class="picsum-img-wrapper">
-                        <img src="../../../assets/images/genome_browser.png" class="help-image img-fluid mb-3"
-                          alt="Genome browser interface" />
+                  <ngb-carousel class="guide-carousel" [interval]="guideCarouselInterval"
+                    (pointerdown)="stopGuideCarouselAutoplay()"
+                    (keydown)="stopGuideCarouselAutoplay()"
+                    (slide)="onGuideCarouselSlide($event)">
+                    <ng-template ngbSlide id="genome-guide-1">
+                      <div class="picsum-img-wrapper guide-slide-frame">
+                        <img [src]="genomeGuideImages[0].src" class="help-image img-fluid"
+                          [alt]="genomeGuideImages[0].alt" />
                       </div>
                     </ng-template>
-                    <ng-template ngbSlide>
-                      <div class="picsum-img-wrapper">
-                        <img src="../../../assets/images/gene_cards.png" class="help-image img-fluid mb-3"
-                          alt="Genome browser interface" />
+                    <ng-template ngbSlide id="genome-guide-2">
+                      <div class="picsum-img-wrapper guide-slide-frame">
+                        <img [src]="genomeGuideImages[1].src" class="help-image img-fluid"
+                          [alt]="genomeGuideImages[1].alt" />
                       </div>
                     </ng-template>
-                    <ng-template ngbSlide>
-                      <div class="picsum-img-wrapper">
-                        <img src="../../../assets/images/mapbox.png" class="help-image img-fluid mb-3"
-                          alt="Genome browser interface" />
+                    <ng-template ngbSlide id="genome-guide-3">
+                      <div class="picsum-img-wrapper guide-slide-frame">
+                        <img [src]="genomeGuideImages[2].src" class="help-image img-fluid"
+                          [alt]="genomeGuideImages[2].alt" />
                       </div>
                     </ng-template>
                   </ngb-carousel>
@@ -111,36 +114,7 @@
             </div>
           </div>
         </div>
-        <div ngbAccordionItem>
-          <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>
-              <div class="row">
-                <h3 translate="home.pathway.title"></h3>
-                <p class="mb-0" translate="home.pathway.subtitle"></p>
-              </div>
-            </button>
-          </h2>
-          <div ngbAccordionCollapse>
-            <div ngbAccordionBody>
-              <div class="row">
-                <div class="col-md-6 col-sm-12">
-                  <img src="../../../assets/images/pathway_enrichment.png" class="help-image img-fluid"
-                    alt="Pathway analysis interface">
-                </div>
-                <div class="col-md-6 col-sm-12">
-                  <h4 translate="home.pathway.card.t1"></h4>
-                  <ul>
-                    <li translate="home.pathway.card.d1"></li>
-                    <li translate="home.pathway.card.d2"></li>
-                    <li translate="home.pathway.card.d3"></li>
-                    <li translate="home.pathway.card.d4"></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div ngbAccordionItem>
+        <div ngbAccordionItem data-guide-section="expression">
           <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
               <div class="row">
@@ -170,7 +144,79 @@
             </div>
           </div>
         </div>
-        <div ngbAccordionItem>
+        <div ngbAccordionItem data-guide-section="spatial">
+          <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+              <div class="row">
+                <h3 translate="home.spatial-guide.title"></h3>
+                <p class="mb-0" translate="home.spatial-guide.subtitle"></p>
+              </div>
+            </button>
+          </h2>
+          <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+              <div class="row">
+                <div class="col-lg-8 col-md-12">
+                  <ngb-carousel class="guide-carousel" [interval]="guideCarouselInterval"
+                    (pointerdown)="stopGuideCarouselAutoplay()"
+                    (keydown)="stopGuideCarouselAutoplay()"
+                    (slide)="onGuideCarouselSlide($event)">
+                    <ng-template ngbSlide id="spatial-guide-1">
+                      <div class="picsum-img-wrapper guide-slide-frame">
+                        <img [src]="spatialGuideImages[0].src" class="help-image img-fluid"
+                          [alt]="spatialGuideImages[0].alt" />
+                      </div>
+                    </ng-template>
+                    <ng-template ngbSlide id="spatial-guide-2">
+                      <div class="picsum-img-wrapper guide-slide-frame">
+                        <img [src]="spatialGuideImages[1].src" class="help-image img-fluid"
+                          [alt]="spatialGuideImages[1].alt" />
+                      </div>
+                    </ng-template>
+                  </ngb-carousel>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <h4 translate="home.spatial-guide.card.t1"></h4>
+                  <ol>
+                    <li translate="home.spatial-guide.card.d1"></li>
+                    <li translate="home.spatial-guide.card.d2"></li>
+                    <li translate="home.spatial-guide.card.d3"></li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ngbAccordionItem data-guide-section="pathway">
+          <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+              <div class="row">
+                <h3 translate="home.pathway.title"></h3>
+                <p class="mb-0" translate="home.pathway.subtitle"></p>
+              </div>
+            </button>
+          </h2>
+          <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+              <div class="row">
+                <div class="col-md-6 col-sm-12">
+                  <img src="../../../assets/images/pathway_enrichment.png" class="help-image img-fluid"
+                    alt="Pathway analysis interface">
+                </div>
+                <div class="col-md-6 col-sm-12">
+                  <h4 translate="home.pathway.card.t1"></h4>
+                  <ul>
+                    <li translate="home.pathway.card.d1"></li>
+                    <li translate="home.pathway.card.d2"></li>
+                    <li translate="home.pathway.card.d3"></li>
+                    <li translate="home.pathway.card.d4"></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ngbAccordionItem data-guide-section="download">
           <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
               <div class="row">

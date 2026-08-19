@@ -21,24 +21,24 @@
       <!--CELL TYPE SELECT BOX-->
       <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
         <h4 translate="pathway.filterarea.celltype" class="mb-0"></h4>
-        <div class="d-flex gap-2">
-          <button class="btn btn-sm btn-link text-decoration-none" (click)="selected_cell_types = []; onCellsChanged()">
-            <i class="fa fa-times"></i> {{'pathway.filterarea.deselectAll' | translate}}
-          </button>
-          <button class="btn btn-sm btn-link text-decoration-none"
-            (click)="selected_cell_types = cell_types.slice(); prepareData()">
-            <i class="fa fa-refresh"></i> {{'pathway.filterarea.reset' | translate}}
-          </button>
-        </div>
+        @if (selected_cell_types.length === 0) {
+        <button class="btn btn-sm btn-link text-decoration-none" (click)="selectAllCellTypes()">
+          <i class="fa fa-check-double"></i> {{'pathway.filterarea.selectAll' | translate}}
+        </button>
+        } @else {
+        <button class="btn btn-sm btn-link text-decoration-none" (click)="clearSelectedCellTypes()">
+          <i class="fa fa-times"></i> {{'pathway.filterarea.clearSelection' | translate}}
+        </button>
+        }
       </div>
       <ng-select [items]="cell_types" [searchable]="true" [clearable]="true" placeholder="Select Cell Type(s)"
         [(ngModel)]="selected_cell_types" [selectableGroup]="true" [selectableGroupAsModel]="false"
         [closeOnSelect]="false" [addTag]="false" [multiple]="true" (change)="onCellsChanged()">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="d-flex justify-content-left align-items-center" style="gap: .5rem">
-            <input id="item-{{ index }}" type="checkbox" class="form-check-input me-0 mt-0"
+            <input type="checkbox" tabindex="-1" aria-hidden="true" class="form-check-input me-0 mt-0"
               [ngModel]="item$.selected" />
-            <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;" for="item-{{index}}">
+            <label class="flex-grow-1 text-truncate" style="min-width: 0px !important;">
               {{ item }}
             </label>
           </div>

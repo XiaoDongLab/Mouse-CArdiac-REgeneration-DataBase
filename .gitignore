@@ -50,11 +50,8 @@ Thumbs.db
 # Figure 2 analysis workspace (local only)
 /fig2/
 
-# Per-cell-type scATAC bigwigs: ~4.5 GB of derived data, several files over
-# GitHub's 100 MB limit. Regenerate with scripts/run_wang_celltype_tracks.sh.
-# The four pooled tracks below predate this rule and stay in the repo.
+# scATAC bigWigs: ~7 GB of derived data, many files far over GitHub's 100 MB
+# limit. These are deploy-time artifacts, not source: they are rsynced to the
+# server alongside the built frontend, never committed. Regenerate the
+# per-cell-type tracks with scripts/run_wang_celltype_tracks.sh.
 /src/assets/tracks/scatac/*.bw
-!/src/assets/tracks/scatac/wang2020_p1_mi_psd3.bw
-!/src/assets/tracks/scatac/wang2020_p1_sham_psd3.bw
-!/src/assets/tracks/scatac/wang2020_p8_mi_psd3.bw
-!/src/assets/tracks/scatac/wang2020_p8_sham_psd3.bw

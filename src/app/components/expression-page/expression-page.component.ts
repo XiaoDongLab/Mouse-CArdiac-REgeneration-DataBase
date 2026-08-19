@@ -65,6 +65,7 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
   selectedSurgery = 'All';
   selectedNatalStatus = 'All';
   cellTypes: string[] = [];
+  cellTypeGroups: { family: string, subClusters: string[] }[] = [];
   surgeries: string[] = ['All', 'MI', 'Sham'];
   natalStatuses: string[] = ['All', 'P1', 'P8', 'P2'];
   logScale = true;
@@ -295,13 +296,16 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.cellTypes = this.databaseConstService.getDECellTypes();
+    // The picker offers each major type plus its individual sub-clusters. A major
+    // type matches every sub-cluster under it; a sub-cluster matches only itself.
+    // "All Cells" stays first as the no-filter option.
+    this.cellTypeGroups = this.databaseConstService.getCellTypeGroups();
+    this.cellTypes = ['All Cells', ...this.databaseConstService.getMajorCellTypes()];
     this.nameConverter.getAllGenes().then(value => {
       this.selectableGenes = value;
 
     console.log(this.selectableGenes)
     })
-    this.loadCellTypes();
     this.loadRecentGenes();
   }
 
@@ -310,35 +314,10 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private loadCellTypes() {
-    console.debug('[ExpressionPageComponent] loadCellTypes: Fetching cell types from getGeneDiffExpGeneral');
-    this.subscriptions.push(
-      this.databaseService.getGeneDiffExpGeneral([]).pipe(
-        map((data: DiffExp[]) => {
-          console.debug('[ExpressionPageComponent] loadCellTypes: Raw API response:', data);
-          const cellTypes = new Set<string>();
-          data.forEach(row => {
-            if (row.cell_type) cellTypes.add(row.cell_type);
-            if (row.cell_type2) cellTypes.add(row.cell_type2);
-            if (row.cell_type3) cellTypes.add(row.cell_type3);
-          });
-          const types = ['All Cells', ...Array.from(cellTypes).filter(type => type)];
-          console.debug('[ExpressionPageComponent] loadCellTypes: Processed cell types:', types);
-          return types;
-        }),
-        catchError(error => {
-          console.error('[ExpressionPageComponent] loadCellTypes: Error fetching cell types:', error);
-          return of(this.databaseConstService.getDECellTypes());
-        })
-      ).subscribe({
-        next: (types) => {
-          this.cellTypes = types.length > 1 ? types : this.databaseConstService.getDECellTypes();
-          console.debug('[ExpressionPageComponent] loadCellTypes: Final cell types set:', this.cellTypes);
-        },
-        error: (e) => console.error('[ExpressionPageComponent] loadCellTypes: Failed to process cell types', e)
-      })
-    );
-  }
+  // Cell types come from DatabaseConstsService (set in ngOnInit). There is no
+  // endpoint that lists them: differentialExpressionGeneral is a per-gene route,
+  // so calling it with an empty gene list produced a bare trailing slash, missed
+  // the route, and returned 401 on every page load.
 
   async loadExpression(gene: string = this.searchInput.trim(), surgery = this.selectedSurgery, age = this.selectedNatalStatus, celltype = this.selectedCellType) {
     if (!gene) {
@@ -811,8 +790,16 @@ export class ExpressionPageComponent implements OnInit, OnDestroy {
 
       // Apply cell type filter
       if (filters.cellType !== 'All Cells') {
-        // filteredRows = filteredRows.filter(row => row.cell_type === filters.cellType);
-        filteredRows = filteredRows.filter(row => row.cell_type?.includes(filters.cellType));
+        // A selection ending in an index ("Cardiomyocyte 1") is an individual
+        // sub-cluster and matches exactly; anything else is a major type and matches
+        // every sub-cluster under it.
+        const isSubCluster = /\s\d+$/.test(filters.cellType);
+        filteredRows = filteredRows.filter(row => {
+          if (!row.cell_type) { return false; }
+          return isSubCluster
+            ? row.cell_type === filters.cellType
+            : row.cell_type.replace(/(\s+\d+)+$/, '') === filters.cellType;
+        });
       }
 
       // Apply natal status filter

@@ -10,8 +10,18 @@
         <div class="d-flex flex-row gap-3 align-items-center">
           <small class="text-muted text-nowrap" translate="expression.celltype"></small>
           <select [(ngModel)]="selectedCellType" class="form-select">
-            @for (type of cellTypes; track type) {
-            <option [value]="type">{{ type }}</option>
+            <option value="All Cells">All Cells</option>
+            @for (group of cellTypeGroups; track group.family) {
+            @if (group.subClusters.length) {
+            <optgroup [label]="group.family">
+              <option [value]="group.family">{{ group.family }} (all)</option>
+              @for (sub of group.subClusters; track sub) {
+              <option [value]="sub">{{ sub }}</option>
+              }
+            </optgroup>
+            } @else {
+            <option [value]="group.family">{{ group.family }}</option>
+            }
             }
           </select>
         </div>

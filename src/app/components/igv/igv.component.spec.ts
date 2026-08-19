@@ -23,6 +23,10 @@ describe('IgvComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('opens the genome browser at the configured chr7 locus', () => {
+    expect(component.options.locus).toBe('chr7:45,211,501-45,231,177');
+  });
+
   it('includes all four Wang PSD3 scATAC-seq conditions on a shared scale', () => {
     const scAtacTracks = IgvComponent.TRACK_CATALOG
       .filter(track => track.populationId === 'all' && track.config.format === 'bigWig')
@@ -47,7 +51,9 @@ describe('IgvComponent', () => {
     expect(IgvComponent.SCATAC_POPULATIONS.length).toBe(10);
     expect(reconstructed.length).toBe(36);
     expect(new Set(reconstructed.map(track => track.populationId)).size).toBe(9);
-    expect(reconstructed.every(track => track.defaultVisible === false)).toBeTrue();
+    expect(reconstructed.filter(track => track.defaultVisible).map(track => track.populationId)).toEqual([
+      'cm', 'cm', 'cm', 'cm'
+    ]);
     expect(reconstructed.every(track => track.config.url.endsWith('.bw'))).toBeTrue();
   });
 
@@ -72,11 +78,12 @@ describe('IgvComponent', () => {
 
   it('uses the comparison-focused accessibility preset by default', () => {
     expect(IgvComponent.RECOMMENDED_TRACK_IDS).toEqual([
-      'scatac-all-p1-mi',
-      'scatac-all-p1-sham',
-      'scatac-all-p8-mi',
-      'scatac-all-p8-sham'
+      'scatac-cm-p1-mi',
+      'scatac-cm-p1-sham',
+      'scatac-cm-p8-mi',
+      'scatac-cm-p8-sham'
     ]);
+    expect(component.selectedScAtacPopulationId).toBe('cm');
   });
 
   it('keeps the PSD3 H3K27ac preset separate from scATAC accessibility', () => {
@@ -86,6 +93,19 @@ describe('IgvComponent', () => {
     expect(histonePreset!.trackIds.length).toBe(8);
     expect(histonePreset!.trackIds.every(trackId => trackId.startsWith('h3k27ac-'))).toBeTrue();
     expect(histonePreset!.trackIds.some(trackId => trackId.startsWith('scatac-'))).toBeFalse();
+  });
+
+  it('offers the P0 developmental references as a quick view', () => {
+    const developmentalPreset = component.trackPresets.find(preset => preset.id === 'developmental');
+
+    expect(developmentalPreset).toBeDefined();
+    expect(developmentalPreset!.trackIds).toEqual([
+      'reference-p0-h3k27ac',
+      'reference-p0-wgbs-r1-plus',
+      'reference-p0-wgbs-r1-minus',
+      'reference-p0-wgbs-r2-plus',
+      'reference-p0-wgbs-r2-minus'
+    ]);
   });
 
   it('loads and removes tracks selected in the track menu', async () => {
@@ -111,7 +131,7 @@ describe('IgvComponent', () => {
     await component.showTrackGroup('developmental-reference');
 
     expect(component.isTrackGroupVisible('developmental-reference')).toBeTrue();
-    expect(component.isTrackVisible('scatac-all-p1-mi')).toBeTrue();
+    expect(component.isTrackVisible('scatac-cm-p1-mi')).toBeTrue();
     expect(loadTrack).toHaveBeenCalledTimes(5);
   });
 
@@ -142,19 +162,19 @@ describe('IgvComponent', () => {
     const removeTrackByName = jasmine.createSpy('removeTrackByName');
     component.browser = { loadTrack, removeTrackByName };
 
-    await component.setScAtacPopulation('cm');
+    await component.setScAtacPopulation('all');
 
-    expect(component.selectedScAtacPopulationId).toBe('cm');
+    expect(component.selectedScAtacPopulationId).toBe('all');
     expect(removeTrackByName).toHaveBeenCalledTimes(4);
     expect(loadTrack).toHaveBeenCalledTimes(4);
     expect(component.tracksForGroup('accessibility').map(track => track.id)).toEqual([
-      'scatac-cm-p1-mi',
-      'scatac-cm-p1-sham',
-      'scatac-cm-p8-mi',
-      'scatac-cm-p8-sham'
+      'scatac-all-p1-mi',
+      'scatac-all-p1-sham',
+      'scatac-all-p8-mi',
+      'scatac-all-p8-sham'
     ]);
-    expect(component.selectedTrackIds.has('scatac-all-p1-mi')).toBeFalse();
-    expect(component.selectedTrackIds.has('scatac-cm-p1-mi')).toBeTrue();
+    expect(component.selectedTrackIds.has('scatac-cm-p1-mi')).toBeFalse();
+    expect(component.selectedTrackIds.has('scatac-all-p1-mi')).toBeTrue();
   });
 
   it('hides IGV multi-track selection in favor of the MCaReDB picker', () => {

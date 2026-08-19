@@ -2,10 +2,10 @@
 
 This directory contains two related GSE153479 track sets on GRCm38/mm10.
 
-The four `wang2020_p*_psd3.bw` files are legacy condition-level all-cell
-pseudobulks generated from the public processed peak-by-cell matrix. Peak
-counts were summed by the four barcode suffixes and normalized to counts per
-million peak-matrix insertions.
+The four `wang2020_p*_psd3.bw` files are fragment-derived condition-level
+all-cell pseudobulks generated from the 30,520 QC-retained cells analyzed in
+the reconstruction. They use the same Tn5 insertion coverage, depth scaling,
+100-bp smoothing, and 10-bp output bins as the population tracks below.
 
 The 36 `wang2020_<cell-type>_<condition>_psd3.bw` files are fragment-derived
 pseudobulks for the nine populations displayed by Wang et al.:
@@ -45,15 +45,18 @@ All nine labels show positive enrichment using the held-out marker peaks. See
 
 ## Coverage method
 
-Cell-type tracks are generated from `GSE153479_fragments.tsv.gz`, rather than
-painting peak-matrix values across peak intervals. They reproduce the relevant
-Signac 0.2.5 `CoveragePlot` behavior used by the paper: each unique fragment
-row contributes one cut at its start and end (the 10x PCR-support column is
+All-cell and cell-type tracks are generated from `GSE153479_fragments.tsv.gz`,
+rather than painting peak-matrix values across peak intervals. They reproduce
+the relevant Signac 0.2.5 `CoveragePlot` behavior used by the paper: each
+unique fragment row contributes one cut at its start and end (the 10x
+PCR-support column is
 ignored), each condition is normalized to the median peak-matrix depth of the
-four conditions in that cell type, and signal is smoothed with a centered
-100-bp mean. Non-overlapping 10-bp output bins match CoveragePlot's default 0.1
-positional downsampling. The BigWigs and their SHA-256 checksums are listed in
-`cell_type_track_metadata.tsv`. `bigwig_validation.tsv` records header-level
+four conditions in the selected population (or all retained cells), and signal
+is smoothed with a centered 100-bp mean. Non-overlapping 10-bp output bins match
+CoveragePlot's default 0.1 positional downsampling. The BigWigs and their
+SHA-256 checksums are listed in `fragment_track_metadata.tsv` (all 40 tracks),
+`all_cell_track_metadata.tsv`, and `cell_type_track_metadata.tsv`.
+`bigwig_validation.tsv` records header-level
 integrity checks, and `track_marker_validation.tsv` confirms that the held-out
 marker peaks are enriched in each fragment-derived population after removing
 the population-specific display scale.
@@ -69,6 +72,10 @@ The analysis scripts are:
 - `scripts/derive_wang_cell_types.py`
 - `scripts/generate_wang_celltype_bigwigs.py`
 - `scripts/run_wang_celltype_tracks.sh`
+
+The generator accepts `--track-set all`, `--track-set populations`, or the
+default `--track-set both`. The default writes all 40 tracks in one scan of the
+fragment archive.
 
 Their Python dependencies are pinned in
 `scripts/requirements-wang-scatac.txt`. Large GEO inputs are downloaded to a

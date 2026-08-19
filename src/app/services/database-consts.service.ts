@@ -136,6 +136,57 @@ export class DatabaseConstsService {
     return this.DiffExpCellTypes
   }
 
+  // The major cell types in the primary cell_type column. Sub-clusters
+  // ("Cardiomyocyte 1", "Fibroblast 3", "Cardiomyocyte 2 2") are matched by their
+  // major type rather than listed individually. DiffExpCellTypes above still holds
+  // the full vocabulary, including names that only ever occur in the secondary
+  // cell_type2/cell_type3 columns and so are never valid cell_type filters.
+  MajorCellTypes = [
+    "Activated fibroblast",
+    "B cell",
+    "Cardiac cell",
+    "Cardiomyocyte",
+    "Endothelial cell",
+    "Fibroblast",
+    "Granulocyte",
+    "Macrophage",
+    "Mural cell",
+    "Red blood cell",
+    "T cell"
+  ];
+
+  getMajorCellTypes() {
+    return this.MajorCellTypes.slice();
+  }
+
+  // Sub-clusters per major type, verified against 4,429 DEG rows spanning 25 marker
+  // genes: the primary cell_type column uses exactly these values. A family's bare
+  // name ("Fibroblast", "Endothelial cell") is also a cluster in its own right and is
+  // covered by the umbrella entry, so it is not repeated here.
+  CellTypeSubClusters: { [family: string]: string[] } = {
+    "Cardiomyocyte": [
+      "Cardiomyocyte 1", "Cardiomyocyte 1 2", "Cardiomyocyte 2", "Cardiomyocyte 2 2",
+      "Cardiomyocyte 2 3", "Cardiomyocyte 2 4", "Cardiomyocyte 3", "Cardiomyocyte 4",
+      "Cardiomyocyte 4 2", "Cardiomyocyte 5"
+    ],
+    "Endothelial cell": [
+      "Endothelial cell 2", "Endothelial cell 3", "Endothelial cell 4",
+      "Endothelial cell 5", "Endothelial cell 6"
+    ],
+    "Fibroblast": [
+      "Fibroblast 2", "Fibroblast 3", "Fibroblast 4", "Fibroblast 5", "Fibroblast 6"
+    ],
+    "Macrophage": ["Macrophage 2"]
+  };
+
+  // Major types paired with their sub-clusters, for pickers that offer both.
+  getCellTypeGroups() {
+    return this.MajorCellTypes.map(family => ({
+      family,
+      subClusters: this.CellTypeSubClusters[family] ?? []
+    }));
+  }
+
   getSearchCellTypes() {
     return this.searchCellTypes;
   }

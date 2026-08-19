@@ -515,6 +515,13 @@
 
 ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
     padding-bottom: 0px !important;
+    /* Chips must wrap. The nowrap rule above is for single-select; applied to
+       multi-select it lays every chip on one row far wider than the control,
+       leaving the remove buttons reachable only by scrolling a 24px strip. */
+    flex-wrap: wrap !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    max-height: 6rem;
 }
 
 ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
@@ -688,4 +695,32 @@
 .cutoff-range::-moz-range-thumb,
 .cutoff-range:active::-moz-range-thumb {
     background-color: var(--thumb-color, var(--bs-primary));
+}
+
+
+/* Long labels must not push a chip wider than the box: the name truncates so
+   the remove button stays on screen instead of being clipped out of reach. */
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-label {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon {
+    flex: 0 0 auto !important;
+}
+
+/* The checkbox and name in a dropdown option are presentational: ng-select
+   toggles the row itself. Left interactive, a click on the checkbox fires the
+   native toggle as well as ng-select's, the two cancel out, and only the gap
+   between them selects anything. */
+::ng-deep .ng-dropdown-panel .ng-option .form-check-input,
+::ng-deep .ng-dropdown-panel .ng-option label {
+    pointer-events: none !important;
 }

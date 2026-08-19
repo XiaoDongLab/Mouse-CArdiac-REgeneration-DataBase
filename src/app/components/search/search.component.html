@@ -22,8 +22,8 @@
         [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="form-check">
-            <input id="item-{{ index }}" type="checkbox" class="form-check-input" [ngModel]="item$.selected" />
-            <label class="form-check-label" for="item-{{index}}">
+            <input type="checkbox" tabindex="-1" aria-hidden="true" class="form-check-input" [ngModel]="item$.selected" />
+            <label class="form-check-label">
               {{ item }}
             </label>
           </div>
@@ -42,8 +42,8 @@
         [closeOnSelect]="false" [(ngModel)]="selected_cells" groupBy="cell_types" [addTag]="false" [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="form-check">
-            <input id="item-{{ index }}" type="checkbox" class="form-check-input" [ngModel]="item$.selected" />
-            <label class="form-check-label" for="item-{{index}}">
+            <input type="checkbox" tabindex="-1" aria-hidden="true" class="form-check-input" [ngModel]="item$.selected" />
+            <label class="form-check-label">
               {{ item }}
             </label>
           </div>
@@ -63,8 +63,8 @@
         [(ngModel)]="selected_pmid" groupBy="pmid" [addTag]="false" [multiple]="true">
         <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
           <div class="form-check">
-            <input id="item-{{ index }}" type="checkbox" class="form-check-input" [ngModel]="item$.selected" />
-            <label class="form-check-label" for="item-{{index}}">
+            <input type="checkbox" tabindex="-1" aria-hidden="true" class="form-check-input" [ngModel]="item$.selected" />
+            <label class="form-check-label">
               {{ item }}
             </label>
           </div>

@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
-# Generate condition-level pseudobulk BigWig tracks from the processed
-# GSE153479 10x scATAC-seq peak-by-cell matrix.
+# Legacy generator for peak-interval CPM score tracks from the processed
+# GSE153479 peak-by-cell matrix. These are not fragment coverage tracks and are
+# no longer used by the browser. Use generate_wang_celltype_bigwigs.py with
+# --track-set all (or the default --track-set both) for browser assets.
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 4) {

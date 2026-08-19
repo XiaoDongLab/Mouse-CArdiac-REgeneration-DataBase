@@ -135,7 +135,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         populationId: population.id,
         conditionId: condition.id,
         label: `${condition.age} · ${condition.treatment}`,
-        defaultVisible: allCells,
+        defaultVisible: population.id === 'cm',
         config: {
           name: allCells
             ? `scATAC · ${condition.age} · ${condition.treatment} · PSD3`
@@ -253,12 +253,12 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
   readonly recommendedTrackIds = IgvComponent.RECOMMENDED_TRACK_IDS;
   readonly scAtacPopulations = IgvComponent.SCATAC_POPULATIONS;
   selectedTrackIds = new Set(IgvComponent.RECOMMENDED_TRACK_IDS);
-  selectedScAtacPopulationId = 'all';
+  selectedScAtacPopulationId = 'cm';
   loadingTrackIds = new Set<string>();
   expandedTrackGroupIds = new Set<GenomeTrackOption['group']>(['accessibility']);
   options: any = {
     reference: IgvComponent.MM10_REFERENCE,
-    locus: 'chr8:14000000-15000000',
+    locus: 'chr7:45,211,501-45,231,177',
     tracks: IgvComponent.DATA_TRACKS.map(track => ({ ...track })),
     showMultiSelectButton: false,
   };
@@ -299,7 +299,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
 
 
   constructor(private databaseService: DatabaseService, public databaseConstService: DatabaseConstsService, public lociService: LociService, private nameConverterService: GeneConversionService, public router: Router, private changeDetector: ChangeDetectorRef) {
-    this.cell_types = databaseConstService.getDECellTypes();
+    this.cell_types = databaseConstService.getMajorCellTypes();
     this.selected_cells = this.cell_types;
     this.load_progress = 0;
     this.pmid_tissue_dist = databaseConstService.getDePmidTissueDict();
@@ -416,6 +416,13 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
         label: 'PSD3 H3K27ac',
         trackIds: this.trackCatalog
           .filter(track => track.group === 'matched-histone')
+          .map(track => track.id),
+      },
+      {
+        id: 'developmental',
+        label: 'Developmental references',
+        trackIds: this.trackCatalog
+          .filter(track => track.group === 'developmental-reference')
           .map(track => track.id),
       },
       {
@@ -746,6 +753,7 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
           this.detailedGenesByKey = new Map(
             this.original_grouped_genes.map(geneset => [this.getGeneKey(geneset), geneset])
           );
+          this.refreshCellTypeOptions(data);
           this.detailedDataLoaded = true;
           this.lazyPlotMode = this.original_grouped_genes.length > this.eagerPlotGeneLimit;
           this.scheduleAutomaticApply();
@@ -926,17 +934,51 @@ export class IgvComponent implements AfterViewInit, OnDestroy {
       if (gene.cell_type?.includes('All')) {
         return true;
       }
-      const cleanedCellType = gene.cell_type?.replace(/\s+\d+$/, '');
-      return selectedCells.includes(cleanedCellType!) && selectedPmids.has(gene.pmid!);
+      // Rows are matched at major-cell-type level: the picker lists families, not
+      // sub-clusters, so "Cardiomyocyte" has to catch "Cardiomyocyte 1" through
+      // "Cardiomyocyte 5" and the double-numbered duplicates alike.
+      const family = gene.cell_type ? this.cellTypeFamily(gene.cell_type) : '';
+      return selectedCells.includes(family) && selectedPmids.has(gene.pmid!);
     });
   }
 
+  clearSelectedCells() {
+    this.onCellChanged([]);
+  }
+
+  selectAllCells() {
+    this.onCellChanged(this.cell_types.slice());
+  }
+
+
+  // "Cardiomyocyte 1", "Cardiomyocyte 5" and "Cardiomyocyte 2 2" are all sub-clusters
+  // of one major type. Every trailing index is stripped rather than only the last,
+  // so the double-numbered duplicates land on the same family as their siblings.
+  private cellTypeFamily(cellType: string) {
+    return cellType.replace(/(\s+\d+)+$/, '');
+  }
+
+  private refreshCellTypeOptions(rows: DiffExp[]) {
+    // Options are the major cell types present in the genes currently loaded, taken
+    // from the data rather than a hand-maintained list (the two had drifted: the old
+    // list omitted "Cardiomyocyte 5" and offered entries that never occur). Selecting
+    // a major type matches every sub-cluster under it. "All Cells" is excluded because
+    // filterGeneSet keeps those rows unconditionally.
+    const options = [...new Set(
+      rows
+        .map(row => row.cell_type)
+        .filter((cellType): cellType is string => !!cellType && !cellType.includes('All'))
+        .map(cellType => this.cellTypeFamily(cellType))
+    )].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    this.cell_types = options;
+    this.selected_cells = options.slice();
+  }
+
   private getSelectedCells() {
-    const selectedCells = this.selected_cells.length == 0
-      ? this.databaseConstService.getDECellTypes()
-      : this.selected_cells;
-    this.selected_cells = selectedCells;
-    return selectedCells;
+    // An empty selection is honoured rather than reset to everything: filterGeneSet
+    // always keeps the pooled "All Cells" rows, so clearing narrows the cards to
+    // that series instead of leaving the picker impossible to empty.
+    return this.selected_cells;
   }
 
   private getSelectedPmids() {

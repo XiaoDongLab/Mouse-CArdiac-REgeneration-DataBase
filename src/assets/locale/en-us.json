@@ -7,7 +7,7 @@
         "citepopup": "Copied!",
         "userguide": "User Guide",
         "genomebrowser": "Genome Browser",
-        "gb-description": "View how Genes differ in expression levels accross Age, Cell Groups and Experimental Conditions",
+        "gb-description": "View how Genes differ in expression levels across Age, Cell Groups and Experimental Conditions",
         "prev": "Previous",
         "next": "Next",
         "igv": "How to use IGV",
@@ -18,9 +18,19 @@
             "d1": "View comparison groups in the card body. You can compare P1 / P8 (Group 1) or Sham / MI (Group 2) currently.",
             "d2": "Click the card to expand statistical data. Hit any data point on the scatter plot to show UMAP, TSNE and meta information."
         },
+        "spatial-guide": {
+            "title": "Spatial Transcriptomics",
+            "subtitle": "Explore gene expression and estimated cell-type composition across heart tissue sections",
+            "card": {
+                "t1": "How to use",
+                "d1": "Choose a surgery condition and post-surgery day, then select gene expression or cell-type proportion.",
+                "d2": "Search for a gene or choose a cell type, and use the comparison controls to view samples or layers side by side.",
+                "d3": "Select a tissue spot to inspect its barcode, coordinates, expression, and estimated cell-type proportions."
+            }
+        },
         "pathway": {
             "title": "Pathway Enrichment",
-            "subtitle": "Explore how various pathways are impacted accross Age, and Experimental Conditions",
+            "subtitle": "Explore how various pathways are impacted across Age, and Experimental Conditions",
             "card": {
                 "t1": "Workflow",
                 "d1": "Start with gene list from differential expression results",
@@ -179,10 +189,12 @@
             "no-cg": "No Change",
             "sl-dn": "Slightly Downregulated",
             "sg-dn": "Significantly Downregulated",
-            "no-ft": "Not have a significant fit",
+            "no-ft": "No Significant Fit",
             "note1": "Numbers on the meta plot were hidden if the sample size is less than 2.",
             "reset": "Reset",
-            "deselectAll": "Deselect All"
+            "deselectAll": "Deselect All",
+            "clearSelection": "Clear selection",
+            "selectAll": "Select all"
         },
         "list": "List of genes interested"
     },
@@ -272,10 +284,10 @@
         "viewer": {
       "showing": "Showing",
       "compare": "Compare",
-      "compare_samples": "Samples",
-      "compare_samples_hint": "Compare MI and sham sections at the same timepoint",
-      "compare_layers": "Layers",
-      "compare_layers_hint": "Compare gene expression and cell-type proportion on the same section",
+      "compare_samples": "MI vs Sham",
+      "compare_samples_hint": "Show MI and sham tissue sections side by side at the selected post-surgery day",
+      "compare_layers": "Expression vs Cell Types",
+      "compare_layers_hint": "Show gene expression and estimated cell-type proportions side by side on the selected tissue section",
       "download": "Download",
       "download_disabled": "Download will be enabled when the spatial API is connected.",
       "download_hint": "Download the visible spot measurements as TSV",
@@ -353,7 +365,9 @@
             "fdrqval": "FDR Cutoff",
             "nes": "NES Cutoff",
             "reset": "Reset",
-            "deselectAll": "Deselect All"
+            "deselectAll": "Deselect All",
+            "clearSelection": "Clear selection",
+            "selectAll": "Select all"
         },
         "body": {
             "select": "Select Cluster To See Details",

@@ -17,6 +17,16 @@
             "d1": "「遺伝子カード」を見せて中的对照组。您可以比较 P1 / P8（第 1 组）或 Sham / MI（第 2 组）。",
             "d2": "点击「遺伝子カード」展开统计数据。点击散点图上的任意数据点即可显示 UMAP、TSNE 和元信息。"
         },
+        "spatial-guide": {
+            "title": "空間トランスクリプトーム",
+            "subtitle": "心臓組織切片上で遺伝子発現と推定細胞型組成を探索します",
+            "card": {
+                "t1": "使用方法",
+                "d1": "手術条件と術後日を選び、遺伝子発現または細胞型比率を選択します。",
+                "d2": "遺伝子を検索するか細胞型を選び、比較コントロールでサンプルやレイヤーを並べて表示します。",
+                "d3": "組織上のスポットを選択すると、バーコード、座標、発現量、推定細胞型比率を確認できます。"
+            }
+        },
         "pathway": {
             "title": "パスウェイ強化",
             "subtitle": "探索不同年龄和实验条件对各种通路的影响",
@@ -194,10 +204,10 @@
         "viewer": {
       "showing": "表示中",
       "compare": "比較",
-      "compare_samples": "サンプル",
-      "compare_samples_hint": "同じ時点の MI と Sham 切片を比較",
-      "compare_layers": "レイヤー",
-      "compare_layers_hint": "同じ切片で遺伝子発現と細胞型割合を比較",
+      "compare_samples": "MI vs Sham",
+      "compare_samples_hint": "選択した術後時点の MI と Sham の組織切片を並べて表示",
+      "compare_layers": "発現 vs 細胞型",
+      "compare_layers_hint": "選択した組織切片で遺伝子発現と推定細胞型割合を並べて表示",
       "download": "ダウンロード",
       "download_disabled": "空間データ API 接続後にダウンロードできます。",
       "download_hint": "表示中のスポット測定値を TSV でダウンロード",

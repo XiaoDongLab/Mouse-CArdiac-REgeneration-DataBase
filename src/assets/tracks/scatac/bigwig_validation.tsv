@@ -35,3 +35,7 @@ wang2020_lymphocyte_p1_mi_psd3.bw	Lymphocyte	P1+3 dpi	True	22	89115360	0	0	13680
 wang2020_lymphocyte_p1_sham_psd3.bw	Lymphocyte	P1+3 dps	True	22	88309330	0	0	1347765
 wang2020_lymphocyte_p8_mi_psd3.bw	Lymphocyte	P8+3 dpi	True	22	86452090	0	0	1503120
 wang2020_lymphocyte_p8_sham_psd3.bw	Lymphocyte	P8+3 dps	True	22	61944340	0	0	1244809
+wang2020_p1_mi_psd3.bw	All	P1+3 dpi	True	22	2255192230	0	88	230630537
+wang2020_p1_sham_psd3.bw	All	P1+3 dps	True	22	2249043020	0	79	216810178
+wang2020_p8_mi_psd3.bw	All	P8+3 dpi	True	22	2123427190	0	60	222388494
+wang2020_p8_sham_psd3.bw	All	P8+3 dps	True	22	2226368880	0	62	197921574

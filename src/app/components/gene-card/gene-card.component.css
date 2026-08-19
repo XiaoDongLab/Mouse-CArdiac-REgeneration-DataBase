@@ -124,6 +124,15 @@ apx-chart>div {
     font-size: var(--bs-body-font-size)
 }
 
+/*
+ * Each condition's label and bar are left-aligned within a quarter-width column.
+ * Nudge each comparison heading left so it is visually centered over the
+ * condition markers rather than the full column boxes.
+ */
+.comparison-headings > .col-6 {
+    transform: translateX(-15%);
+}
+
 apx-chart {
     display: block;
     width: 100%;
@@ -380,7 +389,7 @@ canvas,
 */
 
 /* This removes the auxiliary marker in apexcharts, which should only exist in a one-datapoint scatter plot. */
-::ng-deep .apexcharts-series-markers-wrap path[default-marker-size=1.5] {
+::ng-deep .apexcharts-series-markers-wrap path[default-marker-size="1.5"] {
     opacity: 0 !important;
 }
 

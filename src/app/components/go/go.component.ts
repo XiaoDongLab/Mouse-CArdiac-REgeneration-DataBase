@@ -99,56 +99,22 @@ export class GoComponent implements OnInit {
   tissue_types: string[] = ['Heart'];
   selected_tissues: string[] = this.tissue_types;
   colorPreference: number = localStorage["colorPreference"] ? localStorage["colorPreference"] : 0;
-  cell_types = [
-    "All Cells",
-    "Cardiac cell",
-    "B cell",
-    "T cell",
-    "Red blood cell",
-    "Granulocyte",
-    "Cardiomyocyte",
-    "Cardiomyocyte 1",
-    "Cardiomyocyte 1 2",
-    "Cardiomyocyte 1 3",
-    "Cardiomyocyte 1 4",
-    "Cardiomyocyte 2",
-    "Cardiomyocyte 2 2",
-    "Cardiomyocyte 2 3",
-    "Cardiomyocyte 2 4",
-    "Cardiomyocyte 3",
-    "Cardiomyocyte 4",
-    "Cardiomyocyte 4 2",
-    "Sinoatrial node (SAN) cell",
-    "Sinoatrial node cell",
-    "Endothelial cell",
-    "Endothelial cell 2",
-    "Endothelial cell 3",
-    "Endothelial cell 4",
-    "Endothelial cell 5",
-    "Endothelial cell 6",
-    "Macrophage",
-    "Macrophage 2",
-    "M2 macrophage",
-    "Fibroblast",
-    "Fibroblast 2",
-    "Fibroblast 3",
-    "Fibroblast 4",
-    "Fibroblast 5",
-    "Fibroblast 6",
-    "Mural cell",
-    "Well-established epicardial progenitor cell",
-    "Progenitor cell",
-    "Activated fibroblast"
-  ];
+  // Major cell types only; sub-clusters are matched by their major type. The API
+  // prefix-matches, so sending "Cardiomyocyte" covers Cardiomyocyte 1-5. "All Cells"
+  // is omitted here and force-included in every query (prepareData) so the pooled
+  // series stays on the plot regardless of what is selected.
+  cell_types: string[] = [];
   upreg_gene_counts: { gene: string, count: string }[];
   downreg_gene_counts: { gene: string, count: string }[];
-  selected_cell_types: string[] = this.cell_types;
+  selected_cell_types: string[] = [];
   selected_pathway: string = 'G protein-coupled receptor signaling pathway';
   selected_pathway_kegg: string = 'Cytokine-cytokine receptor interaction';
   pathway_groupby_go: boolean = true; // False is KEGG
   pathway_groupby_kegg: boolean = false;
 
-  constructor(private databaseService: DatabaseService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, public appComponent: AppComponent, private t: TranslateService) {
+  constructor(private databaseService: DatabaseService, public databaseConstService: DatabaseConstsService, private geneConversionService: GeneConversionService, private router: Router, public lociService: LociService, private pathwayInfoService: PathwayinfoService, private zone: NgZone, public appComponent: AppComponent, private t: TranslateService) {
+    this.cell_types = databaseConstService.getMajorCellTypes();
+    this.selected_cell_types = this.cell_types.slice();
     this.go_chart_options = {
       series: [{
         name: 'TEST',
@@ -700,7 +666,7 @@ export class GoComponent implements OnInit {
     const isGoPathway = this.pathway_groupby_go;
     const selectedPathway = isGoPathway ? this.selected_pathway : this.selected_pathway_kegg;
     const selectedTissues = [...(this.selected_tissues ?? [])];
-    const selectedCellTypes = [...(this.selected_cell_types ?? [])];
+    const selectedCellTypes = ['All Cells', ...(this.selected_cell_types ?? [])];
     const selectedComparisonType = this.selectedComparisonType;
 
     this.loading = true;
@@ -708,7 +674,7 @@ export class GoComponent implements OnInit {
     this.selected_core_enrichment = [];
     this.pathway_info = null;
 
-    if (!selectedPathway || selectedCellTypes.length === 0) {
+    if (!selectedPathway) {
       this.go_terms = [];
       this.filtered_go_terms = [];
       await this.createDisplayData();
@@ -797,6 +763,16 @@ export class GoComponent implements OnInit {
   onSearchModeChanged(event: any): void {
     console.log('Selected Search Mode:', event.value);
     this.resetAnnotations()
+  }
+
+  clearSelectedCellTypes() {
+    this.selected_cell_types = [];
+    this.onCellsChanged();
+  }
+
+  selectAllCellTypes() {
+    this.selected_cell_types = this.cell_types.slice();
+    this.onCellsChanged();
   }
 
   onCellsChanged() {

@@ -528,6 +528,13 @@
 
 ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
   padding-bottom: 0px !important;
+  /* Chips must wrap. The nowrap rule above is for single-select; applied to
+     multi-select it lays every chip on one row far wider than the control,
+     leaving the remove buttons reachable only by scrolling a 24px strip. */
+  flex-wrap: wrap !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  max-height: 6rem;
 }
 
 ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
@@ -769,4 +776,57 @@
 
 .color-legend .no-ft:focus, .color-legend .no-ft:active {
   background-color: rgb(40, 40, 40);
+}
+
+/* DEG gene cards: keep a small gap between stacked cards so each one reads
+   as a separate card instead of a single continuous block. */
+.gene-card-accordion .accordion-item {
+  margin-bottom: .5rem;
+  border-top: var(--bs-accordion-border-width, var(--bs-border-width)) solid var(--bs-accordion-border-color, var(--bs-border-color-translucent));
+  border-radius: var(--bs-accordion-border-radius, var(--bs-border-radius));
+}
+
+.gene-card-accordion .accordion-item:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Bootstrap only rounds the first/last item's button; round every one now that
+   the items are visually separated. */
+.gene-card-accordion .accordion-header,
+.gene-card-accordion .accordion-button {
+  border-top-left-radius: var(--bs-accordion-inner-border-radius, var(--bs-border-radius));
+  border-top-right-radius: var(--bs-accordion-inner-border-radius, var(--bs-border-radius));
+}
+
+.gene-card-accordion .accordion-button.collapsed {
+  border-bottom-left-radius: var(--bs-accordion-inner-border-radius, var(--bs-border-radius));
+  border-bottom-right-radius: var(--bs-accordion-inner-border-radius, var(--bs-border-radius));
+}
+
+
+/* Long labels must not push a chip wider than the box: the name truncates so
+   the remove button stays on screen instead of being clipped out of reach. */
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-label {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon {
+    flex: 0 0 auto !important;
+}
+
+/* The checkbox and name in a dropdown option are presentational: ng-select
+   toggles the row itself. Left interactive, a click on the checkbox fires the
+   native toggle as well as ng-select's, the two cancel out, and only the gap
+   between them selects anything. */
+::ng-deep .ng-dropdown-panel .ng-option .form-check-input,
+::ng-deep .ng-dropdown-panel .ng-option label {
+    pointer-events: none !important;
 }

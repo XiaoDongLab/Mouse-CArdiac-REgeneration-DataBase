@@ -232,7 +232,7 @@
               [class.btn-outline-secondary]="comparisonMode !== 'feature'"
               (click)="setComparisonMode('feature')" [disabled]="loadingMetadata"
               [ngbTooltip]="'spatial.viewer.compare_layers_hint' | translate">
-              <i class="fa fa-layer-group me-2"></i>{{ 'spatial.viewer.compare_layers' | translate }}
+              <i class="fa fa-table-columns me-2"></i>{{ 'spatial.viewer.compare_layers' | translate }}
             </button>
           </div>
           <button type="button" class="btn btn-sm btn-outline-secondary"
@@ -253,7 +253,7 @@
       }
 
       <div class="viewer-grid" [class.is-comparing]="isComparing">
-        @for (panel of visiblePanels; track panel.id) {
+        @for (panel of visiblePanels; track panel.id; let firstPanel = $first) {
           @let panelSpotSize = spotSizeForPanel(panel);
           <section class="sample-view"
             [attr.aria-label]="'P1 ' + panel.sample.surgery + ' ' + formatTimepoint(panel.sample.timepoint) + ' - ' + panel.feature">
@@ -316,10 +316,12 @@
               <div class="orientation-marker" aria-hidden="true">
                 <span>R</span><i></i><span>L</span>
               </div>
-              <div class="scale-bar"><i></i><span>500 μm</span></div>
-              <div class="viewport-hint">
-                <i class="fa fa-hand me-1"></i>{{ 'spatial.viewer.hint' | translate }}
-              </div>
+              <div class="scale-bar"><i [style.width.px]="scaleBarWidthPx"></i><span>500 μm</span></div>
+              @if (firstPanel) {
+                <div class="viewport-hint">
+                  <i class="fa fa-hand me-1"></i>{{ 'spatial.viewer.hint' | translate }}
+                </div>
+              }
             </div>
           </section>
         }
